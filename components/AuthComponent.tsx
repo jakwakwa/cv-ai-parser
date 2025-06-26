@@ -37,7 +37,7 @@ export default function AuthComponent() {
 
   if (user) {
     return (
-      <div className="flex items-center space-x-4">
+      <div className="flex  items-center md:space-x-4">
         <span className="text-sm text-gray-600">Welcome, {user.user_metadata?.full_name || user.email}</span>
         <button
           onClick={signOut}
@@ -50,8 +50,8 @@ export default function AuthComponent() {
   }
 
   return (
-    <div className="flex items-center space-x-4">
-      <form onSubmit={handleSubmit} className="flex items-center space-x-2">
+    <div className="flex flex-col md:flex-row gap-4 items-center sm:space-x-4">
+      <form onSubmit={handleSubmit} className="flex mt-2 md:mt-0 md:w-2/3 gap-2 flex-col md:flex-row lg:flex-row md:items-center sm:space-x-2">
         {isSignUp && (
           <input
             type="text"
@@ -86,7 +86,7 @@ export default function AuthComponent() {
           {loading ? "..." : isSignUp ? "Sign Up" : "Sign In"}
         </button>
       </form>
-      <button onClick={() => setIsSignUp(!isSignUp)} className="text-sm text-teal-600 hover:text-teal-700">
+      <button onClick={() => setIsSignUp(!isSignUp)} className=" mt-2 text-xs text-teal-600 hover:text-teal-700 rounded ">
         {isSignUp ? "Sign In" : "Sign Up"}
       </button>
       {error && <p className="text-sm text-red-600">{error}</p>}

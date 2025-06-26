@@ -1,0 +1,387 @@
+/* ProfileImageUploader.module.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.card {
+    width: 100%;
+    max-width: 28rem;
+    margin: 0 auto;
+    background-color: white;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+}
+
+.cardHeader {
+    text-align: center;
+    padding-bottom: 1rem;
+}
+
+.iconContainer {
+    margin: 0 auto 1rem;
+    display: flex;
+    height: 3rem;
+    width: 3rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background-color: #ccfbf1;
+}
+
+.icon {
+    height: 1.5rem;
+    width: 1.5rem;
+    color: #0d9488;
+}
+
+.cardTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.cardDescription {
+    color: #6b7280;
+}
+
+.cardContent {
+    padding: 0 1.5rem 1.5rem;
+}
+
+.uploadArea {
+    position: relative;
+    border: 2px dashed #d1d5db;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.uploadAreaDragActive {
+    border-color: #14b8a6;
+    background-color: #f0fdfa;
+    transform: scale(1.05);
+}
+
+.uploadAreaWithImage {
+    border-style: solid;
+    border-color: #14b8a6;
+    background-color: #f9fafb;
+}
+
+.uploadAreaDefault {
+    border-color: #d1d5db;
+    background-color: #f9fafb;
+}
+
+.uploadAreaDefault:hover {
+    border-color: #2dd4bf;
+}
+
+.fileInput {
+    display: none;
+}
+
+.loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 8rem;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+    border-radius: 9999px;
+    height: 2rem;
+    width: 2rem;
+    border-bottom: 2px solid #0d9488;
+    margin-bottom: 0.75rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loadingText {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.previewContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.imageWrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.imageWrapper:hover .removeButton {
+    opacity: 1;
+}
+
+.previewImage {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 9999px;
+    margin: 0 auto;
+    object-fit: cover;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 4px solid white;
+}
+
+.removeButton {
+    position: absolute;
+    top: -0.5rem;
+    right: -0.5rem;
+    background-color: #ef4444;
+    color: white;
+    border-radius: 9999px;
+    padding: 0.375rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.removeIcon {
+    height: 0.75rem;
+    width: 0.75rem;
+}
+
+.successContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0d9488;
+}
+
+.checkIcon {
+    height: 1rem;
+    width: 1rem;
+    margin-right: 0.25rem;
+}
+
+.successText {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.instructionText {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.uploadPromptContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 8rem;
+    gap: 0.5rem;
+}
+
+.uploadIcon {
+    height: 3rem;
+    width: 3rem;
+    color: #9ca3af;
+    margin-bottom: 0.5rem;
+}
+
+.uploadText {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+}
+
+.errorContainer {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 0.375rem;
+}
+
+.errorText {
+    font-size: 0.875rem;
+    color: #dc2626;
+    text-align: center;
+}
+
+.cardFooter {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background-color: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+}
+
+@media (min-width: 640px) {
+    .cardFooter {
+        flex-direction: row;
+    }
+}
+
+.skipButton {
+    flex: 1;
+}
+
+.completeButton {
+    flex: 1;
+    background-color: #0d9488;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.completeButton:hover {
+    background-color: #0f766e;
+}
+
+.completeButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Editor mode styles */
+.editorContainer {
+    background-color: white;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+    padding: 1rem;
+}
+
+.editorContent {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.editorImageWrapper {
+    position: relative;
+}
+
+.editorImageWrapper:hover .editorRemoveButton {
+    opacity: 1;
+}
+
+.editorImage {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 9999px;
+    object-fit: cover;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 2px solid #e5e7eb;
+}
+
+.editorRemoveButton {
+    position: absolute;
+    top: -0.5rem;
+    right: -0.5rem;
+    background-color: #ef4444;
+    color: white;
+    border-radius: 9999px;
+    padding: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.editorRemoveIcon {
+    height: 0.75rem;
+    width: 0.75rem;
+}
+
+.editorButtonContainer {
+    flex: 1;
+}
+
+.uploadButton {
+    width: 100%;
+}
+
+.uploadButtonIcon {
+    height: 1rem;
+    width: 1rem;
+    margin-right: 0.5rem;
+}
+
+.editorInstructionText {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+.editorUploadArea {
+    margin-top: 1rem;
+    border: 2px dashed #d1d5db;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: center;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.editorUploadAreaDragActive {
+    border-color: #14b8a6;
+    background-color: #f0fdfa;
+}
+
+.editorUploadAreaDefault {
+    border-color: #d1d5db;
+    background-color: #f9fafb;
+}
+
+.editorUploadText {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.editorLoadingContainer {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editorSpinner {
+    animation: spin 1s linear infinite;
+    border-radius: 9999px;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-bottom: 2px solid #0d9488;
+    margin-right: 0.5rem;
+}
+
+.editorLoadingText {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.editorErrorContainer {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 0.375rem;
+}
+
+.editorErrorText {
+    font-size: 0.875rem;
+    color: #dc2626;
+}

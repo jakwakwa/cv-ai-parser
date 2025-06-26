@@ -7,6 +7,7 @@ import { Eye, Download, Trash2, Calendar, Lock, Globe, FileText } from "lucide-r
 import { ResumeDatabase } from "@/lib/database"
 import { useAuth } from "./AuthProvider"
 import type { Resume } from "@/lib/supabase"
+import styles from "./ResumeLibrary.module.css"
 
 export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (resume: any) => void }) {
   const { user } = useAuth()
@@ -69,11 +70,11 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
   const getMethodBadgeColor = (method: string) => {
     switch (method) {
       case "ai":
-        return "bg-green-100 text-green-800"
+        return styles.badgeGreen
       case "regex_fallback":
-        return "bg-yellow-100 text-yellow-800"
+        return styles.badgeYellow
       default:
-        return "bg-gray-100 text-gray-800"
+        return styles.badgeGray
     }
   }
 
@@ -90,15 +91,15 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-4xl mx-auto p-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-            <div className="text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 mb-4">
-                <FileText className="h-6 w-6 text-gray-600" />
+      <div className={styles.container}>
+        <div className={styles.wrapper}>
+          <div className={styles.stateContainer}>
+            <div className={styles.stateContent}>
+              <div className={styles.iconContainer}>
+                <FileText className={styles.icon} />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Sign In Required</h2>
-              <p className="text-gray-600">Please sign in to view your resume library.</p>
+              <h2 className={styles.stateTitle}>Sign In Required</h2>
+              <p className={styles.stateText}>Please sign in to view your resume library.</p>
             </div>
           </div>
         </div>
@@ -108,12 +109,12 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-4xl mx-auto p-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading your resumes...</p>
+      <div className={styles.container}>
+        <div className={styles.wrapper}>
+          <div className={styles.stateContainer}>
+            <div className={styles.stateContent}>
+              <div className={styles.loadingSpinner}></div>
+              <p className={styles.stateText}>Loading your resumes...</p>
             </div>
           </div>
         </div>
@@ -122,53 +123,53 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">Your Resume Library</h2>
-          <p className="text-gray-600 mt-1">
+    <div className={styles.container}>
+      <div className={styles.wrapper}>
+        <div className={styles.header}>
+          <h2 className={styles.title}>Your Resume Library</h2>
+          <p className={styles.subtitle}>
             {resumes.length} resume{resumes.length !== 1 ? "s" : ""}
           </p>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-            <p className="text-red-800">{error}</p>
+          <div className={styles.errorContainer}>
+            <p className={styles.errorText}>{error}</p>
           </div>
         )}
 
         {resumes.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12">
-            <div className="text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 mb-4">
-                <FileText className="h-6 w-6 text-gray-400" />
+          <div className={styles.stateContainer}>
+            <div className={styles.stateContent}>
+              <div className={styles.iconContainer}>
+                <FileText className={styles.iconGray} />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No resumes yet</h3>
-              <p className="text-gray-600 mb-4">Upload your first resume to get started!</p>
+              <h3 className={styles.stateTitle}>No resumes yet</h3>
+              <p className={styles.stateText}>Upload your first resume to get started!</p>
             </div>
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className={styles.grid}>
             {resumes.map((resume) => (
-              <Card key={resume.id} className="bg-white border border-gray-200 hover:shadow-md transition-shadow">
-                <CardHeader className="pb-3">
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="font-semibold text-gray-800 truncate flex-1">{resume.title}</h3>
-                    <div className="flex space-x-1 ml-2">
+              <Card key={resume.id} className={styles.card}>
+                <CardHeader className={styles.cardHeader}>
+                  <div className={styles.cardHeaderContent}>
+                    <h3 className={styles.cardTitle}>{resume.title}</h3>
+                    <div className={styles.publicToggleContainer}>
                       <button
                         onClick={() => handleTogglePublic(resume)}
-                        className={`px-2 py-1 text-xs rounded ${
-                          resume.is_public ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-600"
+                        className={`${styles.publicToggle} ${
+                          resume.is_public ? styles.publicTogglePublic : styles.publicTogglePrivate
                         }`}
                       >
                         {resume.is_public ? (
                           <>
-                            <Globe className="h-3 w-3 inline mr-1" />
+                            <Globe className={styles.publicToggleIcon} />
                             Public
                           </>
                         ) : (
                           <>
-                            <Lock className="h-3 w-3 inline mr-1" />
+                            <Lock className={styles.publicToggleIcon} />
                             Private
                           </>
                         )}
@@ -177,55 +178,55 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
                   </div>
                 </CardHeader>
 
-                <CardContent className="pb-4">
-                  <div className="text-sm text-gray-600 space-y-2">
-                    <div className="flex items-center justify-between">
+                <CardContent className={styles.cardContent}>
+                  <div className={styles.contentText}>
+                    <div className={styles.contentRow}>
                       <span>Method:</span>
-                      <Badge className={`text-xs ${getMethodBadgeColor(resume.parse_method || "unknown")}`}>
+                      <Badge className={`${styles.badge} ${getMethodBadgeColor(resume.parse_method || "unknown")}`}>
                         {getMethodLabel(resume.parse_method || "unknown")}
                       </Badge>
                     </div>
                     {resume.confidence_score && (
-                      <div className="flex items-center justify-between">
+                      <div className={styles.contentRow}>
                         <span>Confidence:</span>
-                        <span className="font-medium text-green-600">{resume.confidence_score}%</span>
+                        <span className={styles.contentValue}>{resume.confidence_score}%</span>
                       </div>
                     )}
-                    <div className="flex items-center justify-between">
+                    <div className={styles.contentRow}>
                       <span>Views:</span>
-                      <span className="flex items-center">
-                        <Eye className="h-3 w-3 mr-1" />
+                      <span className={styles.contentIconContainer}>
+                        <Eye className={styles.contentIcon} />
                         {resume.view_count}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className={styles.contentRow}>
                       <span>Downloads:</span>
-                      <span className="flex items-center">
-                        <Download className="h-3 w-3 mr-1" />
+                      <span className={styles.contentIconContainer}>
+                        <Download className={styles.contentIcon} />
                         {resume.download_count}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className={styles.contentRow}>
                       <span>Created:</span>
-                      <span className="flex items-center">
-                        <Calendar className="h-3 w-3 mr-1" />
+                      <span className={styles.contentIconContainer}>
+                        <Calendar className={styles.contentIcon} />
                         {formatDate(resume.created_at)}
                       </span>
                     </div>
                   </div>
                 </CardContent>
 
-                <CardFooter className="flex space-x-2 pt-3">
+                <CardFooter className={styles.cardFooter}>
                   <button
                     onClick={() => onSelectResume(resume.parsed_data)}
-                    className="flex-1 bg-teal-600 text-white px-3 py-2 rounded text-sm hover:bg-teal-700 transition-colors"
+                    className={styles.viewButton}
                   >
                     View
                   </button>
                   {resume.is_public && resume.slug && (
                     <button
                       onClick={() => navigator.clipboard.writeText(`${window.location.origin}/resume/${resume.slug}`)}
-                      className="px-3 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
+                      className={styles.shareButton}
                     >
                       Share
                     </button>
@@ -233,12 +234,12 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
                   <button
                     onClick={() => handleDeleteResume(resume.id, resume.title)}
                     disabled={deleting === resume.id}
-                    className="px-3 py-2 bg-red-500 text-white rounded text-sm hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className={styles.deleteButton}
                   >
                     {deleting === resume.id ? (
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      <div className={styles.deleteSpinner}></div>
                     ) : (
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className={styles.deleteIcon} />
                     )}
                   </button>
                 </CardFooter>

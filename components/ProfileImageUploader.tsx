@@ -6,6 +6,7 @@ import { useState, useRef, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Camera, Upload, User, X, Check } from "lucide-react"
+import styles from "./ProfileImageUploader.module.css"
 
 interface ProfileImageUploaderProps {
   currentImage?: string
@@ -164,24 +165,24 @@ const ProfileImageUploader = ({
   // Prompt mode for after resume upload
   if (showPrompt) {
     return (
-      <Card className="w-full max-w-md mx-auto bg-white shadow-lg border border-gray-200">
-        <CardHeader className="text-center pb-4">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-teal-100">
-            <Camera className="h-6 w-6 text-teal-600" />
+      <Card className={styles.card}>
+        <CardHeader className={styles.cardHeader}>
+          <div className={styles.iconContainer}>
+            <Camera className={styles.icon} />
           </div>
-          <CardTitle className="text-xl font-semibold text-gray-900">Add Profile Picture</CardTitle>
-          <CardDescription className="text-gray-600">
+          <CardTitle className={styles.cardTitle}>Add Profile Picture</CardTitle>
+          <CardDescription className={styles.cardDescription}>
             Make your resume stand out with a professional photo.
           </CardDescription>
         </CardHeader>
-        <CardContent className="px-6 pb-6">
+        <CardContent className={styles.cardContent}>
           <div
-            className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 cursor-pointer ${
+            className={`${styles.uploadArea} ${
               dragActive
-                ? "border-teal-500 bg-teal-50 scale-105"
+                ? styles.uploadAreaDragActive
                 : previewImage
-                  ? "border-solid border-teal-500 bg-gray-50"
-                  : "border-gray-300 hover:border-teal-400 bg-gray-50"
+                  ? styles.uploadAreaWithImage
+                  : styles.uploadAreaDefault
             }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
@@ -194,58 +195,58 @@ const ProfileImageUploader = ({
               type="file"
               accept="image/jpeg,image/jpg,image/png,image/webp"
               onChange={handleFileSelect}
-              className="hidden"
+              className={styles.fileInput}
             />
 
             {isLoading ? (
-              <div className="flex flex-col items-center justify-center h-32">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600 mb-3"></div>
-                <p className="text-sm text-gray-600">Processing image...</p>
+              <div className={styles.loadingContainer}>
+                <div className={styles.spinner}></div>
+                <p className={styles.loadingText}>Processing image...</p>
               </div>
             ) : previewImage ? (
-              <div className="space-y-3">
-                <div className="relative inline-block group">
+              <div className={styles.previewContainer}>
+                <div className={styles.imageWrapper}>
                   <img
                     src={previewImage || "/placeholder.svg"}
                     alt="Profile preview"
-                    className="w-24 h-24 rounded-full mx-auto object-cover shadow-md border-4 border-white"
+                    className={styles.previewImage}
                   />
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
                       handleRemoveImage()
                     }}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
+                    className={styles.removeButton}
                   >
-                    <X className="h-3 w-3" />
+                    <X className={styles.removeIcon} />
                   </button>
                 </div>
-                <div className="flex items-center justify-center text-teal-600">
-                  <Check className="h-4 w-4 mr-1" />
-                  <span className="text-sm font-medium">Image Selected</span>
+                <div className={styles.successContainer}>
+                  <Check className={styles.checkIcon} />
+                  <span className={styles.successText}>Image Selected</span>
                 </div>
-                <p className="text-xs text-gray-500">Click image to change</p>
+                <p className={styles.instructionText}>Click image to change</p>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-32 space-y-2">
-                <User className="h-12 w-12 text-gray-400 mb-2" />
-                <p className="text-sm font-medium text-gray-900">Click to upload or drag & drop</p>
-                <p className="text-xs text-gray-500">JPEG, PNG, or WebP (max 5MB)</p>
+              <div className={styles.uploadPromptContainer}>
+                <User className={styles.uploadIcon} />
+                <p className={styles.uploadText}>Click to upload or drag & drop</p>
+                <p className={styles.instructionText}>JPEG, PNG, or WebP (max 5MB)</p>
               </div>
             )}
           </div>
 
           {error && (
-            <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-sm text-red-600 text-center">{error}</p>
+            <div className={styles.errorContainer}>
+              <p className={styles.errorText}>{error}</p>
             </div>
           )}
         </CardContent>
-        <CardFooter className="flex flex-col sm:flex-row gap-3 p-6 bg-gray-50 border-t">
-          <Button variant="outline" onClick={handleSkip} className="flex-1" disabled={isLoading}>
+        <CardFooter className={styles.cardFooter}>
+          <Button variant="outline" onClick={handleSkip} className={styles.skipButton} disabled={isLoading}>
             Skip for Now
           </Button>
-          <Button onClick={handleComplete} className="flex-1 bg-teal-600 hover:bg-teal-700" disabled={isLoading}>
+          <Button onClick={handleComplete} className={styles.completeButton} disabled={isLoading}>
             {previewImage ? "Use This Image" : "Continue Without Image"}
           </Button>
         </CardFooter>
@@ -255,36 +256,36 @@ const ProfileImageUploader = ({
 
   // Editor mode for resume editing
   return (
-    <div className="space-y-4">
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
-        <div className="flex items-center gap-4">
+    <div className={styles.container}>
+      <div className={styles.editorContainer}>
+        <div className={styles.editorContent}>
           {previewImage && (
-            <div className="relative group">
+            <div className={styles.editorImageWrapper}>
               <img
                 src={previewImage || "/placeholder.svg"}
                 alt="Profile"
-                className="w-20 h-20 rounded-full object-cover shadow-md border-2 border-gray-200"
+                className={styles.editorImage}
               />
               <button
                 onClick={handleRemoveImage}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                className={styles.editorRemoveButton}
               >
-                <X className="h-3 w-3" />
+                <X className={styles.editorRemoveIcon} />
               </button>
             </div>
           )}
-          <div className="flex-1">
-            <Button onClick={handleButtonClick} variant="outline" className="w-full" disabled={isLoading}>
-              <Upload className="h-4 w-4 mr-2" />
+          <div className={styles.editorButtonContainer}>
+            <Button onClick={handleButtonClick} variant="default" className={styles.uploadButton} disabled={isLoading}>
+              <Upload className={styles.uploadButtonIcon} />
               {previewImage ? "Change Image" : "Upload Image"}
             </Button>
-            <p className="text-xs text-gray-500 mt-1">JPEG, PNG, or WebP (max 5MB)</p>
+            <p className={styles.editorInstructionText}>JPEG, PNG, or WebP (max 5MB)</p>
           </div>
         </div>
 
         <div
-          className={`mt-4 border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
-            dragActive ? "border-teal-500 bg-teal-50" : "border-gray-300 bg-gray-50"
+          className={`${styles.editorUploadArea} ${
+            dragActive ? styles.editorUploadAreaDragActive : styles.editorUploadAreaDefault
           }`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
@@ -296,21 +297,21 @@ const ProfileImageUploader = ({
             type="file"
             accept="image/jpeg,image/jpg,image/png,image/webp"
             onChange={handleFileSelect}
-            className="hidden"
+            className={styles.fileInput}
           />
-          <p className="text-sm text-gray-600">Or drag and drop your image here</p>
+          <p className={styles.editorUploadText}>Or drag and drop your image here</p>
         </div>
 
         {isLoading && (
-          <div className="mt-4 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-teal-600 mr-2"></div>
-            <span className="text-sm text-gray-600">Processing...</span>
+          <div className={styles.editorLoadingContainer}>
+            <div className={styles.editorSpinner}></div>
+            <span className={styles.editorLoadingText}>Processing...</span>
           </div>
         )}
 
         {error && (
-          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-sm text-red-600">{error}</p>
+          <div className={styles.editorErrorContainer}>
+            <p className={styles.editorErrorText}>{error}</p>
           </div>
         )}
       </div>
