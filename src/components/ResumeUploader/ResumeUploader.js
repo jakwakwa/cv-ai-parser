@@ -357,15 +357,20 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
   }
 
   const handleProfileImageChange = (imageUrl) => {
+    console.log("Profile image changed:", imageUrl)
     setProfileImage(imageUrl)
   }
 
   const handleProfilePromptComplete = (finalProfileImage) => {
+    console.log("Profile prompt completed with image:", finalProfileImage)
+
     // Add profile image to parsed data if provided
     const finalResumeData = {
       ...parsedResumeData,
       profileImage: finalProfileImage || "", // Empty string means no profile image
     }
+
+    console.log("Final resume data:", finalResumeData)
 
     // Reset states
     setShowProfilePrompt(false)
@@ -380,6 +385,11 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
     onResumeUploaded(finalResumeData, tempParseInfo)
   }
 
+  const handleProfilePromptSkip = () => {
+    console.log("Profile prompt skipped")
+    handleProfilePromptComplete("")
+  }
+
   const onButtonClick = () => {
     fileInputRef.current?.click()
   }
@@ -387,125 +397,133 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
   // Show profile picture prompt after successful resume parsing
   if (showProfilePrompt) {
     return (
-      <div className="max-w-2xl mx-auto p-4 sm:p-6">
-        <div className="text-center mb-8">
-          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Resume Parsed Successfully!</h2>
-          <p className="text-gray-600 text-lg">
-            Parsed with{" "}
-            <span className="font-semibold text-teal-600">
-              {tempParseInfo?.method === "ai" ? "Google Gemini AI" : "Text Analysis"}
-            </span>
-          </p>
-          <p className="text-gray-600 text-lg">
-            Confidence: <span className="font-semibold text-green-600">{tempParseInfo?.confidence}%</span>
-          </p>
-        </div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="max-w-2xl mx-auto p-4 sm:p-6">
+          <div className="text-center mb-8">
+            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">Resume Parsed Successfully!</h2>
+            <p className="text-gray-600 text-lg">
+              Parsed with{" "}
+              <span className="font-semibold text-teal-600">
+                {tempParseInfo?.method === "ai" ? "Google Gemini AI" : "Text Analysis"}
+              </span>
+            </p>
+            <p className="text-gray-600 text-lg">
+              Confidence: <span className="font-semibold text-green-600">{tempParseInfo?.confidence}%</span>
+            </p>
+          </div>
 
-        <ProfileImageUploader
-          currentImage={profileImage}
-          onImageChange={handleProfileImageChange}
-          showPrompt={true}
-          onSkip={() => handleProfilePromptComplete("")} // Pass empty string for skip
-          onComplete={handleProfilePromptComplete}
-        />
+          <ProfileImageUploader
+            currentImage={profileImage}
+            onImageChange={handleProfileImageChange}
+            showPrompt={true}
+            onSkip={handleProfilePromptSkip}
+            onComplete={handleProfilePromptComplete}
+          />
+        </div>
       </div>
     )
   }
 
   if (isLoading) {
     return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.spinner}></div>
-        <p className={styles.loadingText}>Parsing your resume...</p>
-        <p className={styles.loadingSubtext}>Extracting text and analyzing content with Google Gemini...</p>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-md mx-auto">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600 mx-auto mb-4"></div>
+            <p className="text-gray-900 font-medium mb-2">Parsing your resume...</p>
+            <p className="text-gray-600 text-sm">Extracting text and analyzing content with Google Gemini...</p>
+          </div>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className={styles.uploaderContainer}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Resume Parser</h1>
-        <p className={styles.subtitle}>Upload your existing resume and we'll create a beautiful online version</p>
-        {parseMethod && (
-          <div className={styles.parseInfo}>
-            <p className={styles.parseMethod}>
-              {parseMethod === "ai"
-                ? "✨ Parsed with Google Gemini AI"
-                : parseMethod === "regex_fallback"
-                  ? "⚠️ AI failed, parsed with text analysis"
-                  : "📝 Parsed with text analysis"}
-            </p>
-            {confidenceScore > 0 && <p className={styles.confidenceScore}>Confidence: {confidenceScore}% accurate</p>}
+    <div className="min-h-screen bg-gray-50">
+      <div className={styles.uploaderContainer}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Resume Parser</h1>
+          <p className={styles.subtitle}>Upload your existing resume and we'll create a beautiful online version</p>
+          {parseMethod && (
+            <div className={styles.parseInfo}>
+              <p className={styles.parseMethod}>
+                {parseMethod === "ai"
+                  ? "✨ Parsed with Google Gemini AI"
+                  : parseMethod === "regex_fallback"
+                    ? "⚠️ AI failed, parsed with text analysis"
+                    : "📝 Parsed with text analysis"}
+              </p>
+              {confidenceScore > 0 && <p className={styles.confidenceScore}>Confidence: {confidenceScore}% accurate</p>}
+            </div>
+          )}
+        </div>
+
+        <div
+          className={`${styles.dropZone} ${dragActive ? styles.dragActive : ""}`}
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            className={styles.fileInput}
+            accept=".pdf,.doc,.docx,.txt"
+            onChange={handleChange}
+          />
+
+          <div className={styles.uploadIcon}>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17,8 12,3 7,8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+          </div>
+
+          <p className={styles.dropText}>
+            <strong>Click to upload</strong> or drag and drop your resume
+          </p>
+          <p className={styles.fileTypes}>Supports PDF, Word documents, and text files (max 10MB)</p>
+          <p className={styles.fileTypes} style={{ fontSize: "0.8rem", marginTop: "0.5rem", opacity: 0.7 }}>
+            For best results with PDFs, ensure they contain selectable text (not scanned images)
+          </p>
+
+          <button type="button" className={styles.uploadButton} onClick={onButtonClick}>
+            Choose File
+          </button>
+        </div>
+
+        {error && (
+          <div className={styles.error}>
+            <AlertTriangle className="w-5 h-5 text-red-500 mr-2" />
+            <p style={{ whiteSpace: "pre-line" }}>{error}</p>
           </div>
         )}
-      </div>
 
-      <div
-        className={`${styles.dropZone} ${dragActive ? styles.dragActive : ""}`}
-        onDragEnter={handleDrag}
-        onDragLeave={handleDrag}
-        onDragOver={handleDrag}
-        onDrop={handleDrop}
-      >
-        <input
-          ref={fileInputRef}
-          type="file"
-          className={styles.fileInput}
-          accept=".pdf,.doc,.docx,.txt"
-          onChange={handleChange}
-        />
-
-        <div className={styles.uploadIcon}>
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="17,8 12,3 7,8" />
-            <line x1="12" y1="3" x2="12" y2="15" />
-          </svg>
-        </div>
-
-        <p className={styles.dropText}>
-          <strong>Click to upload</strong> or drag and drop your resume
-        </p>
-        <p className={styles.fileTypes}>Supports PDF, Word documents, and text files (max 10MB)</p>
-        <p className={styles.fileTypes} style={{ fontSize: "0.8rem", marginTop: "0.5rem", opacity: 0.7 }}>
-          For best results with PDFs, ensure they contain selectable text (not scanned images)
-        </p>
-
-        <button type="button" className={styles.uploadButton} onClick={onButtonClick}>
-          Choose File
-        </button>
-      </div>
-
-      {error && (
-        <div className={styles.error}>
-          <AlertTriangle className="w-5 h-5 text-red-500 mr-2" />
-          <p style={{ whiteSpace: "pre-line" }}>{error}</p>
-        </div>
-      )}
-
-      <div className={styles.features}>
-        <div className={styles.feature}>
-          <div className={styles.featureIcon}>
-            <Bot size={28} />
+        <div className={styles.features}>
+          <div className={styles.feature}>
+            <div className={styles.featureIcon}>
+              <Bot size={28} />
+            </div>
+            <h3>Smart Parsing</h3>
+            <p>Google Gemini AI-powered parsing when available, with intelligent fallback text analysis</p>
           </div>
-          <h3>Smart Parsing</h3>
-          <p>Google Gemini AI-powered parsing when available, with intelligent fallback text analysis</p>
-        </div>
-        <div className={styles.feature}>
-          <div className={styles.featureIcon}>
-            <FileText size={28} />
+          <div className={styles.feature}>
+            <div className={styles.featureIcon}>
+              <FileText size={28} />
+            </div>
+            <h3>Beautiful Design</h3>
+            <p>Your resume gets transformed into a modern, professional layout</p>
           </div>
-          <h3>Beautiful Design</h3>
-          <p>Your resume gets transformed into a modern, professional layout</p>
-        </div>
-        <div className={styles.feature}>
-          <div className={styles.featureIcon}>
-            <Smartphone size={28} />
+          <div className={styles.feature}>
+            <div className={styles.featureIcon}>
+              <Smartphone size={28} />
+            </div>
+            <h3>Responsive</h3>
+            <p>Looks great on all devices and can be downloaded as PDF</p>
           </div>
-          <h3>Responsive</h3>
-          <p>Looks great on all devices and can be downloaded as PDF</p>
         </div>
       </div>
     </div>
