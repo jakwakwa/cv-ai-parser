@@ -3,6 +3,7 @@
 import { useState, useRef } from "react"
 import styles from "./ResumeUploader.module.css"
 import ProfileImageUploader from "../../../components/ProfileImageUploader"
+import { CheckCircle, AlertTriangle, Bot, FileText, Smartphone } from "lucide-react"
 
 const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
   const [dragActive, setDragActive] = useState(false)
@@ -359,11 +360,11 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
     setProfileImage(imageUrl)
   }
 
-  const handleProfilePromptComplete = () => {
+  const handleProfilePromptComplete = (finalProfileImage) => {
     // Add profile image to parsed data if provided
     const finalResumeData = {
       ...parsedResumeData,
-      profileImage: profileImage || "", // Empty string means no profile image
+      profileImage: finalProfileImage || "", // Empty string means no profile image
     }
 
     // Reset states
@@ -386,16 +387,17 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
   // Show profile picture prompt after successful resume parsing
   if (showProfilePrompt) {
     return (
-      <div className={styles.uploaderContainer}>
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Resume Parsed Successfully!</h2>
-          <p className="text-gray-600">
+      <div className="max-w-2xl mx-auto p-4 sm:p-6">
+        <div className="text-center mb-8">
+          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">Resume Parsed Successfully!</h2>
+          <p className="text-gray-600 text-lg">
             Parsed with{" "}
-            <span className="font-semibold">
+            <span className="font-semibold text-teal-600">
               {tempParseInfo?.method === "ai" ? "Google Gemini AI" : "Text Analysis"}
             </span>
           </p>
-          <p className="text-gray-600">
+          <p className="text-gray-600 text-lg">
             Confidence: <span className="font-semibold text-green-600">{tempParseInfo?.confidence}%</span>
           </p>
         </div>
@@ -404,7 +406,7 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
           currentImage={profileImage}
           onImageChange={handleProfileImageChange}
           showPrompt={true}
-          onSkip={handleProfilePromptComplete}
+          onSkip={() => handleProfilePromptComplete("")} // Pass empty string for skip
           onComplete={handleProfilePromptComplete}
         />
       </div>
@@ -478,23 +480,30 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
 
       {error && (
         <div className={styles.error}>
+          <AlertTriangle className="w-5 h-5 text-red-500 mr-2" />
           <p style={{ whiteSpace: "pre-line" }}>{error}</p>
         </div>
       )}
 
       <div className={styles.features}>
         <div className={styles.feature}>
-          <div className={styles.featureIcon}>🤖</div>
+          <div className={styles.featureIcon}>
+            <Bot size={28} />
+          </div>
           <h3>Smart Parsing</h3>
           <p>Google Gemini AI-powered parsing when available, with intelligent fallback text analysis</p>
         </div>
         <div className={styles.feature}>
-          <div className={styles.featureIcon}>🎨</div>
+          <div className={styles.featureIcon}>
+            <FileText size={28} />
+          </div>
           <h3>Beautiful Design</h3>
           <p>Your resume gets transformed into a modern, professional layout</p>
         </div>
         <div className={styles.feature}>
-          <div className={styles.featureIcon}>📱</div>
+          <div className={styles.featureIcon}>
+            <Smartphone size={28} />
+          </div>
           <h3>Responsive</h3>
           <p>Looks great on all devices and can be downloaded as PDF</p>
         </div>
