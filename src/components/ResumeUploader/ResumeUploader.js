@@ -3,7 +3,8 @@
 import { useState, useRef } from "react"
 import styles from "./ResumeUploader.module.css"
 import ProfileImageUploader from "../../../components/ProfileImageUploader"
-import { CheckCircle, AlertTriangle, Bot, FileText, Smartphone, Upload, ImageIcon } from "lucide-react"
+import ColorPicker from "../../../components/ColorPicker"
+import { CheckCircle, AlertTriangle, Bot, FileText, Smartphone, Upload, ImageIcon, Palette } from "lucide-react"
 
 const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
   const [dragActive, setDragActive] = useState(false)
@@ -11,6 +12,21 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
   const [uploadedFile, setUploadedFile] = useState(null)
   const [profileImage, setProfileImage] = useState("")
   const [showProfileUploader, setShowProfileUploader] = useState(false)
+  const [showColorPicker, setShowColorPicker] = useState(false)
+  const [customColors, setCustomColors] = useState({
+    "--mint-light": "#d8b08c",
+    "--teal-dark": "#1f3736",
+    "--charcoal": "#565854",
+    "--mint-background": "#c4f0dc",
+    "--bronze-dark": "#a67244",
+    "--peach": "#f9b87f",
+    "--coffee": "#3e2f22",
+    "--teal-main": "#116964",
+    "--light-grey-background": "#f5f5f5",
+    "--off-white": "#faf4ec",
+    "--light-brown-border": "#a49990c7",
+    "--light-grey-border": "#cecac6",
+  })
   const fileInputRef = useRef(null)
 
   const handleDrag = (e) => {
@@ -330,10 +346,11 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
 
       console.log(`Parsing completed using ${result.method} with ${result.confidence}% confidence`)
 
-      // Add profile image to parsed data
+      // Add profile image and custom colors to parsed data
       const finalResumeData = {
         ...result.data,
         profileImage: profileImage || "", // Empty string means no profile image
+        customColors: customColors, // Add custom colors to the resume data
       }
 
       const parseInfo = {
@@ -348,6 +365,7 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
       setUploadedFile(null)
       setProfileImage("")
       setShowProfileUploader(false)
+      setShowColorPicker(false)
       setError("")
       setIsLoading(false)
 
@@ -361,7 +379,7 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
 
       if (errorMessage.includes("PDF")) {
         errorMessage +=
-          "\n\nTips for PDF files:\n• Make sure the PDF contains selectable text (not just images)\n• Try saving the PDF from a different source\n• Consider converting to a Word document or text file"
+          "\n\nTips for PDF files:\n• Make sure the PDF contains selectable text (not just images)\n• Try saving the PDF from a different source\n• Consider converting to a Word document or text file for best results."
       }
 
       setError(errorMessage)
@@ -372,6 +390,11 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
   const handleProfileImageChange = (imageUrl) => {
     console.log("Profile image changed:", imageUrl)
     setProfileImage(imageUrl)
+  }
+
+  const handleColorsChange = (colors) => {
+    console.log("Colors changed:", colors)
+    setCustomColors(colors)
   }
 
   const handleRemoveFile = () => {
@@ -520,7 +543,59 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
           </div>
         )}
 
-        {/* Step 3: Create Resume Button */}
+        {/* Step 3: Optional Color Customization */}
+        {uploadedFile && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+              <Palette className="w-5 h-5 mr-2" />
+              Step 3: Customize Colors (Optional)
+            </h2>
+
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-gray-600">Personalize your resume with custom colors and themes</p>
+                <button
+                  onClick={() => setShowColorPicker(!showColorPicker)}
+                  className="text-teal-600 hover:text-teal-700 font-medium text-sm"
+                >
+                  {showColorPicker ? "Hide" : "Customize Colors"}
+                </button>
+              </div>
+
+              {showColorPicker && <ColorPicker currentColors={customColors} onColorsChange={handleColorsChange} />}
+
+              {!showColorPicker && (
+                <div className="flex items-center space-x-3">
+                  <div className="flex space-x-1">
+                    <div
+                      className="w-6 h-6 rounded-full border border-gray-300"
+                      style={{ backgroundColor: customColors["--teal-main"] }}
+                    />
+                    <div
+                      className="w-6 h-6 rounded-full border border-gray-300"
+                      style={{ backgroundColor: customColors["--bronze-dark"] }}
+                    />
+                    <div
+                      className="w-6 h-6 rounded-full border border-gray-300"
+                      style={{ backgroundColor: customColors["--charcoal"] }}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">Color scheme selected</p>
+                    <button
+                      onClick={() => setShowColorPicker(true)}
+                      className="text-sm text-teal-600 hover:text-teal-700"
+                    >
+                      Change colors
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Create Resume Button */}
         {uploadedFile && (
           <div className="mb-8">
             <button
