@@ -1,4 +1,4 @@
-/* ProfileHeader styles migrated from old location */
+/* ProfileHeader styles */
 .header {
   border-bottom: 1px solid rgba(164, 153, 144, 0.5);
   height: 285px;
@@ -9,6 +9,11 @@
 @media (min-width: 768px) {
   .header {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* When no image, content spans full width */
+  .header.noImage {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -40,10 +45,17 @@
   .right {
     padding-left: 2rem;
     padding-right: 2rem;
-    display: flex;
-    padding-right: 2rem;
     grid-column: span 2 / span 2;
     justify-content: center;
+  }
+
+  /* When no image, content spans full width and is centered */
+  .right.fullWidth {
+    grid-column: span 1 / span 1;
+    text-align: center;
+    max-width: none;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -58,6 +70,31 @@
 
 .contentBody {
   color: #535c5b;
-  /* Using hardcoded value as it's not in color palette */
   font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+  .header {
+    height: auto;
+    min-height: 285px;
+    grid-template-columns: 1fr;
+  }
+
+  .header.noImage {
+    text-align: center;
+  }
+
+  .left {
+    order: 1;
+  }
+
+  .right {
+    order: 2;
+  }
+
+  .right.fullWidth {
+    text-align: center;
+  }
 }

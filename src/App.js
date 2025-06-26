@@ -157,6 +157,11 @@ const App = () => {
   }
 
   const handleEditResume = () => {
+    // Only allow editing if user is signed in
+    if (!user) {
+      alert("Please sign in to edit your resume.")
+      return
+    }
     setIsEditing(true)
   }
 
@@ -261,17 +266,20 @@ const App = () => {
               >
                 Upload New Resume
               </button>
-              <button
-                onClick={handleEditResume}
-                className="px-4 py-2 rounded-lg text-white font-bold transition-all duration-300 ease-in-out transform hover:scale-105"
-                style={{
-                  background: colors["--teal-main"],
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  border: `1px solid ${colors["--teal-dark"]}`,
-                }}
-              >
-                Edit Resume
-              </button>
+              {/* Only show edit button if user is signed in */}
+              {user && (
+                <button
+                  onClick={handleEditResume}
+                  className="px-4 py-2 rounded-lg text-white font-bold transition-all duration-300 ease-in-out transform hover:scale-105"
+                  style={{
+                    background: colors["--teal-main"],
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    border: `1px solid ${colors["--teal-dark"]}`,
+                  }}
+                >
+                  Edit Resume
+                </button>
+              )}
               <DownloadButton onClick={handleDownloadPdf} />
             </div>
           )}
@@ -293,17 +301,20 @@ const App = () => {
           >
             {user ? "Back to Library" : "Upload New Resume"}
           </button>
-          <button
-            onClick={handleEditResume}
-            className="px-4 py-2 rounded-lg text-white font-bold transition-all duration-300 ease-in-out transform hover:scale-105"
-            style={{
-              background: colors["--teal-main"],
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-              border: `1px solid ${colors["--teal-dark"]}`,
-            }}
-          >
-            Edit Resume
-          </button>
+          {/* Only show edit button if user is signed in */}
+          {user && (
+            <button
+              onClick={handleEditResume}
+              className="px-4 py-2 rounded-lg text-white font-bold transition-all duration-300 ease-in-out transform hover:scale-105"
+              style={{
+                background: colors["--teal-main"],
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                border: `1px solid ${colors["--teal-dark"]}`,
+              }}
+            >
+              Edit Resume
+            </button>
+          )}
           <DownloadButton onClick={handleDownloadPdf} />
         </div>
       )}

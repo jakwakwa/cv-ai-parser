@@ -2,21 +2,57 @@
 
 import type React from "react"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useCallback } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Upload, X, Camera } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Upload, X, Camera, User } from "lucide-react"
 
 interface ProfileImageUploaderProps {
   currentImage?: string
-  onImageChange: (imageUrl: string) => void
+  onImageChange?: (imageUrl: string) => void
+  showPrompt?: boolean
+  onSkip?: () => void
+  onComplete?: (imageUrl?: string) => void
 }
 
-const ProfileImageUploader = ({ currentImage, onImageChange }: ProfileImageUploaderProps) => {
-  const [isDragging, setIsDragging] = useState(false)
-  const [isUploading, setIsUploading] = useState(false)
+const ProfileImageUploader = ({
+  currentImage = "",
+  onImageChange,
+  showPrompt = false,
+  onSkip,
+  onComplete,
+}: ProfileImageUploaderProps) => {
+  const [dragActive, setDragActive] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [error, setError] = useState("")
+  const [previewImage, setPreviewImage] = useState(currentImage)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleDrag = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true)
+    } else if (e.type === "dragleave") {
+      setDragActive(false)
+    }
+  }, [])
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragActive(false)
+
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFile(e.dataTransfer.files[0])
+    }
+  }, [])
+
+  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      handleFile(e.target.files[0])
+    }
+  }, [])
 
   const validateFile = (file: File): string | null => {
     // Check file type
@@ -26,205 +62,229 @@ const ProfileImageUploader = ({ currentImage, onImageChange }: ProfileImageUploa
     }
 
     // Check file size (5MB limit)
-    const maxSize = 5 * 1024 * 1024 // 5MB in bytes
+    const maxSize = 5 * 1024 * 1024 // 5MB
     if (file.size > maxSize) {
-      return "Image must be smaller than 5MB."
+      return "Image size must be less than 5MB."
     }
 
     return null
   }
 
-  const processImage = (file: File): Promise<string> => {
+  const resizeImage = (file: File, maxWidth = 400, maxHeight = 400, quality = 0.8): Promise<string> => {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const img = new Image()
-        img.onload = () => {
-          // Create canvas for resizing
-          const canvas = document.createElement("canvas")
-          const ctx = canvas.getContext("2d")
+      const canvas = document.createElement("canvas")
+      const ctx = canvas.getContext("2d")
+      const img = new Image()
 
-          if (!ctx) {
-            reject(new Error("Could not get canvas context"))
-            return
+      img.onload = () => {
+        // Calculate new dimensions
+        let { width, height } = img
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height = (height * maxWidth) / width
+            width = maxWidth
           }
-
-          // Calculate new dimensions (max 400x400, maintain aspect ratio)
-          const maxSize = 400
-          let { width, height } = img
-
-          if (width > height) {
-            if (width > maxSize) {
-              height = (height * maxSize) / width
-              width = maxSize
-            }
-          } else {
-            if (height > maxSize) {
-              width = (width * maxSize) / height
-              height = maxSize
-            }
+        } else {
+          if (height > maxHeight) {
+            width = (width * maxHeight) / height
+            height = maxHeight
           }
-
-          // Set canvas size and draw image
-          canvas.width = width
-          canvas.height = height
-          ctx.drawImage(img, 0, 0, width, height)
-
-          // Convert to base64 with compression
-          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.8)
-          resolve(compressedDataUrl)
         }
 
-        img.onerror = () => reject(new Error("Failed to load image"))
-        img.src = e.target?.result as string
+        // Set canvas dimensions
+        canvas.width = width
+        canvas.height = height
+
+        // Draw and compress
+        ctx?.drawImage(img, 0, 0, width, height)
+
+        // Convert to base64 with compression
+        const compressedDataUrl = canvas.toDataURL("image/jpeg", quality)
+        resolve(compressedDataUrl)
       }
 
-      reader.onerror = () => reject(new Error("Failed to read file"))
-      reader.readAsDataURL(file)
+      img.onerror = () => reject(new Error("Failed to load image"))
+      img.src = URL.createObjectURL(file)
     })
   }
 
-  const handleFileUpload = async (file: File) => {
+  const handleFile = async (file: File) => {
     setError("")
-    setIsUploading(true)
+    setUploading(true)
 
     try {
+      // Validate file
       const validationError = validateFile(file)
       if (validationError) {
-        setError(validationError)
-        return
+        throw new Error(validationError)
       }
 
-      const processedImage = await processImage(file)
-      onImageChange(processedImage)
+      // Resize and compress image
+      const compressedImage = await resizeImage(file)
+
+      // Update preview
+      setPreviewImage(compressedImage)
+
+      // Call callback if provided
+      if (onImageChange) {
+        onImageChange(compressedImage)
+      }
     } catch (err) {
-      setError("Failed to process image. Please try again.")
-      console.error("Image processing error:", err)
+      console.error("Image upload error:", err)
+      setError(err instanceof Error ? err.message : "Failed to process image")
     } finally {
-      setIsUploading(false)
-    }
-  }
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(true)
-  }
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-  }
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-
-    const files = Array.from(e.dataTransfer.files)
-    if (files.length > 0) {
-      handleFileUpload(files[0])
-    }
-  }
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (files && files.length > 0) {
-      handleFileUpload(files[0])
+      setUploading(false)
     }
   }
 
   const handleRemoveImage = () => {
-    onImageChange("")
+    setPreviewImage("")
+    if (onImageChange) {
+      onImageChange("")
+    }
     if (fileInputRef.current) {
       fileInputRef.current.value = ""
     }
   }
 
-  const handleBrowseClick = () => {
-    fileInputRef.current?.click()
+  const handleSkip = () => {
+    if (onSkip) {
+      onSkip()
+    }
   }
 
-  return (
-    <div className="space-y-4">
-      {/* Current Image Display */}
-      {currentImage && (
-        <div className="flex justify-center">
-          <div className="relative">
-            <img
-              src={currentImage || "/placeholder.svg"}
-              alt="Profile"
-              className="w-32 h-32 object-cover rounded-full border-4 border-gray-200 shadow-lg"
-            />
-            <button
-              onClick={handleRemoveImage}
-              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-              title="Remove image"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-      )}
+  const handleComplete = () => {
+    if (onComplete) {
+      onComplete(previewImage)
+    }
+  }
 
-      {/* Upload Area */}
-      <Card>
-        <CardContent className="p-6">
+  if (showPrompt) {
+    return (
+      <Card className="w-full max-w-md mx-auto">
+        <CardHeader className="text-center">
+          <CardTitle className="flex items-center justify-center gap-2">
+            <Camera className="h-5 w-5" />
+            Add Profile Picture
+          </CardTitle>
+          <p className="text-sm text-gray-600">Would you like to add a profile picture to your resume?</p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Upload Area */}
           <div
-            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-              isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300 hover:border-gray-400"
+            className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+              dragActive ? "border-blue-400 bg-blue-50" : "border-gray-300 hover:border-gray-400"
             }`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
             onDrop={handleDrop}
           >
+            {previewImage ? (
+              <div className="space-y-4">
+                <div className="relative inline-block">
+                  <img
+                    src={previewImage || "/placeholder.svg"}
+                    alt="Profile preview"
+                    className="w-24 h-24 rounded-full object-cover mx-auto border-4 border-white shadow-lg"
+                  />
+                  <button
+                    onClick={handleRemoveImage}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+                <p className="text-sm text-gray-600">Click to change image</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <User className="h-12 w-12 text-gray-400 mx-auto" />
+                <p className="text-sm font-medium">
+                  {uploading ? "Processing..." : "Click to upload or drag and drop"}
+                </p>
+                <p className="text-xs text-gray-500">JPEG, PNG, or WebP (max 5MB)</p>
+              </div>
+            )}
+
             <input
               ref={fileInputRef}
               type="file"
               accept="image/jpeg,image/jpg,image/png,image/webp"
               onChange={handleFileSelect}
-              className="hidden"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              disabled={uploading}
             />
-
-            <div className="space-y-4">
-              <div className="flex justify-center">
-                {isUploading ? (
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                ) : (
-                  <div className="p-3 bg-gray-100 rounded-full">
-                    <Camera className="h-8 w-8 text-gray-600" />
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  {currentImage ? "Replace Profile Picture" : "Upload Profile Picture"}
-                </h3>
-                <p className="text-sm text-gray-600 mb-4">Drag and drop an image here, or click to browse</p>
-                <p className="text-xs text-gray-500">Supports JPEG, PNG, WebP • Max 5MB • Recommended: 400x400px</p>
-              </div>
-
-              <Button onClick={handleBrowseClick} disabled={isUploading} className="flex items-center gap-2">
-                <Upload className="h-4 w-4" />
-                {isUploading ? "Processing..." : "Browse Files"}
-              </Button>
-            </div>
           </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-sm text-red-600">{error}</p>
-            </div>
-          )}
+          {error && <div className="text-sm text-red-600 bg-red-50 p-2 rounded">{error}</div>}
 
-          {/* Success Message */}
-          {currentImage && !error && !isUploading && (
-            <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
-              <p className="text-sm text-green-600">✓ Profile picture uploaded successfully!</p>
-            </div>
-          )}
+          {/* Action Buttons */}
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={handleSkip} className="flex-1" disabled={uploading}>
+              Skip for Now
+            </Button>
+            <Button onClick={handleComplete} className="flex-1" disabled={uploading}>
+              {previewImage ? "Use This Image" : "Continue Without Image"}
+            </Button>
+          </div>
         </CardContent>
       </Card>
+    )
+  }
+
+  // Regular editor mode
+  return (
+    <div className="space-y-4">
+      <div
+        className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+          dragActive ? "border-blue-400 bg-blue-50" : "border-gray-300 hover:border-gray-400"
+        }`}
+        onDragEnter={handleDrag}
+        onDragLeave={handleDrag}
+        onDragOver={handleDrag}
+        onDrop={handleDrop}
+      >
+        {previewImage ? (
+          <div className="space-y-4">
+            <div className="relative inline-block">
+              <img
+                src={previewImage || "/placeholder.svg"}
+                alt="Profile preview"
+                className="w-32 h-32 rounded-full object-cover mx-auto border-4 border-white shadow-lg"
+              />
+              <button
+                onClick={handleRemoveImage}
+                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-600">Click to change image</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <Upload className="h-12 w-12 text-gray-400 mx-auto" />
+            <div>
+              <p className="text-lg font-medium">{uploading ? "Processing..." : "Upload Profile Picture"}</p>
+              <p className="text-sm text-gray-500">Drag and drop or click to browse</p>
+              <p className="text-xs text-gray-400 mt-1">JPEG, PNG, or WebP (max 5MB)</p>
+            </div>
+          </div>
+        )}
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/jpeg,image/jpg,image/png,image/webp"
+          onChange={handleFileSelect}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          disabled={uploading}
+        />
+      </div>
+
+      {error && <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{error}</div>}
     </div>
   )
 }

@@ -2,12 +2,17 @@
 
 import { useState, useRef } from "react"
 import styles from "./ResumeUploader.module.css"
+import ProfileImageUploader from "../../../components/ProfileImageUploader"
 
 const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
   const [dragActive, setDragActive] = useState(false)
   const [error, setError] = useState("")
   const [parseMethod, setParseMethod] = useState("")
   const [confidenceScore, setConfidenceScore] = useState(0)
+  const [showProfilePrompt, setShowProfilePrompt] = useState(false)
+  const [parsedResumeData, setParsedResumeData] = useState(null)
+  const [tempParseInfo, setTempParseInfo] = useState(null)
+  const [profileImage, setProfileImage] = useState("")
   const fileInputRef = useRef(null)
 
   const handleDrag = (e) => {
@@ -143,7 +148,7 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
       } catch (readerError) {
         console.warn("FileReader fallback failed:", readerError)
         throw new Error(
-          "Could not extract text from PDF. This might be a scanned PDF or image-based PDF. Please try converting to a text file or Word document.",
+          "Could not extract text from PDF. This might be a scanned PDF or image-based PDF. Please try converting to a text file or Word document for best results.",
         )
       }
     }
@@ -283,7 +288,16 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
+        const errorText = await response.text()
+        console.error("API Response Error:", errorText)
+
+        let errorData
+        try {
+          errorData = JSON.parse(errorText)
+        } catch (parseError) {
+          throw new Error(`Server error: ${response.status} - ${errorText}`)
+        }
+
         if (errorData.error) {
           if (errorData.error.includes("quota") || errorData.error.includes("QUOTA_EXCEEDED")) {
             throw new Error(
@@ -305,20 +319,26 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
         throw new Error(result.error)
       }
 
+      // Check if we have valid data
+      if (!result.data) {
+        throw new Error("No resume data returned from parser")
+      }
+
       console.log(`Parsing completed using ${result.method} with ${result.confidence}% confidence`)
       setParseMethod(result.method)
       setConfidenceScore(result.confidence)
 
-      // Pass additional info for database saving
-      const parseInfo = {
+      // Store parsed data and show profile prompt
+      setParsedResumeData(result.data)
+      setTempParseInfo({
         method: result.method,
         confidence: result.confidence,
         filename: file.name,
         fileType: file.type,
         fileSize: file.size,
-      }
-
-      onResumeUploaded(result.data, parseInfo)
+      })
+      setShowProfilePrompt(true)
+      setIsLoading(false)
     } catch (err) {
       console.error("Error processing resume:", err)
 
@@ -331,13 +351,64 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
       }
 
       setError(errorMessage)
-    } finally {
       setIsLoading(false)
     }
   }
 
+  const handleProfileImageChange = (imageUrl) => {
+    setProfileImage(imageUrl)
+  }
+
+  const handleProfilePromptComplete = () => {
+    // Add profile image to parsed data if provided
+    const finalResumeData = {
+      ...parsedResumeData,
+      profileImage: profileImage || "", // Empty string means no profile image
+    }
+
+    // Reset states
+    setShowProfilePrompt(false)
+    setParsedResumeData(null)
+    setTempParseInfo(null)
+    setProfileImage("")
+    setError("")
+    setParseMethod("")
+    setConfidenceScore(0)
+
+    // Call the parent callback
+    onResumeUploaded(finalResumeData, tempParseInfo)
+  }
+
   const onButtonClick = () => {
     fileInputRef.current?.click()
+  }
+
+  // Show profile picture prompt after successful resume parsing
+  if (showProfilePrompt) {
+    return (
+      <div className={styles.uploaderContainer}>
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Resume Parsed Successfully!</h2>
+          <p className="text-gray-600">
+            Parsed with{" "}
+            <span className="font-semibold">
+              {tempParseInfo?.method === "ai" ? "Google Gemini AI" : "Text Analysis"}
+            </span>
+          </p>
+          <p className="text-gray-600">
+            Confidence: <span className="font-semibold text-green-600">{tempParseInfo?.confidence}%</span>
+          </p>
+        </div>
+
+        <ProfileImageUploader
+          currentImage={profileImage}
+          onImageChange={handleProfileImageChange}
+          showPrompt={true}
+          onSkip={handleProfilePromptComplete}
+          onComplete={handleProfilePromptComplete}
+        />
+      </div>
+    )
   }
 
   if (isLoading) {
