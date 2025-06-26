@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import colors from "./utils/colors"
-import { resumeData } from "./utils/resumeData"
 import ProfileHeader from "./components/ProfileHeader/ProfileHeader"
 import ContactSection from "./components/ContactSection/ContactSection"
 import EducationSection from "./components/EducationSection/EducationSection"
@@ -18,9 +17,29 @@ import DownloadButton from "./components/DownloadButton/DownloadButton"
 import { useAuth } from "../components/AuthProvider"
 import { ResumeDatabase } from "../lib/database"
 
+// Default resume data for fallback
+const defaultResumeData = {
+  name: "Your Name",
+  title: "Your Professional Title",
+  profileImage: "/placeholder.svg?height=200&width=200",
+  summary: "Your professional summary will appear here after uploading your resume.",
+  contact: {
+    email: "your.email@example.com",
+    phone: "+1 (555) 123-4567",
+    location: "Your City, State",
+    linkedin: "",
+    github: "",
+    website: "",
+  },
+  experience: [],
+  skills: [],
+  education: [],
+  certifications: [],
+}
+
 const App = () => {
   const { user, loading: authLoading } = useAuth()
-  const [currentResumeData, setCurrentResumeData] = useState(resumeData)
+  const [currentResumeData, setCurrentResumeData] = useState(defaultResumeData)
   const [isUploaded, setIsUploaded] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [currentView, setCurrentView] = useState("upload")
@@ -75,7 +94,17 @@ const App = () => {
   }
 
   const handleResumeUploaded = async (parsedData, parseInfo) => {
-    setCurrentResumeData(parsedData)
+    // Merge parsed data with defaults to ensure all fields exist
+    const mergedData = {
+      ...defaultResumeData,
+      ...parsedData,
+      contact: {
+        ...defaultResumeData.contact,
+        ...parsedData.contact,
+      },
+    }
+
+    setCurrentResumeData(mergedData)
     setIsUploaded(true)
     setShowResume(true)
     setCurrentView("resume")
@@ -88,7 +117,7 @@ const App = () => {
           originalFilename: parseInfo.filename,
           fileType: parseInfo.fileType,
           fileSize: parseInfo.fileSize,
-          parsedData: parsedData,
+          parsedData: mergedData,
           parseMethod: parseInfo.method,
           confidenceScore: parseInfo.confidence,
           isPublic: false,
@@ -103,14 +132,23 @@ const App = () => {
   }
 
   const handleSelectResumeFromLibrary = (resumeData) => {
-    setCurrentResumeData(resumeData)
+    const mergedData = {
+      ...defaultResumeData,
+      ...resumeData,
+      contact: {
+        ...defaultResumeData.contact,
+        ...resumeData.contact,
+      },
+    }
+
+    setCurrentResumeData(mergedData)
     setCurrentView("resume")
     setIsUploaded(true)
     setShowResume(true)
   }
 
   const handleReset = () => {
-    setCurrentResumeData(resumeData)
+    setCurrentResumeData(defaultResumeData)
     setIsUploaded(false)
     setShowResume(false)
     setCurrentView("upload")
@@ -144,12 +182,11 @@ const App = () => {
     setIsEditing(false)
   }
 
-  // Always use global data for contact, education, certifications, and profile image from original resume
-  // But allow override if uploaded resume has this data
-  const contact = currentResumeData.contact || resumeData.contact
-  const education = currentResumeData.education || resumeData.education
-  const certifications = currentResumeData.certifications || resumeData.certifications
-  const profileImage = currentResumeData.profileImage || resumeData.profileImage
+  // Use current resume data with fallbacks
+  const contact = currentResumeData.contact || defaultResumeData.contact
+  const education = currentResumeData.education || defaultResumeData.education
+  const certifications = currentResumeData.certifications || defaultResumeData.certifications
+  const profileImage = currentResumeData.profileImage || defaultResumeData.profileImage
 
   if (authLoading) {
     return (
