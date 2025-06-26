@@ -1,0 +1,491 @@
+/* Container and Layout */
+.container {
+    min-height: 100vh;
+    background-color: #f9fafb;
+}
+
+.wrapper {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.header {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.headerContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headerTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.headerSubtitle {
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+.headerActions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.previewButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.saveButton {
+    background-color: #0d9488;
+}
+
+.saveButton:hover {
+    background-color: #0f766e;
+}
+
+/* Grid Layout */
+.grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.gridOneColumn {
+    grid-template-columns: 1fr;
+}
+
+.gridTwoColumns {
+    grid-template-columns: 1fr 1fr;
+}
+
+.editorPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Cards */
+.card {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.cardTitle {
+    color: #111827;
+}
+
+/* Form Elements */
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.formGridFull {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.formField {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.label {
+    color: #374151;
+}
+
+.input {
+    background-color: white;
+    border-color: #d1d5db;
+}
+
+.textarea {
+    background-color: white;
+    border-color: #d1d5db;
+}
+
+/* Skills Section */
+.skillsInputGroup {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.addSkillButton {
+    background-color: #0d9488;
+}
+
+.addSkillButton:hover {
+    background-color: #0f766e;
+}
+
+.skillsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.skillBadge {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background-color: #f3f4f6;
+    color: #1f2937;
+}
+
+.removeSkillButton {
+    margin-left: 0.25rem;
+}
+
+.removeSkillButton:hover {
+    color: #dc2626;
+}
+
+/* Experience Section */
+.experienceHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.addExperienceButton {
+    background-color: #0d9488;
+}
+
+.addExperienceButton:hover {
+    background-color: #0f766e;
+}
+
+.experienceItem {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: #f9fafb;
+}
+
+.experienceItemHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.experienceItemTitle {
+    font-weight: 500;
+    color: #111827;
+}
+
+.removeExperienceButton {
+    color: #dc2626;
+}
+
+.removeExperienceButton:hover {
+    color: #b91c1c;
+    background-color: #fef2f2;
+}
+
+/* Preview Panel */
+.previewContainer {
+    position: sticky;
+    top: 1.5rem;
+}
+
+.previewContent {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background-color: white;
+    font-size: 12px;
+}
+
+.previewHeader {
+    text-align: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.previewImageContainer {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 0.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #e5e7eb;
+}
+
+.previewImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.previewName {
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: #111827;
+}
+
+.previewTitle {
+    color: #6b7280;
+}
+
+.previewSummary {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+}
+
+.previewSection {
+    margin-bottom: 1rem;
+}
+
+.previewSectionTitle {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #111827;
+}
+
+.previewContactInfo {
+    font-size: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    color: #6b7280;
+}
+
+.previewSkillsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.previewSkill {
+    background-color: #f3f4f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    color: #1f2937;
+}
+
+.previewMoreSkills {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.previewExperienceItem {
+    margin-bottom: 0.75rem;
+}
+
+.previewExperienceTitle {
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: #111827;
+}
+
+.previewExperienceCompany {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.previewExperienceDuration {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.previewMoreExperience {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+/* Spacing Utilities */
+.spaceY4 {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.spaceY6 {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.mb4 {
+    margin-bottom: 1rem;
+}
+
+.mb6 {
+    margin-bottom: 1.5rem;
+}
+
+.mt1 {
+    margin-top: 0.25rem;
+}
+
+.mt2 {
+    margin-top: 0.5rem;
+}
+
+.mb2 {
+    margin-bottom: 0.5rem;
+}
+
+.mb3 {
+    margin-bottom: 0.75rem;
+}
+
+.mb4 {
+    margin-bottom: 1rem;
+}
+
+/* Text Utilities */
+.textXs {
+    font-size: 0.75rem;
+}
+
+.textSm {
+    font-size: 0.875rem;
+}
+
+.textLg {
+    font-size: 1.125rem;
+}
+
+.text2xl {
+    font-size: 1.5rem;
+}
+
+.fontBold {
+    font-weight: 700;
+}
+
+.fontMedium {
+    font-weight: 500;
+}
+
+.fontSemibold {
+    font-weight: 600;
+}
+
+.textGray500 {
+    color: #6b7280;
+}
+
+.textGray600 {
+    color: #6b7280;
+}
+
+.textGray700 {
+    color: #374151;
+}
+
+.textGray800 {
+    color: #1f2937;
+}
+
+.textGray900 {
+    color: #111827;
+}
+
+.textRed600 {
+    color: #dc2626;
+}
+
+.textRed700 {
+    color: #b91c1c;
+}
+
+/* Flex Utilities */
+.flex {
+    display: flex;
+}
+
+.flexWrap {
+    flex-wrap: wrap;
+}
+
+.itemsCenter {
+    align-items: center;
+}
+
+.itemsStart {
+    align-items: flex-start;
+}
+
+.justifyBetween {
+    justify-content: space-between;
+}
+
+.gap1 {
+    gap: 0.25rem;
+}
+
+.gap2 {
+    gap: 0.5rem;
+}
+
+.gap3 {
+    gap: 0.75rem;
+}
+
+.gap4 {
+    gap: 1rem;
+}
+
+.gap6 {
+    gap: 1.5rem;
+}
+
+/* Icon Sizes */
+.iconSm {
+    width: 0.75rem;
+    height: 0.75rem;
+}
+
+.iconMd {
+    width: 1rem;
+    height: 1rem;
+}
+
+.iconLg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .gridTwoColumns {
+        grid-template-columns: 1fr;
+    }
+
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .headerContent {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .headerActions {
+        justify-content: center;
+    }
+}

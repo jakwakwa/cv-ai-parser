@@ -125,7 +125,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
-  margin-top: 3rem;
+  margin-top: 0rem;
   padding: 2rem;
   background-color: #ffffff;
   border-radius: 0.75rem;
@@ -182,6 +182,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

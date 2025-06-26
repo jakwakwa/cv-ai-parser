@@ -246,9 +246,9 @@ const App = () => {
   return (
     <div className={styles.appBg}>
       {/* Navigation */}
-      <div className="w-full max-w-4xl mx-auto mb-6">
-        <div className="flex justify-between items-center bg-white rounded-lg shadow-sm p-4">
-          <div className="flex space-x-4">
+      <div className="w-full mx-auto max-w-6xl mb-6">
+        <div className="flex flex-col md:flex-row justify-between items-center bg-white rounded-lg shadow-sm p-4">
+          <div className="flex flex-col md:flex-row space-x-4">
             <button
               onClick={() => setCurrentView("upload")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -318,7 +318,7 @@ const App = () => {
         <div className="mb-4 flex gap-4">
           <button
             onClick={() => setCurrentView(user ? "library" : "upload")}
-            className="px-4 py-2 rounded-lg text-white font-bold transition-all duration-300 ease-in-out transform hover:scale-105"
+            className="px-4 py-2 rounded-lg text-white text-sm font-bold transition-all duration-300 ease-in-out transform hover:scale-105"
             style={{
               background: customColors["--bronze-dark"],
               boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
@@ -331,7 +331,7 @@ const App = () => {
           {user && (
             <button
               onClick={handleEditResume}
-              className="px-4 py-2 rounded-lg text-white font-bold transition-all duration-300 ease-in-out transform hover:scale-105"
+              className="px-4 py-2 rounded-lg text-white text-sm font-bold transition-all duration-300 ease-in-out transform hover:scale-105"
               style={{
                 background: customColors["--teal-main"],
                 boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",

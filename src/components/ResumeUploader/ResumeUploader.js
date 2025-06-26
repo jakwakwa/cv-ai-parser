@@ -412,7 +412,7 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-md mx-auto">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-6xl mx-auto">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600 mx-auto mb-4"></div>
             <p className="text-gray-900 font-medium mb-2">Creating your resume...</p>
@@ -424,7 +424,7 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen w-full max-w-4xl bg-[#fff]/50 rounded">
       <div className={styles.uploaderContainer}>
         <div className={styles.header}>
           <h1 className={styles.title}>Resume Parser</h1>
@@ -432,7 +432,7 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
         </div>
 
         {/* Step 1: Upload Resume File */}
-        <div className="mb-8">
+        <div className="mt-8">
           <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
             <Upload className="w-5 h-5 mr-2" />
             Step 1: Upload Your Resume
@@ -615,7 +615,9 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
           </div>
         )}
 
-        <div className={styles.features}>
+   
+      </div>
+      <div className={styles.features}>
           <div className={styles.feature}>
             <div className={styles.featureIcon}>
               <Bot size={28} />
@@ -630,15 +632,14 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
             <h3>Beautiful Design</h3>
             <p>Your resume gets transformed into a modern, professional layout</p>
           </div>
-          <div className={styles.feature}>
+          {/* <div className={styles.feature}>
             <div className={styles.featureIcon}>
               <Smartphone size={28} />
             </div>
             <h3>Responsive</h3>
             <p>Looks great on all devices and can be downloaded as PDF</p>
-          </div>
+          </div> */}
         </div>
-      </div>
     </div>
   )
 }
