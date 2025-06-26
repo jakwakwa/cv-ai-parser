@@ -216,8 +216,8 @@ function parseResumeWithRegex(content: string) {
 
   // Look for summary/objective/about sections
   const summaryPatterns = [
-    /(?:SUMMARY|OBJECTIVE|ABOUT|PROFILE)\s*:?\s*([\s\S]*?)(?=EXPERIENCE|WORK|EMPLOYMENT|EDUCATION|SKILLS|$)/i,
-    /(?:PROFESSIONAL SUMMARY|CAREER SUMMARY)\s*:?\s*([\s\S]*?)(?=EXPERIENCE|WORK|EMPLOYMENT|EDUCATION|SKILLS|$)/i,
+    /(?:SUMMARY|OBJECTIVE|ABOUT|PROFILE)\s*:?\s*([\s\S]*?)(?=EXPERIENCE|WORK|EMPLOYMENT|EMPLOYMENT HISTORY|EDUCATION|SKILLS|PREFERENCES|$)/i,
+    /(?:PROFESSIONAL SUMMARY|CAREER SUMMARY)\s*:?\s*([\s\S]*?)(?=EXPERIENCE|WORK|EMPLOYMENT|EMPLOYMENT HISTORY|EDUCATION|SKILLS|PREFERENCES|$)/i,
   ]
 
   for (const pattern of summaryPatterns) {
@@ -236,10 +236,10 @@ function parseResumeWithRegex(content: string) {
   // --- Experience ---
   const experience = []
 
-  // Look for experience section with various patterns
+  // Look for experience section with various patterns - now including EMPLOYMENT HISTORY
   const experiencePatterns = [
-    /(?:EXPERIENCE|WORK EXPERIENCE|EMPLOYMENT|PROFESSIONAL EXPERIENCE)\s*:?\s*([\s\S]*?)(?=EDUCATION|SKILLS|CERTIFICATIONS|$)/i,
-    /(?:WORK HISTORY|CAREER HISTORY)\s*:?\s*([\s\S]*?)(?=EDUCATION|SKILLS|CERTIFICATIONS|$)/i,
+    /(?:EXPERIENCE|WORK EXPERIENCE|EMPLOYMENT|EMPLOYMENT HISTORY|PROFESSIONAL EXPERIENCE)\s*:?\s*([\s\S]*?)(?=EDUCATION|SKILLS|CERTIFICATIONS|PREFERENCES|$)/i,
+    /(?:WORK HISTORY|CAREER HISTORY)\s*:?\s*([\s\S]*?)(?=EDUCATION|SKILLS|CERTIFICATIONS|PREFERENCES|$)/i,
   ]
 
   let experienceSection = ""
@@ -335,7 +335,7 @@ function parseResumeWithRegex(content: string) {
   // --- Education ---
   const education = []
   const educationMatch = content.match(
-    /(?:EDUCATION|ACADEMIC BACKGROUND)\s*:?\s*([\s\S]*?)(?=EXPERIENCE|SKILLS|CERTIFICATIONS|$)/i,
+    /(?:EDUCATION|ACADEMIC BACKGROUND)\s*:?\s*([\s\S]*?)(?=EXPERIENCE|EMPLOYMENT HISTORY|SKILLS|CERTIFICATIONS|PREFERENCES|$)/i,
   )
 
   if (educationMatch) {
@@ -379,9 +379,9 @@ function parseResumeWithRegex(content: string) {
   }
 
   // --- Skills ---
-  let skills = []
+  let skills: string[] = []
   const skillsMatch = content.match(
-    /(?:SKILLS|TECHNICAL SKILLS|CORE COMPETENCIES|TECHNOLOGIES)\s*:?\s*([\s\S]*?)(?=EXPERIENCE|EDUCATION|CERTIFICATIONS|$)/i,
+    /(?:SKILLS|TECHNICAL SKILLS|CORE COMPETENCIES|TECHNOLOGIES)\s*:?\s*([\s\S]*?)(?=EXPERIENCE|EMPLOYMENT HISTORY|EDUCATION|CERTIFICATIONS|PREFERENCES|$)/i,
   )
 
   if (skillsMatch) {
@@ -467,10 +467,22 @@ export async function POST(request: NextRequest) {
             - For phone numbers: Include country codes and format consistently
             - For websites: Extract personal websites or portfolio URLs
             
+            SECTION HANDLING:
+            - Treat "EMPLOYMENT HISTORY" as Experience section (same as "WORK EXPERIENCE")
+            - Completely ignore any "PREFERENCES" sections - do not extract any content from them
+            - Focus on extracting from these sections: Personal info, Summary, Experience/Employment History, Education, Skills, Certifications
+            
+            SUMMARY PROCESSING:
+            - Extract the professional summary from the resume
+            - If the extracted summary is longer than 600 characters, rewrite it to be concise and professional while staying under 600 characters
+            - Maintain the key points, achievements, and professional tone in the rewritten summary
+            - Focus on the most important qualifications, experience highlights, and career objectives
+            - Remove redundant information and use clear, impactful language
+            
             Focus on extracting:
             - Personal information (name, title, contact details including location, GitHub, LinkedIn)
-            - Professional summary
-            - Work experience with job titles, companies, dates, and detailed descriptions
+            - Professional summary (rewritten to <600 characters if needed)
+            - Work experience with job titles, companies, dates, and detailed descriptions (including from "EMPLOYMENT HISTORY" sections)
             - Education background
             - Certifications with dates and credential IDs if available
             - Skills (separate by commas)
