@@ -443,8 +443,7 @@ export async function POST(request: NextRequest) {
     console.log(`First 500 chars: ${fileContent.substring(0, 500)}`)
 
     // Check if Google Gemini API key is available
-    const hasGeminiKey =
-      process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_GENERATIVE_AI_API_KEY
+    const hasGeminiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY
 
     let parsedResume
     let parseMethod = "regex" // Default to regex
