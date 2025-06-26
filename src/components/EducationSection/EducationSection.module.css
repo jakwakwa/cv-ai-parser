@@ -1,0 +1,41 @@
+/* EducationSection styles migrated from old location */
+.educationSection {
+    margin-bottom: 1.5rem;
+}
+
+
+
+.icon {
+    margin-right: 0.75rem;
+    color: var(--teal-main, #116964);
+}
+
+.degree {
+    font-weight: 600;
+    font-size: 0.7rem;
+    color: var(--charcoal, #565854);
+    font-weight: 600;
+    font-size: 0.7rem;
+    color: var(--charcoal, #565854);
+}
+
+.institution {
+    text-transform: uppercase;
+    color: var(--bronze-dark, #a67244);
+    font-size: 0.55rem;
+    font-family: 'DM Mono', Menlo, monospace;
+    letter-spacing: 0.05rem;
+    font-family: 'DM Mono', Menlo, monospace;
+    font-weight: 600;
+    font-size: 0.6rem;
+    opacity: 0.8;
+    text-transform: uppercase;
+    font-size: 0.57rem;
+    font-weight: 800;
+    color: var(--bronze-dark);
+}
+
+.detail {
+    font-style: italic;
+    color: var(--charcoal, #565854);
+}

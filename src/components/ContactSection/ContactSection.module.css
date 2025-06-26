@@ -1,0 +1,42 @@
+/* ContactSection styles migrated from old location */
+.contactSection {
+    margin-bottom: 2.5rem;
+}
+
+.sectionTitle {
+    font-size: 1.125rem;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    display: flex;
+    justify-content: flex-start;
+    gap: 5px;
+    align-items: center;
+    border-bottom: 1px solid var(--light-brown-border, #a49990c7);
+    color: var(--charcoal, #565854);
+}
+
+
+
+.detail {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 0.7rem;
+}
+
+.text,
+.link {
+    font-size: 0.675rem;
+    color: var(--coffee, #3e2f22);
+}
+
+.link {
+    color: var(--coffee, #3e2f22);
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+}

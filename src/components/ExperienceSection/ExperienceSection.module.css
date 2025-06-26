@@ -1,0 +1,49 @@
+/* ExperienceSection styles migrated from old location */
+.experienceSection {
+    color: var(--coffee, #3e2f22);
+}
+
+.sectionTitle {
+    font-size: 1.15rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--light-grey-border, #cecac6);
+    color: var(--bronze-dark);
+    padding-bottom: 0.5rem;
+}
+
+.jobTitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 2rem;
+    color: var(--coffee, #3e2f22);
+}
+
+.company {
+    text-transform: uppercase;
+    font-family: 'DM Mono', Menlo, monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.05rem;
+    color: var(--bronze-dark, #a67244);
+}
+
+.duration {
+    font-size: 0.75rem;
+    font-family: 'DM Mono', Menlo, monospace;
+    color: var(--teal-main, #116964);
+}
+
+.details {
+    list-style: none;
+    margin-top: 0.5rem;
+    padding-left: 0;
+}
+
+.detailItem {
+    font-size: 0.7rem;
+    padding-left: 1rem;
+    position: relative;
+}

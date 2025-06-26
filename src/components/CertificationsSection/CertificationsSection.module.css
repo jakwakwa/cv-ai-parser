@@ -1,0 +1,42 @@
+/* CertificationsSection styles migrated from old location */
+.certificationsSection {
+    margin-bottom: 1.5rem;
+}
+
+
+
+.icon {
+    margin-right: 0.75rem;
+    color: var(--teal-main, #116964);
+}
+
+.certificationsList {
+    margin-top: 0.5rem;
+}
+
+.certificationItem {
+    margin-bottom: 0.75rem;
+}
+
+.certName {
+    font-weight: 600;
+    font-size: 0.7rem;
+    color: var(--charcoal, #565854);
+}
+
+.credentialId {
+    font-size: 0.4rem;
+    color: var(--charcoal, #565854);
+    font-style: italic;
+    margin-top: 0.1rem;
+}
+
+
+
+
+
+.noCerts {
+    color: #aaa;
+    font-size: 0.9rem;
+    font-style: italic;
+}

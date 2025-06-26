@@ -1,0 +1,63 @@
+/* ProfileHeader styles migrated from old location */
+.header {
+  border-bottom: 1px solid rgba(164, 153, 144, 0.5);
+  height: 285px;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .header {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.left {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(146.96deg, #a5917f 7.87%, #836b65 57.71%, #5f434a 110.99%, #dbd1d1 137.9%);
+}
+
+@media (min-width: 768px) {
+  .left {
+    padding: 0.5rem;
+  }
+}
+
+.right {
+  padding: 1.5rem;
+  background-color: var(--light-grey-background, #f5f5f5);
+  color: var(--coffee, #3e2f22);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-dm-sans);
+}
+
+@media (min-width: 768px) {
+  .right {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    display: flex;
+    padding-right: 2rem;
+    grid-column: span 2 / span 2;
+    justify-content: center;
+  }
+}
+
+.profile-image {
+  max-width: 240px;
+  max-height: 240px;
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.contentBody {
+  color: #535c5b;
+  /* Using hardcoded value as it's not in color palette */
+  font-size: 0.85rem;
+}

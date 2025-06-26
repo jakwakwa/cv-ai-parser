@@ -1,0 +1,16 @@
+/* DownloadButton styles migrated from old location */
+.downloadBtn {
+    margin-bottom: 1rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.5rem;
+    color: #fff;
+    font-weight: bold;
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: var(--teal-main, #116964);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--teal-dark, #1f3736);
+}
+
+.downloadBtn:hover {
+    transform: scale(1.05);
+}

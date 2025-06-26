@@ -1,0 +1,22 @@
+.appBg {
+    min-height: 100vh;
+    padding: 1rem;
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--mint-background, #c4f0dc);
+}
+
+.resumeContent {
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    width: 100%;
+    max-width: 64rem;
+    display: grid;
+    grid-template-columns: 1fr;
+}
