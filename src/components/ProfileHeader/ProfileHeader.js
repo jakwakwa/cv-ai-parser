@@ -1,7 +1,22 @@
 import styles from "./ProfileHeader.module.css"
-import colors from "../../utils/colors"
 
-const ProfileHeader = ({ profileImage, name, title, summary }) => {
+const ProfileHeader = ({ profileImage, name, title, summary, customColors }) => {
+  // Use custom colors if provided, otherwise fall back to default colors
+  const colors = customColors || {
+    "--mint-light": "#d8b08c",
+    "--teal-dark": "#1f3736",
+    "--charcoal": "#565854",
+    "--mint-background": "#c4f0dc",
+    "--bronze-dark": "#a67244",
+    "--peach": "#f9b87f",
+    "--coffee": "#3e2f22",
+    "--teal-main": "#116964",
+    "--light-grey-background": "#f5f5f5",
+    "--off-white": "#faf4ec",
+    "--light-brown-border": "#a49990c7",
+    "--light-grey-border": "#cecac6",
+  }
+
   // Check if we have a real profile image (not the default placeholder)
   const hasProfileImage =
     profileImage &&
@@ -38,7 +53,9 @@ const ProfileHeader = ({ profileImage, name, title, summary }) => {
           {title}
         </p>
         <section className="w-full">
-          <p className={styles.contentBody}>{summary}</p>
+          <p className={styles.contentBody} style={{ color: colors["--coffee"] }}>
+            {summary}
+          </p>
         </section>
       </div>
     </div>

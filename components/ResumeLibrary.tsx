@@ -3,17 +3,6 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
 import { Eye, Download, Trash2, Calendar, Lock, Globe, FileText } from "lucide-react"
 import { ResumeDatabase } from "@/lib/database"
 import { useAuth } from "./AuthProvider"
@@ -45,18 +34,16 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
   }
 
   const handleDeleteResume = async (id: string, title: string) => {
-    if (confirm(`Are you sure you want to permanently delete "${title}"? This action cannot be undone.`)) {
-      try {
-        setError("") // Clear any previous errors
-        setDeleting(id)
-        await ResumeDatabase.deleteResume(id)
-        setResumes(resumes.filter((r) => r.id !== id))
-        // Optional: Show success message
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to delete resume")
-      } finally {
-        setDeleting(null)
-      }
+    try {
+      setError("") // Clear any previous errors
+      setDeleting(id)
+      await ResumeDatabase.deleteResume(id)
+      setResumes(resumes.filter((r) => r.id !== id))
+      // Optional: Show success message
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete resume")
+    } finally {
+      setDeleting(null)
     }
   }
 
@@ -243,37 +230,17 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
                       Share
                     </button>
                   )}
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <button
-                        disabled={deleting === resume.id}
-                        className="px-3 py-2 bg-red-500 text-white rounded text-sm hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {deleting === resume.id ? (
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        ) : (
-                          <Trash2 className="h-4 w-4" />
-                        )}
-                      </button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="bg-white">
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Resume</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Are you sure you want to delete "{resume.title}"? This action cannot be undone.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDeleteResume(resume.id, resume.title)}
-                          className="bg-red-500 hover:bg-red-600"
-                        >
-                          Delete
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <button
+                    onClick={() => handleDeleteResume(resume.id, resume.title)}
+                    disabled={deleting === resume.id}
+                    className="px-3 py-2 bg-red-500 text-white rounded text-sm hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {deleting === resume.id ? (
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    ) : (
+                      <Trash2 className="h-4 w-4" />
+                    )}
+                  </button>
                 </CardFooter>
               </Card>
             ))}
