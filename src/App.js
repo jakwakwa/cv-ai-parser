@@ -12,6 +12,7 @@ import ExperienceSection from "./components/ExperienceSection/ExperienceSection"
 import ResumeUploader from "./components/ResumeUploader/ResumeUploader"
 import ResumeLibrary from "../components/ResumeLibrary"
 import AuthComponent from "../components/AuthComponent"
+import ResumeEditor from "../components/ResumeEditor"
 import styles from "./App.module.css"
 import DownloadButton from "./components/DownloadButton/DownloadButton"
 import { useAuth } from "../components/AuthProvider"
@@ -25,6 +26,7 @@ const App = () => {
   const [currentView, setCurrentView] = useState("upload")
   const [currentResumeId, setCurrentResumeId] = useState(null)
   const [showResume, setShowResume] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
     const scriptId = "html2pdf-script"
@@ -113,6 +115,33 @@ const App = () => {
     setShowResume(false)
     setCurrentView("upload")
     setCurrentResumeId(null)
+    setIsEditing(false)
+  }
+
+  const handleEditResume = () => {
+    setIsEditing(true)
+  }
+
+  const handleSaveEdits = async (updatedData) => {
+    setCurrentResumeData(updatedData)
+    setIsEditing(false)
+
+    // Update in database if user is logged in and resume is saved
+    if (user && currentResumeId) {
+      try {
+        await ResumeDatabase.updateResume(currentResumeId, {
+          parsed_data: updatedData,
+          updated_at: new Date().toISOString(),
+        })
+        console.log("Resume updated in database")
+      } catch (error) {
+        console.warn("Failed to update resume in database:", error)
+      }
+    }
+  }
+
+  const handleCancelEdit = () => {
+    setIsEditing(false)
   }
 
   // Always use global data for contact, education, certifications, and profile image from original resume
@@ -130,6 +159,17 @@ const App = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
             <p className="text-gray-600">Loading...</p>
           </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Show editor view
+  if (isEditing) {
+    return (
+      <div className={styles.appBg}>
+        <div className="w-full max-w-6xl mx-auto p-6">
+          <ResumeEditor resumeData={currentResumeData} onSave={handleSaveEdits} onCancel={handleCancelEdit} />
         </div>
       </div>
     )
@@ -184,6 +224,17 @@ const App = () => {
               >
                 Upload New Resume
               </button>
+              <button
+                onClick={handleEditResume}
+                className="px-4 py-2 rounded-lg text-white font-bold transition-all duration-300 ease-in-out transform hover:scale-105"
+                style={{
+                  background: colors["--teal-main"],
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  border: `1px solid ${colors["--teal-dark"]}`,
+                }}
+              >
+                Edit Resume
+              </button>
               <DownloadButton onClick={handleDownloadPdf} />
             </div>
           )}
@@ -204,6 +255,17 @@ const App = () => {
             }}
           >
             {user ? "Back to Library" : "Upload New Resume"}
+          </button>
+          <button
+            onClick={handleEditResume}
+            className="px-4 py-2 rounded-lg text-white font-bold transition-all duration-300 ease-in-out transform hover:scale-105"
+            style={{
+              background: colors["--teal-main"],
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              border: `1px solid ${colors["--teal-dark"]}`,
+            }}
+          >
+            Edit Resume
           </button>
           <DownloadButton onClick={handleDownloadPdf} />
         </div>
