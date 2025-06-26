@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import colors from "./utils/colors"
 import ProfileHeader from "./components/ProfileHeader/ProfileHeader"
 import ContactSection from "./components/ContactSection/ContactSection"
 import EducationSection from "./components/EducationSection/EducationSection"
@@ -35,6 +34,20 @@ const defaultResumeData = {
   skills: [],
   education: [],
   certifications: [],
+  customColors: {
+    "--mint-light": "#d8b08c",
+    "--teal-dark": "#1f3736",
+    "--charcoal": "#565854",
+    "--mint-background": "#c4f0dc",
+    "--bronze-dark": "#a67244",
+    "--peach": "#f9b87f",
+    "--coffee": "#3e2f22",
+    "--teal-main": "#116964",
+    "--light-grey-background": "#f5f5f5",
+    "--off-white": "#faf4ec",
+    "--light-brown-border": "#a49990c7",
+    "--light-grey-border": "#cecac6",
+  },
 }
 
 const App = () => {
@@ -63,6 +76,16 @@ const App = () => {
       }
     }
   }, [])
+
+  // Apply custom colors to CSS variables when resume data changes
+  useEffect(() => {
+    if (currentResumeData.customColors) {
+      const root = document.documentElement
+      Object.entries(currentResumeData.customColors).forEach(([key, value]) => {
+        root.style.setProperty(key, value)
+      })
+    }
+  }, [currentResumeData.customColors])
 
   const handleDownloadPdf = async () => {
     // Increment download count if this is a saved resume
@@ -102,6 +125,7 @@ const App = () => {
         ...defaultResumeData.contact,
         ...parsedData.contact,
       },
+      customColors: parsedData.customColors || defaultResumeData.customColors,
     }
 
     setCurrentResumeData(mergedData)
@@ -139,6 +163,7 @@ const App = () => {
         ...defaultResumeData.contact,
         ...resumeData.contact,
       },
+      customColors: resumeData.customColors || defaultResumeData.customColors,
     }
 
     setCurrentResumeData(mergedData)
@@ -192,6 +217,7 @@ const App = () => {
   const education = currentResumeData.education || defaultResumeData.education
   const certifications = currentResumeData.certifications || defaultResumeData.certifications
   const profileImage = currentResumeData.profileImage || defaultResumeData.profileImage
+  const customColors = currentResumeData.customColors || defaultResumeData.customColors
 
   if (authLoading) {
     return (
@@ -259,9 +285,9 @@ const App = () => {
                 onClick={handleReset}
                 className="px-4 py-2 rounded-lg text-white font-bold transition-all duration-300 ease-in-out transform hover:scale-105"
                 style={{
-                  background: colors["--bronze-dark"],
+                  background: customColors["--bronze-dark"],
                   boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  border: `1px solid ${colors["--coffee"]}`,
+                  border: `1px solid ${customColors["--coffee"]}`,
                 }}
               >
                 Upload New Resume
@@ -272,9 +298,9 @@ const App = () => {
                   onClick={handleEditResume}
                   className="px-4 py-2 rounded-lg text-white font-bold transition-all duration-300 ease-in-out transform hover:scale-105"
                   style={{
-                    background: colors["--teal-main"],
+                    background: customColors["--teal-main"],
                     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                    border: `1px solid ${colors["--teal-dark"]}`,
+                    border: `1px solid ${customColors["--teal-dark"]}`,
                   }}
                 >
                   Edit Resume
@@ -294,9 +320,9 @@ const App = () => {
             onClick={() => setCurrentView(user ? "library" : "upload")}
             className="px-4 py-2 rounded-lg text-white font-bold transition-all duration-300 ease-in-out transform hover:scale-105"
             style={{
-              background: colors["--bronze-dark"],
+              background: customColors["--bronze-dark"],
               boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-              border: `1px solid ${colors["--coffee"]}`,
+              border: `1px solid ${customColors["--coffee"]}`,
             }}
           >
             {user ? "Back to Library" : "Upload New Resume"}
@@ -307,9 +333,9 @@ const App = () => {
               onClick={handleEditResume}
               className="px-4 py-2 rounded-lg text-white font-bold transition-all duration-300 ease-in-out transform hover:scale-105"
               style={{
-                background: colors["--teal-main"],
+                background: customColors["--teal-main"],
                 boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                border: `1px solid ${colors["--teal-dark"]}`,
+                border: `1px solid ${customColors["--teal-dark"]}`,
               }}
             >
               Edit Resume
@@ -327,16 +353,20 @@ const App = () => {
             name={currentResumeData.name}
             title={currentResumeData.title}
             summary={currentResumeData.summary}
+            customColors={customColors}
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
-            <div className="flex flex-col md:col-span-1 p-6 md:p-8" style={{ backgroundColor: colors["--off-white"] }}>
-              <ContactSection contact={contact} />
-              <EducationSection education={education} />
-              <CertificationsSection certifications={certifications} />
-              <SkillsSection skills={currentResumeData.skills} />
+            <div
+              className="flex flex-col md:col-span-1 p-6 md:p-8"
+              style={{ backgroundColor: customColors["--off-white"] }}
+            >
+              <ContactSection contact={contact} customColors={customColors} />
+              <EducationSection education={education} customColors={customColors} />
+              <CertificationsSection certifications={certifications} customColors={customColors} />
+              <SkillsSection skills={currentResumeData.skills} customColors={customColors} />
             </div>
-            <div className="p-6 md:p-8 md:col-span-2" style={{ color: colors["--coffee"] }}>
-              <ExperienceSection experience={currentResumeData.experience} />
+            <div className="p-6 md:p-8 md:col-span-2" style={{ color: customColors["--coffee"] }}>
+              <ExperienceSection experience={currentResumeData.experience} customColors={customColors} />
             </div>
           </div>
         </div>

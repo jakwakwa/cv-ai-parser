@@ -3,17 +3,30 @@
 import { useState, useRef } from "react"
 import styles from "./ResumeUploader.module.css"
 import ProfileImageUploader from "../../../components/ProfileImageUploader"
-import { CheckCircle, AlertTriangle, Bot, FileText, Smartphone } from "lucide-react"
+import ColorPicker from "../../../components/ColorPicker"
+import { CheckCircle, AlertTriangle, Bot, FileText, Smartphone, Upload, ImageIcon, Palette } from "lucide-react"
 
 const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
   const [dragActive, setDragActive] = useState(false)
   const [error, setError] = useState("")
-  const [parseMethod, setParseMethod] = useState("")
-  const [confidenceScore, setConfidenceScore] = useState(0)
-  const [showProfilePrompt, setShowProfilePrompt] = useState(false)
-  const [parsedResumeData, setParsedResumeData] = useState(null)
-  const [tempParseInfo, setTempParseInfo] = useState(null)
+  const [uploadedFile, setUploadedFile] = useState(null)
   const [profileImage, setProfileImage] = useState("")
+  const [showProfileUploader, setShowProfileUploader] = useState(false)
+  const [showColorPicker, setShowColorPicker] = useState(false)
+  const [customColors, setCustomColors] = useState({
+    "--mint-light": "#d8b08c",
+    "--teal-dark": "#1f3736",
+    "--charcoal": "#565854",
+    "--mint-background": "#c4f0dc",
+    "--bronze-dark": "#a67244",
+    "--peach": "#f9b87f",
+    "--coffee": "#3e2f22",
+    "--teal-main": "#116964",
+    "--light-grey-background": "#f5f5f5",
+    "--off-white": "#faf4ec",
+    "--light-brown-border": "#a49990c7",
+    "--light-grey-border": "#cecac6",
+  })
   const fileInputRef = useRef(null)
 
   const handleDrag = (e) => {
@@ -32,15 +45,48 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
     setDragActive(false)
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFile(e.dataTransfer.files[0])
+      handleFileSelection(e.dataTransfer.files[0])
     }
   }
 
   const handleChange = (e) => {
     e.preventDefault()
     if (e.target.files && e.target.files[0]) {
-      handleFile(e.target.files[0])
+      handleFileSelection(e.target.files[0])
     }
+  }
+
+  const handleFileSelection = (file) => {
+    setError("")
+
+    console.log(`File selected: ${file.name}, type: ${file.type}, size: ${file.size} bytes`)
+
+    // Validate file type
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "text/plain",
+    ]
+
+    if (!allowedTypes.includes(file.type)) {
+      setError("Please upload a PDF, Word document, or text file.")
+      return
+    }
+
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setError("File size must be less than 10MB.")
+      return
+    }
+
+    // Check for empty files
+    if (file.size < 100) {
+      setError("File appears to be empty or too small.")
+      return
+    }
+
+    setUploadedFile(file)
   }
 
   // Enhanced client-side PDF text extraction with better CDN handling
@@ -210,46 +256,19 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
     }
   }
 
-  const handleFile = async (file) => {
+  const handleCreateResume = async () => {
+    if (!uploadedFile) {
+      setError("Please upload a resume file first.")
+      return
+    }
+
     setError("")
-    setParseMethod("")
-    setConfidenceScore(0)
     setIsLoading(true)
 
-    console.log(`Processing file: ${file.name}, type: ${file.type}, size: ${file.size} bytes`)
-
-    // Validate file type
-    const allowedTypes = [
-      "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "text/plain",
-    ]
-
-    if (!allowedTypes.includes(file.type)) {
-      setError("Please upload a PDF, Word document, or text file.")
-      setIsLoading(false)
-      return
-    }
-
-    // Validate file size (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      setError("File size must be less than 10MB.")
-      setIsLoading(false)
-      return
-    }
-
-    // Check for empty files
-    if (file.size < 100) {
-      setError("File appears to be empty or too small.")
-      setIsLoading(false)
-      return
-    }
-
     try {
-      // Extract text on client side
+      // Extract text from the uploaded file
       console.log("Starting text extraction...")
-      const extractedText = await extractTextFromFile(file)
+      const extractedText = await extractTextFromFile(uploadedFile)
       console.log(`Successfully extracted ${extractedText.length} characters`)
       console.log(`Text preview: ${extractedText.substring(0, 300)}...`)
 
@@ -284,7 +303,7 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
         },
         body: JSON.stringify({
           text: extractedText,
-          filename: file.name,
+          filename: uploadedFile.name,
         }),
       })
 
@@ -326,20 +345,32 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
       }
 
       console.log(`Parsing completed using ${result.method} with ${result.confidence}% confidence`)
-      setParseMethod(result.method)
-      setConfidenceScore(result.confidence)
 
-      // Store parsed data and show profile prompt
-      setParsedResumeData(result.data)
-      setTempParseInfo({
+      // Add profile image and custom colors to parsed data
+      const finalResumeData = {
+        ...result.data,
+        profileImage: profileImage || "", // Empty string means no profile image
+        customColors: customColors, // Add custom colors to the resume data
+      }
+
+      const parseInfo = {
         method: result.method,
         confidence: result.confidence,
-        filename: file.name,
-        fileType: file.type,
-        fileSize: file.size,
-      })
-      setShowProfilePrompt(true)
+        filename: uploadedFile.name,
+        fileType: uploadedFile.type,
+        fileSize: uploadedFile.size,
+      }
+
+      // Reset states
+      setUploadedFile(null)
+      setProfileImage("")
+      setShowProfileUploader(false)
+      setShowColorPicker(false)
+      setError("")
       setIsLoading(false)
+
+      // Call the parent callback
+      onResumeUploaded(finalResumeData, parseInfo)
     } catch (err) {
       console.error("Error processing resume:", err)
 
@@ -348,7 +379,7 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
 
       if (errorMessage.includes("PDF")) {
         errorMessage +=
-          "\n\nTips for PDF files:\n• Make sure the PDF contains selectable text (not just images)\n• Try saving the PDF from a different source\n• Consider converting to a Word document or text file"
+          "\n\nTips for PDF files:\n• Make sure the PDF contains selectable text (not just images)\n• Try saving the PDF from a different source\n• Consider converting to a Word document or text file for best results."
       }
 
       setError(errorMessage)
@@ -361,68 +392,21 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
     setProfileImage(imageUrl)
   }
 
-  const handleProfilePromptComplete = (finalProfileImage) => {
-    console.log("Profile prompt completed with image:", finalProfileImage)
-
-    // Add profile image to parsed data if provided
-    const finalResumeData = {
-      ...parsedResumeData,
-      profileImage: finalProfileImage || "", // Empty string means no profile image
-    }
-
-    console.log("Final resume data:", finalResumeData)
-
-    // Reset states
-    setShowProfilePrompt(false)
-    setParsedResumeData(null)
-    setTempParseInfo(null)
-    setProfileImage("")
-    setError("")
-    setParseMethod("")
-    setConfidenceScore(0)
-
-    // Call the parent callback
-    onResumeUploaded(finalResumeData, tempParseInfo)
+  const handleColorsChange = (colors) => {
+    console.log("Colors changed:", colors)
+    setCustomColors(colors)
   }
 
-  const handleProfilePromptSkip = () => {
-    console.log("Profile prompt skipped")
-    handleProfilePromptComplete("")
+  const handleRemoveFile = () => {
+    setUploadedFile(null)
+    setError("")
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
+    }
   }
 
   const onButtonClick = () => {
     fileInputRef.current?.click()
-  }
-
-  // Show profile picture prompt after successful resume parsing
-  if (showProfilePrompt) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="max-w-2xl mx-auto p-4 sm:p-6">
-          <div className="text-center mb-8">
-            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">Resume Parsed Successfully!</h2>
-            <p className="text-gray-600 text-lg">
-              Parsed with{" "}
-              <span className="font-semibold text-teal-600">
-                {tempParseInfo?.method === "ai" ? "Google Gemini AI" : "Text Analysis"}
-              </span>
-            </p>
-            <p className="text-gray-600 text-lg">
-              Confidence: <span className="font-semibold text-green-600">{tempParseInfo?.confidence}%</span>
-            </p>
-          </div>
-
-          <ProfileImageUploader
-            currentImage={profileImage}
-            onImageChange={handleProfileImageChange}
-            showPrompt={true}
-            onSkip={handleProfilePromptSkip}
-            onComplete={handleProfilePromptComplete}
-          />
-        </div>
-      </div>
-    )
   }
 
   if (isLoading) {
@@ -431,7 +415,7 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-md mx-auto">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600 mx-auto mb-4"></div>
-            <p className="text-gray-900 font-medium mb-2">Parsing your resume...</p>
+            <p className="text-gray-900 font-medium mb-2">Creating your resume...</p>
             <p className="text-gray-600 text-sm">Extracting text and analyzing content with Google Gemini...</p>
           </div>
         </div>
@@ -445,55 +429,184 @@ const ResumeUploader = ({ onResumeUploaded, isLoading, setIsLoading }) => {
         <div className={styles.header}>
           <h1 className={styles.title}>Resume Parser</h1>
           <p className={styles.subtitle}>Upload your existing resume and we'll create a beautiful online version</p>
-          {parseMethod && (
-            <div className={styles.parseInfo}>
-              <p className={styles.parseMethod}>
-                {parseMethod === "ai"
-                  ? "✨ Parsed with Google Gemini AI"
-                  : parseMethod === "regex_fallback"
-                    ? "⚠️ AI failed, parsed with text analysis"
-                    : "📝 Parsed with text analysis"}
+        </div>
+
+        {/* Step 1: Upload Resume File */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+            <Upload className="w-5 h-5 mr-2" />
+            Step 1: Upload Your Resume
+          </h2>
+
+          {!uploadedFile ? (
+            <div
+              className={`${styles.dropZone} ${dragActive ? styles.dragActive : ""}`}
+              onDragEnter={handleDrag}
+              onDragLeave={handleDrag}
+              onDragOver={handleDrag}
+              onDrop={handleDrop}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                className={styles.fileInput}
+                accept=".pdf,.doc,.docx,.txt"
+                onChange={handleChange}
+              />
+
+              <div className={styles.uploadIcon}>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17,8 12,3 7,8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+              </div>
+
+              <p className={styles.dropText}>
+                <strong>Click to upload</strong> or drag and drop your resume
               </p>
-              {confidenceScore > 0 && <p className={styles.confidenceScore}>Confidence: {confidenceScore}% accurate</p>}
+              <p className={styles.fileTypes}>Supports PDF, Word documents, and text files (max 10MB)</p>
+              <p className={styles.fileTypes} style={{ fontSize: "0.8rem", marginTop: "0.5rem", opacity: 0.7 }}>
+                For best results with PDFs, ensure they contain selectable text (not scanned images)
+              </p>
+
+              <button type="button" className={styles.uploadButton} onClick={onButtonClick}>
+                Choose File
+              </button>
+            </div>
+          ) : (
+            <div className="bg-white rounded-lg border border-gray-200 p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                  <div>
+                    <p className="font-medium text-gray-900">{uploadedFile.name}</p>
+                    <p className="text-sm text-gray-500">
+                      {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB • {uploadedFile.type}
+                    </p>
+                  </div>
+                </div>
+                <button onClick={handleRemoveFile} className="text-red-600 hover:text-red-700 font-medium text-sm">
+                  Remove
+                </button>
+              </div>
             </div>
           )}
         </div>
 
-        <div
-          className={`${styles.dropZone} ${dragActive ? styles.dragActive : ""}`}
-          onDragEnter={handleDrag}
-          onDragLeave={handleDrag}
-          onDragOver={handleDrag}
-          onDrop={handleDrop}
-        >
-          <input
-            ref={fileInputRef}
-            type="file"
-            className={styles.fileInput}
-            accept=".pdf,.doc,.docx,.txt"
-            onChange={handleChange}
-          />
+        {/* Step 2: Optional Profile Image */}
+        {uploadedFile && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+              <ImageIcon className="w-5 h-5 mr-2" />
+              Step 2: Add Profile Picture (Optional)
+            </h2>
 
-          <div className={styles.uploadIcon}>
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="17,8 12,3 7,8" />
-              <line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-gray-600">Add a professional profile picture to your resume</p>
+                <button
+                  onClick={() => setShowProfileUploader(!showProfileUploader)}
+                  className="text-teal-600 hover:text-teal-700 font-medium text-sm"
+                >
+                  {showProfileUploader ? "Hide" : "Add Photo"}
+                </button>
+              </div>
+
+              {showProfileUploader && (
+                <ProfileImageUploader
+                  currentImage={profileImage}
+                  onImageChange={handleProfileImageChange}
+                  showPrompt={false}
+                />
+              )}
+
+              {profileImage && !showProfileUploader && (
+                <div className="flex items-center">
+                  <img
+                    src={profileImage || "/placeholder.svg"}
+                    alt="Profile preview"
+                    className="w-12 h-12 rounded-full object-cover mr-3"
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">Profile picture added</p>
+                    <button
+                      onClick={() => setShowProfileUploader(true)}
+                      className="text-sm text-teal-600 hover:text-teal-700"
+                    >
+                      Change photo
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
+        )}
 
-          <p className={styles.dropText}>
-            <strong>Click to upload</strong> or drag and drop your resume
-          </p>
-          <p className={styles.fileTypes}>Supports PDF, Word documents, and text files (max 10MB)</p>
-          <p className={styles.fileTypes} style={{ fontSize: "0.8rem", marginTop: "0.5rem", opacity: 0.7 }}>
-            For best results with PDFs, ensure they contain selectable text (not scanned images)
-          </p>
+        {/* Step 3: Optional Color Customization */}
+        {uploadedFile && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+              <Palette className="w-5 h-5 mr-2" />
+              Step 3: Customize Colors (Optional)
+            </h2>
 
-          <button type="button" className={styles.uploadButton} onClick={onButtonClick}>
-            Choose File
-          </button>
-        </div>
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-gray-600">Personalize your resume with custom colors and themes</p>
+                <button
+                  onClick={() => setShowColorPicker(!showColorPicker)}
+                  className="text-teal-600 hover:text-teal-700 font-medium text-sm"
+                >
+                  {showColorPicker ? "Hide" : "Customize Colors"}
+                </button>
+              </div>
+
+              {showColorPicker && <ColorPicker currentColors={customColors} onColorsChange={handleColorsChange} />}
+
+              {!showColorPicker && (
+                <div className="flex items-center space-x-3">
+                  <div className="flex space-x-1">
+                    <div
+                      className="w-6 h-6 rounded-full border border-gray-300"
+                      style={{ backgroundColor: customColors["--teal-main"] }}
+                    />
+                    <div
+                      className="w-6 h-6 rounded-full border border-gray-300"
+                      style={{ backgroundColor: customColors["--bronze-dark"] }}
+                    />
+                    <div
+                      className="w-6 h-6 rounded-full border border-gray-300"
+                      style={{ backgroundColor: customColors["--charcoal"] }}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">Color scheme selected</p>
+                    <button
+                      onClick={() => setShowColorPicker(true)}
+                      className="text-sm text-teal-600 hover:text-teal-700"
+                    >
+                      Change colors
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Create Resume Button */}
+        {uploadedFile && (
+          <div className="mb-8">
+            <button
+              onClick={handleCreateResume}
+              disabled={isLoading}
+              className="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors duration-200"
+            >
+              {isLoading ? "Creating Resume..." : "Create Resume"}
+            </button>
+          </div>
+        )}
 
         {error && (
           <div className={styles.error}>
