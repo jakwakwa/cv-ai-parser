@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
+import ColorPicker from './ColorPicker';
 import ProfileImageUploader from './ProfileImageUploader';
 import styles from './ResumeEditor.module.css';
 
@@ -25,9 +26,15 @@ interface ResumeEditorProps {
   resumeData: ParsedResume; // Use ParsedResume for consistency
   onSave: (data: ParsedResume) => void; // Ensure onSave expects ParsedResume
   onCancel: () => void;
+  onCustomColorsChange?: (colors: Record<string, string>) => void; // Add this prop
 }
 
-const ResumeEditor = ({ resumeData, onSave, onCancel }: ResumeEditorProps) => {
+const ResumeEditor = ({
+  resumeData,
+  onSave,
+  onCancel,
+  onCustomColorsChange,
+}: ResumeEditorProps) => {
   // Normalize experience data to ensure consistent field names
   const normalizeExperienceData = (
     experience: IncomingExperience[]
@@ -173,6 +180,17 @@ const ResumeEditor = ({ resumeData, onSave, onCancel }: ResumeEditorProps) => {
       ...prev,
       profileImage: imageUrl,
     }));
+  };
+
+  // New handler for color changes
+  const handleColorsChange = (colors: Record<string, string>) => {
+    setEditedData((prev: ParsedResume) => ({
+      ...prev,
+      customColors: colors,
+    }));
+    if (onCustomColorsChange) {
+      onCustomColorsChange(colors);
+    }
   };
 
   const handleSave = () => {
@@ -901,6 +919,19 @@ const ResumeEditor = ({ resumeData, onSave, onCancel }: ResumeEditorProps) => {
                     </div>
                   </div>
                 ))}
+              </CardContent>
+            </Card>
+
+            {/* Color Picker Section */}
+            <Card className="mt-8">
+              <CardHeader>
+                <CardTitle>Color Scheme</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ColorPicker
+                  currentColors={editedData.customColors || {}}
+                  onColorsChange={handleColorsChange}
+                />
               </CardContent>
             </Card>
           </div>

@@ -1,20 +1,82 @@
 'use client';
 
 import { ArrowLeft, Loader2 } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { useAuth } from '@/components/AuthProvider';
 import ResumeEditor from '@/components/ResumeEditor';
+import { SiteHeader } from '@/components/SiteHeader';
 import { Button } from '@/components/ui/button';
-import type { Resume } from '@/lib/supabase'; // Import the Resume type
+import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
+import { useToast } from '@/hooks/use-toast';
+import type { Resume } from '@/lib/types'; // Import the Resume type
+import CertificationsSection from '@/src/components/CertificationsSection/CertificationsSection';
+import ContactSection from '@/src/components/ContactSection/ContactSection';
+import DownloadButton from '@/src/components/DownloadButton/DownloadButton';
+import EducationSection from '@/src/components/EducationSection/EducationSection';
+import ExperienceSection from '@/src/components/ExperienceSection/ExperienceSection';
+import ProfileHeader from '@/src/components/ProfileHeader/ProfileHeader';
+import SkillsSection from '@/src/components/SkillsSection/SkillsSection';
+import styles from '../../page.module.css';
 
 export default function ViewResumePage() {
   const router = useRouter();
   const params = useParams();
   const { slug } = params;
+  const { user, loading: authLoading } = useAuth();
+  const resumeContainerRef = useRef<HTMLDivElement>(null);
+  const { isDownloading, downloadPdf } = usePdfDownloader();
+  const { toast } = useToast();
 
+  const [viewMode, setViewMode] = useState<'view' | 'edit'>('view');
   const [resume, setResume] = useState<Resume | null>(null); // Change to 'resume' and Resume type
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const toastMessage = searchParams.get('toast');
+    console.log('Toast message from URL:', toastMessage);
+
+    if (toastMessage) {
+      switch (toastMessage) {
+        case 'resume_uploaded':
+          toast({
+            title: 'Success!',
+            description: 'Resume uploaded and parsed successfully!',
+          });
+          break;
+        case 'resume_saved':
+          toast({
+            title: 'Success!',
+            description: 'Resume saved successfully!',
+          });
+          break;
+        case 'view_error':
+          toast({
+            title: 'Error',
+            description:
+              'Could not view resume: Missing necessary information.',
+            variant: 'destructive',
+          });
+          break;
+        // Add more cases for other toast messages as needed
+      }
+      // Clean up the URL to prevent the toast from reappearing on refresh
+      router.replace(window.location.pathname);
+    }
+  }, [searchParams, router, toast]);
+
+  useEffect(() => {
+    if (resume?.parsed_data?.customColors && resumeContainerRef.current) {
+      for (const [key, value] of Object.entries(
+        resume.parsed_data.customColors
+      )) {
+        resumeContainerRef.current.style.setProperty(key, value);
+      }
+    }
+  }, [resume?.parsed_data?.customColors]);
 
   useEffect(() => {
     const fetchResume = async () => {
@@ -72,24 +134,51 @@ export default function ViewResumePage() {
 
       const result = await response.json();
       setResume(result.data); // Update with saved data (entire resume object)
-      alert('Resume saved successfully!');
+      setViewMode('view');
+      router.push(window.location.pathname + '?toast=resume_saved');
     } catch (err: unknown) {
       setError((err as Error).message || 'Failed to save edits.');
+      toast({
+        title: 'Error',
+        description: (err as Error).message || 'Failed to save edits.',
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }
   };
 
   const handleCancelEdit = () => {
-    // Simply navigate back or to library
-    router.push('/library');
+    setViewMode('view');
   };
 
-  if (loading) {
+  const handleEdit = () => {
+    setViewMode('edit');
+  };
+
+  const handleDownloadPdf = () => {
+    if (resume) {
+      downloadPdf(
+        resumeContainerRef as React.RefObject<HTMLElement>,
+        `${resume.parsed_data.name?.replace(/ /g, '_') || 'resume'}.pdf`
+      );
+    }
+  };
+
+  if (authLoading || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
-        <p className="ml-3 text-gray-700">Loading resume...</p>
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingSpinner} />
+        <p className={styles.loadingText}>Loading Resume...</p>
+      </div>
+    );
+  }
+
+  if (isDownloading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingSpinner} />
+        <p className={styles.loadingText}>Downloading PDF...</p>
       </div>
     );
   }
@@ -123,11 +212,95 @@ export default function ViewResumePage() {
     );
   }
 
+  if (viewMode === 'edit') {
+    return (
+      <ResumeEditor
+        resumeData={resume.parsed_data}
+        onSave={handleSaveEdits}
+        onCancel={handleCancelEdit}
+        onCustomColorsChange={(colors) =>
+          setResume((prevResume) => {
+            if (!prevResume) return null;
+            return {
+              ...prevResume,
+              parsed_data: {
+                ...prevResume.parsed_data,
+                customColors: colors,
+              },
+            };
+          })
+        }
+      />
+    );
+  }
+
   return (
-    <ResumeEditor
-      resumeData={resume.parsed_data} // Pass parsed_data to ResumeEditor
-      onSave={handleSaveEdits}
-      onCancel={handleCancelEdit}
-    />
+    <div className={styles.pageWrapper}>
+      <SiteHeader />
+      <div className={styles.buttonContainer}>
+        <button
+          type="button"
+          onClick={handleEdit}
+          className={styles.editButton}
+        >
+          Edit Resume
+        </button>
+        <DownloadButton onClick={handleDownloadPdf} />
+        <button
+          type="button"
+          onClick={() => router.push('/')}
+          className={styles.resetButton}
+        >
+          Upload New
+        </button>
+      </div>
+      <main className={styles.mainUserContainer}>
+        <div
+          id="resume-content"
+          className={styles.resumeContent}
+          ref={resumeContainerRef}
+        >
+          <ProfileHeader
+            profileImage={resume.parsed_data.profileImage || ''}
+            name={resume.parsed_data.name || ''}
+            title={resume.parsed_data.title || ''}
+            summary={resume.parsed_data.summary || ''}
+            customColors={resume.parsed_data.customColors || {}} // Ensure customColors is an object
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
+            <div
+              className="flex flex-col md:col-span-1 p-6 md:p-8"
+              style={{ backgroundColor: 'var(--off-white)' }}
+            >
+              <ContactSection
+                contact={resume.parsed_data.contact || {}}
+                customColors={resume.parsed_data.customColors || {}}
+              />
+              <EducationSection
+                education={resume.parsed_data.education}
+                customColors={resume.parsed_data.customColors || {}}
+              />
+              <CertificationsSection
+                certifications={resume.parsed_data.certifications}
+                customColors={resume.parsed_data.customColors || {}}
+              />
+              <SkillsSection
+                skills={resume.parsed_data.skills}
+                customColors={resume.parsed_data.customColors || {}}
+              />
+            </div>
+            <div
+              className="p-6 md:p-8 md:col-span-2"
+              style={{ color: 'var(--coffee)' }}
+            >
+              <ExperienceSection
+                experience={resume.parsed_data.experience}
+                customColors={resume.parsed_data.customColors || {}}
+              />
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
   );
 }

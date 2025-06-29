@@ -1,12 +1,13 @@
-import styles from './ContactSection.module.css';
 import {
-  MailIcon,
-  PhoneIcon,
-  MapPinIcon,
-  GlobeIcon,
+  ContactTitleIcon,
   GitHubIcon,
+  GlobeIcon,
   LinkedInIcon,
+  MailIcon,
+  MapPinIcon,
+  PhoneIcon,
 } from '../Icons';
+import styles from './ContactSection.module.css';
 
 interface Contact {
   email?: string;
@@ -28,6 +29,7 @@ const ContactSection = ({ contact, customColors }: ContactSectionProps) => (
       className={styles.sectionTitle}
       style={{ color: customColors['--charcoal'] }}
     >
+      <ContactTitleIcon fill={customColors['--bronze-dark']} />
       Contact
     </h2>
     <div className={styles.contactDetails}>

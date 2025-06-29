@@ -1,51 +1,60 @@
-import { type NextRequest, NextResponse } from 'next/server';
 import { ResumeDatabase } from '@/lib/database';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 
 export async function PUT(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
-  const { id } = params;
+  const { id } = await params;
   const { parsedData } = await request.json();
 
   if (!id || !parsedData) {
-    return NextResponse.json(
-      { error: 'Resume ID and parsed data are required.' },
+    return new Response(
+      JSON.stringify({ error: 'Resume ID and parsed data are required.' }),
       { status: 400 }
     );
   }
 
+  const supabase = await createClient();
   const {
     data: { user },
+    error: userError,
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (userError || !user) {
+    return new Response(
+      JSON.stringify({
+        error: 'Authentication required. Please sign in again.',
+      }),
+      { status: 401 }
+    );
   }
 
   try {
-    // Ensure the user owns the resume before updating
-    const existingResume = await ResumeDatabase.getResume(id);
+    const existingResume = await ResumeDatabase.getResume(supabase, id);
     if (!existingResume || existingResume.user_id !== user.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized access or resume not found.' },
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized access or resume not found.' }),
         { status: 403 }
       );
     }
 
-    const updatedResume = await ResumeDatabase.updateResume(id, {
+    const updatedResume = await ResumeDatabase.updateResume(supabase, id, {
       parsed_data: parsedData,
-      updated_at: new Date().toISOString(), // Update timestamp
+      updated_at: new Date().toISOString(),
     });
 
-    return NextResponse.json({ data: updatedResume });
+    return new Response(JSON.stringify({ data: updatedResume }), {
+      status: 200,
+    });
   } catch (error) {
-    console.error('Error updating resume:', error);
     const errorMessage =
       error instanceof Error ? error.message : 'An unknown error occurred.';
-    return NextResponse.json(
-      { error: 'Failed to update resume.', details: errorMessage },
+    return new Response(
+      JSON.stringify({
+        error: 'Failed to update resume.',
+        details: errorMessage,
+      }),
       { status: 500 }
     );
   }

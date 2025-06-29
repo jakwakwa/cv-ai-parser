@@ -2,9 +2,7 @@
 
 import {
   AlertTriangle,
-  Bot,
   CheckCircle,
-  FileText,
   ImageIcon,
   Palette,
   Upload,
@@ -12,6 +10,7 @@ import {
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useRef, useState } from 'react';
 import Tesseract from 'tesseract.js';
+import { useAuth } from '@/components/AuthProvider';
 import { Progress } from '@/components/ui/progress';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import ColorPicker from '../../../components/ColorPicker';
@@ -35,6 +34,8 @@ declare global {
 }
 
 interface ParseInfo {
+  resumeId: string;
+  resumeSlug: string;
   method: string;
   confidence: number;
   filename: string;
@@ -53,6 +54,7 @@ const ResumeUploader = ({
   isLoading,
   setIsLoading,
 }: ResumeUploaderProps) => {
+  const { supabase } = useAuth();
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState('');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -106,10 +108,6 @@ const ResumeUploader = ({
   const handleFileSelection = (file: File) => {
     setError('');
 
-    console.log(
-      `File selected: ${file.name}, type: ${file.type}, size: ${file.size} bytes`
-    );
-
     // Validate file type
     const allowedTypes = [
       'application/pdf',
@@ -140,7 +138,6 @@ const ResumeUploader = ({
 
   // Enhanced client-side PDF text extraction with better CDN handling and OCR fallback
   const extractTextFromPDF = async (file: File) => {
-    console.log('Starting PDF text extraction...');
     let pdfjsLib: typeof window.pdfjsLib | null = null;
     let fullText = '';
 
@@ -149,12 +146,8 @@ const ResumeUploader = ({
       try {
         // Use dynamic import with ssr: false
         const pdfjs = await import('pdfjs-dist');
-        pdfjsLib = pdfjs as unknown as typeof window.pdfjsLib; // Type assertion
+        pdfjsLib = pdfjs as unknown as typeof window.pdfjsLib;
       } catch (e) {
-        console.warn(
-          'Failed to load pdfjs-dist directly, attempting CDN fallback.',
-          e
-        );
         // Fallback to CDN if dynamic import fails
         await loadPDFJSFromCDN();
         pdfjsLib = window.pdfjsLib;
@@ -177,10 +170,7 @@ const ResumeUploader = ({
             pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
             break;
           } catch (workerError) {
-            console.warn(
-              `Failed to set worker source ${workerSrc}:`,
-              workerError
-            );
+            // Fall through
           }
         }
       }
@@ -194,44 +184,40 @@ const ResumeUploader = ({
       });
 
       const pdf = await loadingTask.promise;
-      console.log(`PDF loaded successfully. Pages: ${pdf.numPages}`);
 
       // Extract text from each page
       for (let pageNum = 1; pageNum <= Math.min(pdf.numPages, 10); pageNum++) {
         // Limit to 10 pages for performance
-        console.log(`Extracting text from page ${pageNum}`);
         const page = await pdf.getPage(pageNum);
         const textContent = await page.getTextContent();
 
         // Combine all text items from the page with proper spacing
         const pageText = textContent.items
-          .map((item) => {
-            // Add space after each text item to prevent words from running together
-            // Check if item is a TextItem before accessing its properties
-            if ('str' in item && 'hasEOL' in item) {
-              return `${item.str}${item.hasEOL ? '\\n' : ' '}`;
+          .map(
+            (
+              item:
+                | import('pdfjs-dist/types/src/display/api').TextItem
+                | import('pdfjs-dist/types/src/display/api').TextMarkedContent
+            ) => {
+              // Add space after each text item to prevent words from running together
+              // Check if item is a TextItem before accessing its properties
+              if ('str' in item && 'hasEOL' in item) {
+                return `${item.str}${item.hasEOL ? '\\n' : ' '}`;
+              }
+              return '';
             }
-            return '';
-          })
+          )
           .join('');
 
         fullText += `${pageText}\\n\\n`;
       }
 
       const cleanText = fullText.trim();
-      console.log(`Extracted ${cleanText.length} characters from PDF`);
 
       if (cleanText.length > 100) {
         return cleanText;
       }
-      console.warn(
-        'PDF.js extracted very little text, attempting OCR fallback.'
-      );
     } catch (pdfError: unknown) {
-      console.warn(
-        'PDF.js extraction failed or resulted in little text:',
-        pdfError
-      );
       // Fall through to OCR if PDF.js fails or extracts insufficient text
     }
 
@@ -247,7 +233,6 @@ const ResumeUploader = ({
       setError(
         'No selectable text found. Attempting OCR (Optical Character Recognition) which may take a moment...'
       );
-      console.log('Attempting OCR with Tesseract.js...');
 
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -269,7 +254,6 @@ const ResumeUploader = ({
           .promise;
         const imageData = canvas.toDataURL('image/png');
 
-        console.log(`Running OCR on page ${i}/${pagesToProcess}...`);
         const {
           data: { text },
         } = await Tesseract.recognize(imageData, 'eng', {
@@ -284,7 +268,6 @@ const ResumeUploader = ({
       }
 
       const cleanOcrText = ocrText.trim();
-      console.log(`OCR extracted ${cleanOcrText.length} characters.`);
 
       if (cleanOcrText.length < 100) {
         throw new Error(
@@ -293,10 +276,6 @@ const ResumeUploader = ({
       }
       return cleanOcrText;
     } catch (ocrError: unknown) {
-      console.error(
-        'Tesseract.js OCR failed:',
-        ocrError instanceof Error ? ocrError.message : ocrError
-      );
       throw new Error(
         `Could not extract text from PDF even with OCR. This might be due to a very poor quality scan or an unsupported PDF format. Details: ${
           ocrError instanceof Error ? ocrError.message : String(ocrError)
@@ -334,13 +313,10 @@ const ResumeUploader = ({
 
   // Client-side text extraction for different file types
   const extractTextFromFile = async (file: File) => {
-    console.log(`Extracting text from file: ${file.name} (${file.type})`);
-
     if (file.type === 'application/pdf') {
       return await extractTextFromPDF(file);
     }
     if (file.type === 'text/plain') {
-      console.log('Reading text file...');
       const text = await file.text();
       if (text.length < 50) {
         throw new Error('Text file appears to be empty or too short');
@@ -352,7 +328,6 @@ const ResumeUploader = ({
       file.type ===
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     ) {
-      console.log('Attempting to read Word document...');
       try {
         // Try to read as text (this works for some Word docs)
         const text = await file.text();
@@ -382,11 +357,17 @@ const ResumeUploader = ({
     setIsLoading(true);
 
     try {
+      // Debug: Check if user is authenticated
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        throw new Error('No active session found. Please sign in again.');
+      }
+
       // Extract text from the uploaded file
-      console.log('Starting text extraction...');
       const extractedText = await extractTextFromFile(uploadedFile);
-      console.log(`Successfully extracted ${extractedText.length} characters`);
-      console.log(`Text preview: ${extractedText.substring(0, 300)}...`);
 
       if (!extractedText || extractedText.trim().length < 50) {
         throw new Error(
@@ -406,26 +387,27 @@ const ResumeUploader = ({
         lowerText.includes('college');
 
       if (!hasResumeKeywords) {
-        console.warn("Text doesn't appear to contain typical resume content");
-        // Don't fail here, just warn - let the parsing attempt continue
+        console.log('keywords found!');
       }
 
       // Send extracted text to server for parsing
-      console.log('Sending text to server for parsing...');
-      const response = await fetch('/api/parse-resume', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: extractedText,
-          filename: uploadedFile.name,
-        }),
-      });
+      const response = await fetch(
+        `${window.location.origin}/api/parse-resume`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            text: extractedText,
+            filename: uploadedFile.name,
+            customColors: customColors,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('API Response Error:', errorText);
 
         let errorData: { error?: string }; // Explicitly type errorData
         try {
@@ -459,49 +441,52 @@ const ResumeUploader = ({
       const result = await response.json();
 
       if (result.error) {
-        throw new Error(result.error);
+        throw new Error(result.error || 'Parsing failed.');
       }
 
-      // Check if we have valid data
-      if (!result.data) {
-        throw new Error('No resume data returned from parser');
-      }
+      const parsedData: ParsedResume = result.data;
 
-      console.log(
-        `Parsing completed using ${result.method} with ${result.confidence}% confidence`
-      );
-
-      // Add profile image and custom colors to parsed data
-      const finalResumeData = {
-        ...result.data,
-        profileImage: profileImage || '', // Empty string means no profile image
-        customColors: customColors, // Add custom colors to the resume data
-      };
-
-      const parseInfo = {
-        method: result.method,
-        confidence: result.confidence,
-        filename: uploadedFile.name,
+      // Combine server-provided metadata with client-side file info
+      const uploadInfo: ParseInfo = {
+        ...result.meta,
         fileType: uploadedFile.type,
         fileSize: uploadedFile.size,
       };
 
-      // Reset states
-      setUploadedFile(null);
-      setProfileImage('');
-      setShowProfileUploader(false);
-      setShowColorPicker(false);
+      // Pass the parsed data and the full info object to the parent
+      const parsedResume: ParsedResume = {
+        name: parsedData.name || '',
+        title: parsedData.title || '',
+        summary: parsedData.summary || '',
+        profileImage: profileImage,
+        contact: parsedData.contact || {},
+        experience: parsedData.experience || [],
+        education: parsedData.education || [],
+        certifications: parsedData.certifications || [],
+        skills: parsedData.skills || [],
+        customColors: customColors,
+      };
+
+      // Set parsing method and confidence based on success
+      const method =
+        parsedResume.experience && parsedResume.experience.length > 0
+          ? 'AI Parser'
+          : 'Regex Fallback';
+      const confidence = 0.8; // Assuming a default confidence, or get from result.meta if available
+
+      // Update uploadInfo with additional information
+      const uploadInfoWithMethodAndConfidence: ParseInfo = {
+        ...uploadInfo,
+        method: method,
+        confidence: confidence,
+      };
+
+      // Pass the parsed data and the full info object to the parent
+      onResumeUploaded(parsedResume, uploadInfoWithMethodAndConfidence);
+
+      setShowProfileUploader(true); // Move to next step
       setError('');
-      setIsLoading(false);
-
-      // Call the parent callback
-      onResumeUploaded(finalResumeData, parseInfo);
     } catch (err: unknown) {
-      console.error(
-        'Error processing resume:',
-        err instanceof Error ? err.message : err
-      );
-
       // Provide more helpful error messages
       let errorMessage =
         err instanceof Error ? err.message : 'An unknown error occurred.';
@@ -517,12 +502,10 @@ const ResumeUploader = ({
   };
 
   const handleProfileImageChange = (imageUrl: string) => {
-    console.log('Profile image changed:', imageUrl);
     setProfileImage(imageUrl);
   };
 
   const handleColorsChange = (colors: Record<string, string>) => {
-    console.log('Colors changed:', colors);
     setCustomColors(colors);
   };
 
@@ -568,7 +551,7 @@ const ResumeUploader = ({
   }
 
   return (
-    <div className="min-h-screen w-full max-w-4xl bg-[#fff]/50 rounded">
+    <div className="w-full max-w-4xl bg-[#fff]/50 rounded">
       <div className={styles.uploaderContainer}>
         <div className={styles.header}>
           <h1 className={styles.title}>Resume Parser</h1>
@@ -579,12 +562,12 @@ const ResumeUploader = ({
         </div>
 
         {/* Step 1: Upload Resume File */}
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-            <Upload className="w-5 h-5 mr-2" />
-            Step 1: Upload Your Resume
-          </h2>
+        <h2 className="text-xl w-full flex justify-center font-semibold text-gray-800 mb-4 flex items-center">
+          <Upload className="w-5 h-5 mr-2" />
+          Step 1: Upload Your Resume
+        </h2>
 
+        <div className="mt-8">
           {!uploadedFile ? (
             // biome-ignore lint/a11y/noStaticElementInteractions: <>
             <div
@@ -649,13 +632,13 @@ const ResumeUploader = ({
           ) : (
             <div className="bg-white rounded-lg border border-gray-200 p-4">
               <div className="flex items-center justify-between">
-                <div className="flex items-center">
+                <div className="flex justify-start w-full items-center">
                   <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                  <div>
-                    <p className="font-medium text-gray-900">
+                  <div className="flex flex-col items-start justify-start">
+                    <p className="font-medium text-md text-left text-gray-900">
                       {uploadedFile.name}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-xs text-gray-500">
                       {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB •{' '}
                       {uploadedFile.type}
                     </p>
@@ -675,14 +658,14 @@ const ResumeUploader = ({
 
         {/* Step 2: Optional Profile Image */}
         {uploadedFile && (
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <div className="my-16">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
               <ImageIcon className="w-5 h-5 mr-2" />
               Step 2: Add Profile Picture (Optional)
             </h2>
 
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-4">
+            <div className="bg-white rounded-lg border border-gray-200 px-6 shadow">
+              <div className="flex items-center justify-between my-4">
                 <p className="text-gray-600">
                   Add a professional profile picture to your resume
                 </p>
@@ -731,13 +714,13 @@ const ResumeUploader = ({
 
         {/* Step 3: Optional Color Customization */}
         {uploadedFile && (
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <div className="my-16">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
               <Palette className="w-5 h-5 mr-2" />
               Step 3: Customize Colors (Optional)
             </h2>
 
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex flex-col bg-white rounded-lg border border-gray-200 p-6 shadow">
               <div className="flex items-center justify-between mb-4">
                 <p className="text-gray-600">
                   Personalize your resume with custom colors and themes
@@ -759,7 +742,7 @@ const ResumeUploader = ({
               )}
 
               {!showColorPicker && (
-                <div className="flex items-center space-x-3">
+                <div className="flex w-full space-around items-center space-x-3">
                   <div className="flex space-x-1">
                     <div
                       className="w-6 h-6 rounded-full border border-gray-300"
@@ -774,17 +757,10 @@ const ResumeUploader = ({
                       style={{ backgroundColor: customColors['--charcoal'] }}
                     />
                   </div>
-                  <div>
+                  <div className="w-full flex gap-4 justify-start">
                     <p className="text-sm font-medium text-gray-900">
                       Color scheme selected
                     </p>
-                    <button
-                      type="button"
-                      onClick={() => setShowColorPicker(true)}
-                      className="text-sm text-teal-600 hover:text-teal-700"
-                    >
-                      Change colors
-                    </button>
                   </div>
                 </div>
               )}
@@ -812,32 +788,6 @@ const ResumeUploader = ({
             <p style={{ whiteSpace: 'pre-line' }}>{error}</p>
           </div>
         )}
-      </div>
-      <div className={styles.features}>
-        <div className={styles.feature}>
-          <div className={styles.featureIcon}>
-            <Bot size={28} />
-          </div>
-          <h3>Smart Parsing</h3>
-          <p>
-            Google Gemini AI-powered parsing when available, with intelligent
-            fallback text analysis
-          </p>
-        </div>
-        <div className={styles.feature}>
-          <div className={styles.featureIcon}>
-            <FileText size={28} />
-          </div>
-          <h3>Beautiful Design</h3>
-          <p>Your resume gets transformed into a modern, professional layout</p>
-        </div>
-        {/* <div className={styles.feature}>
-            <div className={styles.featureIcon}>
-              <Smartphone size={28} />
-            </div>
-            <h3>Responsive</h3>
-            <p>Looks great on all devices and can be downloaded as PDF</p>
-          </div> */}
       </div>
     </div>
   );

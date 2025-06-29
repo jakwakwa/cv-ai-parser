@@ -2,9 +2,9 @@
  * Feature flag to enable or disable AI-powered resume parsing.
  * Defaults to true if the necessary API key is present.
  */
-// export const IS_AI_PARSING_ENABLED = process.env.GOOGLE_GENERATIVE_AI_API_KEY ? true : false;
+export const IS_AI_PARSING_ENABLED = !!process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 
-export const IS_AI_PARSING_ENABLED = false;
+// export const IS_AI_PARSING_ENABLED = false;
 
 /**
  * The specific Google Gemini model to be used for AI parsing.

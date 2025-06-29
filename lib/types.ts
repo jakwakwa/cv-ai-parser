@@ -1,13 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
+import type { ParsedResume } from './resume-parser/schema';
 
-// biome-ignore lint/style/noNonNullAssertion: <>
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-// biome-ignore lint/style/noNonNullAssertion: <>
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-// Types for our database tables
 export interface Profile {
   id: string;
   email: string;
@@ -24,7 +16,7 @@ export interface Resume {
   original_filename: string | null;
   file_type: string | null;
   file_size: number | null;
-  parsed_data: unknown;
+  parsed_data: ParsedResume;
   parse_method: string | null;
   confidence_score: number | null;
   is_public: boolean;
@@ -33,6 +25,7 @@ export interface Resume {
   download_count: number;
   created_at: string;
   updated_at: string;
+  custom_colors: Record<string, string>;
 }
 
 export interface ResumeVersion {

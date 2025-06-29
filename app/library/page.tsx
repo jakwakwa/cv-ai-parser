@@ -1,29 +1,74 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
+import AuthComponent from '@/components/AuthComponent';
+import { useAuth } from '@/components/AuthProvider';
 import ResumeLibrary from '@/components/ResumeLibrary';
-import type { Resume } from '@/lib/supabase';
+import { SiteHeader } from '@/components/SiteHeader';
+import TabNavigation from '@/components/TabNavigation';
+import { useToast } from '@/hooks/use-toast';
+import type { Resume } from '@/lib/types';
+import styles from '../page.module.css';
 
 export default function LibraryPage() {
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
+  const { toast } = useToast();
+
+  const searchParams = useSearchParams();
 
   const handleSelectResume = (resume: Resume) => {
     // Navigate to the resume view page using the slug
     if (resume?.slug) {
       router.push(`/resume/${resume.slug}`);
     } else {
-      console.error('Resume data missing slug for navigation.', resume);
-      // Optionally, show an error message to the user
-      alert('Could not view resume: Missing necessary information.');
+      // Redirect back to library with an error toast message
+      router.push('/library?toast=view_error');
     }
   };
 
+  useEffect(() => {
+    const toastMessage = searchParams.get('toast');
+    console.log('Toast message from URL (Library Page):', toastMessage);
+
+    if (toastMessage) {
+      switch (toastMessage) {
+        case 'view_error':
+          toast({
+            title: 'Error',
+            description:
+              'Could not view resume: Missing necessary information.',
+            variant: 'destructive',
+          });
+          break;
+      }
+      // Clean up the URL to prevent the toast from reappearing on refresh
+      router.replace(window.location.pathname);
+    }
+  }, [searchParams, router, toast]);
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-        Your Resume Library
-      </h1>
-      <ResumeLibrary onSelectResume={handleSelectResume} />
+    <div className={styles.pageWrapper}>
+      <SiteHeader />
+      <main className={styles.mainContainer}>
+        {!user && (
+          <div className="text-center bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-md mx-auto mt-12">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Welcome!</h2>
+            <p className="text-gray-600 mb-6">
+              Please sign in or sign up to use the resume parser and manage your
+              library.
+            </p>
+            <AuthComponent />
+          </div>
+        )}
+        {user && (
+          <>
+            <TabNavigation initialView="library" />
+            <ResumeLibrary onSelectResume={handleSelectResume} />
+          </>
+        )}
+      </main>
     </div>
   );
 }

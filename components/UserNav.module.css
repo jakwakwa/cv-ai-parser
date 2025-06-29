@@ -1,0 +1,63 @@
+.userNavButton {
+  position: relative;
+  border-radius: 100%;
+  padding: 0;
+
+}
+
+.avatar {
+  padding: 0;
+  height: 10px;
+  width: 10px;
+}
+
+.dropdownContent {
+  box-shadow: 0 10px 20px 0 rgb(0 0 0 / 0.55);
+  background-color: rgb(0, 0, 0);
+  color: white;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: end;
+  padding: 15px 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 14rem;
+}
+
+.dropdownMenuItem:hover {
+  color: rgb(209, 216, 217);
+  cursor: pointer;
+  transition: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.dropdownLabel {
+  font-weight: 400;
+
+  margin: 0px;
+}
+
+.labelContainer {
+
+  display: flex;
+  flex-direction: column;
+}
+
+.labelContainer>*:not([hidden])~*:not([hidden]) {
+  margin-top: 0.85rem;
+}
+
+.userName {
+  font-size: 0.75rem;
+  /* 14px */
+  font-weight: 500;
+  line-height: 1;
+}
+
+.userEmail {
+  font-size: 0.55rem;
+  /* 12px */
+  line-height: 1;
+}

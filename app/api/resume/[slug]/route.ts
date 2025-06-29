@@ -1,18 +1,21 @@
 import { NextResponse } from 'next/server';
 import { ResumeDatabase } from '@/lib/database';
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET(
   _request: Request,
   { params }: { params: { slug: string } }
 ) {
-  const { slug } = params;
+  const resolvedParams = await params;
+  const { slug } = resolvedParams;
 
   if (!slug) {
     return NextResponse.json({ error: 'Slug is required.' }, { status: 400 });
   }
 
   try {
-    const resume = await ResumeDatabase.getPublicResume(slug);
+    const supabase = await createClient();
+    const resume = await ResumeDatabase.getPublicResume(supabase, slug);
 
     if (!resume) {
       return NextResponse.json({ error: 'Resume not found.' }, { status: 404 });

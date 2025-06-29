@@ -1,9 +1,14 @@
 'use client';
+import { Bot, FileText } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import AuthComponent from '@/components/AuthComponent';
 import { useAuth } from '@/components/AuthProvider';
 import ResumeEditor from '@/components/ResumeEditor';
+import { SiteHeader } from '@/components/SiteHeader';
+import TabNavigation from '@/components/TabNavigation';
+import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
+import { useToast } from '@/hooks/use-toast';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import CertificationsSection from '@/src/components/CertificationsSection/CertificationsSection';
 import ContactSection from '@/src/components/ContactSection/ContactSection';
@@ -13,6 +18,7 @@ import ExperienceSection from '@/src/components/ExperienceSection/ExperienceSect
 import ProfileHeader from '@/src/components/ProfileHeader/ProfileHeader';
 import ResumeUploader from '@/src/components/ResumeUploader/ResumeUploader';
 import SkillsSection from '@/src/components/SkillsSection/SkillsSection';
+import styles from './page.module.css';
 
 interface ParseInfo {
   resumeId: string;
@@ -25,6 +31,9 @@ interface ParseInfo {
 export default function Home() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
+  const resumeContainerRef = useRef<HTMLDivElement>(null);
+  const { isDownloading, downloadPdf } = usePdfDownloader();
+  const { toast } = useToast();
 
   const [currentView, setCurrentView] = useState('upload'); // "upload" | "view" | "edit"
   const [resumeData, setResumeData] = useState<ParsedResume | null>(null);
@@ -33,22 +42,25 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
 
   const handleDownloadPdf = async () => {
-    // TODO: Implement PDF download logic (e.g., using a serverless function to generate PDF from rendered HTML)
-    alert('PDF download not yet implemented.');
+    if (resumeData) {
+      downloadPdf(
+        resumeContainerRef as React.RefObject<HTMLElement>,
+        `${resumeData.name?.replace(/ /g, '_') || 'resume'}.pdf`
+      );
+    }
   };
 
   const handleResumeUploaded = async (
     parsedData: ParsedResume,
     info: ParseInfo
   ) => {
-    console.log('Resume Uploaded and Saved:', parsedData, info);
     setResumeData(parsedData);
     setParseInfo(info); // Store the full info including resumeId and resumeSlug
     setIsLoading(false); // Stop main loading
 
     if (info.resumeSlug) {
-      // Redirect to the new resume view page
-      router.push(`/resume/${info.resumeSlug}`);
+      // Redirect to the new resume view page with a success message
+      router.push(`/resume/${info.resumeSlug}?toast=resume_uploaded`);
     } else {
       // Fallback if slug is not returned for some reason
       setCurrentView('view'); // Stay on current page, show the new resume
@@ -89,23 +101,23 @@ export default function Home() {
 
         const result = await response.json();
         setResumeData(result.data); // Update local state with saved data (full resume object)
-        alert('Resume saved successfully!');
 
         // Redirect back to the view page after saving edits
         if (parseInfo.resumeSlug) {
-          router.push(`/resume/${parseInfo.resumeSlug}`);
+          router.push(`/resume/${parseInfo.resumeSlug}?toast=resume_saved`);
         } else {
           setCurrentView('view'); // Fallback if slug is somehow missing
         }
       } else {
-        // This case should ideally not happen if initial parse always saves.
-        // If a user edits a resume without it being saved (e.g. via direct upload not through parse flow),
-        // this logic would need to save it for the first time.
         console.warn(
           'Attempted to save edits on an unsaved resume. This flow needs review.'
         );
         setResumeData(updatedData);
-        alert('Edits applied locally. Resume was not saved to database.');
+        toast({
+          title: 'Info',
+          description:
+            'Edits applied locally. Resume was not saved to database.',
+        });
         setCurrentView('view');
       }
     } catch (err: unknown) {
@@ -116,6 +128,11 @@ export default function Home() {
         errorMessage = err.message;
       }
       setError(errorMessage);
+      toast({
+        title: 'Error',
+        description: errorMessage,
+        variant: 'destructive',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -128,52 +145,41 @@ export default function Home() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600" />
-        <p className="ml-3 text-gray-700">Loading user session...</p>
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingSpinner} />
+        <p className={styles.loadingText}>Loading user session...</p>
+      </div>
+    );
+  }
+
+  if (isDownloading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingSpinner} />
+        <p className={styles.loadingText}>Downloading PDF...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-50">
-      <header className="w-full max-w-4xl mx-auto flex justify-between items-center py-4 px-6 md:px-0 bg-white rounded-b-lg shadow-sm border-b border-l border-r border-gray-200 z-10">
-        <h1 className="text-xl font-bold text-gray-800">CV AI Parser</h1>
-        <div className="flex space-x-4 items-center">
-          <AuthComponent />
-        </div>
-      </header>
+    <div className={styles.pageWrapper}>
+      <SiteHeader />
 
-      <main className="flex-1 flex flex-col items-center p-6 w-full max-w-4xl">
+      <main className={!user ? styles.mainContainer : styles.mainUserContainer}>
         {!user && (
-          <div className="text-center bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-md mb-8 mt-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Welcome!</h2>
-            <p className="text-gray-600 mb-6">
-              Please sign in or sign up to use the resume parser and manage your
-              library.
-            </p>
-            <AuthComponent />
-          </div>
+          <>
+            <div className={styles.authContainer}>
+              <h2 className={styles.authTitle}>Magic AI Resume Converter</h2>
+              <p className={styles.authDescription}>
+                Please sign in or sign up to use the resume parser and manage
+                your library.
+              </p>
+              <AuthComponent />
+            </div>{' '}
+          </>
         )}
 
-        {user && (
-          <div className="w-full max-w-4xl flex justify-center space-x-4 mb-8 mt-6">
-            <button
-              type="button"
-              onClick={() => router.push('/')}
-              className={`px-6 py-3 rounded-lg font-semibold transition-colors ${currentView === 'upload' ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-            >
-              Upload New Resume
-            </button>
-            <button
-              type="button"
-              onClick={() => router.push('/library')}
-              className={`px-6 py-3 rounded-lg font-semibold transition-colors ${currentView === 'library' ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-            >
-              My Resume Library
-            </button>
-          </div>
-        )}
+        {user && <TabNavigation initialView="upload" />}
 
         {user && currentView === 'upload' && (
           <ResumeUploader
@@ -183,11 +189,40 @@ export default function Home() {
           />
         )}
 
-        {/* The 'view' and 'edit' states will typically be handled by the /resume/[slug] page */}
+        <div className={!user ? styles.features : styles.userFeatures}>
+          <div className={styles.feature}>
+            <div className={styles.featureIcon}>
+              <Bot size={28} />
+            </div>
+            <h3>Smart Parsing</h3>
+            <p>
+              Google Gemini AI-powered parsing when available, with intelligent
+              fallback text analysis
+            </p>
+          </div>
+          <div className={styles.feature}>
+            <div className={styles.featureIcon}>
+              <FileText size={28} />
+            </div>
+            <h3>Beautiful Design</h3>
+            <p>
+              Your resume gets transformed into a modern, professional layout
+            </p>
+          </div>
+          {/* <div className={styles.feature}>
+               <div className={styles.featureIcon}>
+                 <Smartphone size={28} />
+               </div>
+               <h3>Responsive</h3>
+               <p>Looks great on all devices and can be downloaded as PDF</p>
+             </div> */}
+        </div>
+
+        {/* The 'view' and 'edit' states will typically be handled by th  e /resume/[slug] page */}
         {/* However, if a user uploads and we don't redirect immediately (e.g., if there's no slug or for local testing), we can still show it here */}
         {user && currentView === 'view' && resumeData && (
-          <div className="w-full">
-            {error && <div className="text-red-600 mb-4">Error: {error}</div>}
+          <div className={styles.resumeContainer} ref={resumeContainerRef}>
+            {error && <div className={styles.errorMessage}>Error: {error}</div>}
             <ProfileHeader
               profileImage={resumeData.profileImage || ''}
               name={resumeData.name || ''}
@@ -215,11 +250,11 @@ export default function Home() {
               certifications={resumeData.certifications}
               customColors={resumeData.customColors || {}}
             />
-            <div className="flex justify-center space-x-4 mt-6 p-4">
+            <div className={styles.buttonContainer}>
               <button
                 type="button"
                 onClick={handleEditResume}
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors"
+                className={styles.editButton}
               >
                 Edit Resume
               </button>
@@ -227,7 +262,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={handleReset}
-                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg shadow hover:bg-gray-300 transition-colors"
+                className={styles.resetButton}
               >
                 Upload New
               </button>
@@ -235,7 +270,7 @@ export default function Home() {
           </div>
         )}
 
-        {user && currentView === 'edit' && resumeData && (
+        {currentView === 'edit' && resumeData && (
           <ResumeEditor
             resumeData={resumeData}
             onSave={handleSaveEdits}
