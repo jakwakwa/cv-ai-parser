@@ -11,7 +11,7 @@ const colors = {
   '--light-grey-background': '#f5f5f5',
   '--off-white': '#faf4ec',
   '--light-brown-border': '#a49990c7',
-  '--light-grey-border': '#cecac6'
+  '--light-grey-border': '#cecac6',
 };
 
 export default colors;

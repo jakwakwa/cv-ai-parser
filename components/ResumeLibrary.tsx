@@ -1,93 +1,110 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Eye, Download, Trash2, Calendar, Lock, Globe, FileText } from "lucide-react"
-import { ResumeDatabase } from "@/lib/database"
-import { useAuth } from "./AuthProvider"
-import type { Resume } from "@/lib/supabase"
-import styles from "./ResumeLibrary.module.css"
+import {
+  Calendar,
+  Download,
+  Eye,
+  FileText,
+  Globe,
+  Lock,
+  Trash2,
+} from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from '@/components/ui/card';
+import { ResumeDatabase } from '@/lib/database';
+import type { Resume } from '@/lib/supabase';
+import { useAuth } from './AuthProvider';
+import styles from './ResumeLibrary.module.css';
 
-export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (resume: any) => void }) {
-  const { user } = useAuth()
-  const [resumes, setResumes] = useState<Resume[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
-  const [deleting, setDeleting] = useState<string | null>(null)
+export default function ResumeLibrary({
+  onSelectResume,
+}: {
+  onSelectResume: (resume: unknown) => void;
+}) {
+  const { user } = useAuth();
+  const [resumes, setResumes] = useState<Resume[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [deleting, setDeleting] = useState<string | null>(null);
+
+  const loadResumes = useCallback(async () => {
+    try {
+      setLoading(true);
+      const userResumes = await ResumeDatabase.getUserResumes();
+      setResumes(userResumes);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load resumes');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (user) {
-      loadResumes()
+      loadResumes();
     }
-  }, [user])
+  }, [user, loadResumes]);
 
-  const loadResumes = async () => {
+  const handleDeleteResume = async (id: string, _title: string) => {
     try {
-      setLoading(true)
-      const userResumes = await ResumeDatabase.getUserResumes()
-      setResumes(userResumes)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load resumes")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleDeleteResume = async (id: string, title: string) => {
-    try {
-      setError("") // Clear any previous errors
-      setDeleting(id)
-      await ResumeDatabase.deleteResume(id)
-      setResumes(resumes.filter((r) => r.id !== id))
+      setError(''); // Clear any previous errors
+      setDeleting(id);
+      await ResumeDatabase.deleteResume(id);
+      setResumes(resumes.filter((r) => r.id !== id));
       // Optional: Show success message
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete resume")
+      setError(err instanceof Error ? err.message : 'Failed to delete resume');
     } finally {
-      setDeleting(null)
+      setDeleting(null);
     }
-  }
+  };
 
   const handleTogglePublic = async (resume: Resume) => {
     try {
       const updated = await ResumeDatabase.updateResume(resume.id, {
         is_public: !resume.is_public,
-      })
-      setResumes(resumes.map((r) => (r.id === resume.id ? updated : r)))
+      });
+      setResumes(resumes.map((r) => (r.id === resume.id ? updated : r)));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update resume")
+      setError(err instanceof Error ? err.message : 'Failed to update resume');
     }
-  }
+  };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    })
-  }
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
 
   const getMethodBadgeColor = (method: string) => {
     switch (method) {
-      case "ai":
-        return styles.badgeGreen
-      case "regex_fallback":
-        return styles.badgeYellow
+      case 'ai':
+        return styles.badgeGreen;
+      case 'regex_fallback':
+        return styles.badgeYellow;
       default:
-        return styles.badgeGray
+        return styles.badgeGray;
     }
-  }
+  };
 
   const getMethodLabel = (method: string) => {
     switch (method) {
-      case "ai":
-        return "AI Parsed"
-      case "regex_fallback":
-        return "Text Analysis"
+      case 'ai':
+        return 'AI Parsed';
+      case 'regex_fallback':
+        return 'Text Analysis';
       default:
-        return "Unknown"
+        return 'Unknown';
     }
-  }
+  };
 
   if (!user) {
     return (
@@ -99,12 +116,14 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
                 <FileText className={styles.icon} />
               </div>
               <h2 className={styles.stateTitle}>Sign In Required</h2>
-              <p className={styles.stateText}>Please sign in to view your resume library.</p>
+              <p className={styles.stateText}>
+                Please sign in to view your resume library.
+              </p>
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (loading) {
@@ -113,13 +132,13 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
         <div className={styles.wrapper}>
           <div className={styles.stateContainer}>
             <div className={styles.stateContent}>
-              <div className={styles.loadingSpinner}></div>
+              <div className={styles.loadingSpinner} />
               <p className={styles.stateText}>Loading your resumes...</p>
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -128,7 +147,7 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
         <div className={styles.header}>
           <h2 className={styles.title}>Your Resume Library</h2>
           <p className={styles.subtitle}>
-            {resumes.length} resume{resumes.length !== 1 ? "s" : ""}
+            {resumes.length} resume{resumes.length !== 1 ? 's' : ''}
           </p>
         </div>
 
@@ -145,7 +164,9 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
                 <FileText className={styles.iconGray} />
               </div>
               <h3 className={styles.stateTitle}>No resumes yet</h3>
-              <p className={styles.stateText}>Upload your first resume to get started!</p>
+              <p className={styles.stateText}>
+                Upload your first resume to get started!
+              </p>
             </div>
           </div>
         ) : (
@@ -157,9 +178,12 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
                     <h3 className={styles.cardTitle}>{resume.title}</h3>
                     <div className={styles.publicToggleContainer}>
                       <button
+                        type="button"
                         onClick={() => handleTogglePublic(resume)}
                         className={`${styles.publicToggle} ${
-                          resume.is_public ? styles.publicTogglePublic : styles.publicTogglePrivate
+                          resume.is_public
+                            ? styles.publicTogglePublic
+                            : styles.publicTogglePrivate
                         }`}
                       >
                         {resume.is_public ? (
@@ -182,14 +206,18 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
                   <div className={styles.contentText}>
                     <div className={styles.contentRow}>
                       <span>Method:</span>
-                      <Badge className={`${styles.badge} ${getMethodBadgeColor(resume.parse_method || "unknown")}`}>
-                        {getMethodLabel(resume.parse_method || "unknown")}
+                      <Badge
+                        className={`${styles.badge} ${getMethodBadgeColor(resume.parse_method || 'unknown')}`}
+                      >
+                        {getMethodLabel(resume.parse_method || 'unknown')}
                       </Badge>
                     </div>
                     {resume.confidence_score && (
                       <div className={styles.contentRow}>
                         <span>Confidence:</span>
-                        <span className={styles.contentValue}>{resume.confidence_score}%</span>
+                        <span className={styles.contentValue}>
+                          {resume.confidence_score}%
+                        </span>
                       </div>
                     )}
                     <div className={styles.contentRow}>
@@ -218,6 +246,7 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
 
                 <CardFooter className={styles.cardFooter}>
                   <button
+                    type="button"
                     onClick={() => onSelectResume(resume.parsed_data)}
                     className={styles.viewButton}
                   >
@@ -225,19 +254,25 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
                   </button>
                   {resume.is_public && resume.slug && (
                     <button
-                      onClick={() => navigator.clipboard.writeText(`${window.location.origin}/resume/${resume.slug}`)}
+                      type="button"
+                      onClick={() =>
+                        navigator.clipboard.writeText(
+                          `${window.location.origin}/resume/${resume.slug}`
+                        )
+                      }
                       className={styles.shareButton}
                     >
                       Share
                     </button>
                   )}
                   <button
+                    type="button"
                     onClick={() => handleDeleteResume(resume.id, resume.title)}
                     disabled={deleting === resume.id}
                     className={styles.deleteButton}
                   >
                     {deleting === resume.id ? (
-                      <div className={styles.deleteSpinner}></div>
+                      <div className={styles.deleteSpinner} />
                     ) : (
                       <Trash2 className={styles.deleteIcon} />
                     )}
@@ -249,5 +284,5 @@ export default function ResumeLibrary({ onSelectResume }: { onSelectResume: (res
         )}
       </div>
     </div>
-  )
+  );
 }
