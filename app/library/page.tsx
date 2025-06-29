@@ -2,18 +2,18 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
-import AuthComponent from '@/components/AuthComponent';
-import { useAuth } from '@/components/AuthProvider';
-import ResumeLibrary from '@/components/ResumeLibrary';
-import { SiteHeader } from '@/components/SiteHeader';
-import TabNavigation from '@/components/TabNavigation';
 import { useToast } from '@/hooks/use-toast';
 import type { Resume } from '@/lib/types';
+import AuthComponent from '@/src/components/auth-component/AuthComponent';
+import { useAuth } from '@/src/components/auth-provider/AuthProvider';
+import ResumeLibrary from '@/src/components/resume-library/ResumeLibrary';
+import { SiteHeader } from '@/src/components/site-header/SiteHeader';
+import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import styles from '../page.module.css';
 
 export default function LibraryPage() {
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
   const { toast } = useToast();
 
   const searchParams = useSearchParams();

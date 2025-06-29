@@ -2,8 +2,14 @@
 
 import { Palette, RotateCcw } from 'lucide-react';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/src/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/src/components/ui/card';
+import styles from './ColorPicker.module.css';
 
 interface ColorScheme {
   name: string;
@@ -160,46 +166,40 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
   };
 
   return (
-    <Card className="bg-white border border-gray-200 shadow-sm">
-      <CardHeader>
-        <CardTitle className="text-gray-900 flex items-center">
-          <Palette className="w-5 h-5 mr-2" />
+    <Card className={styles.colorPickerCard}>
+      <CardHeader className={styles.cardHeader}>
+        <CardTitle className={styles.cardTitle}>
+          <Palette className={styles.iconSize} />
           Choose Color Scheme
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className={styles.cardContent}>
         {/* Preset Color Schemes */}
         <div>
-          <h4 className="font-medium text-gray-900 mb-3">Preset Themes</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <h4 className={styles.presetThemesTitle}>Preset Themes</h4>
+          <div className={styles.gridContainer}>
             {colorSchemes.map((scheme) => (
               <button
                 type="button"
                 key={scheme.name}
                 onClick={() => handleSchemeSelect(scheme)}
-                className={`p-3 rounded-lg border-2 transition-all text-left ${
-                  selectedScheme === scheme.name
-                    ? 'border-teal-500 bg-teal-50'
-                    : 'border-gray-200 hover:border-gray-300 bg-white'
-                }`}
+                className={`${styles.schemeButton} ${selectedScheme === scheme.name ? styles.selectedScheme : styles.unselectedScheme}`}
               >
-                <div className="flex items-center space-x-2 mb-2">
+                <div className={styles.schemeColorPreview}>
                   <div
-                    className="w-4 h-4 rounded-full"
+                    className={styles.colorCircle}
                     style={{ backgroundColor: scheme.colors['--teal-main'] }}
                   />
                   <div
-                    className="w-4 h-4 rounded-full"
+                    className={styles.colorCircle}
                     style={{ backgroundColor: scheme.colors['--bronze-dark'] }}
                   />
                   <div
-                    className="w-4 h-4 rounded-full"
+                    className={styles.colorCircle}
                     style={{ backgroundColor: scheme.colors['--charcoal'] }}
                   />
                 </div>
-                <p className="text-sm font-medium text-gray-900">
-                  {scheme.name}
-                </p>
+                <p className={styles.schemeName}>{scheme.name}</p>
               </button>
             ))}
           </div>
@@ -207,28 +207,25 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
 
         {/* Custom Color Controls */}
         <div>
-          <div className="flex items-center justify-between mb-3">
-            <h4 className="font-medium text-gray-900">Custom Colors</h4>
+          <div className={styles.customColorHeader}>
+            <h4 className={styles.customColorTitle}>Custom Colors</h4>
             <Button
               variant="outline"
               size="sm"
               onClick={handleReset}
-              className="flex items-center gap-1"
+              className={styles.resetButton}
             >
-              <RotateCcw className="w-4 h-4" />
+              <RotateCcw className={styles.iconSize} />
               Reset
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div className={styles.customColorGrid}>
             <div>
-              <label
-                htmlFor="main-accent"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="main-accent" className={styles.colorLabel}>
                 Main Accent
               </label>
-              <div className="flex items-center space-x-2">
+              <div className={styles.colorInputContainer}>
                 <input
                   id="main-accent"
                   type="color"
@@ -238,20 +235,16 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
                   onChange={(e) =>
                     handleCustomColorChange('--teal-main', e.target.value)
                   }
-                  className="w-8 h-8 rounded border border-gray-300 cursor-pointer"
+                  className={styles.colorInput}
                 />
-                <span className="text-xs text-gray-500">Headers</span>
               </div>
             </div>
 
             <div>
-              <label
-                htmlFor="secondary"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="secondary" className={styles.colorLabel}>
                 Secondary
               </label>
-              <div className="flex items-center space-x-2">
+              <div className={styles.colorInputContainer}>
                 <input
                   id="secondary"
                   type="color"
@@ -262,20 +255,17 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
                   onChange={(e) =>
                     handleCustomColorChange('--bronze-dark', e.target.value)
                   }
-                  className="w-8 h-8 rounded border border-gray-300 cursor-pointer"
+                  className={styles.colorInput}
                 />
-                <span className="text-xs text-gray-500">Buttons</span>
+                <span className={styles.colorDescription}>Buttons</span>
               </div>
             </div>
 
             <div>
-              <label
-                htmlFor="text-color"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="text-color" className={styles.colorLabel}>
                 Text Color
               </label>
-              <div className="flex items-center space-x-2">
+              <div className={styles.colorInputContainer}>
                 <input
                   id="text-color"
                   type="color"
@@ -285,20 +275,17 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
                   onChange={(e) =>
                     handleCustomColorChange('--charcoal', e.target.value)
                   }
-                  className="w-8 h-8 rounded border border-gray-300 cursor-pointer"
+                  className={styles.colorInput}
                 />
-                <span className="text-xs text-gray-500">Body text</span>
+                <span className={styles.colorDescription}>Body text</span>
               </div>
             </div>
 
             <div>
-              <label
-                htmlFor="background"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="background" className={styles.colorLabel}>
                 Background
               </label>
-              <div className="flex items-center space-x-2">
+              <div className={styles.colorInputContainer}>
                 <input
                   id="background"
                   type="color"
@@ -308,20 +295,17 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
                   onChange={(e) =>
                     handleCustomColorChange('--off-white', e.target.value)
                   }
-                  className="w-8 h-8 rounded border border-gray-300 cursor-pointer"
+                  className={styles.colorInput}
                 />
-                <span className="text-xs text-gray-500">Sidebar</span>
+                <span className={styles.colorDescription}>Sidebar</span>
               </div>
             </div>
 
             <div>
-              <label
-                htmlFor="accent-light"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="accent-light" className={styles.colorLabel}>
                 Accent Light
               </label>
-              <div className="flex items-center space-x-2">
+              <div className={styles.colorInputContainer}>
                 <input
                   id="accent-light"
                   type="color"
@@ -329,20 +313,17 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
                   onChange={(e) =>
                     handleCustomColorChange('--peach', e.target.value)
                   }
-                  className="w-8 h-8 rounded border border-gray-300 cursor-pointer"
+                  className={styles.colorInput}
                 />
-                <span className="text-xs text-gray-500">Highlights</span>
+                <span className={styles.colorDescription}>Highlights</span>
               </div>
             </div>
 
             <div>
-              <label
-                htmlFor="dark-text"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="dark-text" className={styles.colorLabel}>
                 Dark Text
               </label>
-              <div className="flex items-center space-x-2">
+              <div className={styles.colorInputContainer}>
                 <input
                   id="dark-text"
                   type="color"
@@ -350,9 +331,9 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
                   onChange={(e) =>
                     handleCustomColorChange('--coffee', e.target.value)
                   }
-                  className="w-8 h-8 rounded border border-gray-300 cursor-pointer"
+                  className={styles.colorInput}
                 />
-                <span className="text-xs text-gray-500">Content</span>
+                <span className={styles.colorDescription}>Content</span>
               </div>
             </div>
           </div>
@@ -360,10 +341,10 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
 
         {/* Color Preview */}
         <div>
-          <h4 className="font-medium text-gray-900 mb-3">Preview</h4>
-          <div className="border border-gray-200 rounded-lg p-4 space-y-2">
+          <h4 className={styles.previewTitle}>Preview</h4>
+          <div className={styles.previewContainer}>
             <div
-              className="text-lg font-bold"
+              className={styles.previewName}
               style={{
                 color:
                   currentColors['--charcoal'] || defaultColors['--charcoal'],
@@ -372,7 +353,7 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
               Your Name
             </div>
             <div
-              className="text-sm font-medium"
+              className={styles.previewTitleText}
               style={{
                 color:
                   currentColors['--teal-main'] || defaultColors['--teal-main'],
@@ -381,7 +362,7 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
               Professional Title
             </div>
             <div
-              className="text-sm"
+              className={styles.previewContentText}
               style={{
                 color: currentColors['--coffee'] || defaultColors['--coffee'],
               }}
@@ -390,7 +371,7 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
               colors.
             </div>
             <div
-              className="inline-block px-3 py-1 rounded text-white text-xs"
+              className={styles.previewButton}
               style={{
                 backgroundColor:
                   currentColors['--bronze-dark'] ||

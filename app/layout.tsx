@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import type React from 'react';
 import '../styles/globals.css';
 import '../src/index.css';
-import { AuthProvider } from '@/components/AuthProvider';
-import { Toaster } from '@/components/ui/toaster';
 import { ToastProvider } from '@/hooks/use-toast';
+import { AuthProvider } from '@/src/components/auth-provider/AuthProvider';
+import { Toaster } from '@/src/components/ui/toaster';
 
 export const metadata: Metadata = {
   title: 'Resume Parser & Generator',

@@ -3,7 +3,7 @@
 import type React from 'react';
 
 import { useState } from 'react';
-import { useAuth } from './AuthProvider';
+import { useAuth } from '../auth-provider/AuthProvider';
 import styles from './authComponent.module.css';
 
 export default function AuthComponent() {

@@ -10,16 +10,16 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { Badge } from '@/components/ui/badge';
+import { ResumeDatabase } from '@/lib/database';
+import type { Resume } from '@/lib/types';
+import { Badge } from '@/src/components/ui/badge';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-} from '@/components/ui/card';
-import { ResumeDatabase } from '@/lib/database';
-import type { Resume } from '@/lib/types';
-import { useAuth } from './AuthProvider';
+} from '@/src/components/ui/card';
+import { useAuth } from '../auth-provider/AuthProvider';
 import styles from './ResumeLibrary.module.css';
 
 export default function ResumeLibrary({

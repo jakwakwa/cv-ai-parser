@@ -3,10 +3,25 @@ import jsPDF from 'jspdf';
 import { type RefObject, useState } from 'react';
 import { useToast } from './use-toast';
 
+interface Html2PdfOptions {
+  margin: number;
+  filename: string;
+  image: { type: string; quality: number };
+  html2canvas: { scale: number; useCORS: boolean };
+  jsPDF: { unit: string; format: string; orientation: string };
+  pagebreak: { mode: string };
+}
+
 // Define the html2pdf function on the window object
 declare global {
   interface Window {
-    html2pdf: any;
+    html2pdf: () => {
+      from: (element: HTMLElement) => {
+        set: (options: Html2PdfOptions) => {
+          save: () => Promise<void>;
+        };
+      };
+    };
   }
 }
 

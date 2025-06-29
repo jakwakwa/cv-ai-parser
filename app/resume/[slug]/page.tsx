@@ -1,29 +1,29 @@
 'use client';
 
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { useAuth } from '@/components/AuthProvider';
-import ResumeEditor from '@/components/ResumeEditor';
-import { SiteHeader } from '@/components/SiteHeader';
-import { Button } from '@/components/ui/button';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import type { Resume } from '@/lib/types'; // Import the Resume type
+import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import CertificationsSection from '@/src/components/CertificationsSection/CertificationsSection';
 import ContactSection from '@/src/components/ContactSection/ContactSection';
 import DownloadButton from '@/src/components/DownloadButton/DownloadButton';
 import EducationSection from '@/src/components/EducationSection/EducationSection';
 import ExperienceSection from '@/src/components/ExperienceSection/ExperienceSection';
 import ProfileHeader from '@/src/components/ProfileHeader/ProfileHeader';
+import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
 import SkillsSection from '@/src/components/SkillsSection/SkillsSection';
+import { SiteHeader } from '@/src/components/site-header/SiteHeader';
+import { Button } from '@/src/components/ui/button';
 import styles from '../../page.module.css';
 
 export default function ViewResumePage() {
   const router = useRouter();
   const params = useParams();
   const { slug } = params;
-  const { user, loading: authLoading } = useAuth();
+  const { loading: authLoading } = useAuth();
   const resumeContainerRef = useRef<HTMLDivElement>(null);
   const { isDownloading, downloadPdf } = usePdfDownloader();
   const { toast } = useToast();
@@ -135,7 +135,7 @@ export default function ViewResumePage() {
       const result = await response.json();
       setResume(result.data); // Update with saved data (entire resume object)
       setViewMode('view');
-      router.push(window.location.pathname + '?toast=resume_saved');
+      router.push(`${window.location.pathname}?toast=resume_saved`);
     } catch (err: unknown) {
       setError((err as Error).message || 'Failed to save edits.');
       toast({

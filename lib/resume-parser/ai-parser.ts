@@ -1,8 +1,8 @@
-import { generateObject } from 'ai';
 import { google } from '@ai-sdk/google';
+import { generateObject } from 'ai';
 import { AI_MODEL } from '@/lib/config';
-import { resumeSchema, type ParsedResume } from './schema';
 import { getResumeParsingPrompt } from './prompts';
+import { type ParsedResume, resumeSchema } from './schema';
 
 export async function parseWithAI(content: string): Promise<ParsedResume> {
   console.log(`Starting AI parsing with model: ${AI_MODEL}`);

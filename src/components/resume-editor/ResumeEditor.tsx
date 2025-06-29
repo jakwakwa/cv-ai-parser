@@ -2,15 +2,20 @@
 
 import { Eye, EyeOff, Plus, Save, Trash2, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
-import ColorPicker from './ColorPicker';
-import ProfileImageUploader from './ProfileImageUploader';
+import { Badge } from '@/src/components/ui/badge';
+import { Button } from '@/src/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/src/components/ui/card';
+import { Input } from '@/src/components/ui/input';
+import { Label } from '@/src/components/ui/label';
+import { Textarea } from '@/src/components/ui/textarea';
+import ColorPicker from '../color-picker/ColorPicker';
+import ProfileImageUploader from '../profile-image-uploader/ProfileImageUploader';
 import styles from './ResumeEditor.module.css';
 
 type IncomingExperience = {
