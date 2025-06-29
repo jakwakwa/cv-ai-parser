@@ -551,7 +551,7 @@ const ResumeUploader = ({
   }
 
   return (
-    <div className="w-full max-w-4xl bg-[#fff]/50 rounded">
+    <div className="w-full max-w-4xl rounded">
       <div className={styles.uploaderContainer}>
         <div className={styles.header}>
           <h1 className={styles.title}>Resume Parser</h1>

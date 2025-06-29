@@ -51,7 +51,7 @@ export default function LibraryPage() {
   return (
     <div className={styles.pageWrapper}>
       <SiteHeader />
-      <main className={styles.mainContainer}>
+      <main className={styles.mainUserContainer}>
         {!user && (
           <div className="text-center bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-md mx-auto mt-12">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">Welcome!</h2>

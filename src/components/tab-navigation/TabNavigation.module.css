@@ -21,10 +21,11 @@
 }
 
 .inactiveTab {
-  background-color: #e5e7eb;
-  color: #4b5563;
+  background-color: #bababa;
+  color: #181c22;
 }
 
 .inactiveTab:hover {
-  background-color: #d1d5db;
+  background-color: #ccd2dc;
+  color: #4e5b6f;
 } 

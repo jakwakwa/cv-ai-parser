@@ -23,7 +23,7 @@ export default function TabNavigation({ initialView }: TabNavigationProps) {
         type="button"
         onClick={() => handleTabClick('upload')}
         className={`${styles.tabButton} ${currentView === 'upload' ? styles.activeTab : styles.inactiveTab}`}
-        style={{ height: '30px' }}
+        style={{ height: '50px' }}
       >
         Upload New Resume
       </button>
@@ -31,7 +31,7 @@ export default function TabNavigation({ initialView }: TabNavigationProps) {
         type="button"
         onClick={() => handleTabClick('library')}
         className={`${styles.tabButton} ${currentView === 'library' ? styles.activeTab : styles.inactiveTab}`}
-        style={{ height: '30px' }}
+        style={{ height: '50px' }}
       >
         My Resume Library
       </button>
