@@ -1,10 +1,14 @@
 /* Container and layout styles */
 .container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     /* Removed min-height and background-color as it's now handled by pageWrapper */
 }
 
 .wrapper {
-    max-width: 64rem;
+    /* max-width: 64rem; */
+    width: 100%;
     margin: 0 auto;
     padding: 2rem;
     background-color: #fff;
@@ -252,7 +256,7 @@
 
 .shareButton {
     padding: 0.5rem 0.75rem;
-    background-color: rgb(37 99 235);
+    background-color: rgb(37, 159, 235);
     color: white;
     border-radius: 0.25rem;
     font-size: 0.875rem;
@@ -262,12 +266,12 @@
 }
 
 .shareButton:hover {
-    background-color: rgb(29 78 216);
+    background-color: rgb(97, 133, 232);
 }
 
 .deleteButton {
-    padding: 0.5rem 0.75rem;
-    background-color: rgb(239 68 68);
+    padding: 0.65rem 0.75rem;
+    background-color: rgb(234, 95, 95);
     color: white;
     border-radius: 0.25rem;
     font-size: 0.875rem;

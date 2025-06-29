@@ -4,6 +4,7 @@
 
 body {
   font-family: "Inter", Helvetica, sans-serif;
+  background: black;
 }
 
 @layer utilities {
@@ -99,11 +100,4 @@ body {
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
+

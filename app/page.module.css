@@ -4,7 +4,7 @@
   align-items: flex-start;
   align-content: flex-start;
   justify-content: flex-start;
-  background-color: #f9fafb; /* bg-gray-50 */
+  background-color: #26252a; /* bg-gray-50 */
 }
 .mainUserContainer {
   flex: 1;
@@ -18,7 +18,7 @@
   max-width: 64rem; /* max-w-4xl, adjusted for single column */
   margin: 2rem auto; /* Added vertical margin */
   padding: 2rem; /* Increased padding */
-  background-color: #fff;
+  background-color: #e2e2e2;
   border-radius: 0.75rem; /* rounded-xl */
   box-shadow:
     0 4px 6px -1px rgb(0 0 0 / 0.1),
@@ -36,7 +36,7 @@
   max-width: 64rem; /* max-w-4xl, adjusted for single column */
   margin: 2rem auto; /* Added vertical margin */
   padding: 2rem; /* Increased padding */
-  background-color: #fff;
+  background-color: #e2e2e2;
   border-radius: 0.75rem; /* rounded-xl */
   box-shadow:
     0 4px 6px -1px rgb(0 0 0 / 0.1),
@@ -131,8 +131,8 @@
 /* Button styles */
 .editButton {
   padding: 0.75rem 1.5rem; /* px-6 py-3 */
-  background-color: #2b2b2b; /* bg-blue-600 */
-  color: #ffffff; /* text-white */
+  background-color: #a67245; /* bg-blue-600 */
+  color: #f4e0bf; /* text-white */
   border-radius: 0.5rem; /* rounded-lg */
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); /* shadow */
   transition: background-color 0.15s ease-in-out; /* transition-colors */
