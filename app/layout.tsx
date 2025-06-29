@@ -1,19 +1,18 @@
-import type React from "react"
-import type { Metadata } from "next"
-import "../styles/globals.css"
-import "../src/index.css"
-import { AuthProvider } from "@/components/AuthProvider"
+import type React from 'react';
+import type { Metadata } from 'next';
+import '../styles/globals.css';
+import '../src/index.css';
+import { AuthProvider } from '@/components/AuthProvider';
 
 export const metadata: Metadata = {
-  title: "Resume Parser & Generator",
-  description: "Upload your resume and generate a beautiful online version",
-    generator: 'v0.dev'
-}
+  title: 'Resume Parser & Generator',
+  description: 'Upload your resume and generate a beautiful online version',
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -27,5 +26,5 @@ export default function RootLayout({
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
-  )
+  );
 }

@@ -1,0 +1,24 @@
+/**
+ * Feature flag to enable or disable AI-powered resume parsing.
+ * Defaults to true if the necessary API key is present.
+ */
+// export const IS_AI_PARSING_ENABLED = process.env.GOOGLE_GENERATIVE_AI_API_KEY ? true : false;
+
+export const IS_AI_PARSING_ENABLED = false;
+
+/**
+ * The specific Google Gemini model to be used for AI parsing.
+ */
+export const AI_MODEL = 'gemini-1.5-pro-latest';
+
+/**
+ * A confidence score threshold. If the regex parser's confidence is below this,
+ * we might consider the result unreliable.
+ */
+export const REGEX_CONFIDENCE_THRESHOLD = 30;
+
+/**
+ * The maximum confidence score the regex parser can assign.
+ * This ensures that AI-parsed results are always considered more reliable.
+ */
+export const MAX_REGEX_CONFIDENCE = 85;
