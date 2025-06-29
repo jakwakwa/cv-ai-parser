@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import type { Resume } from '@/lib/types';
 import AuthComponent from '@/src/components/auth-component/AuthComponent';
@@ -11,7 +11,8 @@ import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import styles from '../page.module.css';
 
-export default function LibraryPage() {
+// Component that handles URL parameters - needs to be wrapped in Suspense
+function LibraryPageContent() {
   const router = useRouter();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -49,26 +50,34 @@ export default function LibraryPage() {
   }, [searchParams, router, toast]);
 
   return (
+    <main className={styles.mainUserContainer}>
+      {!user && (
+        <div className="text-center bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-md mx-auto mt-12">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Welcome!</h2>
+          <p className="text-gray-600 mb-6">
+            Please sign in or sign up to use the resume parser and manage your
+            library.
+          </p>
+          <AuthComponent />
+        </div>
+      )}
+      {user && (
+        <>
+          <TabNavigation initialView="library" />
+          <ResumeLibrary onSelectResume={handleSelectResume} />
+        </>
+      )}
+    </main>
+  );
+}
+
+export default function LibraryPage() {
+  return (
     <div className={styles.pageWrapper}>
       <SiteHeader />
-      <main className={styles.mainUserContainer}>
-        {!user && (
-          <div className="text-center bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-md mx-auto mt-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Welcome!</h2>
-            <p className="text-gray-600 mb-6">
-              Please sign in or sign up to use the resume parser and manage your
-              library.
-            </p>
-            <AuthComponent />
-          </div>
-        )}
-        {user && (
-          <>
-            <TabNavigation initialView="library" />
-            <ResumeLibrary onSelectResume={handleSelectResume} />
-          </>
-        )}
-      </main>
+      <Suspense fallback={<div>Loading...</div>}>
+        <LibraryPageContent />
+      </Suspense>
     </div>
   );
 }
