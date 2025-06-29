@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import styles from './TabNavigation.module.css';
 
 interface TabNavigationProps {
   initialView: 'upload' | 'library';
@@ -17,15 +18,11 @@ export default function TabNavigation({ initialView }: TabNavigationProps) {
   };
 
   return (
-    <div className="w-full flex justify-center space-x-4 mb-8">
+    <div className={styles.tabNavigationContainer}>
       <button
         type="button"
         onClick={() => handleTabClick('upload')}
-        className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
-          currentView === 'upload'
-            ? 'bg-teal-600 text-white'
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }`}
+        className={`${styles.tabButton} ${currentView === 'upload' ? styles.activeTab : styles.inactiveTab}`}
         style={{ height: '30px' }}
       >
         Upload New Resume
@@ -33,11 +30,7 @@ export default function TabNavigation({ initialView }: TabNavigationProps) {
       <button
         type="button"
         onClick={() => handleTabClick('library')}
-        className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
-          currentView === 'library'
-            ? 'bg-teal-600 text-white'
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }`}
+        className={`${styles.tabButton} ${currentView === 'library' ? styles.activeTab : styles.inactiveTab}`}
         style={{ height: '30px' }}
       >
         My Resume Library

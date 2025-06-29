@@ -10,11 +10,11 @@ import {
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useRef, useState } from 'react';
 import Tesseract from 'tesseract.js';
-import { useAuth } from '@/components/AuthProvider';
-import { Progress } from '@/components/ui/progress';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
-import ColorPicker from '../../../components/ColorPicker';
-import ProfileImageUploader from '../../../components/ProfileImageUploader';
+import { useAuth } from '@/src/components/auth-provider/AuthProvider';
+import { Progress } from '@/src/components/ui/progress';
+import ColorPicker from '../color-picker/ColorPicker';
+import ProfileImageUploader from '../profile-image-uploader/ProfileImageUploader';
 import styles from './ResumeUploader.module.css';
 
 declare global {
@@ -147,7 +147,7 @@ const ResumeUploader = ({
         // Use dynamic import with ssr: false
         const pdfjs = await import('pdfjs-dist');
         pdfjsLib = pdfjs as unknown as typeof window.pdfjsLib;
-      } catch (e) {
+      } catch (_e) {
         // Fallback to CDN if dynamic import fails
         await loadPDFJSFromCDN();
         pdfjsLib = window.pdfjsLib;
@@ -169,7 +169,7 @@ const ResumeUploader = ({
           try {
             pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
             break;
-          } catch (workerError) {
+          } catch (_workerError) {
             // Fall through
           }
         }
@@ -217,7 +217,7 @@ const ResumeUploader = ({
       if (cleanText.length > 100) {
         return cleanText;
       }
-    } catch (pdfError: unknown) {
+    } catch (_pdfError: unknown) {
       // Fall through to OCR if PDF.js fails or extracts insufficient text
     }
 

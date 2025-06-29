@@ -4,7 +4,7 @@ import { Camera, Check, Upload, User, X } from 'lucide-react';
 import Image from 'next/image';
 import type React from 'react';
 import { useCallback, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/src/components/ui/button';
 import {
   Card,
   CardContent,
@@ -12,7 +12,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '@/src/components/ui/card';
 import styles from './ProfileImageUploader.module.css';
 
 interface ProfileImageUploaderProps {

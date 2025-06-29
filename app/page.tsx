@@ -2,14 +2,11 @@
 import { Bot, FileText } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
-import AuthComponent from '@/components/AuthComponent';
-import { useAuth } from '@/components/AuthProvider';
-import ResumeEditor from '@/components/ResumeEditor';
-import { SiteHeader } from '@/components/SiteHeader';
-import TabNavigation from '@/components/TabNavigation';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
+import AuthComponent from '@/src/components/auth-component/AuthComponent';
+import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import CertificationsSection from '@/src/components/CertificationsSection/CertificationsSection';
 import ContactSection from '@/src/components/ContactSection/ContactSection';
 import DownloadButton from '@/src/components/DownloadButton/DownloadButton';
@@ -17,7 +14,10 @@ import EducationSection from '@/src/components/EducationSection/EducationSection
 import ExperienceSection from '@/src/components/ExperienceSection/ExperienceSection';
 import ProfileHeader from '@/src/components/ProfileHeader/ProfileHeader';
 import ResumeUploader from '@/src/components/ResumeUploader/ResumeUploader';
+import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
 import SkillsSection from '@/src/components/SkillsSection/SkillsSection';
+import { SiteHeader } from '@/src/components/site-header/SiteHeader';
+import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import styles from './page.module.css';
 
 interface ParseInfo {
