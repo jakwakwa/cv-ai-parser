@@ -4,10 +4,9 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function GET(
   _request: Request,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
-  const resolvedParams = await params;
-  const { slug } = resolvedParams;
+  const { slug } = await params;
 
   if (!slug) {
     return NextResponse.json({ error: 'Slug is required.' }, { status: 400 });
