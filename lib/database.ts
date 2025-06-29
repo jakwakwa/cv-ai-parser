@@ -1,32 +1,37 @@
 /** biome-ignore-all lint/complexity/noStaticOnlyClass: <> */
-import type { Resume } from './supabase';
-import { supabase } from './supabase';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Resume } from './types';
 
 export class ResumeDatabase {
   // Save a new resume
-  static async saveResume({
-    title,
-    originalFilename,
-    fileType,
-    fileSize,
-    parsedData,
-    parseMethod,
-    confidenceScore,
-    isPublic = false,
-    userId,
-    slug,
-  }: {
-    title: string;
-    originalFilename?: string;
-    fileType?: string;
-    fileSize?: number;
-    parsedData: unknown;
-    parseMethod?: string;
-    confidenceScore?: number;
-    isPublic?: boolean;
-    userId: string;
-    slug: string;
-  }) {
+  static async saveResume(
+    supabase: SupabaseClient,
+    {
+      title,
+      originalFilename,
+      fileType,
+      fileSize,
+      parsedData,
+      parseMethod,
+      confidenceScore,
+      isPublic = false,
+      userId,
+      slug,
+      customColors,
+    }: {
+      title: string;
+      originalFilename?: string;
+      fileType?: string;
+      fileSize?: number;
+      parsedData: unknown;
+      parseMethod?: string;
+      confidenceScore?: number;
+      isPublic?: boolean;
+      userId: string;
+      slug: string;
+      customColors?: Record<string, string>;
+    }
+  ) {
     const { data, error } = await supabase
       .from('resumes')
       .insert({
@@ -40,6 +45,7 @@ export class ResumeDatabase {
         confidence_score: confidenceScore,
         is_public: isPublic,
         slug: slug,
+        custom_colors: customColors,
       })
       .select()
       .single();
@@ -52,7 +58,7 @@ export class ResumeDatabase {
   }
 
   // Get user's resumes
-  static async getUserResumes() {
+  static async getUserResumes(supabase: SupabaseClient) {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -75,25 +81,31 @@ export class ResumeDatabase {
   }
 
   // Get a specific resume
-  static async getResume(id: string) {
+  static async getResume(supabase: SupabaseClient, id: string) {
     const { data, error } = await supabase
       .from('resumes')
-      .select('*')
+      .select('*, custom_colors')
       .eq('id', id)
       .single();
 
     if (error) {
       throw new Error(`Failed to fetch resume: ${error.message}`);
     }
-
-    return data;
+    const resumeData = {
+      ...data,
+      parsed_data: {
+        ...data.parsed_data,
+        customColors: data.parsed_data.customColors || {},
+      },
+    };
+    return resumeData;
   }
 
   // Get public resume by slug
-  static async getPublicResume(slug: string) {
+  static async getPublicResume(supabase: SupabaseClient, slug: string) {
     const { data, error } = await supabase
       .from('resumes')
-      .select('*')
+      .select('*, custom_colors')
       .eq('slug', slug)
       .eq('is_public', true)
       .single();
@@ -107,15 +119,28 @@ export class ResumeDatabase {
       .from('resumes')
       .update({ view_count: data.view_count + 1 })
       .eq('id', data.id);
-
-    return data;
+    const resumeData = {
+      ...data,
+      parsed_data: {
+        ...data.parsed_data,
+        customColors: data.parsed_data.customColors || {},
+      },
+    };
+    return resumeData;
   }
 
   // Update resume
-  static async updateResume(id: string, updates: Partial<Resume>) {
+  static async updateResume(
+    supabase: SupabaseClient,
+    id: string,
+    updates: Partial<Resume> & { customColors?: Record<string, string> }
+  ) {
     const { data, error } = await supabase
       .from('resumes')
-      .update(updates)
+      .update({
+        ...updates,
+        custom_colors: updates.customColors,
+      })
       .eq('id', id)
       .select()
       .single();
@@ -128,7 +153,7 @@ export class ResumeDatabase {
   }
 
   // Delete resume
-  static async deleteResume(id: string) {
+  static async deleteResume(supabase: SupabaseClient, id: string) {
     const { error } = await supabase.from('resumes').delete().eq('id', id);
 
     if (error) {
@@ -139,6 +164,7 @@ export class ResumeDatabase {
   // Save resume version
 
   static async saveResumeVersion(
+    supabase: SupabaseClient,
     resumeId: string,
     // biome-ignore lint/suspicious/noExplicitAny: <s>
     parsedData: any,
@@ -174,7 +200,7 @@ export class ResumeDatabase {
   }
 
   // Get resume versions
-  static async getResumeVersions(resumeId: string) {
+  static async getResumeVersions(supabase: SupabaseClient, resumeId: string) {
     const { data, error } = await supabase
       .from('resume_versions')
       .select('*')
@@ -189,7 +215,7 @@ export class ResumeDatabase {
   }
 
   // Increment download count
-  static async incrementDownloadCount(id: string) {
+  static async incrementDownloadCount(supabase: SupabaseClient, id: string) {
     const { data } = await supabase
       .from('resumes')
       .select('download_count')

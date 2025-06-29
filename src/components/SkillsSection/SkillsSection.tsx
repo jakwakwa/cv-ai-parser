@@ -1,3 +1,4 @@
+import { SkillsIcon } from '../Icons';
 import styles from './SkillsSection.module.css';
 
 interface SkillsSectionProps {
@@ -14,12 +15,13 @@ const SkillsSection = ({ skills, customColors }: SkillsSectionProps) => {
         className={styles.sectionTitle}
         style={{ color: colors['--charcoal'] }}
       >
+        <SkillsIcon fill={colors['--bronze-dark']} />
         Skills
       </h2>
       {skills && skills.length > 0 ? (
-        <ul className={styles.skillsList}>
+        <div>
           {skills.map((skill) => (
-            <li
+            <span
               key={skill}
               className={styles.skill}
               style={{
@@ -29,9 +31,9 @@ const SkillsSection = ({ skills, customColors }: SkillsSectionProps) => {
               }}
             >
               {skill}
-            </li>
+            </span>
           ))}
-        </ul>
+        </div>
       ) : (
         <p
           className="text-gray-600 text-sm"

@@ -17,6 +17,7 @@ CREATE TABLE public.resumes (
   file_type TEXT,
   file_size INTEGER,
   parsed_data JSONB NOT NULL,
+  custom_colors JSONB DEFAULT '{}'::jsonb, -- New column for custom colors
   parse_method TEXT, -- 'ai', 'regex_fallback', 'regex'
   confidence_score INTEGER,
   is_public BOOLEAN DEFAULT FALSE,

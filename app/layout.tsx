@@ -1,8 +1,10 @@
-import type React from 'react';
 import type { Metadata } from 'next';
+import type React from 'react';
 import '../styles/globals.css';
 import '../src/index.css';
 import { AuthProvider } from '@/components/AuthProvider';
+import { Toaster } from '@/components/ui/toaster';
+import { ToastProvider } from '@/hooks/use-toast';
 
 export const metadata: Metadata = {
   title: 'Resume Parser & Generator',
@@ -21,9 +23,13 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" />
       </head>
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <ToastProvider>
+          <AuthProvider>{children}</AuthProvider>
+          <Toaster />
+        </ToastProvider>
       </body>
     </html>
   );

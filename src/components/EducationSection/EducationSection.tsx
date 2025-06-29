@@ -1,3 +1,4 @@
+import { EducationIcon } from '../Icons';
 import styles from './EducationSection.module.css';
 
 interface EducationItem {
@@ -24,6 +25,7 @@ const EducationSection = ({
         className={styles.sectionTitle}
         style={{ color: colors['--charcoal'] }}
       >
+        <EducationIcon fill={colors['--bronze-dark']} />
         Education
       </h2>
       {education && education.length > 0 ? (
@@ -32,23 +34,14 @@ const EducationSection = ({
             key={`${edu.degree}-${edu.institution}`}
             className="mb-4 last:mb-0"
           >
-            <h3
-              className={styles.degree}
-              style={{ color: colors['--teal-main'] }}
-            >
+            <p className="subject" style={{ color: colors['--teal-main'] }}>
               {edu.degree}
-            </h3>
-            <p
-              className={styles.institution}
-              style={{ color: colors['--bronze-dark'] }}
-            >
+            </p>
+            <p className="issuer" style={{ color: colors['--bronze-dark'] }}>
               {edu.institution}
             </p>
             {edu.duration && (
-              <p
-                className={styles.detail}
-                style={{ color: colors['--charcoal'] }}
-              >
+              <p className="date" style={{ color: colors['--charcoal'] }}>
                 {edu.duration}
               </p>
             )}

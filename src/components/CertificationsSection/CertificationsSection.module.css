@@ -3,7 +3,23 @@
     margin-bottom: 1.5rem;
 }
 
+.sectionTitle {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
+    align-items: center;
+    border-bottom: 1px solid var(--light-brown-border);
+    color: var(--charcoal);
+}
 
+.sectionTitle svg {
+  width: 19px;
+  height: 19px;
+}
 
 .icon {
     margin-right: 0.75rem;
@@ -30,10 +46,6 @@
     font-style: italic;
     margin-top: 0.1rem;
 }
-
-
-
-
 
 .noCerts {
     color: #aaa;

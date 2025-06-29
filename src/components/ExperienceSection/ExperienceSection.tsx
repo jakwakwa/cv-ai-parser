@@ -1,4 +1,5 @@
 import styles from './ExperienceSection.module.css';
+import './avoidBreak.css';
 
 interface ExperienceItem {
   title?: string;
@@ -63,7 +64,7 @@ const ExperienceSection = ({
                 {job.details.map((detail) => (
                   <li
                     key={detail}
-                    className={styles.detailItem}
+                    className={`${styles.detailItem} bullet-point content-body`}
                     style={{ color: colors['--coffee'] }}
                   >
                     {detail}

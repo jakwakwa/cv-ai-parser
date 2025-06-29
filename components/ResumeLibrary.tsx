@@ -18,32 +18,33 @@ import {
   CardHeader,
 } from '@/components/ui/card';
 import { ResumeDatabase } from '@/lib/database';
-import type { Resume } from '@/lib/supabase';
+import type { Resume } from '@/lib/types';
 import { useAuth } from './AuthProvider';
 import styles from './ResumeLibrary.module.css';
 
 export default function ResumeLibrary({
   onSelectResume,
 }: {
-  onSelectResume: (resume: unknown) => void;
+  onSelectResume: (resume: Resume) => void;
 }) {
-  const { user } = useAuth();
+  const { user, supabase } = useAuth();
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState<string | null>(null);
 
   const loadResumes = useCallback(async () => {
+    if (!supabase) return;
     try {
       setLoading(true);
-      const userResumes = await ResumeDatabase.getUserResumes();
+      const userResumes = await ResumeDatabase.getUserResumes(supabase);
       setResumes(userResumes);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load resumes');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [supabase]);
 
   useEffect(() => {
     if (user) {
@@ -52,10 +53,11 @@ export default function ResumeLibrary({
   }, [user, loadResumes]);
 
   const handleDeleteResume = async (id: string, _title: string) => {
+    if (!supabase) return;
     try {
       setError(''); // Clear any previous errors
       setDeleting(id);
-      await ResumeDatabase.deleteResume(id);
+      await ResumeDatabase.deleteResume(supabase, id);
       setResumes(resumes.filter((r) => r.id !== id));
       // Optional: Show success message
     } catch (err) {
@@ -66,8 +68,9 @@ export default function ResumeLibrary({
   };
 
   const handleTogglePublic = async (resume: Resume) => {
+    if (!supabase) return;
     try {
-      const updated = await ResumeDatabase.updateResume(resume.id, {
+      const updated = await ResumeDatabase.updateResume(supabase, resume.id, {
         is_public: !resume.is_public,
       });
       setResumes(resumes.map((r) => (r.id === resume.id ? updated : r)));
@@ -127,18 +130,7 @@ export default function ResumeLibrary({
   }
 
   if (loading) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.wrapper}>
-          <div className={styles.stateContainer}>
-            <div className={styles.stateContent}>
-              <div className={styles.loadingSpinner} />
-              <p className={styles.stateText}>Loading your resumes...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <div className={styles.loadingSpinner} />;
   }
 
   return (
@@ -247,7 +239,7 @@ export default function ResumeLibrary({
                 <CardFooter className={styles.cardFooter}>
                   <button
                     type="button"
-                    onClick={() => onSelectResume(resume.parsed_data)}
+                    onClick={() => onSelectResume(resume)}
                     className={styles.viewButton}
                   >
                     View

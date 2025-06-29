@@ -1,36 +1,38 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { v4 as uuidv4 } from 'uuid';
 import { IS_AI_PARSING_ENABLED } from '@/lib/config';
 import { ResumeDatabase } from '@/lib/database';
 import { parseWithAI } from '@/lib/resume-parser/ai-parser';
 import { parseWithRegex } from '@/lib/resume-parser/regex-parser';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import { createSlug } from '@/lib/utils';
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { text: fileContent, filename } = body;
+    const { text: fileContent, filename, customColors } = body;
 
     if (!fileContent) {
-      return NextResponse.json(
-        { error: 'No text content provided.' },
+      return new Response(
+        JSON.stringify({ error: 'No text content provided.' }),
         { status: 400 }
       );
     }
 
+    const supabase = await createClient();
     const {
       data: { user },
       error: userError,
     } = await supabase.auth.getUser();
+
     if (userError || !user) {
-      return NextResponse.json(
-        { error: 'Authentication required.' },
+      return new Response(
+        JSON.stringify({
+          error: 'Authentication required. Please sign in again.',
+        }),
         { status: 401 }
       );
     }
-
-    console.log(`Processing resume: ${filename} for user: ${user.id}`);
 
     let parsedResume: ParsedResume;
     let parseMethod: 'ai' | 'regex' | 'regex_fallback' = 'regex';
@@ -40,55 +42,92 @@ export async function POST(request: NextRequest) {
       try {
         parsedResume = await parseWithAI(fileContent);
         parseMethod = 'ai';
-        confidence = 95; // AI parsing is high-confidence
-      } catch (aiError) {
-        console.warn('AI parsing failed. Falling back to regex.', aiError);
+        confidence = 95;
+      } catch (_aiError) {
         const regexResult = parseWithRegex(fileContent);
         parsedResume = regexResult.data;
         confidence = regexResult.confidence;
         parseMethod = 'regex_fallback';
       }
     } else {
-      console.log('AI parsing is disabled. Using regex parser.');
       const regexResult = parseWithRegex(fileContent);
       parsedResume = regexResult.data;
       confidence = regexResult.confidence;
       parseMethod = 'regex';
     }
 
+    // Ensure customColors are merged and create a plain JS object for database serialization
+    const finalParsedData: ParsedResume = JSON.parse(
+      JSON.stringify({
+        ...parsedResume,
+        customColors: customColors || {},
+      })
+    );
+
     const resumeTitle =
       parsedResume.name || filename.split('.')[0] || 'Untitled Resume';
-    const generatedSlug = createSlug(resumeTitle);
+    let generatedSlug = createSlug(resumeTitle);
+    const MAX_RETRIES = 5;
+    let retries = 0;
+    let savedResume: { id: string; slug: string } | undefined;
 
-    const savedResume = await ResumeDatabase.saveResume({
-      userId: user.id,
-      title: resumeTitle,
-      originalFilename: filename,
-      fileType: body.fileType,
-      fileSize: body.fileSize,
-      parsedData: parsedResume,
-      parseMethod: parseMethod,
-      confidenceScore: confidence,
-      isPublic: true,
-      slug: generatedSlug,
-    });
+    while (retries < MAX_RETRIES) {
+      try {
+        savedResume = await ResumeDatabase.saveResume(supabase, {
+          userId: user.id,
+          title: resumeTitle,
+          originalFilename: filename,
+          fileType: body.fileType,
+          fileSize: body.fileSize,
+          parsedData: finalParsedData,
+          parseMethod: parseMethod,
+          confidenceScore: confidence,
+          isPublic: true,
+          slug: generatedSlug,
+        });
+        break; // If save is successful, break the loop
+      } catch (dbError: unknown) {
+        if (
+          dbError instanceof Error &&
+          dbError.message.includes(
+            'duplicate key value violates unique constraint "resumes_slug_key"'
+          )
+        ) {
+          generatedSlug = `${createSlug(resumeTitle)}-${uuidv4().substring(0, 8)}`;
+          retries++;
+        } else {
+          throw dbError; // Re-throw other database errors
+        }
+      }
+    }
 
-    return NextResponse.json({
-      data: parsedResume,
-      meta: {
-        method: parseMethod,
-        confidence,
-        filename,
-        resumeId: savedResume.id,
-        resumeSlug: savedResume.slug,
-      },
-    });
+    if (!savedResume) {
+      throw new Error(
+        'Failed to save resume after multiple retries due to slug collision.'
+      );
+    }
+
+    return new Response(
+      JSON.stringify({
+        data: parsedResume,
+        meta: {
+          method: parseMethod,
+          confidence,
+          filename,
+          resumeId: savedResume.id,
+          resumeSlug: savedResume.slug,
+        },
+      }),
+      { status: 200 }
+    );
   } catch (error) {
-    console.error('An unexpected error occurred in parse-resume route:', error);
     const errorMessage =
       error instanceof Error ? error.message : 'An unknown error occurred.';
-    return NextResponse.json(
-      { error: 'Failed to parse resume.', details: errorMessage },
+    return new Response(
+      JSON.stringify({
+        error: 'Failed to parse resume.',
+        details: errorMessage,
+      }),
       { status: 500 }
     );
   }

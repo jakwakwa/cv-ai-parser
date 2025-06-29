@@ -1,3 +1,4 @@
+import { CertificationsIcon } from '../Icons';
 import styles from './CertificationsSection.module.css';
 
 interface CertificationItem {
@@ -24,29 +25,24 @@ const CertificationsSection = ({
         className={styles.sectionTitle}
         style={{ color: colors['--charcoal'] }}
       >
+        <CertificationsIcon fill={colors['--bronze-dark']} />
         Certifications
       </h2>
       {certifications && certifications.length > 0 ? (
         <div className={styles.certificationsList}>
           {certifications.map((cert) => (
-            <div key={cert.id} className={styles.certificationItem}>
-              <h3
-                className={styles.certName}
-                style={{ color: colors['--teal-main'] }}
-              >
+            <div
+              key={cert.id || cert.name}
+              className={styles.certificationItem}
+            >
+              <p className="subject" style={{ color: colors['--teal-main'] }}>
                 {cert.name}
-              </h3>
-              <p
-                className={styles.issuer}
-                style={{ color: colors['--bronze-dark'] }}
-              >
+              </p>
+              <p className="issuer" style={{ color: colors['--bronze-dark'] }}>
                 {cert.issuer}
               </p>
               {cert.date && (
-                <p
-                  className={styles.date}
-                  style={{ color: colors['--charcoal'] }}
-                >
+                <p className="date" style={{ color: colors['--charcoal'] }}>
                   {cert.date}
                 </p>
               )}
