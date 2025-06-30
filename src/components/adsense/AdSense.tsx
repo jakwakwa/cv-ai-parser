@@ -27,7 +27,8 @@ const AdSense: React.FC<AdSenseProps> = ({
     try {
       // Initialize adsbygoogle if not already done
       if (typeof window !== 'undefined') {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        window.adsbygoogle = window.adsbygoogle || [];
+        window.adsbygoogle.push({});
       }
     } catch (error) {
       console.error('AdSense error:', error);
