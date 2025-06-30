@@ -16,6 +16,13 @@ import { Progress } from '@/src/components/ui/progress';
 import ColorPicker from '../color-picker/ColorPicker';
 import ProfileImageUploader from '../profile-image-uploader/ProfileImageUploader';
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from '../ui/dialog';
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -40,8 +47,8 @@ declare global {
 }
 
 interface ParseInfo {
-  resumeId: string;
-  resumeSlug: string;
+  resumeId?: string; // Optional for non-auth users
+  resumeSlug?: string; // Optional for non-auth users
   method: string;
   confidence: number;
   filename: string;
@@ -53,12 +60,14 @@ interface ResumeUploaderProps {
   onResumeUploaded: (data: ParsedResume, info: ParseInfo) => void;
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
+  isAuthenticated?: boolean;
 }
 
 const ResumeUploader = ({
   onResumeUploaded,
   isLoading,
   setIsLoading,
+  isAuthenticated = false,
 }: ResumeUploaderProps) => {
   const { supabase } = useAuth();
   const [dragActive, setDragActive] = useState(false);
@@ -342,13 +351,15 @@ const ResumeUploader = ({
     setIsLoading(true);
 
     try {
-      // Debug: Check if user is authenticated
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      // Only check authentication for authenticated users
+      if (isAuthenticated) {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
 
-      if (!session) {
-        throw new Error('No active session found. Please sign in again.');
+        if (!session) {
+          throw new Error('No active session found. Please sign in again.');
+        }
       }
 
       // Extract text from the uploaded file
@@ -387,6 +398,7 @@ const ResumeUploader = ({
             text: extractedText,
             filename: uploadedFile.name,
             customColors: customColors,
+            isAuthenticated: isAuthenticated,
           }),
         }
       );
@@ -536,16 +548,8 @@ const ResumeUploader = ({
   }
 
   return (
-    <div className="w-full max-w-4xl rounded">
+    <div className="w-full rounded">
       <div className={styles.uploaderContainer}>
-        <div className={styles.header}>
-          <h1 className={styles.title}>Magic AI CV Generator</h1>
-          <p className={styles.subtitle}>
-            Upload your existing resume and we'll create a beautiful online
-            version
-          </p>
-        </div>
-
         {/* Step 1: Upload Resume File */}
         <h2 className="text-xl w-full flex justify-center font-semibold text-gray-800 mb-4 flex items-center">
           <Upload className="w-5 h-5 mr-2" />
@@ -569,7 +573,6 @@ const ResumeUploader = ({
                 accept=".txt"
                 onChange={handleChange}
               />
-
               <div className={styles.uploadIcon}>
                 <svg
                   width="48"
@@ -587,7 +590,6 @@ const ResumeUploader = ({
                   <line x1="12" y1="3" x2="12" y2="15" />
                 </svg>
               </div>
-
               <p className={styles.dropText}>
                 <strong>Click to upload</strong> or drag and drop your resume
               </p>
@@ -603,10 +605,32 @@ const ResumeUploader = ({
                 For best results with text files, ensure they contain meaningful
                 text
               </p>
+              <div className="w-full max-w-[300px] flex flex-col mx-auto gap-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = '/resume-upload-text.txt';
+                    link.download = 'resume-upload-text.txt';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }}
+                  className="text-teal-600 hover:text-teal-700 font-medium text-sm underline mt-2"
+                >
+                  📄 Download Sample Resume Text to start out with
+                </button>
 
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className={styles.uploadButton}
+                  onClick={onButtonClick}
+                >
+                  Choose File
+                </button>
+
+                <Dialog>
+                  <DialogTrigger asChild>
                     <p
                       className={styles.fileTypes}
                       style={{
@@ -617,16 +641,16 @@ const ResumeUploader = ({
                         cursor: 'pointer',
                       }}
                     >
-                      Hover for detailed instructions on converting Word to .txt
+                      Click for detailed instructions on converting Word to .txt
                     </p>
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-md">
-                    <p>
-                      <b>
-                        To export a Word document as a plain text file (.txt):
-                      </b>
-                      <br />
-                      1. Open the document in Word.
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md">
+                    <DialogTitle>
+                      To export a Word document as a plain text file (.txt):
+                    </DialogTitle>
+                    <DialogDescription>
+                      Follow these steps to convert your Word file to plain
+                      text. 1. Open the document in Word.
                       <br />
                       2. Go to "File" then "Save As".
                       <br />
@@ -637,21 +661,10 @@ const ResumeUploader = ({
                       5. If prompted with a "File Conversion" dialog, ensure
                       "Windows (Default)" is selected and click "OK".
                       <br />
-                      <br />
-                      After saving, you can open the .txt file with any text
-                      editor like Notepad (Windows) or TextEdit (Mac).
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-
-              <button
-                type="button"
-                className={styles.uploadButton}
-                onClick={onButtonClick}
-              >
-                Choose File
-              </button>
+                    </DialogDescription>
+                  </DialogContent>
+                </Dialog>
+              </div>
             </div>
           ) : (
             <div className="bg-white rounded-lg border border-gray-200 p-4">
@@ -801,8 +814,17 @@ const ResumeUploader = ({
               disabled={isLoading}
               className="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors duration-200"
             >
-              {isLoading ? 'Creating Resume...' : 'Create Resume'}
+              {isLoading
+                ? 'Creating Resume...'
+                : isAuthenticated
+                  ? 'Create Resume'
+                  : 'Create Resume (Preview Only)'}
             </button>
+            {!isAuthenticated && (
+              <p className="text-sm text-gray-600 mt-2 text-center">
+                💡 Sign in to save your resume to your library and edit it later
+              </p>
+            )}
           </div>
         )}
 

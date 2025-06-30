@@ -6,6 +6,11 @@
   justify-content: flex-start;
   background-color: #26252a; /* bg-gray-50 */
 }
+.header {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 3rem;
+}
 .mainUserContainer {
   flex: 1;
   align-items: flex-start;
@@ -101,6 +106,7 @@
 /* Resume view styles */
 .resumeContainer {
   width: 100%; /* w-full */
+  
 }
 
 .resumeContent {

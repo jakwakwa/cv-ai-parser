@@ -1,11 +1,25 @@
 import Link from 'next/link';
-import styles from './MainNav.module.css';
 // import { Icons } from '@/components/icons'
+import { useAuthModal } from '../auth-component/AuthModalContext';
+import styles from './MainNav.module.css';
 
-export function MainNav() {
+interface MainNavProps {
+  onLogoClick?: () => void;
+}
+
+export function MainNav({ onLogoClick }: MainNavProps) {
+  const { setAuthModalOpen } = useAuthModal();
+
   return (
     <div className={styles.container}>
-      <Link href="/" className={styles.link}>
+      <Link
+        href="/"
+        className={styles.link}
+        onClick={() => {
+          setAuthModalOpen(false);
+          onLogoClick?.();
+        }}
+      >
         {/* <Icons.logo className="h-6 w-6" /> */}
         <span className={styles.brand}>Magic AI CV Generator</span>
       </Link>

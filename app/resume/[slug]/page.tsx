@@ -14,6 +14,7 @@ import DownloadButton from '@/src/components/DownloadButton/DownloadButton';
 import EducationSection from '@/src/components/EducationSection/EducationSection';
 import ExperienceSection from '@/src/components/ExperienceSection/ExperienceSection';
 import ProfileHeader from '@/src/components/ProfileHeader/ProfileHeader';
+import ResumeDisplay from '@/src/components/resume-display/ResumeDisplay';
 import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
 import SkillsSection from '@/src/components/SkillsSection/SkillsSection';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
@@ -24,7 +25,7 @@ export default function ViewResumePage() {
   const router = useRouter();
   const params = useParams();
   const { slug } = params;
-  const { loading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const resumeContainerRef = useRef<HTMLDivElement>(null);
   const { isDownloading, downloadPdf } = usePdfDownloader();
   const { toast } = useToast();
@@ -68,16 +69,6 @@ export default function ViewResumePage() {
       router.replace(window.location.pathname);
     }
   }, [searchParams, router, toast]);
-
-  useEffect(() => {
-    if (resume?.parsed_data?.customColors && resumeContainerRef.current) {
-      for (const [key, value] of Object.entries(
-        resume.parsed_data.customColors
-      )) {
-        resumeContainerRef.current.style.setProperty(key, value);
-      }
-    }
-  }, [resume?.parsed_data?.customColors]);
 
   useEffect(() => {
     const fetchResume = async () => {
@@ -160,7 +151,7 @@ export default function ViewResumePage() {
   const handleDownloadPdf = () => {
     if (resume) {
       downloadPdf(
-        resumeContainerRef as React.RefObject<HTMLElement>,
+        document.getElementById('resume-content') as HTMLElement,
         `${resume.parsed_data.name?.replace(/ /g, '_') || 'resume'}.pdf`
       );
     }
@@ -238,14 +229,14 @@ export default function ViewResumePage() {
   return (
     <div className={styles.pageWrapper}>
       <SiteHeader />
-      
+
       {/* Header Ad */}
-      <AdSense 
-        adSlot="2345678901" 
+      <AdSense
+        adSlot="2345678901"
         adFormat="horizontal"
         className="mx-auto my-4"
       />
-      
+
       <div className={styles.buttonContainer}>
         <button
           type="button"
@@ -264,67 +255,14 @@ export default function ViewResumePage() {
         </button>
       </div>
       <main className={styles.mainUserContainer}>
-        <div
-          id="resume-content"
-          className={styles.resumeContent}
-          ref={resumeContainerRef}
-        >
-          <ProfileHeader
-            profileImage={resume.parsed_data.profileImage || ''}
-            name={resume.parsed_data.name || ''}
-            title={resume.parsed_data.title || ''}
-            summary={resume.parsed_data.summary || ''}
-            customColors={resume.parsed_data.customColors || {}} // Ensure customColors is an object
-          />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
-            <div
-              className="flex flex-col md:col-span-1 p-6 md:p-8"
-              style={{ backgroundColor: 'var(--off-white)' }}
-            >
-              <ContactSection
-                contact={resume.parsed_data.contact || {}}
-                customColors={resume.parsed_data.customColors || {}}
-              />
-              <EducationSection
-                education={resume.parsed_data.education}
-                customColors={resume.parsed_data.customColors || {}}
-              />
-              <CertificationsSection
-                certifications={resume.parsed_data.certifications}
-                customColors={resume.parsed_data.customColors || {}}
-              />
-              <SkillsSection
-                skills={resume.parsed_data.skills}
-                customColors={resume.parsed_data.customColors || {}}
-              />
-            </div>
-            <div
-              className="p-6 md:p-8 md:col-span-2"
-              style={{ color: 'var(--coffee)' }}
-            >
-              <ExperienceSection
-                experience={resume.parsed_data.experience}
-                customColors={resume.parsed_data.customColors || {}}
-              />
-            </div>
-          </div>
-          
-          {/* Content Ad - Between resume sections */}
-          <AdSense 
-            adSlot="3456789012" 
-            adFormat="horizontal"
-            className="my-6"
-          />
-          
-        </div>
-        
+        <ResumeDisplay resumeData={resume.parsed_data} isAuth={!!user} />
+
         {/* Footer Ad */}
-        <AdSense 
-          adSlot="4567890123" 
+        <AdSense
+          adSlot="4567890123"
           adFormat="horizontal"
           className="mx-auto my-8"
         />
-        
       </main>
     </div>
   );

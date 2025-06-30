@@ -6,7 +6,11 @@ import { useState } from 'react';
 import { useAuth } from '../auth-provider/AuthProvider';
 import styles from './authComponent.module.css';
 
-export default function AuthComponent() {
+interface AuthComponentProps {
+  onSuccess?: () => void;
+}
+
+export default function AuthComponent({ onSuccess }: AuthComponentProps) {
   const { user, signIn, signUp } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
@@ -29,6 +33,8 @@ export default function AuthComponent() {
       setEmail('');
       setPassword('');
       setFullName('');
+      // Call onSuccess callback if provided
+      onSuccess?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {

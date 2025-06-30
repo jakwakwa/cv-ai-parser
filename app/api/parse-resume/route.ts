@@ -10,7 +10,7 @@ import { createSlug } from '@/lib/utils';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { text: fileContent, filename, customColors } = body;
+    const { text: fileContent, filename, customColors, isAuthenticated } = body;
 
     if (!fileContent) {
       return new Response(
@@ -20,18 +20,23 @@ export async function POST(request: Request) {
     }
 
     const supabase = await createClient();
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+    let user = null;
+    let userError = null;
 
-    if (userError || !user) {
-      return new Response(
-        JSON.stringify({
-          error: 'Authentication required. Please sign in again.',
-        }),
-        { status: 401 }
-      );
+    // Only check authentication if the user is supposed to be authenticated
+    if (isAuthenticated) {
+      const authResult = await supabase.auth.getUser();
+      user = authResult.data.user;
+      userError = authResult.error;
+
+      if (userError || !user) {
+        return new Response(
+          JSON.stringify({
+            error: 'Authentication required. Please sign in again.',
+          }),
+          { status: 401 }
+        );
+      }
     }
 
     let parsedResume: ParsedResume;
@@ -64,47 +69,51 @@ export async function POST(request: Request) {
       })
     );
 
-    const resumeTitle =
-      parsedResume.name || filename.split('.')[0] || 'Untitled Resume';
-    let generatedSlug = createSlug(resumeTitle);
-    const MAX_RETRIES = 5;
-    let retries = 0;
+    // Only save to database for authenticated users
     let savedResume: { id: string; slug: string } | undefined;
 
-    while (retries < MAX_RETRIES) {
-      try {
-        savedResume = await ResumeDatabase.saveResume(supabase, {
-          userId: user.id,
-          title: resumeTitle,
-          originalFilename: filename,
-          fileType: body.fileType,
-          fileSize: body.fileSize,
-          parsedData: finalParsedData,
-          parseMethod: parseMethod,
-          confidenceScore: confidence,
-          isPublic: true,
-          slug: generatedSlug,
-        });
-        break; // If save is successful, break the loop
-      } catch (dbError: unknown) {
-        if (
-          dbError instanceof Error &&
-          dbError.message.includes(
-            'duplicate key value violates unique constraint "resumes_slug_key"'
-          )
-        ) {
-          generatedSlug = `${createSlug(resumeTitle)}-${uuidv4().substring(0, 8)}`;
-          retries++;
-        } else {
-          throw dbError; // Re-throw other database errors
+    if (isAuthenticated && user) {
+      const resumeTitle =
+        parsedResume.name || filename.split('.')[0] || 'Untitled Resume';
+      let generatedSlug = createSlug(resumeTitle);
+      const MAX_RETRIES = 5;
+      let retries = 0;
+
+      while (retries < MAX_RETRIES) {
+        try {
+          savedResume = await ResumeDatabase.saveResume(supabase, {
+            userId: user.id,
+            title: resumeTitle,
+            originalFilename: filename,
+            fileType: body.fileType,
+            fileSize: body.fileSize,
+            parsedData: finalParsedData,
+            parseMethod: parseMethod,
+            confidenceScore: confidence,
+            isPublic: true,
+            slug: generatedSlug,
+          });
+          break; // If save is successful, break the loop
+        } catch (dbError: unknown) {
+          if (
+            dbError instanceof Error &&
+            dbError.message.includes(
+              'duplicate key value violates unique constraint "resumes_slug_key"'
+            )
+          ) {
+            generatedSlug = `${createSlug(resumeTitle)}-${uuidv4().substring(0, 8)}`;
+            retries++;
+          } else {
+            throw dbError; // Re-throw other database errors
+          }
         }
       }
-    }
 
-    if (!savedResume) {
-      throw new Error(
-        'Failed to save resume after multiple retries due to slug collision.'
-      );
+      if (!savedResume) {
+        throw new Error(
+          'Failed to save resume after multiple retries due to slug collision.'
+        );
+      }
     }
 
     return new Response(
@@ -114,8 +123,8 @@ export async function POST(request: Request) {
           method: parseMethod,
           confidence,
           filename,
-          resumeId: savedResume.id,
-          resumeSlug: savedResume.slug,
+          resumeId: savedResume?.id,
+          resumeSlug: savedResume?.slug,
         },
       }),
       { status: 200 }

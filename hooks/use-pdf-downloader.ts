@@ -30,10 +30,9 @@ export const usePdfDownloader = () => {
   const { toast } = useToast();
 
   const downloadPdf = async (
-    elementRef: RefObject<HTMLElement>,
+    element: HTMLElement | null,
     filename = 'resume.pdf'
   ) => {
-    const element = elementRef.current;
     if (!element) {
       toast({
         title: 'Error',
