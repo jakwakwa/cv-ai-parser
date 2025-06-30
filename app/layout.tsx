@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type React from 'react';
 import '../styles/globals.css';
 import '../src/index.css';
+import { Analytics } from '@vercel/analytics/next';
 import { ToastProvider } from '@/hooks/use-toast';
 import { AuthProvider } from '@/src/components/auth-provider/AuthProvider';
 import { Toaster } from '@/src/components/ui/toaster';
@@ -77,6 +78,7 @@ export default function RootLayout({
           <AuthProvider>{children}</AuthProvider>
           <Toaster />
         </ToastProvider>
+        <Analytics />
       </body>
     </html>
   );
