@@ -7,7 +7,7 @@ export function MainNav() {
     <div className={styles.container}>
       <Link href="/" className={styles.link}>
         {/* <Icons.logo className="h-6 w-6" /> */}
-        <span className={styles.brand}>Magic AI Resume Converter</span>
+        <span className={styles.brand}>Magic AI CV Generator</span>
       </Link>
     </div>
   );

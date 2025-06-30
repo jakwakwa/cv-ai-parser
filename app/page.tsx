@@ -165,10 +165,10 @@ export default function Home() {
   return (
     <div className={styles.pageWrapper}>
       <SiteHeader />
-      
+
       {/* Header Ad */}
-      <AdSense 
-        adSlot="1234567890" 
+      <AdSense
+        adSlot="1234567890"
         adFormat="horizontal"
         className="mx-auto my-4"
       />
@@ -177,7 +177,7 @@ export default function Home() {
         {!user && (
           <>
             <div className={styles.authContainer}>
-              <h2 className={styles.authTitle}>Magic AI Resume Converter</h2>
+              <h2 className={styles.authTitle}>Magic AI CV Generator</h2>
               <p className={styles.authDescription}>
                 Please sign in or sign up to use the resume parser and manage
                 your library.
