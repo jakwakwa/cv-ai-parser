@@ -103,6 +103,9 @@ export class ResumeDatabase {
 
   // Get public resume by slug
   static async getPublicResume(supabase: SupabaseClient, slug: string) {
+    console.log('🔍 [DEBUG] getPublicResume called with slug:', slug);
+
+    const startTime = Date.now();
     const { data, error } = await supabase
       .from('resumes')
       .select('*, custom_colors')
@@ -110,15 +113,27 @@ export class ResumeDatabase {
       .eq('is_public', true)
       .single();
 
+    const endTime = Date.now();
+    console.log('⏱️ [DEBUG] Query execution time:', endTime - startTime, 'ms');
+
     if (error) {
+      console.error('❌ [DEBUG] getPublicResume error:', error);
       throw new Error(`Failed to fetch public resume: ${error.message}`);
     }
+
+    console.log('✅ [DEBUG] getPublicResume success, found resume:', {
+      id: data.id,
+      title: data.title,
+      slug: data.slug,
+      is_public: data.is_public,
+    });
 
     // Increment view count
     await supabase
       .from('resumes')
       .update({ view_count: data.view_count + 1 })
       .eq('id', data.id);
+
     const resumeData = {
       ...data,
       parsed_data: {
