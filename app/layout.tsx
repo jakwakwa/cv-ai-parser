@@ -4,6 +4,7 @@ import '../styles/globals.css';
 import '../src/index.css';
 import { Analytics } from '@vercel/analytics/next';
 import { ToastProvider } from '@/hooks/use-toast';
+import { AdSenseUnit } from '@/src/components/adsense/AdSenseUnit';
 import { AuthProvider } from '@/src/components/auth-provider/AuthProvider';
 import { Toaster } from '@/src/components/ui/toaster';
 
@@ -79,6 +80,7 @@ export default function RootLayout({
           <Toaster />
         </ToastProvider>
         <Analytics />
+        <AdSenseUnit slot="1977334562" />
         <footer className="py-6 w-full shrink-0 items-center px-4 md:px-6 border-t text-white">
           <nav className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center text-center text-sm">
             <a
