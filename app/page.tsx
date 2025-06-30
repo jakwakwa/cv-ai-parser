@@ -7,16 +7,10 @@ import { useToast } from '@/hooks/use-toast';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import AdSense from '@/src/components/adsense/AdSense';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
-import CertificationsSection from '@/src/components/CertificationsSection/CertificationsSection';
-import ContactSection from '@/src/components/ContactSection/ContactSection';
 import DownloadButton from '@/src/components/DownloadButton/DownloadButton';
-import EducationSection from '@/src/components/EducationSection/EducationSection';
-import ExperienceSection from '@/src/components/ExperienceSection/ExperienceSection';
-import ProfileHeader from '@/src/components/ProfileHeader/ProfileHeader';
 import ResumeUploader from '@/src/components/ResumeUploader/ResumeUploader';
 import ResumeDisplay from '@/src/components/resume-display/ResumeDisplay';
 import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
-import SkillsSection from '@/src/components/SkillsSection/SkillsSection';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import { Button } from '@/src/components/ui/button';
@@ -33,7 +27,7 @@ interface ParseInfo {
 export default function Home() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
-  const resumeContainerRef = useRef<HTMLDivElement>(null);
+  const _resumeContainerRef = useRef<HTMLDivElement>(null);
   const uploaderRef = useRef<HTMLDivElement>(null);
   const { isDownloading, downloadPdf } = usePdfDownloader();
   const { toast } = useToast();

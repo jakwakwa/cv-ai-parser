@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import type React from 'react';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import BackButton from '@/src/components/ui/BackButton';
 

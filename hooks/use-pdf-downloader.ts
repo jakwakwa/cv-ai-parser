@@ -1,6 +1,6 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { type RefObject, useState } from 'react';
+import { useState } from 'react';
 import { useToast } from './use-toast';
 
 interface Html2PdfOptions {

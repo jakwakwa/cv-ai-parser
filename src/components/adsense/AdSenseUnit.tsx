@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 
 declare global {
   interface Window {
+    // biome-ignore lint/suspicious/noExplicitAny: <any>
     adsbygoogle: any[];
   }
 }

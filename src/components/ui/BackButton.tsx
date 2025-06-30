@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import type React from 'react';
 
 const BackButton: React.FC = () => {
   const router = useRouter();

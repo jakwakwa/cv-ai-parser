@@ -12,6 +12,7 @@ interface AdSenseProps {
 
 declare global {
   interface Window {
+    // biome-ignore lint/suspicious/noExplicitAny: <any>
     adsbygoogle: any[];
   }
 }
