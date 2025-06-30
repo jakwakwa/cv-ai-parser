@@ -384,17 +384,15 @@ const ResumeUploader = ({
               <p className={styles.fileTypes}>
                 Supports text files and PDFs (max 10MB)
               </p>
-              <p
-                className={styles.fileTypes}
-                style={{
-                  fontSize: '0.8rem',
-                  marginTop: '0.5rem',
-                  opacity: 0.7,
-                }}
-              >
-                For best results, ensure your document contains meaningful text
-              </p>
-              <div className="w-full max-w-[300px] flex flex-col mx-auto gap-4">
+
+              <div className="w-full max-w-[500px] flex flex-col mx-auto gap-4">
+                <button
+                  type="button"
+                  className={styles.uploadButton}
+                  onClick={onButtonClick}
+                >
+                  Choose File
+                </button>
                 <button
                   type="button"
                   onClick={() => {
@@ -407,17 +405,8 @@ const ResumeUploader = ({
                   }}
                   className="text-teal-600 hover:text-teal-700 font-medium text-sm underline mt-2"
                 >
-                  📄 Download Sample Resume Text to start out with
+                  📄 Download Starter Resume Text File (optional)
                 </button>
-
-                <button
-                  type="button"
-                  className={styles.uploadButton}
-                  onClick={onButtonClick}
-                >
-                  Choose File
-                </button>
-
                 <Dialog>
                   <DialogTrigger asChild>
                     <p

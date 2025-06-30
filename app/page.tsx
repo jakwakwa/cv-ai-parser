@@ -254,18 +254,22 @@ export default function Home() {
                 <Bot size={28} />
               </div>
               <p className="text-xs">AI powered by Google Gemini</p>
-
+              <p className="text-md mt-4">
+                Upload your existing resume and we'll create a beautiful online
+                version within seconds!
+              </p>
               <Button
                 className="mt-8"
                 type="button"
                 onClick={handleScrollToUploader}
               >
-                Free to try!
+                Try it out!
               </Button>
-              <p className="text-sm my-2">
-                Upload your existing resume and we'll create a beautiful online
-                version ( no sign-up required )
-              </p>
+              <div className="flex flex-row gap-2 justify-center mt-2">
+                <span className="text-xs">Free to use</span>
+                <span className="text-xs">-</span>
+                <span className="text-xs">No sign in required</span>
+              </div>
             </div>
             <div className={styles.userFeatures}>
               <div className={styles.feature}>
