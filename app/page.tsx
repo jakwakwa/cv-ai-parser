@@ -40,6 +40,13 @@ export default function Home() {
   const [localCustomColors, setLocalCustomColors] = useState<
     Record<string, string>
   >({});
+  // New state to explicitly manage isAuthenticated status for prop passing
+  const [isAuthenticatedState, setIsAuthenticatedState] = useState(false);
+
+  useEffect(() => {
+    // Update isAuthenticatedState whenever user or authLoading changes
+    setIsAuthenticatedState(!!user && !authLoading);
+  }, [user, authLoading]);
 
   useEffect(() => {
     if (!user) {
@@ -294,7 +301,7 @@ export default function Home() {
                 onResumeUploaded={handleResumeUploaded}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
-                isAuthenticated={!!user}
+                isAuthenticated={isAuthenticatedState}
               />
             </div>
           </>

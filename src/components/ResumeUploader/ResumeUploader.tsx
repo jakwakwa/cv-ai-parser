@@ -9,10 +9,8 @@ import {
 } from 'lucide-react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useRef, useState } from 'react';
-import Tesseract from 'tesseract.js';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
-import { Progress } from '@/src/components/ui/progress';
 import ColorPicker from '../color-picker/ColorPicker';
 import ProfileImageUploader from '../profile-image-uploader/ProfileImageUploader';
 import {
@@ -85,7 +83,8 @@ const ResumeUploader = ({
     '--light-grey-border': '#cecac6',
   });
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [ocrProgress, setOcrProgress] = useState(0);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [modalErrorMessage, setModalErrorMessage] = useState('');
 
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -117,14 +116,12 @@ const ResumeUploader = ({
   const handleFileSelection = (file: File) => {
     setError('');
 
-    // Validate file type
-    const allowedTypes = [
-      'text/plain', // Only allow text files for now
-    ];
+    // Validate file type (always allow both for all users now)
+    const allowedTypes = ['text/plain', 'application/pdf'];
 
     if (!allowedTypes.includes(file.type)) {
       setError(
-        "For now, please upload a plain text (.txt) file. We're working on improving PDF and Word document parsing, which will be available soon! In the meantime, you can easily convert your PDF or Word document to a .txt file."
+        "For now, please upload a plain text (.txt) file or a PDF (.pdf). We're working on improving Word document parsing, which will be available soon! In the meantime, you can easily convert your Word document to a .txt file."
       );
       return;
     }
@@ -144,197 +141,6 @@ const ResumeUploader = ({
     setUploadedFile(file);
   };
 
-  // Enhanced client-side PDF text extraction with better CDN handling and OCR fallback
-  const _extractTextFromPDF = async (file: File) => {
-    let pdfjsLib: typeof window.pdfjsLib | null = null;
-    let fullText = '';
-
-    try {
-      // Try to load PDF.js from multiple sources
-      try {
-        // Use dynamic import with ssr: false
-        const pdfjs = await import('pdfjs-dist');
-        pdfjsLib = pdfjs as unknown as typeof window.pdfjsLib;
-      } catch (_e) {
-        // Fallback to CDN if dynamic import fails
-        await loadPDFJSFromCDN();
-        pdfjsLib = window.pdfjsLib;
-      }
-
-      if (!pdfjsLib) {
-        throw new Error('PDF.js library could not be loaded.');
-      }
-
-      // Set worker source - try multiple CDN options
-      if (pdfjsLib.GlobalWorkerOptions) {
-        const workerSources = [
-          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
-          'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js',
-          'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js',
-        ];
-
-        for (const workerSrc of workerSources) {
-          try {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
-            break;
-          } catch (_workerError) {
-            // Fall through
-          }
-        }
-      }
-
-      const arrayBuffer = await file.arrayBuffer();
-      const loadingTask = pdfjsLib.getDocument({
-        data: arrayBuffer,
-        verbosity: 0, // Reduce console noise
-        disableAutoFetch: true,
-        disableStream: true,
-      });
-
-      const pdf = await loadingTask.promise;
-
-      // Extract text from each page
-      for (let pageNum = 1; pageNum <= Math.min(pdf.numPages, 10); pageNum++) {
-        // Limit to 10 pages for performance
-        const page = await pdf.getPage(pageNum);
-        const textContent = await page.getTextContent();
-
-        // Combine all text items from the page with proper spacing
-        const pageText = textContent.items
-          .map(
-            (
-              item:
-                | import('pdfjs-dist/types/src/display/api').TextItem
-                | import('pdfjs-dist/types/src/display/api').TextMarkedContent
-            ) => {
-              // Add space after each text item to prevent words from running together
-              // Check if item is a TextItem before accessing its properties
-              if ('str' in item && 'hasEOL' in item) {
-                return `${item.str}${item.hasEOL ? '\\n' : ' '}`;
-              }
-              return '';
-            }
-          )
-          .join('');
-
-        fullText += `${pageText}\\n\\n`;
-      }
-
-      const cleanText = fullText.trim();
-
-      if (cleanText.length > 100) {
-        return cleanText;
-      }
-    } catch (_pdfError: unknown) {
-      // Fall through to OCR if PDF.js fails or extracts insufficient text
-    }
-
-    // OCR Fallback with Tesseract.js for scanned/image-based PDFs
-    try {
-      if (!pdfjsLib) {
-        throw new Error(
-          'PDF.js library was not loaded, cannot perform OCR fallback.'
-        );
-      }
-
-      setIsLoading(true); // Indicate OCR loading
-      setError(
-        'No selectable text found. Attempting OCR (Optical Character Recognition) which may take a moment...'
-      );
-
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      const pagesToProcess = Math.min(pdf.numPages, 3); // Limit OCR to first 3 pages for speed
-
-      let ocrText = '';
-      for (let i = 1; i <= pagesToProcess; i++) {
-        const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 2.0 }); // Increased scale for better OCR accuracy
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        if (!context) {
-          throw new Error('Could not get 2D context for canvas.');
-        }
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        await page.render({ canvasContext: context, viewport: viewport })
-          .promise;
-        const imageData = canvas.toDataURL('image/png');
-
-        const {
-          data: { text },
-        } = await Tesseract.recognize(imageData, 'eng', {
-          logger: (m: { status: string; progress: number }) => {
-            if (m.status === 'recognizing text') {
-              setOcrProgress(Math.round(m.progress * 100)); // Update OCR progress
-              setError(`OCR in progress: ${Math.round(m.progress * 100)}%`);
-            }
-          },
-        });
-        ocrText += `${text}\\n\\n`;
-      }
-
-      const cleanOcrText = ocrText.trim();
-
-      if (cleanOcrText.length < 100) {
-        throw new Error(
-          'OCR could not extract meaningful text from the PDF. It might be a very poor quality scan.'
-        );
-      }
-      return cleanOcrText;
-    } catch (ocrError: unknown) {
-      throw new Error(
-        `Could not extract text from PDF even with OCR. This might be due to a very poor quality scan or an unsupported PDF format. Details: ${
-          ocrError instanceof Error ? ocrError.message : String(ocrError)
-        }`
-      );
-    } finally {
-      setIsLoading(false); // Reset loading after OCR attempt
-      setError(''); // Clear error
-    }
-  };
-
-  // Function to load PDF.js from CDN as fallback
-  const loadPDFJSFromCDN = () => {
-    return new Promise((resolve, reject) => {
-      if (window.pdfjsLib) {
-        resolve(window.pdfjsLib);
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src =
-        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-      script.onload = () => {
-        if (window.pdfjsLib) {
-          resolve(window.pdfjsLib);
-        } else {
-          reject(new Error('PDF.js failed to load from CDN'));
-        }
-      };
-      script.onerror = () =>
-        reject(new Error('Failed to load PDF.js from CDN'));
-      document.head.appendChild(script);
-    });
-  };
-
-  // Client-side text extraction for different file types
-  const extractTextFromFile = async (file: File) => {
-    if (file.type === 'text/plain') {
-      const text = await file.text();
-      if (text.length < 50) {
-        throw new Error('Text file appears to be empty or too short');
-      }
-      return text;
-    }
-    // This case should ideally not be reached due to client-side validation
-    // but is kept for robustness.
-    throw new Error(
-      `Unsupported file type: ${file.type}. Please use a plain text (.txt) file.`
-    );
-  };
-
   const handleCreateResume = async () => {
     if (!uploadedFile) {
       setError('Please upload a resume file first.');
@@ -342,6 +148,8 @@ const ResumeUploader = ({
     }
 
     setError('');
+    setModalErrorMessage('');
+    setShowErrorModal(false);
     setIsLoading(true);
 
     try {
@@ -356,44 +164,18 @@ const ResumeUploader = ({
         }
       }
 
-      // Extract text from the uploaded file
-      const extractedText = await extractTextFromFile(uploadedFile);
+      // Create FormData to send file directly
+      const formData = new FormData();
+      formData.append('file', uploadedFile);
+      formData.append('customColors', JSON.stringify(customColors));
+      formData.append('isAuthenticated', isAuthenticated.toString());
 
-      if (!extractedText || extractedText.trim().length < 50) {
-        throw new Error(
-          'Could not extract meaningful text from the file. The file might be corrupted, password-protected, or contain only images.'
-        );
-      }
-
-      // Basic validation - check if it looks like resume content
-      const lowerText = extractedText.toLowerCase();
-      const hasResumeKeywords =
-        lowerText.includes('experience') ||
-        lowerText.includes('education') ||
-        lowerText.includes('skills') ||
-        lowerText.includes('work') ||
-        lowerText.includes('job') ||
-        lowerText.includes('university') ||
-        lowerText.includes('college');
-
-      if (!hasResumeKeywords) {
-        console.log('keywords found!');
-      }
-
-      // Send extracted text to server for parsing
+      // Send file directly to server for parsing
       const response = await fetch(
         `${window.location.origin}/api/parse-resume`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            text: extractedText,
-            filename: uploadedFile.name,
-            customColors: customColors,
-            isAuthenticated: isAuthenticated,
-          }),
+          body: formData, // Send FormData instead of JSON
         }
       );
 
@@ -487,7 +269,30 @@ const ResumeUploader = ({
           '\n\nTips for PDF files:\n• Make sure the PDF contains selectable text (not just images)\n• Try saving the PDF from a different source\n• Consider converting to a Word document or text file for best results.';
       }
 
-      setError(errorMessage);
+      if (errorMessage.includes('quota')) {
+        errorMessage =
+          'You exceeded your Google Gemini quota. Please check your Google AI Studio billing details or try again later.';
+      } else if (
+        errorMessage.includes('Request too large') ||
+        errorMessage.includes('INVALID_ARGUMENT')
+      ) {
+        errorMessage =
+          'The resume is too large for the AI model. Please try a shorter resume or use a plain text file if available.';
+      } else if (errorMessage.includes('PDF parsing failed')) {
+        errorMessage =
+          'Failed to parse the PDF document. This might be due to a very poor quality scan, an unsupported PDF format, or an issue with the AI model. Please ensure the PDF contains selectable text or try a plain text file.';
+      } else if (errorMessage.includes('Could not extract meaningful text')) {
+        errorMessage =
+          'Could not extract meaningful text from the file. The file might be corrupted, password-protected, or contain only images. Please ensure the document contains clear, selectable text.';
+      } else if (errorMessage.includes('No active session found')) {
+        errorMessage =
+          'Your session has expired. Please sign in again to save your resume.';
+      }
+
+      setModalErrorMessage(errorMessage);
+      setShowErrorModal(true);
+      setError('');
+    } finally {
       setIsLoading(false);
     }
   };
@@ -524,17 +329,6 @@ const ResumeUploader = ({
             <p className="text-gray-600 text-sm">
               Extracting text and analyzing content with Google Gemini...
             </p>
-            {ocrProgress > 0 && ocrProgress < 100 && (
-              <div className="w-full mt-4">
-                <p className="text-gray-600 text-sm mb-2">
-                  OCR Progress: {ocrProgress}%
-                </p>
-                <Progress
-                  value={ocrProgress}
-                  className="w-full h-2 bg-gray-200 rounded-full"
-                />
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -564,7 +358,7 @@ const ResumeUploader = ({
                 ref={fileInputRef}
                 type="file"
                 className={styles.fileInput}
-                accept=".txt"
+                accept=".txt, .pdf" // Always accept both
                 onChange={handleChange}
               />
               <div className={styles.uploadIcon}>
@@ -587,7 +381,9 @@ const ResumeUploader = ({
               <p className={styles.dropText}>
                 <strong>Click to upload</strong> or drag and drop your resume
               </p>
-              <p className={styles.fileTypes}>Supports text files (max 10MB)</p>
+              <p className={styles.fileTypes}>
+                Supports text files and PDFs (max 10MB)
+              </p>
               <p
                 className={styles.fileTypes}
                 style={{
@@ -596,8 +392,7 @@ const ResumeUploader = ({
                   opacity: 0.7,
                 }}
               >
-                For best results with text files, ensure they contain meaningful
-                text
+                For best results, ensure your document contains meaningful text
               </p>
               <div className="w-full max-w-[300px] flex flex-col mx-auto gap-4">
                 <button
@@ -828,6 +623,30 @@ const ResumeUploader = ({
             <p style={{ whiteSpace: 'pre-line' }}>{error}</p>
           </div>
         )}
+
+        {/* Error Modal */}
+        <Dialog open={showErrorModal} onOpenChange={setShowErrorModal}>
+          <DialogContent className="max-w-md">
+            <DialogTitle>
+              <div className="flex items-center text-red-600">
+                <AlertTriangle className="w-6 h-6 mr-2" />
+                Parsing Error
+              </div>
+            </DialogTitle>
+            <DialogDescription className="whitespace-pre-line">
+              {modalErrorMessage}
+            </DialogDescription>
+            <div className="flex justify-end mt-4">
+              <button
+                type="button"
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                onClick={() => setShowErrorModal(false)}
+              >
+                Close
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

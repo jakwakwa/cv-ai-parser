@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { IS_AI_PARSING_ENABLED } from '@/lib/config';
 import { ResumeDatabase } from '@/lib/database';
-import { parseWithAI } from '@/lib/resume-parser/ai-parser';
+import { parseWithAI, parseWithAIPDF } from '@/lib/resume-parser/ai-parser';
 import { parseWithRegex } from '@/lib/resume-parser/regex-parser';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { createClient } from '@/lib/supabase/server';
@@ -9,14 +9,17 @@ import { createSlug } from '@/lib/utils';
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { text: fileContent, filename, customColors, isAuthenticated } = body;
+    const formData = await request.formData();
+    const file = formData.get('file') as File;
+    const customColors = JSON.parse(
+      (formData.get('customColors') as string) || '{}'
+    );
+    const isAuthenticated = formData.get('isAuthenticated') === 'true';
 
-    if (!fileContent) {
-      return new Response(
-        JSON.stringify({ error: 'No text content provided.' }),
-        { status: 400 }
-      );
+    if (!file) {
+      return new Response(JSON.stringify({ error: 'No file provided.' }), {
+        status: 400,
+      });
     }
 
     const supabase = await createClient();
@@ -40,21 +43,45 @@ export async function POST(request: Request) {
     }
 
     let parsedResume: ParsedResume;
-    let parseMethod: 'ai' | 'regex' | 'regex_fallback' = 'regex';
+    let parseMethod: 'ai' | 'ai_pdf' | 'regex' | 'regex_fallback' = 'regex';
     let confidence = 0;
 
     if (IS_AI_PARSING_ENABLED) {
       try {
-        parsedResume = await parseWithAI(fileContent);
-        parseMethod = 'ai';
-        confidence = 95;
+        if (file.type === 'application/pdf') {
+          // Use direct PDF parsing with Gemini 2.0 Flash
+          parsedResume = await parseWithAIPDF(file);
+          parseMethod = 'ai_pdf';
+          confidence = 98; // Higher confidence for direct PDF parsing
+        } else {
+          // For text files, extract content first
+          const fileContent = await file.text();
+          parsedResume = await parseWithAI(fileContent);
+          parseMethod = 'ai';
+          confidence = 95;
+        }
       } catch (_aiError) {
-        const regexResult = parseWithRegex(fileContent);
-        parsedResume = regexResult.data;
-        confidence = regexResult.confidence;
-        parseMethod = 'regex_fallback';
+        // Fallback to regex for text files only
+        if (file.type === 'text/plain') {
+          const fileContent = await file.text();
+          const regexResult = parseWithRegex(fileContent);
+          parsedResume = regexResult.data;
+          confidence = regexResult.confidence;
+          parseMethod = 'regex_fallback';
+        } else {
+          throw new Error(
+            'PDF parsing failed and no fallback available for non-text files'
+          );
+        }
       }
     } else {
+      // AI parsing disabled - only handle text files
+      if (file.type !== 'text/plain') {
+        throw new Error(
+          'AI parsing is disabled. Only text files are supported.'
+        );
+      }
+      const fileContent = await file.text();
       const regexResult = parseWithRegex(fileContent);
       parsedResume = regexResult.data;
       confidence = regexResult.confidence;
@@ -74,7 +101,7 @@ export async function POST(request: Request) {
 
     if (isAuthenticated && user) {
       const resumeTitle =
-        parsedResume.name || filename.split('.')[0] || 'Untitled Resume';
+        parsedResume.name || file.name.split('.')[0] || 'Untitled Resume';
       let generatedSlug = createSlug(resumeTitle);
       const MAX_RETRIES = 5;
       let retries = 0;
@@ -84,9 +111,9 @@ export async function POST(request: Request) {
           savedResume = await ResumeDatabase.saveResume(supabase, {
             userId: user.id,
             title: resumeTitle,
-            originalFilename: filename,
-            fileType: body.fileType,
-            fileSize: body.fileSize,
+            originalFilename: file.name,
+            fileType: file.type,
+            fileSize: file.size,
             parsedData: finalParsedData,
             parseMethod: parseMethod,
             confidenceScore: confidence,
@@ -122,7 +149,7 @@ export async function POST(request: Request) {
         meta: {
           method: parseMethod,
           confidence,
-          filename,
+          filename: file.name,
           resumeId: savedResume?.id,
           resumeSlug: savedResume?.slug,
         },
