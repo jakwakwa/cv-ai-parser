@@ -1,6 +1,6 @@
 /* EducationSection styles migrated from old location */
 .educationSection {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.95rem;
 }
 
 .sectionTitle {
@@ -31,6 +31,7 @@
     font-size: 0.7rem;
     color: var(--charcoal, #565854);
     font-weight: 600;
+    line-height: 0.8;
     font-size: 0.7rem;
     color: var(--charcoal, #565854);
 }
@@ -38,13 +39,10 @@
 .institution {
     text-transform: uppercase;
     color: var(--bronze-dark, #a67244);
-    font-size: 0.55rem;
-    font-family: 'DM Mono', Menlo, monospace;
-    letter-spacing: 0.05rem;
+margin-top: 13px !important;
     font-family: 'DM Mono', Menlo, monospace;
     font-weight: 600;
-    font-size: 0.6rem;
-    opacity: 0.8;
+    opacity: 1;
     text-transform: uppercase;
     font-size: 0.57rem;
     font-weight: 800;

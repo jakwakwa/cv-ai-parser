@@ -1,6 +1,6 @@
 /* CertificationsSection styles migrated from old location */
 .certificationsSection {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .sectionTitle {
@@ -31,19 +31,15 @@
 }
 
 .certificationItem {
-    margin-bottom: 0.75rem;
+    margin-bottom: 1.2rem;
 }
 
-.certName {
-    font-weight: 600;
-    font-size: 0.7rem;
-    color: var(--charcoal, #565854);
-}
 
 .credentialId {
-    font-size: 0.4rem;
+    font-size: 0.35rem;
+    opacity: 0.65;
     color: var(--charcoal, #565854);
-    font-style: italic;
+    /* font-style: italic; */
     margin-top: 0.1rem;
 }
 

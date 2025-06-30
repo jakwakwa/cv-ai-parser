@@ -68,49 +68,15 @@ export default function ResumeLibrary({
   };
 
   const handleTogglePublic = async (resume: Resume) => {
-    console.log('🔄 [DEBUG] handleTogglePublic called with resume:', {
-      id: resume.id,
-      title: resume.title,
-      slug: resume.slug,
-      current_is_public: resume.is_public,
-      will_become_public: !resume.is_public,
-    });
-
     if (!supabase) {
-      console.error('❌ [DEBUG] handleTogglePublic: No supabase client');
       return;
     }
-
     try {
-      console.log(
-        '📝 [DEBUG] handleTogglePublic: Updating resume in database...'
-      );
-      const startTime = Date.now();
-
       const updated = await ResumeDatabase.updateResume(supabase, resume.id, {
         is_public: !resume.is_public,
       });
-
-      const endTime = Date.now();
-      console.log(
-        '⏱️ [DEBUG] handleTogglePublic: Database update completed in',
-        endTime - startTime,
-        'ms'
-      );
-      console.log(
-        '✅ [DEBUG] handleTogglePublic: Resume updated successfully:',
-        {
-          id: updated.id,
-          title: updated.title,
-          slug: updated.slug,
-          new_is_public: updated.is_public,
-        }
-      );
-
       setResumes(resumes.map((r) => (r.id === resume.id ? updated : r)));
-      console.log('🔄 [DEBUG] handleTogglePublic: Local state updated');
     } catch (err) {
-      console.error('❌ [DEBUG] handleTogglePublic: Error occurred:', err);
       setError(err instanceof Error ? err.message : 'Failed to update resume');
     }
   };

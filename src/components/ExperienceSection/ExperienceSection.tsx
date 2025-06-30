@@ -31,7 +31,7 @@ const ExperienceSection = ({
         experience.map((job, index) => (
           <div
             key={`${job.company}-${job.title}-${index}`}
-            className="avoid-break mb-6 last:mb-0"
+            className="avoid-break mb-10 last:mb-0"
           >
             <div className="flex justify-between items-start mb-2">
               <div>
