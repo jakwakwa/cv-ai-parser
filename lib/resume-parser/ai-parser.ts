@@ -16,3 +16,32 @@ export async function parseWithAI(content: string): Promise<ParsedResume> {
   console.log('AI parsing completed successfully.');
   return object;
 }
+
+// New function for PDF parsing
+export async function parseWithAIPDF(file: File): Promise<ParsedResume> {
+  console.log(`Starting PDF AI parsing with model: ${AI_MODEL}`);
+
+  const { object } = await generateObject({
+    model: google(AI_MODEL),
+    schema: resumeSchema,
+    messages: [
+      {
+        role: 'user',
+        content: [
+          {
+            type: 'text',
+            text: getResumeParsingPrompt(''), // We'll modify this prompt for PDF context
+          },
+          {
+            type: 'file',
+            data: await file.arrayBuffer(),
+            mimeType: file.type,
+          },
+        ],
+      },
+    ],
+  });
+
+  console.log('PDF AI parsing completed successfully.');
+  return object;
+}
