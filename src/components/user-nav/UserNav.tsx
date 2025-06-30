@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import {
   Avatar,
   AvatarFallback,
@@ -51,6 +52,10 @@ export function UserNav() {
             <p className={styles.userEmail}>{user.email}</p>
           </div>
         </div>
+
+        <DropdownMenuItem className={styles.dropdownMenuItem} asChild>
+          <Link href="/library">My Library</Link>
+        </DropdownMenuItem>
 
         <DropdownMenuItem className={styles.dropdownMenuItem} onClick={signOut}>
           Log out
