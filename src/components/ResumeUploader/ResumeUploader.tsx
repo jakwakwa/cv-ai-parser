@@ -539,7 +539,7 @@ const ResumeUploader = ({
     <div className="w-full max-w-4xl rounded">
       <div className={styles.uploaderContainer}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Resume Parser</h1>
+          <h1 className={styles.title}>Magic AI CV Generator</h1>
           <p className={styles.subtitle}>
             Upload your existing resume and we'll create a beautiful online
             version
