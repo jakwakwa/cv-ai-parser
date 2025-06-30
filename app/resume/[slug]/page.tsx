@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import type { Resume } from '@/lib/types'; // Import the Resume type
+import AdSense from '@/src/components/adsense/AdSense';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import CertificationsSection from '@/src/components/CertificationsSection/CertificationsSection';
 import ContactSection from '@/src/components/ContactSection/ContactSection';
@@ -237,6 +238,14 @@ export default function ViewResumePage() {
   return (
     <div className={styles.pageWrapper}>
       <SiteHeader />
+      
+      {/* Header Ad */}
+      <AdSense 
+        adSlot="2345678901" 
+        adFormat="horizontal"
+        className="mx-auto my-4"
+      />
+      
       <div className={styles.buttonContainer}>
         <button
           type="button"
@@ -299,7 +308,23 @@ export default function ViewResumePage() {
               />
             </div>
           </div>
+          
+          {/* Content Ad - Between resume sections */}
+          <AdSense 
+            adSlot="3456789012" 
+            adFormat="horizontal"
+            className="my-6"
+          />
+          
         </div>
+        
+        {/* Footer Ad */}
+        <AdSense 
+          adSlot="4567890123" 
+          adFormat="horizontal"
+          className="mx-auto my-8"
+        />
+        
       </main>
     </div>
   );
