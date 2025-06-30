@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     siteName: 'Resume Parser & Generator',
     images: [
       {
-        url: 'https://www.airesumegen.com/placeholder-logo.svg',
+        url: 'https://www.airesumegen.com/logo.svg',
         width: 1200,
         height: 630,
         alt: 'AI Resume Parser and Online CV Generator',
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     description:
       'Effortlessly convert your text resumes into stunning online CVs using AI-powered parsing. Customize with beautiful colors, download as PDF, and manage your professional presence.',
     creator: '@your_twitter_handle', // Replace with your actual Twitter handle
-    images: ['https://www.airesumegen.com/placeholder-logo.svg'], // Replace with a relevant image
+    images: ['https://www.airesumegen.com/logo.svg'], // Replace with a relevant image
   },
 };
 
