@@ -7,8 +7,49 @@ import { AuthProvider } from '@/src/components/auth-provider/AuthProvider';
 import { Toaster } from '@/src/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Resume Parser & Generator',
-  description: 'Upload your resume and generate a beautiful online version',
+  title:
+    'AI Resume Parser & Online CV Generator - Convert to PDF with Custom Colors',
+  description:
+    'Effortlessly convert your text resumes into stunning online CVs using AI-powered parsing. Customize with beautiful colors, download as PDF, and manage your professional presence.',
+  keywords: [
+    'AI resume parser',
+    'online resume generator',
+    'CV builder',
+    'PDF resume',
+    'customizable resume',
+    'AI resume converter',
+    'professional CV',
+    'resume template',
+    'job application tool',
+    'text to resume',
+  ],
+  openGraph: {
+    title:
+      'AI Resume Parser & Online CV Generator - Convert to PDF with Custom Colors',
+    description:
+      'Effortlessly convert your text resumes into stunning online CVs using AI-powered parsing. Customize with beautiful colors, download as PDF, and manage your professional presence.',
+    url: 'https://www.airesumegen.com',
+    siteName: 'Resume Parser & Generator',
+    images: [
+      {
+        url: 'https://www.airesumegen.com/placeholder-logo.svg',
+        width: 1200,
+        height: 630,
+        alt: 'AI Resume Parser and Online CV Generator',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title:
+      'AI Resume Parser & Online CV Generator - Convert to PDF with Custom Colors',
+    description:
+      'Effortlessly convert your text resumes into stunning online CVs using AI-powered parsing. Customize with beautiful colors, download as PDF, and manage your professional presence.',
+    creator: '@your_twitter_handle', // Replace with your actual Twitter handle
+    images: ['https://www.airesumegen.com/placeholder-logo.svg'], // Replace with a relevant image
+  },
 };
 
 export default function RootLayout({
