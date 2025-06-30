@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
+import AdSense from '@/src/components/adsense/AdSense';
 import AuthComponent from '@/src/components/auth-component/AuthComponent';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import CertificationsSection from '@/src/components/CertificationsSection/CertificationsSection';
@@ -164,6 +165,13 @@ export default function Home() {
   return (
     <div className={styles.pageWrapper}>
       <SiteHeader />
+      
+      {/* Header Ad */}
+      <AdSense 
+        adSlot="1234567890" 
+        adFormat="horizontal"
+        className="mx-auto my-4"
+      />
 
       <main className={!user ? styles.mainContainer : styles.mainUserContainer}>
         {!user && (

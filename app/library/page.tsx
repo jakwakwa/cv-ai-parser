@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, Suspense } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import type { Resume } from '@/lib/types';
+import AdSense from '@/src/components/adsense/AdSense';
 import AuthComponent from '@/src/components/auth-component/AuthComponent';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import ResumeLibrary from '@/src/components/resume-library/ResumeLibrary';
@@ -75,9 +76,24 @@ export default function LibraryPage() {
   return (
     <div className={styles.pageWrapper}>
       <SiteHeader />
+      
+      {/* Header Ad */}
+      <AdSense 
+        adSlot="5678901234" 
+        adFormat="horizontal"
+        className="mx-auto my-4"
+      />
+      
       <Suspense fallback={<div>Loading...</div>}>
         <LibraryPageContent />
       </Suspense>
+      
+      {/* Footer Ad */}
+      <AdSense 
+        adSlot="6789012345" 
+        adFormat="horizontal"
+        className="mx-auto my-8"
+      />
     </div>
   );
 }
