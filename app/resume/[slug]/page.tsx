@@ -2,21 +2,15 @@
 
 import { ArrowLeft } from 'lucide-react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import type { Resume } from '@/lib/types'; // Import the Resume type
 import AdSense from '@/src/components/adsense/AdSense';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
-import CertificationsSection from '@/src/components/CertificationsSection/CertificationsSection';
-import ContactSection from '@/src/components/ContactSection/ContactSection';
 import DownloadButton from '@/src/components/DownloadButton/DownloadButton';
-import EducationSection from '@/src/components/EducationSection/EducationSection';
-import ExperienceSection from '@/src/components/ExperienceSection/ExperienceSection';
-import ProfileHeader from '@/src/components/ProfileHeader/ProfileHeader';
 import ResumeDisplay from '@/src/components/resume-display/ResumeDisplay';
 import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
-import SkillsSection from '@/src/components/SkillsSection/SkillsSection';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import { Button } from '@/src/components/ui/button';
 import styles from '../../page.module.css';
@@ -26,7 +20,6 @@ export default function ViewResumePage() {
   const params = useParams();
   const { slug } = params;
   const { user, loading: authLoading } = useAuth();
-  const resumeContainerRef = useRef<HTMLDivElement>(null);
   const { isDownloading, downloadPdf } = usePdfDownloader();
   const { toast } = useToast();
 
