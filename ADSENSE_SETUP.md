@@ -90,7 +90,7 @@ NEXT_PUBLIC_ADSENSE_LIBRARY_FOOTER_SLOT=your-library-footer-slot-id
 
 ## 💰 Expected Revenue
 
-For a CV parser app, you can expect:
+For a Magic AI CV Generator, you can expect:
 - **RPM (Revenue per 1000 views)**: $1-5
 - **CTR (Click-through rate)**: 1-3%
 - **With 10,000 monthly visitors**: $10-50/month
