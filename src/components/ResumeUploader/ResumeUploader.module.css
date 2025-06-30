@@ -54,6 +54,7 @@
   cursor: pointer;
   margin-bottom: 2rem;
   position: relative;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 .dropZone:hover {
@@ -70,6 +71,9 @@
 .uploadIcon {
   color: #6b7280;
   margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .dropText {

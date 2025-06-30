@@ -15,6 +15,12 @@ import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import { Progress } from '@/src/components/ui/progress';
 import ColorPicker from '../color-picker/ColorPicker';
 import ProfileImageUploader from '../profile-image-uploader/ProfileImageUploader';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../ui/tooltip';
 import styles from './ResumeUploader.module.css';
 
 declare global {
@@ -110,14 +116,13 @@ const ResumeUploader = ({
 
     // Validate file type
     const allowedTypes = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'text/plain',
+      'text/plain', // Only allow text files for now
     ];
 
     if (!allowedTypes.includes(file.type)) {
-      setError('Please upload a PDF, Word document, or text file.');
+      setError(
+        "For now, please upload a plain text (.txt) file. We're working on improving PDF and Word document parsing, which will be available soon! In the meantime, you can easily convert your PDF or Word document to a .txt file."
+      );
       return;
     }
 
@@ -313,9 +318,6 @@ const ResumeUploader = ({
 
   // Client-side text extraction for different file types
   const extractTextFromFile = async (file: File) => {
-    if (file.type === 'application/pdf') {
-      return await extractTextFromPDF(file);
-    }
     if (file.type === 'text/plain') {
       const text = await file.text();
       if (text.length < 50) {
@@ -323,28 +325,11 @@ const ResumeUploader = ({
       }
       return text;
     }
-    if (
-      file.type === 'application/msword' ||
-      file.type ===
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ) {
-      try {
-        // Try to read as text (this works for some Word docs)
-        const text = await file.text();
-        if (text.length > 50) {
-          return text;
-        }
-        throw new Error('Could not extract readable text from Word document');
-      } catch (_wordError: unknown) {
-        throw new Error(
-          'Word document parsing not fully supported. Please save as PDF or text file for best results.'
-        );
-      }
-    } else {
-      throw new Error(
-        `Unsupported file type: ${file.type}. Please use PDF, Word document, or text file.`
-      );
-    }
+    // This case should ideally not be reached due to client-side validation
+    // but is kept for robustness.
+    throw new Error(
+      `Unsupported file type: ${file.type}. Please use a plain text (.txt) file.`
+    );
   };
 
   const handleCreateResume = async () => {
@@ -581,7 +566,7 @@ const ResumeUploader = ({
                 ref={fileInputRef}
                 type="file"
                 className={styles.fileInput}
-                accept=".pdf,.doc,.docx,.txt"
+                accept=".txt"
                 onChange={handleChange}
               />
 
@@ -606,9 +591,7 @@ const ResumeUploader = ({
               <p className={styles.dropText}>
                 <strong>Click to upload</strong> or drag and drop your resume
               </p>
-              <p className={styles.fileTypes}>
-                Supports PDF, Word documents, and text files (max 10MB)
-              </p>
+              <p className={styles.fileTypes}>Supports text files (max 10MB)</p>
               <p
                 className={styles.fileTypes}
                 style={{
@@ -617,9 +600,50 @@ const ResumeUploader = ({
                   opacity: 0.7,
                 }}
               >
-                For best results with PDFs, ensure they contain selectable text
-                (not scanned images)
+                For best results with text files, ensure they contain meaningful
+                text
               </p>
+
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <p
+                      className={styles.fileTypes}
+                      style={{
+                        fontSize: '0.8rem',
+                        marginTop: '0.5rem',
+                        opacity: 0.7,
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Hover for detailed instructions on converting Word to .txt
+                    </p>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-md">
+                    <p>
+                      <b>
+                        To export a Word document as a plain text file (.txt):
+                      </b>
+                      <br />
+                      1. Open the document in Word.
+                      <br />
+                      2. Go to "File" then "Save As".
+                      <br />
+                      3. Choose "Plain Text (.txt)" as the file type.
+                      <br />
+                      4. Select a location, and click "Save".
+                      <br />
+                      5. If prompted with a "File Conversion" dialog, ensure
+                      "Windows (Default)" is selected and click "OK".
+                      <br />
+                      <br />
+                      After saving, you can open the .txt file with any text
+                      editor like Notepad (Windows) or TextEdit (Mac).
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
 
               <button
                 type="button"
