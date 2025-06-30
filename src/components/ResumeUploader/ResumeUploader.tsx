@@ -142,7 +142,7 @@ const ResumeUploader = ({
   };
 
   // Enhanced client-side PDF text extraction with better CDN handling and OCR fallback
-  const extractTextFromPDF = async (file: File) => {
+  const _extractTextFromPDF = async (file: File) => {
     let pdfjsLib: typeof window.pdfjsLib | null = null;
     let fullText = '';
 
