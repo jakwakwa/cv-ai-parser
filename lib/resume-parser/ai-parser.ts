@@ -1,7 +1,10 @@
 import { google } from '@ai-sdk/google';
 import { generateObject } from 'ai';
 import { AI_MODEL } from '@/lib/config';
-import { getResumeParsingPrompt } from './prompts';
+import {
+  getResumeParsingPrompt,
+  getResumeParsingPromptForPDF,
+} from './prompts';
 import { type ParsedResume, resumeSchema } from './schema';
 
 export async function parseWithAI(content: string): Promise<ParsedResume> {
@@ -30,7 +33,7 @@ export async function parseWithAIPDF(file: File): Promise<ParsedResume> {
         content: [
           {
             type: 'text',
-            text: getResumeParsingPrompt(''), // We'll modify this prompt for PDF context
+            text: getResumeParsingPromptForPDF(),
           },
           {
             type: 'file',
