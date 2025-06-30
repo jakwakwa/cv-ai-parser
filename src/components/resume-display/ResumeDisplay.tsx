@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from 'react';
+import type React from 'react';
+import { useEffect, useRef } from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import AdSense from '@/src/components/adsense/AdSense';
 import CertificationsSection from '@/src/components/CertificationsSection/CertificationsSection';
@@ -14,10 +15,7 @@ interface ResumeDisplayProps {
   isAuth: boolean;
 }
 
-const ResumeDisplay: React.FC<ResumeDisplayProps> = ({
-  resumeData,
-  isAuth,
-}) => {
+const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
   const resumeContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
