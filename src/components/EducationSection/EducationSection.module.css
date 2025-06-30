@@ -53,5 +53,6 @@
 
 .detail {
     font-style: italic;
+    font-size: 0.5rem;
     color: var(--charcoal, #565854);
 }

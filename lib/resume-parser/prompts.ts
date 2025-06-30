@@ -21,7 +21,7 @@ IMPORTANT INSTRUCTIONS:
 - Layout Understanding: Use the document's visual structure (headings, bullet points, spacing) to understand content organization
 - Summary Processing: If the professional summary is over 600 characters, rewrite it to be concise and professional under 600 characters
 - Experience Details: For each job, extract and summarize responsibilities into 2-3 clear bullet points
-- Skills Extraction: Identify both hard and soft skills, technical proficiencies, and certifications
+- Skills Extraction: Gather and list both hard and soft skills, technical proficiencies from the entire document content
 - Date Parsing: Extract and standardize all dates (employment periods, education, certifications)
 
 Please parse this resume document and return the structured data according to the provided schema.
