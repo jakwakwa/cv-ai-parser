@@ -43,7 +43,7 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
       />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
         <div
-          className="flex flex-col md:col-span-1 p-6 md:p-8"
+          className="flex flex-col h-full md:col-span-1 p-6 md:p-8"
           style={{ backgroundColor: 'var(--off-white)' }}
         >
           <ContactSection

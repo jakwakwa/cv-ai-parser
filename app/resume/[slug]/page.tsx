@@ -32,7 +32,6 @@ export default function ViewResumePage() {
 
   useEffect(() => {
     const toastMessage = searchParams.get('toast');
-    console.log('Toast message from URL:', toastMessage);
 
     if (toastMessage) {
       switch (toastMessage) {

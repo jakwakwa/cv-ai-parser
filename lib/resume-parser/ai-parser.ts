@@ -8,8 +8,6 @@ import {
 import { type ParsedResume, resumeSchema } from './schema';
 
 export async function parseWithAI(content: string): Promise<ParsedResume> {
-  console.log(`Starting AI parsing with model: ${AI_MODEL}`);
-
   const { object } = await generateObject({
     model: google(AI_MODEL),
     schema: resumeSchema,

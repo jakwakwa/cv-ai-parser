@@ -156,20 +156,17 @@ const ProfileImageUploader = ({
   };
 
   const handleSkip = () => {
-    console.log('Skip button clicked');
     if (onSkip) {
       onSkip();
     }
   };
 
   const handleComplete = () => {
-    console.log('Complete button clicked with image:', previewImage);
     if (onComplete) {
       onComplete(previewImage);
     }
   };
 
-  // Prompt mode for after resume upload
   if (showPrompt) {
     return (
       <Card className={styles.card}>

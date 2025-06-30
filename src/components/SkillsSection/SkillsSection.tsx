@@ -25,9 +25,9 @@ const SkillsSection = ({ skills, customColors }: SkillsSectionProps) => {
               key={skill}
               className={styles.skill}
               style={{
-                backgroundColor: colors['--light-grey-background'],
-                color: colors['--coffee'],
-                borderColor: colors['--light-grey-border'],
+                backgroundColor: 'rgba(255, 255,255,0.5)',
+                color: colors['--teal-main'],
+                borderColor: colors['--light-brown-border'],
               }}
             >
               {skill}
