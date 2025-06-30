@@ -79,6 +79,22 @@ export default function RootLayout({
           <Toaster />
         </ToastProvider>
         <Analytics />
+        <footer className="py-6 w-full shrink-0 items-center px-4 md:px-6 border-t text-white">
+          <nav className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center text-center text-sm">
+            <a
+              className="hover:underline underline-offset-4"
+              href="/privacy-policy"
+            >
+              Privacy Policy
+            </a>
+            <a
+              className="hover:underline underline-offset-4"
+              href="/terms-and-conditions"
+            >
+              Terms and Conditions
+            </a>
+          </nav>
+        </footer>
       </body>
     </html>
   );
