@@ -1,7 +1,8 @@
 'use client';
 
+import Image from 'next/image';
+import Link from 'next/link';
 import type React from 'react';
-
 import { useState } from 'react';
 import { useAuth } from '../auth-provider/AuthProvider';
 import styles from './authComponent.module.css';
@@ -48,49 +49,83 @@ export default function AuthComponent({ onSuccess }: AuthComponentProps) {
 
   return (
     <div className={styles.container}>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        {isSignUp && (
+      <div className={styles.imageColumn}>
+        <Image
+          src="/signinleftcolimg.jpg"
+          alt="Create your account"
+          width={500}
+          height={500}
+          className={styles.sideImage}
+          priority
+        />
+        <div className={styles.imageOverlay}>
+          <h2 className={styles.overlayTitle}>Create your Account</h2>
+          <p className={styles.overlayText}>
+            Start creating custom beautifully designed resumes efortlessly!
+          </p>
+        </div>
+      </div>
+      <div className={styles.formColumn}>
+        <h2 className={styles.formTitle}>Fill in your details</h2>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          {isSignUp && (
+            <input
+              type="text"
+              placeholder="Full name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              required
+              className={styles.input}
+            />
+          )}
+
           <input
-            type="text"
-            placeholder="Full Name"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
+            type="email"
+            placeholder="Email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
             className={styles.input}
           />
-        )}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className={styles.input}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className={styles.input}
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className={styles.input}
+          />
+          <div className={styles.termsCheckbox}>
+            <input type="checkbox" id="terms" required />
+            <label htmlFor="terms">
+              Accept
+              <Link
+                href="/terms-and-conditions"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.termsLink}
+              >
+                Terms & Conditions
+              </Link>
+            </label>
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className={styles.submitButton}
+          >
+            {loading ? '...' : isSignUp ? 'Sign Up' : 'Sign In'}
+          </button>
+        </form>
         <button
-          type="submit"
-          disabled={loading}
-          className={styles.submitButton}
+          type="button"
+          onClick={() => setIsSignUp(!isSignUp)}
+          className={styles.toggleButton}
         >
-          {loading ? '...' : isSignUp ? 'Sign Up' : 'Sign In'}
+          {isSignUp ? 'Sign In' : 'Sign Up'}
         </button>
-      </form>
-      <button
-        type="button"
-        onClick={() => setIsSignUp(!isSignUp)}
-        className={styles.toggleButton}
-      >
-        {isSignUp ? 'Sign In' : 'Sign Up'}
-      </button>
-      {error && <p className={styles.errorMessage}>{error}</p>}
+        {error && <p className={styles.errorMessage}>{error}</p>}
+      </div>
     </div>
   );
 }

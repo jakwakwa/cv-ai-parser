@@ -4,7 +4,12 @@
 
 body {
   font-family: "Inter", Helvetica, sans-serif;
-  background: black;
+  background: #374151;
+  background-color: #374151; /* bg-gray-50 */
+  background: #374151;
+  background-image: radial-gradient(ellipse farthest-corner, rgba(20, 252, 252, 0.9) 20%, rgba(44, 40, 44, 0.9) 90%), url('/main-bg.jpg');
+  background-size: cover; /* Optional: adds better coverage for the image */
+  background-position: center; /* Optional: centers the background image */
 }
 
 @layer utilities {

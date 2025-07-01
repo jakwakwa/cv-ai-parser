@@ -327,12 +327,6 @@ const ResumeUploader = ({
   return (
     <div className="w-full rounded">
       <div className={styles.uploaderContainer}>
-        {/* Step 1: Upload Resume File */}
-        <h2 className="text-xl w-full flex justify-center font-semibold text-gray-800 mb-4 flex items-center">
-          <Upload className="w-5 h-5 mr-2" />
-          Step 1: Upload Your Resume
-        </h2>
-
         <div className="mt-8">
           {!uploadedFile ? (
             // biome-ignore lint/a11y/noStaticElementInteractions: <>
@@ -434,27 +428,29 @@ const ResumeUploader = ({
               </div>
             </div>
           ) : (
-            <div className="bg-white rounded-lg border border-gray-200 p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex justify-start w-full items-center">
-                  <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                  <div className="flex flex-col items-start justify-start">
-                    <p className="font-medium text-md text-left text-gray-900">
-                      {uploadedFile.name}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB •{' '}
-                      {uploadedFile.type}
-                    </p>
+            <div className="pt-8 mt-8">
+              <div className="mx-8 bg-white rounded-lg border border-gray-200 p-6 h-24 shadow">
+                <div className="flex items-center justify-between">
+                  <div className="flex justify-start w-full items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <div className="flex flex-col items-start justify-start">
+                      <p className="font-medium text-md text-left text-gray-900">
+                        {uploadedFile.name}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB •{' '}
+                        {uploadedFile.type}
+                      </p>
+                    </div>
                   </div>
+                  <button
+                    type="button"
+                    onClick={handleRemoveFile}
+                    className="text-red-600 hover:text-red-700 font-medium text-sm"
+                  >
+                    Remove
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={handleRemoveFile}
-                  className="text-red-600 hover:text-red-700 font-medium text-sm"
-                >
-                  Remove
-                </button>
               </div>
             </div>
           )}
@@ -462,15 +458,15 @@ const ResumeUploader = ({
 
         {/* Step 2: Optional Profile Image */}
         {uploadedFile && (
-          <div className="my-16">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <div className="m-8">
+            <h2 className="text-sm font-semibold text-gray-800 mb-4 ml-3 flex items-center">
               <ImageIcon className="w-5 h-5 mr-2" />
-              Step 2: Add Profile Picture (Optional)
+              Profile Picture (Optional)
             </h2>
 
-            <div className="bg-white rounded-lg border border-gray-200 px-6 shadow">
-              <div className="flex items-center justify-between my-4">
-                <p className="text-gray-600">
+            <div className="flex justify-between w-full bg-white rounded-lg border border-gray-200 shadow h-20 px-6">
+              <div className="flex items-center w-full justify-between">
+                <p className="text-gray-600 text-sm">
                   Add a professional profile picture to your resume
                 </p>
                 <button
@@ -518,81 +514,88 @@ const ResumeUploader = ({
 
         {/* Step 3: Optional Color Customization */}
         {uploadedFile && (
-          <div className="my-16">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <div className="m-8">
+            <h2 className="text-sm font-semibold text-gray-800 mb-4 ml-3 flex items-center">
               <Palette className="w-5 h-5 mr-2" />
-              Step 3: Customize Colors (Optional)
+              Customize Colors (Optional)
             </h2>
 
-            <div className="flex flex-col bg-white rounded-lg border border-gray-200 p-6 shadow">
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-gray-600">
+            <div className="flex justify-center w-full bg-white rounded-lg border border-gray-200 shadow h-20 px-6">
+              <div className="flex items-center w-full justify-between mb-0">
+                <p className="text-gray-600 text-sm text-left w-full">
                   Personalize your resume with custom colors and themes
                 </p>
-                <button
-                  type="button"
-                  onClick={() => setShowColorPicker(!showColorPicker)}
-                  className="text-teal-600 hover:text-teal-700 font-medium text-sm"
-                >
-                  {showColorPicker ? 'Hide' : 'Customize Colors'}
-                </button>
               </div>
+              <div className="flex flex-row justify-end align-end w-full">
+                {showColorPicker && (
+                  <ColorPicker
+                    currentColors={customColors}
+                    onColorsChange={handleColorsChange}
+                  />
+                )}
 
-              {showColorPicker && (
-                <ColorPicker
-                  currentColors={customColors}
-                  onColorsChange={handleColorsChange}
-                />
-              )}
-
-              {!showColorPicker && (
-                <div className="flex w-full space-around items-center space-x-3">
-                  <div className="flex space-x-1">
-                    <div
-                      className="w-6 h-6 rounded-full border border-gray-300"
-                      style={{ backgroundColor: customColors['--teal-main'] }}
-                    />
-                    <div
-                      className="w-6 h-6 rounded-full border border-gray-300"
-                      style={{ backgroundColor: customColors['--bronze-dark'] }}
-                    />
-                    <div
-                      className="w-6 h-6 rounded-full border border-gray-300"
-                      style={{ backgroundColor: customColors['--charcoal'] }}
-                    />
+                {!showColorPicker && (
+                  <div className="flex items-center mx-1">
+                    <div className="flex flex-row-reverse gap-1">
+                      <div
+                        className="w-4 h-4 rounded-full border border-gray-300"
+                        style={{
+                          backgroundColor:
+                            customColors['--resume-sidebar-background'],
+                        }}
+                      />
+                      <div
+                        className="w-4 h-4 rounded-full border border-gray-300"
+                        style={{
+                          backgroundColor: customColors['--resume-main-icons'],
+                        }}
+                      />
+                      <div
+                        className="w-4 h-4 rounded-full border border-gray-300"
+                        style={{
+                          backgroundColor: customColors['--resume-job-title'],
+                        }}
+                      />
+                    </div>
                   </div>
-                  <div className="w-full flex gap-4 justify-start">
-                    <p className="text-sm font-medium text-gray-900">
-                      Color scheme selected
-                    </p>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowColorPicker(!showColorPicker)}
+                className="text-teal-600 w-[350px] hover:text-teal-700 font-medium text-sm mx-0"
+              >
+                {showColorPicker ? 'Hide' : 'Customize Colors'}
+              </button>
             </div>
           </div>
         )}
 
         {/* Create Resume Button */}
         {uploadedFile && (
-          <div className="mb-8">
-            <button
-              type="button"
-              onClick={handleCreateResume}
-              disabled={isLoading}
-              className="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors duration-200"
-            >
-              {isLoading
-                ? 'Creating Resume...'
-                : isAuthenticated
-                  ? 'Create Resume'
-                  : 'Create Resume (Preview Only)'}
-            </button>
-            {!isAuthenticated && (
-              <p className="text-sm text-gray-600 mt-2 text-center">
-                💡 Sign in to save your resume to your library and edit it later
-              </p>
-            )}
-          </div>
+          <>
+            <div className="mt-8 mx-8">
+              <button
+                type="button"
+                onClick={handleCreateResume}
+                disabled={isLoading}
+                className="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors duration-200"
+              >
+                {isLoading
+                  ? 'Creating Resume...'
+                  : isAuthenticated
+                    ? 'Create Resume'
+                    : 'Create Resume (Preview Only)'}
+              </button>
+              {!isAuthenticated && (
+                <p className="mx-8 text-sm text-gray-600 my-2 text-center">
+                  💡 Sign in to save your resume to your library and edit it
+                  later
+                </p>
+              )}
+            </div>
+            <div className="pb-6" />
+          </>
         )}
 
         {error && (

@@ -4,12 +4,20 @@
   align-items: flex-start;
   align-content: flex-start;
   justify-content: flex-start;
-  background-color: #26252a; /* bg-gray-50 */
+
+}
+.hero {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  padding: 50px;
+  height:400px;
 }
 .header {
+  height: 90%;
   text-align: center;
   width: 100%;
-  margin-bottom: 3rem;
+  /* margin-bottom: 3rem; */
 }
 .mainUserContainer {
   flex: 1;
@@ -22,7 +30,7 @@
   width: 100%;
   max-width: 64rem; /* max-w-4xl, adjusted for single column */
   margin: 2rem auto; /* Added vertical margin */
-  padding: 2rem; /* Increased padding */
+  padding: 2rem 2rem 80px 2rem; /* Increased padding */
   background-color: #e2e2e2;
   border-radius: 0.75rem; /* rounded-xl */
   box-shadow:
@@ -40,7 +48,7 @@
   width: 100%;
   max-width: 64rem; /* max-w-4xl, adjusted for single column */
   margin: 2rem auto; /* Added vertical margin */
-  padding: 2rem; /* Increased padding */
+  padding: 2em; /* Increased padding */
   background-color: #e2e2e2;
   border-radius: 0.75rem; /* rounded-xl */
   box-shadow:
@@ -183,18 +191,20 @@
 .uploaderContainer {
   max-width: 800px;
   margin: 0 auto;
+  background-color:#0369a1;
   padding: 2rem;
   text-align: center;
 }
 
 .header {
-  text-align: center;
+  text-align: left;
   margin-bottom: 3rem;
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 5rem;
   font-weight: bold;
+  line-height: 1;
   color: #1f2937;
   margin-bottom: 0.5rem;
   font-family: var(--font-dm-sans);
@@ -304,9 +314,8 @@
 }
 
 .features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
+  display: flex;
+  gap: 4rem;
   margin-top: 0rem;
   padding: 2rem;
   background-color: #ffffff;
@@ -315,40 +324,46 @@
 }
 
 .userFeatures {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-end;
+  width: 40%;
+flex-direction: column;
+  gap: 1rem;
   margin-top: 0rem;
-  padding: 2rem;
-  width: 100%;
-  background-color: #ffffff;
-  border-radius: 0.75rem;
-  border: 1px solid #e5e7eb;
+  /* border: 1px solid #0e57e9; */
 }
 
 .feature {
+  display: inline-flex;
+  flex-direction: column;
+  align-content: center;
+  width: 200px;
+  background-color: #093d46;
   text-align: center;
-  padding: 1.5rem;
+  border-radius: 50%;
+  height:200px;
+  padding: 1.9rem;
 }
 
 .featureIcon {
   color: #0d9488;
-  margin-bottom: 1rem;
+  margin-bottom: 0.2rem;
   display: flex;
   justify-content: center;
 }
 
 .feature h3 {
-  font-size: 1.25rem;
+  font-size: .9rem;
   font-weight: 600;
-  color: #1f2937;
+  color: #a8ddd6;
   margin-bottom: 0.5rem;
   font-family: var(--font-dm-sans);
 }
 
 .feature p {
-  color: #6b7280;
-  font-size: 0.875rem;
+  color: #a8f3dbc1;
+  font-size: 0.75rem;
   line-height: 1.5;
   font-family: var(--font-dm-sans);
 }

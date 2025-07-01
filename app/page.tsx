@@ -6,6 +6,7 @@ import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import AdSense from '@/src/components/adsense/AdSense';
+import { AuthModal } from '@/src/components/auth-component/AuthModal';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import DownloadButton from '@/src/components/DownloadButton/DownloadButton';
 import ResumeUploader from '@/src/components/ResumeUploader/ResumeUploader';
@@ -41,6 +42,7 @@ export default function Home() {
   const [localCustomColors, setLocalCustomColors] = useState<
     Record<string, string>
   >({});
+  const [showAuthModal, setShowAuthModal] = useState(false); // State for modal visibility
   // New state to explicitly manage isAuthenticated status for prop passing
   const [isAuthenticatedState, setIsAuthenticatedState] = useState(false);
 
@@ -237,6 +239,12 @@ export default function Home() {
     <div className={styles.pageWrapper}>
       <SiteHeader onLogoClick={handleReset} />
 
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+      />
+
       {/* Header Ad */}
       <AdSense
         adSlot="1234567890"
@@ -251,57 +259,50 @@ export default function Home() {
         {/* Show uploader for both auth and non-auth users */}
         {currentView === 'upload' && (
           <>
-            <div className={styles.header}>
-              <h1 className={styles.title}>AI Resume Generator</h1>
-              <div className={styles.featureIcon}>
-                <Bot size={28} />
-              </div>
-              <p className="text-xs">AI powered by Google Gemini</p>
-              <p className="text-md mt-4">
-                Upload your existing resume and we'll create a beautiful online
-                version within seconds!
-              </p>
-              <Button
-                className="mt-8"
-                type="button"
-                onClick={handleScrollToUploader}
-              >
-                Try it out!
-              </Button>
-              <div className="flex flex-row gap-2 justify-center mt-2">
-                <span className="text-xs">Free to use</span>
-                <span className="text-xs">-</span>
-                <span className="text-xs">No sign in required</span>
-              </div>
-            </div>
-            <div className={styles.userFeatures}>
-              <div className={styles.feature}>
-                <div className={styles.featureIcon}>
+            <div className={styles.hero}>
+              <div className={styles.header}>
+                <h1 className={styles.title}>AI Resume Generator</h1>
+                <div className={styles.headerIcon}>
                   <Bot size={28} />
                 </div>
-                <h3>Smart Parsing</h3>
-                <p>
-                  Google Gemini AI-powered parsing when available, with
-                  intelligent fallback text analysis
+                <p className="text-xs">AI powered by Google Gemini</p>
+                <p className="text-xl mt-4 max-w-md">
+                  Upload your existing resume and we'll create a beautiful
+                  online version within seconds!
                 </p>
-              </div>
-              <div className={styles.feature}>
-                <div className={styles.featureIcon}>
-                  <FileText size={28} />
+                <Button
+                  className="mt-8"
+                  type="button"
+                  onClick={handleScrollToUploader}
+                >
+                  Try it out!
+                </Button>
+                <div className="flex flex-row gap-2 justify-start mt-2">
+                  <span className="text-xs">Free to use</span>
+                  <span className="text-xs">-</span>
+                  <span className="text-xs">No sign in required</span>
                 </div>
-                <h3>Beautiful Design</h3>
-                <p>
-                  Your resume gets transformed into a modern, professional
-                  layout
-                </p>
               </div>
-              {/* <div className={styles.feature}>
+              <div className={styles.userFeatures}>
+                <div className={styles.feature}>
+                  <div className={styles.featureIcon}>
+                    <Bot size={28} />
+                  </div>
+                  <h3>Smart Ai Parsing</h3>
+                  <p>
+                    AI-powered parsing when available, with intelligent fallback
+                    text analysis.
+                  </p>
+                </div>
+
+                {/* <div className={styles.feature}>
                    <div className={styles.featureIcon}>
                      <Smartphone size={28} />
                    </div>
                    <h3>Responsive</h3>
                    <p>Looks great on all devices and can be downloaded as PDF</p>
                  </div> */}
+              </div>
             </div>
             <div ref={uploaderRef} style={{ width: '100%' }}>
               <ResumeUploader
@@ -357,6 +358,7 @@ export default function Home() {
                         'Please sign in using the button in the header to save your resume to your library.',
                       variant: 'default',
                     });
+                    setShowAuthModal(true); // Open the modal
                   }}
                   className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
                 >
