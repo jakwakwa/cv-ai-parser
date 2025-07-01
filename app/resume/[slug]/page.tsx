@@ -237,6 +237,13 @@ export default function ViewResumePage() {
         >
           Edit Resume
         </button>
+        <button
+          type="button"
+          onClick={() => router.push('/library')}
+          className={styles.myLibraryButton}
+        >
+          My Library
+        </button>
         <DownloadButton onClick={handleDownloadPdf} />
         <button
           type="button"
