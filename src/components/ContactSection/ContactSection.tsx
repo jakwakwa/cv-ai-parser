@@ -27,9 +27,9 @@ const ContactSection = ({ contact, customColors }: ContactSectionProps) => (
   <section className={styles.contactSection}>
     <h2
       className={styles.sectionTitle}
-      style={{ color: customColors['--charcoal'] }}
+      style={{ color: customColors['--resume-profile-name'] }}
     >
-      <ContactTitleIcon fill={customColors['--bronze-dark']} />
+      <ContactTitleIcon fill={customColors['--resume-main-icons']} />
       Contact
     </h2>
     <div className={styles.contactDetails}>
@@ -37,12 +37,12 @@ const ContactSection = ({ contact, customColors }: ContactSectionProps) => (
         <div className={styles.detail}>
           <MailIcon
             className={styles.icon}
-            style={{ color: customColors['--teal-main'] }}
+            style={{ color: customColors['--resume-job-title'] }}
           />
           <a
             href={`mailto:${contact.email}`}
             className={styles.link}
-            style={{ color: customColors['--coffee'] }}
+            style={{ color: customColors['--resume-body-text'] }}
           >
             {contact.email}
           </a>
@@ -52,11 +52,11 @@ const ContactSection = ({ contact, customColors }: ContactSectionProps) => (
         <div className={styles.detail}>
           <PhoneIcon
             className={styles.icon}
-            style={{ color: customColors['--teal-main'] }}
+            style={{ color: customColors['--resume-job-title'] }}
           />
           <span
             className={styles.text}
-            style={{ color: customColors['--coffee'] }}
+            style={{ color: customColors['--resume-body-text'] }}
           >
             {contact.phone}
           </span>
@@ -66,11 +66,11 @@ const ContactSection = ({ contact, customColors }: ContactSectionProps) => (
         <div className={styles.detail}>
           <MapPinIcon
             className={styles.icon}
-            style={{ color: customColors['--teal-main'] }}
+            style={{ color: customColors['--resume-job-title'] }}
           />
           <span
             className={styles.text}
-            style={{ color: customColors['--coffee'] }}
+            style={{ color: customColors['--resume-body-text'] }}
           >
             {contact.location}
           </span>
@@ -80,14 +80,14 @@ const ContactSection = ({ contact, customColors }: ContactSectionProps) => (
         <div className={styles.detail}>
           <LinkedInIcon
             className={styles.icon}
-            style={{ color: customColors['--teal-main'] }}
+            style={{ color: customColors['--resume-job-title'] }}
           />
           <a
             href={contact.linkedin}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.link}
-            style={{ color: customColors['--coffee'] }}
+            style={{ color: customColors['--resume-body-text'] }}
           >
             LinkedIn
           </a>
@@ -97,14 +97,14 @@ const ContactSection = ({ contact, customColors }: ContactSectionProps) => (
         <div className={styles.detail}>
           <GitHubIcon
             className={styles.icon}
-            style={{ color: customColors['--teal-main'] }}
+            style={{ color: customColors['--resume-job-title'] }}
           />
           <a
             href={contact.github}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.link}
-            style={{ color: customColors['--coffee'] }}
+            style={{ color: customColors['--resume-body-text'] }}
           >
             GitHub
           </a>
@@ -114,14 +114,14 @@ const ContactSection = ({ contact, customColors }: ContactSectionProps) => (
         <div className={styles.detail}>
           <GlobeIcon
             className={styles.icon}
-            style={{ color: customColors['--teal-main'] }}
+            style={{ color: customColors['--resume-job-title'] }}
           />
           <a
             href={contact.website}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.link}
-            style={{ color: customColors['--coffee'] }}
+            style={{ color: customColors['--resume-body-text'] }}
           >
             Website
           </a>

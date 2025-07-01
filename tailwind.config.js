@@ -6,14 +6,7 @@ module.exports = {
     './src/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
-    extend: {
-      colors: {
-        border: 'hsl(var(--border))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        // Add more as needed
-      },
-    },
+    extend: {},
   },
   plugins: [],
 };

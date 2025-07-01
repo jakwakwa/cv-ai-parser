@@ -8,6 +8,7 @@ import EducationSection from '@/src/components/EducationSection/EducationSection
 import ExperienceSection from '@/src/components/ExperienceSection/ExperienceSection';
 import ProfileHeader from '@/src/components/ProfileHeader/ProfileHeader';
 import SkillsSection from '@/src/components/SkillsSection/SkillsSection';
+import { resumeColors } from '@/src/utils/colors';
 import styles from '../../../app/page.module.css';
 
 interface ResumeDisplayProps {
@@ -44,7 +45,11 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
         <div
           className="flex flex-col h-full md:col-span-1 p-6 md:p-8"
-          style={{ backgroundColor: 'var(--off-white)' }}
+          style={{
+            backgroundColor:
+              resumeData.customColors?.['--resume-sidebar-background'] ||
+              resumeColors['--resume-sidebar-background'],
+          }}
         >
           <ContactSection
             contact={resumeData.contact || {}}
@@ -65,7 +70,11 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
         </div>
         <div
           className="p-6 md:p-8 md:col-span-2"
-          style={{ color: 'var(--coffee)' }}
+          style={{
+            color:
+              resumeData.customColors?.['--resume-body-text'] ||
+              resumeColors['--resume-body-text'],
+          }}
         >
           <ExperienceSection
             experience={resumeData.experience}

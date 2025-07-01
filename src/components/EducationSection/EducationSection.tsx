@@ -17,15 +17,15 @@ const EducationSection = ({
   education,
   customColors,
 }: EducationSectionProps) => {
-  const colors = customColors || {};
+  // const colors = customColors || {};
 
   return (
     <section className={styles.educationSection}>
       <h2
         className={styles.sectionTitle}
-        style={{ color: colors['--charcoal'] }}
+        style={{ color: customColors['--resume-section-titles'] }}
       >
-        <EducationIcon fill={colors['--bronze-dark']} />
+        <EducationIcon fill={customColors['--resume-main-icons']} />
         Education
       </h2>
       {education && education.length > 0 ? (
@@ -34,21 +34,30 @@ const EducationSection = ({
             key={`${edu.degree}-${edu.institution}`}
             className="mb-4 last:mb-0"
           >
-            <p className="subject" style={{ color: colors['--teal-main'] }}>
+            <p
+              className="subject"
+              style={{ color: customColors['--resume-job-title'] }}
+            >
               {edu.degree}
             </p>
-            <p className="issuer" style={{ color: colors['--bronze-dark'] }}>
+            <p
+              className="issuer"
+              style={{ color: customColors['--resume-main-icons'] }}
+            >
               {edu.institution}
             </p>
             {edu.duration && (
-              <p className="date" style={{ color: colors['--charcoal'] }}>
+              <p
+                className="date"
+                style={{ color: customColors['--resume-dates'] }}
+              >
                 {edu.duration}
               </p>
             )}
             {edu.note && (
               <p
                 className={styles.detail}
-                style={{ color: colors['--coffee'] }}
+                style={{ color: customColors['--resume-body-text'] }}
               >
                 {edu.note}
               </p>
@@ -58,7 +67,7 @@ const EducationSection = ({
       ) : (
         <p
           className="text-gray-600 text-sm"
-          style={{ color: colors['--coffee'] }}
+          style={{ color: customColors['--resume-body-text'] }}
         >
           No education details available.
         </p>

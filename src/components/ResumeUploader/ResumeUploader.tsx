@@ -11,6 +11,7 @@ import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useRef, useState } from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
+import { resumeColors } from '@/src/utils/colors';
 import ColorPicker from '../color-picker/ColorPicker';
 import ProfileImageUploader from '../profile-image-uploader/ProfileImageUploader';
 import {
@@ -68,20 +69,8 @@ const ResumeUploader = ({
   const [profileImage, setProfileImage] = useState('');
   const [showProfileUploader, setShowProfileUploader] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [customColors, setCustomColors] = useState<Record<string, string>>({
-    '--mint-light': '#d8b08c',
-    '--teal-dark': '#1f3736',
-    '--charcoal': '#565854',
-    '--mint-background': '#c4f0dc',
-    '--bronze-dark': '#a67244',
-    '--peach': '#f9b87f',
-    '--coffee': '#3e2f22',
-    '--teal-main': '#116964',
-    '--light-grey-background': '#f5f5f5',
-    '--off-white': '#faf4ec',
-    '--light-brown-border': '#a49990c7',
-    '--light-grey-border': '#cecac6',
-  });
+  const [customColors, setCustomColors] =
+    useState<Record<string, string>>(resumeColors);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [modalErrorMessage, setModalErrorMessage] = useState('');

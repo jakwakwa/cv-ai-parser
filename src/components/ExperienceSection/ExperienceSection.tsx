@@ -17,13 +17,13 @@ const ExperienceSection = ({
   experience,
   customColors,
 }: ExperienceSectionProps) => {
-  const colors = customColors || {};
+  // const colors = customColors || {};
 
   return (
     <section className={styles.experienceSection}>
       <h2
         className={styles.sectionTitle}
-        style={{ color: colors['--charcoal'] }}
+        style={{ color: customColors['--resume-section-titles'] }}
       >
         Experience
       </h2>
@@ -37,14 +37,14 @@ const ExperienceSection = ({
               <div>
                 <h3
                   className={styles.jobTitle}
-                  style={{ color: colors['--teal-main'] }}
+                  style={{ color: customColors['--resume-job-title'] }}
                 >
                   {job.title}
                 </h3>
                 {job.company && (
                   <p
                     className={styles.company}
-                    style={{ color: colors['--bronze-dark'] }}
+                    style={{ color: customColors['--resume-main-icons'] }}
                   >
                     {job.company}
                   </p>
@@ -52,7 +52,7 @@ const ExperienceSection = ({
                 {job.duration && (
                   <p
                     className={styles.duration}
-                    style={{ color: colors['--charcoal'] }}
+                    style={{ color: customColors['--resume-dates'] }}
                   >
                     {job.duration}
                   </p>
@@ -65,7 +65,7 @@ const ExperienceSection = ({
                   <li
                     key={detail}
                     className={`${styles.detailItem} bullet-point content-body`}
-                    style={{ color: colors['--coffee'] }}
+                    style={{ color: customColors['--resume-body-text'] }}
                   >
                     {detail}
                   </li>
@@ -77,7 +77,7 @@ const ExperienceSection = ({
       ) : (
         <p
           className="text-gray-600 text-sm"
-          style={{ color: colors['--coffee'] }}
+          style={{ color: customColors['--resume-body-text'] }}
         >
           No experience details available.
         </p>
