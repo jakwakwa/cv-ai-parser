@@ -7,15 +7,15 @@ interface SkillsSectionProps {
 }
 
 const SkillsSection = ({ skills, customColors }: SkillsSectionProps) => {
-  const colors = customColors || {};
+  // const colors = customColors || {};
 
   return (
     <section className={styles.skillsSection}>
       <h2
         className={styles.sectionTitle}
-        style={{ color: colors['--charcoal'] }}
+        style={{ color: customColors['--resume-profile-name'] }}
       >
-        <SkillsIcon fill={colors['--bronze-dark']} />
+        <SkillsIcon fill={customColors['--resume-main-icons']} />
         Skills
       </h2>
       {skills && skills.length > 0 ? (
@@ -26,8 +26,8 @@ const SkillsSection = ({ skills, customColors }: SkillsSectionProps) => {
               className={styles.skill}
               style={{
                 backgroundColor: 'rgba(255, 255,255,0.5)',
-                color: colors['--teal-main'],
-                borderColor: colors['--light-brown-border'],
+                color: customColors['--resume-job-title'],
+                borderColor: customColors['--resume-skill-border'],
               }}
             >
               {skill}
@@ -37,7 +37,7 @@ const SkillsSection = ({ skills, customColors }: SkillsSectionProps) => {
       ) : (
         <p
           className="text-gray-600 text-sm"
-          style={{ color: colors['--coffee'] }}
+          style={{ color: customColors['--resume-body-text'] }}
         >
           No skills listed.
         </p>

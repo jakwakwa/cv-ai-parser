@@ -928,7 +928,7 @@ const ResumeEditor = ({
             </Card>
 
             {/* Color Picker Section */}
-            <Card className="mt-8">
+            <Card className={styles.card}>
               <CardHeader>
                 <CardTitle>Color Scheme</CardTitle>
               </CardHeader>

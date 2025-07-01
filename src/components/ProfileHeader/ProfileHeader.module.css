@@ -23,7 +23,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(146.96deg, #a5917f 7.87%, #836b65 57.71%, #5f434a 110.99%, #dbd1d1 137.9%);
+  background: linear-gradient(146.96deg, var(--resume-skill-border) 7.87%, var(--resume-main-icons) 110.99%);
 }
 
 @media (min-width: 768px) {

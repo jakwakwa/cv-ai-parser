@@ -14,18 +14,19 @@ import styles from './ColorPicker.module.css';
 interface ColorScheme {
   name: string;
   colors: {
-    '--mint-light': string;
-    '--teal-dark': string;
-    '--charcoal': string;
-    '--mint-background': string;
-    '--bronze-dark': string;
-    '--peach': string;
-    '--coffee': string;
-    '--teal-main': string;
-    '--light-grey-background': string;
-    '--off-white': string;
-    '--light-brown-border': string;
-    '--light-grey-border': string;
+    '--resume-job-title': string;
+    '--resume-sub-icons': string;
+    '--resume-profile-header-subtitle': string;
+    '--resume-sidebar-background': string;
+    '--resume-main-icons': string;
+    '--resume-sub-titles-issuer': string;
+    '--resume-sub-titles-companies': string;
+    '--resume-profile-name': string;
+    '--resume-section-titles': string;
+    '--resume-dates': string;
+    '--resume-body-text': string;
+    '--resume-profile-header-background': string;
+    '--resume-skill-border': string;
   };
 }
 
@@ -36,18 +37,19 @@ interface ColorPickerProps {
 
 const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
   const defaultColors = {
-    '--mint-light': '#d8b08c',
-    '--teal-dark': '#1f3736',
-    '--charcoal': '#565854',
-    '--mint-background': '#c4f0dc',
-    '--bronze-dark': '#a67244',
-    '--peach': '#f9b87f',
-    '--coffee': '#3e2f22',
-    '--teal-main': '#116964',
-    '--light-grey-background': '#f5f5f5',
-    '--off-white': '#faf4ec',
-    '--light-brown-border': '#a49990c7',
-    '--light-grey-border': '#cecac6',
+    '--resume-job-title': '#116964',
+    '--resume-sub-icons': '#116964',
+    '--resume-profile-header-subtitle': '#116964',
+    '--resume-sidebar-background': '#f5f5f5',
+    '--resume-main-icons': '#a67244',
+    '--resume-sub-titles-issuer': '#a67244',
+    '--resume-sub-titles-companies': '#a67244',
+    '--resume-profile-name': '#565854',
+    '--resume-section-titles': '#565854',
+    '--resume-dates': '#565854',
+    '--resume-body-text': '#3e2f22',
+    '--resume-profile-header-background': '#faf4ec',
+    '--resume-skill-border': '#a49990c7',
   };
 
   const colorSchemes: ColorScheme[] = [
@@ -56,88 +58,57 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
       colors: defaultColors,
     },
     {
-      name: 'Professional Blue',
+      name: 'Elegant Gold & Slate',
       colors: {
-        '--mint-light': '#b8d4e3',
-        '--teal-dark': '#1e3a5f',
-        '--charcoal': '#2c3e50',
-        '--mint-background': '#e8f4f8',
-        '--bronze-dark': '#34495e',
-        '--peach': '#85c1e9',
-        '--coffee': '#1b2631',
-        '--teal-main': '#2980b9',
-        '--light-grey-background': '#f8f9fa',
-        '--off-white': '#ffffff',
-        '--light-brown-border': '#bdc3c7',
-        '--light-grey-border': '#d5dbdb',
+        '--resume-job-title': '#7a6b3f', // gold
+        '--resume-sub-icons': '#7a6b3f',
+        '--resume-profile-header-subtitle': '#404143', // slate
+        '--resume-sidebar-background': '#F0EEF1', // light background
+        '--resume-main-icons': '#3d637f',
+        '--resume-sub-titles-issuer': '#7a6b3f',
+        '--resume-sub-titles-companies': '#7a6b3f',
+        '--resume-profile-name': '#404143', // slate
+        '--resume-section-titles': '#404143',
+        '--resume-dates': '#404143',
+        '--resume-body-text': '#27272F', // dark
+        '--resume-profile-header-background': '#F0EEF1',
+        '--resume-skill-border': '#A6A6A8', // muted grey
       },
     },
     {
-      name: 'Modern Purple',
+      name: 'Minimalist Sand & Ink',
       colors: {
-        '--mint-light': '#d1c4e9',
-        '--teal-dark': '#4a148c',
-        '--charcoal': '#424242',
-        '--mint-background': '#f3e5f5',
-        '--bronze-dark': '#6a1b9a',
-        '--peach': '#ce93d8',
-        '--coffee': '#2e1065',
-        '--teal-main': '#8e24aa',
-        '--light-grey-background': '#fafafa',
-        '--off-white': '#ffffff',
-        '--light-brown-border': '#b39ddb',
-        '--light-grey-border': '#e1bee7',
+        '--resume-job-title': '#22211D', // ink
+        '--resume-sub-icons': '#22211D',
+        '--resume-profile-header-subtitle': '#E6DFD9', // sand
+        '--resume-sidebar-background': '#FFFCF9', // lightest
+        '--resume-main-icons': '#5d5a4b',
+        '--resume-sub-titles-issuer': '#22211D',
+        '--resume-sub-titles-companies': '#22211D',
+        '--resume-profile-name': '#0D0D0B', // darkest
+        '--resume-section-titles': '#0D0D0B',
+        '--resume-dates': '#0D0D0D',
+        '--resume-body-text': '#22211D',
+        '--resume-profile-header-background': '#E6DFD9',
+        '--resume-skill-border': '#E6DFD9', // sand
       },
     },
     {
-      name: 'Warm Orange',
+      name: 'Modern Blue & Mint',
       colors: {
-        '--mint-light': '#ffcc80',
-        '--teal-dark': '#bf360c',
-        '--charcoal': '#3e2723',
-        '--mint-background': '#fff3e0',
-        '--bronze-dark': '#d84315',
-        '--peach': '#ffab40',
-        '--coffee': '#1e0a00',
-        '--teal-main': '#f57c00',
-        '--light-grey-background': '#fafafa',
-        '--off-white': '#fffde7',
-        '--light-brown-border': '#ffb74d',
-        '--light-grey-border': '#ffe0b2',
-      },
-    },
-    {
-      name: 'Forest Green',
-      colors: {
-        '--mint-light': '#a5d6a7',
-        '--teal-dark': '#1b5e20',
-        '--charcoal': '#2e7d32',
-        '--mint-background': '#e8f5e8',
-        '--bronze-dark': '#388e3c',
-        '--peach': '#81c784',
-        '--coffee': '#0d3f0f',
-        '--teal-main': '#43a047',
-        '--light-grey-background': '#f1f8e9',
-        '--off-white': '#f9fbe7',
-        '--light-brown-border': '#66bb6a',
-        '--light-grey-border': '#c8e6c9',
-      },
-    },
-    {
-      name: 'Elegant Gray',
-      colors: {
-        '--mint-light': '#cfd8dc',
-        '--teal-dark': '#263238',
-        '--charcoal': '#37474f',
-        '--mint-background': '#eceff1',
-        '--bronze-dark': '#455a64',
-        '--peach': '#90a4ae',
-        '--coffee': '#102027',
-        '--teal-main': '#546e7a',
-        '--light-grey-background': '#fafafa',
-        '--off-white': '#ffffff',
-        '--light-brown-border': '#78909c',
-        '--light-grey-border': '#b0bec5',
+        '--resume-job-title': '#2D3340', // blue
+        '--resume-sub-icons': '#BAD9D3', // mint
+        '--resume-profile-header-subtitle': '#2E3442', // blue
+        '--resume-sidebar-background': '#EDEBF0', // light
+        '--resume-main-icons': '#9225a7',
+        '--resume-sub-titles-issuer': '#9225a7',
+        '--resume-sub-titles-companies': '#9225a7',
+        '--resume-profile-name': '#2E3442',
+        '--resume-section-titles': '#2E3442',
+        '--resume-dates': '#2E3442',
+        '--resume-body-text': '#2D3340',
+        '--resume-profile-header-background': '#EDEBF0',
+        '--resume-skill-border': '#9CC4C3', // mint
       },
     },
   ];
@@ -188,15 +159,34 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
                 <div className={styles.schemeColorPreview}>
                   <div
                     className={styles.colorCircle}
-                    style={{ backgroundColor: scheme.colors['--teal-main'] }}
+                    style={{
+                      backgroundColor: scheme.colors['--resume-job-title'],
+                    }}
                   />
                   <div
                     className={styles.colorCircle}
-                    style={{ backgroundColor: scheme.colors['--bronze-dark'] }}
+                    style={{
+                      backgroundColor: scheme.colors['--resume-main-icons'],
+                    }}
                   />
                   <div
                     className={styles.colorCircle}
-                    style={{ backgroundColor: scheme.colors['--charcoal'] }}
+                    style={{
+                      backgroundColor: scheme.colors['--resume-profile-name'],
+                    }}
+                  />
+                  <div
+                    className={styles.colorCircle}
+                    style={{
+                      backgroundColor:
+                        scheme.colors['--resume-sidebar-background'],
+                    }}
+                  />
+                  <div
+                    className={styles.colorCircle}
+                    style={{
+                      backgroundColor: scheme.colors['--resume-skill-border'],
+                    }}
                   />
                 </div>
                 <p className={styles.schemeName}>{scheme.name}</p>
@@ -230,10 +220,14 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
                   id="main-accent"
                   type="color"
                   value={
-                    currentColors['--teal-main'] || defaultColors['--teal-main']
+                    currentColors['--resume-job-title'] ||
+                    defaultColors['--resume-job-title']
                   }
                   onChange={(e) =>
-                    handleCustomColorChange('--teal-main', e.target.value)
+                    handleCustomColorChange(
+                      '--resume-job-title',
+                      e.target.value
+                    )
                   }
                   className={styles.colorInput}
                 />
@@ -249,15 +243,20 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
                   id="secondary"
                   type="color"
                   value={
-                    currentColors['--bronze-dark'] ||
-                    defaultColors['--bronze-dark']
+                    currentColors['--resume-main-icons'] ||
+                    defaultColors['--resume-main-icons']
                   }
                   onChange={(e) =>
-                    handleCustomColorChange('--bronze-dark', e.target.value)
+                    handleCustomColorChange(
+                      '--resume-main-icons',
+                      e.target.value
+                    )
                   }
                   className={styles.colorInput}
                 />
-                <span className={styles.colorDescription}>Buttons</span>
+                <span className={styles.colorDescription}>
+                  Buttons & Main Icons
+                </span>
               </div>
             </div>
 
@@ -270,70 +269,153 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
                   id="text-color"
                   type="color"
                   value={
-                    currentColors['--charcoal'] || defaultColors['--charcoal']
+                    currentColors['--resume-profile-name'] ||
+                    defaultColors['--resume-profile-name']
                   }
                   onChange={(e) =>
-                    handleCustomColorChange('--charcoal', e.target.value)
+                    handleCustomColorChange(
+                      '--resume-profile-name',
+                      e.target.value
+                    )
                   }
                   className={styles.colorInput}
                 />
-                <span className={styles.colorDescription}>Body text</span>
+                <span className={styles.colorDescription}>
+                  Profile Name, Section Titles, Dates
+                </span>
               </div>
             </div>
 
             <div>
-              <label htmlFor="background" className={styles.colorLabel}>
-                Background
+              <label
+                htmlFor="profile-header-background"
+                className={styles.colorLabel}
+              >
+                Profile Header Background
               </label>
               <div className={styles.colorInputContainer}>
                 <input
-                  id="background"
+                  id="profile-header-background"
                   type="color"
                   value={
-                    currentColors['--off-white'] || defaultColors['--off-white']
+                    currentColors['--resume-profile-header-background'] ||
+                    defaultColors['--resume-profile-header-background']
                   }
                   onChange={(e) =>
-                    handleCustomColorChange('--off-white', e.target.value)
+                    handleCustomColorChange(
+                      '--resume-profile-header-background',
+                      e.target.value
+                    )
                   }
                   className={styles.colorInput}
                 />
-                <span className={styles.colorDescription}>Sidebar</span>
+                <span className={styles.colorDescription}>
+                  Background for Profile Header
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="sidebar-background" className={styles.colorLabel}>
+                Sidebar Background
+              </label>
+              <div className={styles.colorInputContainer}>
+                <input
+                  id="sidebar-background"
+                  type="color"
+                  value={
+                    currentColors['--resume-sidebar-background'] ||
+                    defaultColors['--resume-sidebar-background']
+                  }
+                  onChange={(e) =>
+                    handleCustomColorChange(
+                      '--resume-sidebar-background',
+                      e.target.value
+                    )
+                  }
+                  className={styles.colorInput}
+                />
+                <span className={styles.colorDescription}>
+                  Background for Sidebar
+                </span>
               </div>
             </div>
 
             <div>
               <label htmlFor="accent-light" className={styles.colorLabel}>
-                Accent Light
+                Accent Light (Sub-Icons)
               </label>
               <div className={styles.colorInputContainer}>
                 <input
                   id="accent-light"
                   type="color"
-                  value={currentColors['--peach'] || defaultColors['--peach']}
+                  value={
+                    currentColors['--resume-sub-icons'] ||
+                    defaultColors['--resume-sub-icons']
+                  }
                   onChange={(e) =>
-                    handleCustomColorChange('--peach', e.target.value)
+                    handleCustomColorChange(
+                      '--resume-sub-icons',
+                      e.target.value
+                    )
                   }
                   className={styles.colorInput}
                 />
-                <span className={styles.colorDescription}>Highlights</span>
+                <span className={styles.colorDescription}>
+                  Highlights & Sub-Icons
+                </span>
               </div>
             </div>
 
             <div>
-              <label htmlFor="dark-text" className={styles.colorLabel}>
-                Dark Text
+              <label htmlFor="body-text" className={styles.colorLabel}>
+                Body Text
               </label>
               <div className={styles.colorInputContainer}>
                 <input
-                  id="dark-text"
+                  id="body-text"
                   type="color"
-                  value={currentColors['--coffee'] || defaultColors['--coffee']}
+                  value={
+                    currentColors['--resume-body-text'] ||
+                    defaultColors['--resume-body-text']
+                  }
                   onChange={(e) =>
-                    handleCustomColorChange('--coffee', e.target.value)
+                    handleCustomColorChange(
+                      '--resume-body-text',
+                      e.target.value
+                    )
                   }
                   className={styles.colorInput}
                 />
-                <span className={styles.colorDescription}>Content</span>
+                <span className={styles.colorDescription}>
+                  Main content text
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="skill-border" className={styles.colorLabel}>
+                Skill Border
+              </label>
+              <div className={styles.colorInputContainer}>
+                <input
+                  id="skill-border"
+                  type="color"
+                  value={
+                    currentColors['--resume-skill-border'] ||
+                    defaultColors['--resume-skill-border']
+                  }
+                  onChange={(e) =>
+                    handleCustomColorChange(
+                      '--resume-skill-border',
+                      e.target.value
+                    )
+                  }
+                  className={styles.colorInput}
+                />
+                <span className={styles.colorDescription}>
+                  Border for skill badges
+                </span>
               </div>
             </div>
           </div>
@@ -342,43 +424,145 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
         {/* Color Preview */}
         <div>
           <h4 className={styles.previewTitle}>Preview</h4>
-          <div className={styles.previewContainer}>
+          <div
+            className={styles.previewSimulation}
+            style={{
+              backgroundColor:
+                currentColors['--resume-profile-header-background'] ||
+                defaultColors['--resume-profile-header-background'],
+            }}
+          >
             <div
-              className={styles.previewName}
+              className={styles.previewHeaderText}
               style={{
                 color:
-                  currentColors['--charcoal'] || defaultColors['--charcoal'],
+                  currentColors['--resume-profile-name'] ||
+                  defaultColors['--resume-profile-name'],
               }}
             >
-              Your Name
+              Name
             </div>
             <div
-              className={styles.previewTitleText}
+              className={styles.previewSubheaderText}
               style={{
                 color:
-                  currentColors['--teal-main'] || defaultColors['--teal-main'],
+                  currentColors['--resume-profile-header-subtitle'] ||
+                  defaultColors['--resume-profile-header-subtitle'],
               }}
             >
-              Professional Title
+              Title
             </div>
+          </div>
+          <div className={styles.previewTwoColumnLayout}>
             <div
-              className={styles.previewContentText}
-              style={{
-                color: currentColors['--coffee'] || defaultColors['--coffee'],
-              }}
-            >
-              This is how your resume content will look with the selected
-              colors.
-            </div>
-            <div
-              className={styles.previewButton}
+              className={styles.previewSidebar}
               style={{
                 backgroundColor:
-                  currentColors['--bronze-dark'] ||
-                  defaultColors['--bronze-dark'],
+                  currentColors['--resume-sidebar-background'] ||
+                  defaultColors['--resume-sidebar-background'],
               }}
             >
-              Button Style
+              <div
+                className={styles.previewSectionTitle}
+                style={{
+                  color:
+                    currentColors['--resume-section-titles'] ||
+                    defaultColors['--resume-section-titles'],
+                  borderBottomColor:
+                    currentColors['--resume-job-title'] ||
+                    defaultColors['--resume-job-title'],
+                }}
+              >
+                <span
+                  className={styles.previewIcon}
+                  style={{
+                    color:
+                      currentColors['--resume-main-icons'] ||
+                      defaultColors['--resume-main-icons'],
+                  }}
+                >
+                  &#9993; {/* Mail icon */}
+                </span>
+                Contact
+              </div>
+              <div
+                className={styles.previewDetailItem}
+                style={{
+                  color:
+                    currentColors['--resume-body-text'] ||
+                    defaultColors['--resume-body-text'],
+                }}
+              >
+                <span
+                  className={styles.previewSmallIcon}
+                  style={{
+                    color:
+                      currentColors['--resume-sub-icons'] ||
+                      defaultColors['--resume-sub-icons'],
+                  }}
+                >
+                  &#9742; {/* Phone icon */}
+                </span>
+                email@example.com
+              </div>
+            </div>
+            <div className={styles.previewContentArea}>
+              <div
+                className={styles.previewSectionTitle}
+                style={{
+                  color:
+                    currentColors['--resume-section-titles'] ||
+                    defaultColors['--resume-section-titles'],
+                  borderBottomColor:
+                    currentColors['--resume-job-title'] ||
+                    defaultColors['--resume-job-title'],
+                }}
+              >
+                Experience
+              </div>
+              <div
+                className={styles.previewDetailItem}
+                style={{
+                  color:
+                    currentColors['--resume-job-title'] ||
+                    defaultColors['--resume-job-title'],
+                }}
+              >
+                Job Title
+              </div>
+              <div
+                className={styles.previewDetailItem}
+                style={{
+                  color:
+                    currentColors['--resume-sub-titles-companies'] ||
+                    defaultColors['--resume-sub-titles-companies'],
+                }}
+              >
+                Company Name
+              </div>
+              <div
+                className={styles.previewDetailItem}
+                style={{
+                  color:
+                    currentColors['--resume-dates'] ||
+                    defaultColors['--resume-dates'],
+                }}
+              >
+                2020 - 2023
+              </div>
+              <div
+                className={styles.previewSkillBadge}
+                style={{
+                  borderColor:
+                    currentColors['--resume-skill-border'] ||
+                    defaultColors['--resume-skill-border'],
+                  color:
+                    currentColors['--resume-body-text'] ||
+                    defaultColors['--resume-body-text'],
+                }}
+              >
+                Skill
+              </div>
             </div>
           </div>
         </div>

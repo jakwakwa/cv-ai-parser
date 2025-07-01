@@ -14,6 +14,7 @@ import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import { Button } from '@/src/components/ui/button';
+import { migrateOldResumeColorsToNew } from '@/src/utils/colors';
 import styles from './page.module.css';
 
 interface ParseInfo {
@@ -53,7 +54,8 @@ export default function Home() {
       try {
         const storedColors = localStorage.getItem('customResumeColors');
         if (storedColors) {
-          setLocalCustomColors(JSON.parse(storedColors));
+          const parsed = JSON.parse(storedColors);
+          setLocalCustomColors(migrateOldResumeColorsToNew(parsed));
         }
       } catch (e) {
         console.error('Failed to load custom colors from local storage', e);
@@ -64,9 +66,10 @@ export default function Home() {
   useEffect(() => {
     if (!user && Object.keys(localCustomColors).length > 0) {
       try {
+        // Always save only the new variable names
         localStorage.setItem(
           'customResumeColors',
-          JSON.stringify(localCustomColors)
+          JSON.stringify(migrateOldResumeColorsToNew(localCustomColors))
         );
       } catch (e) {
         console.error('Failed to save custom colors to local storage', e);

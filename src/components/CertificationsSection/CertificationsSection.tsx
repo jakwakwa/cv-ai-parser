@@ -17,15 +17,15 @@ const CertificationsSection = ({
   certifications,
   customColors,
 }: CertificationsSectionProps) => {
-  const colors = customColors || {};
+  // const colors = customColors || {};
 
   return (
     <section className={styles.certificationsSection}>
       <h2
         className={styles.sectionTitle}
-        style={{ color: colors['--charcoal'] }}
+        style={{ color: customColors['--resume-section-titles'] }}
       >
-        <CertificationsIcon fill={colors['--bronze-dark']} />
+        <CertificationsIcon fill={customColors['--resume-main-icons']} />
         Certifications
       </h2>
       {certifications && certifications.length > 0 ? (
@@ -35,21 +35,30 @@ const CertificationsSection = ({
               key={cert.id || cert.name}
               className={styles.certificationItem}
             >
-              <p className="subject" style={{ color: colors['--teal-main'] }}>
+              <p
+                className="subject"
+                style={{ color: customColors['--resume-job-title'] }}
+              >
                 {cert.name}
               </p>
-              <p className="issuer" style={{ color: colors['--bronze-dark'] }}>
+              <p
+                className="issuer"
+                style={{ color: customColors['--resume-main-icons'] }}
+              >
                 {cert.issuer}
               </p>
               {cert.date && (
-                <p className="date" style={{ color: colors['--charcoal'] }}>
+                <p
+                  className="date"
+                  style={{ color: customColors['--resume-dates'] }}
+                >
                   {cert.date}
                 </p>
               )}
               {cert.id && (
                 <p
                   className={styles.credentialId}
-                  style={{ color: colors['--coffee'] }}
+                  style={{ color: customColors['--resume-body-text'] }}
                 >
                   ID: {cert.id}
                 </p>
@@ -58,7 +67,10 @@ const CertificationsSection = ({
           ))}
         </div>
       ) : (
-        <p className={styles.noCerts} style={{ color: colors['--coffee'] }}>
+        <p
+          className={styles.noCerts}
+          style={{ color: customColors['--resume-body-text'] }}
+        >
           No certifications listed.
         </p>
       )}
