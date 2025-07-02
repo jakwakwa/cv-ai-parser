@@ -9,13 +9,13 @@ import AdSense from '@/src/components/adsense/AdSense';
 import { AuthModal } from '@/src/components/auth-component/AuthModal';
 import { useAuthModal } from '@/src/components/auth-component/AuthModalContext';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
-import DownloadButton from '@/src/components/DownloadButton/DownloadButton';
 import ResumeUploader from '@/src/components/ResumeUploader/ResumeUploader';
 import ResumeDisplay from '@/src/components/resume-display/ResumeDisplay';
 import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import { Button } from '@/src/components/ui/button';
+import ResumeDisplayButtons from '@/src/components/resume-display-buttons/ResumeDisplayButtons';
 import { migrateOldResumeColorsToNew } from '@/src/utils/colors';
 import styles from './page.module.css';
 
@@ -325,6 +325,11 @@ export default function Home() {
         {currentView === 'view' && resumeData && (
           <div className={styles.resumeContainer}>
             {error && <div className={styles.errorMessage}>Error: {error}</div>}
+            <ResumeDisplayButtons
+              onDownloadPdf={handleDownloadPdf}
+              onEditResume={handleEditResume}
+              onUploadNew={handleReset}
+            />
             <ResumeDisplay
               resumeData={{
                 ...resumeData,
@@ -334,44 +339,6 @@ export default function Home() {
               }}
               isAuth={!!user}
             />
-            <div className={styles.buttonContainer}>
-              {/* Show edit button only for authenticated users */}
-              {user && (
-                <button
-                  type="button"
-                  onClick={handleEditResume}
-                  className={styles.editButton}
-                >
-                  Edit Resume
-                </button>
-              )}
-              <DownloadButton onClick={handleDownloadPdf} />
-              <button
-                type="button"
-                onClick={handleReset}
-                className={styles.resetButton}
-              >
-                Upload New
-              </button>
-              {/* Show sign-in prompt for non-auth users */}
-              {!user && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    toast({
-                      title: 'Sign in Required',
-                      description:
-                        'Please sign in using the button in the header to save your resume to your library.',
-                      variant: 'default',
-                    });
-                    setAuthModalOpen(true); // Open the modal
-                  }}
-                  className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
-                >
-                  Sign In to Save
-                </button>
-              )}
-            </div>
           </div>
         )}
 
