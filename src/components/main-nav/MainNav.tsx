@@ -21,7 +21,7 @@ export function MainNav({ onLogoClick }: MainNavProps) {
         }}
       >
         {/* <Icons.logo className="h-6 w-6" /> */}
-        <span className={styles.brand}>Magic AI CV Generator</span>
+        <span className={styles.brand}>AI Resume Generator</span>
       </Link>
     </div>
   );
