@@ -66,7 +66,7 @@ function LibraryPageContent() {
           <p className="text-gray-600 mb-6">
             Please sign in or sign up to access your resume library and manage your documents.
           </p>
-          <div className="space-y-3">
+          <div className="space-x-3">
             <Button
               onClick={() => setAuthModalOpen(true)}
               variant="default"
