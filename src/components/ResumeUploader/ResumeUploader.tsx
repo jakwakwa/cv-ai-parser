@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import styles from './ResumeUploader.module.css';
 
 declare global {
@@ -478,6 +479,10 @@ const ResumeUploader = ({
                 onOpenChange={setShowProfileUploader}
               >
                 <DialogContent className="p-0 bg-transparent border-none shadow-none max-w-fit">
+                  {/* Accessible title for screen readers */}
+                  <VisuallyHidden>
+                    <DialogTitle>Profile Image Uploader</DialogTitle>
+                  </VisuallyHidden>
                   <ProfileImageUploader
                     currentImage={profileImage}
                     onImageChange={handleProfileImageChange}
