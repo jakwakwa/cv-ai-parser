@@ -68,7 +68,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" />
+        {/* Removed html2pdf.js - using lazy-loaded PDF generation instead */}
         {/* Google AdSense */}
         <script
           async

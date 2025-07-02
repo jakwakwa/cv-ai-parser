@@ -1,7 +1,6 @@
 'use client';
 
 import { AlertTriangle, CheckCircle, ImageIcon, Palette } from 'lucide-react';
-import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useRef, useState } from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
@@ -17,21 +16,7 @@ import {
 } from '../ui/dialog';
 import styles from './ResumeUploader.module.css';
 
-declare global {
-  interface Window {
-    pdfjsLib: {
-      getDocument: (args: {
-        data: ArrayBuffer;
-        verbosity?: number;
-        disableAutoFetch?: boolean;
-        disableStream?: boolean;
-      }) => { promise: Promise<PDFDocumentProxy> };
-      GlobalWorkerOptions: {
-        workerSrc: string;
-      };
-    };
-  }
-}
+// Removed pdfjs-dist type declarations - using server-side PDF parsing with Google Gemini
 
 interface ParseInfo {
   resumeId?: string; // Optional for non-auth users
