@@ -422,6 +422,56 @@
   color: #6b7280;
 }
 
+/* New styles for remaining Tailwind classes in page.tsx */
+.headerAdContainer {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.textSmall {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.textExtraLarge {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  margin-top: 1rem;
+  max-width: 28rem;
+}
+
+.heroButton {
+  margin-top: 2rem;
+}
+
+.heroBottomRow {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  justify-content: flex-start;
+  margin-top: 0.5rem;
+}
+
+.signInToSaveButton {
+  background-color: #0d9488;
+  color: white;
+  font-weight: 500;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  border: none;
+  cursor: pointer;
+}
+
+.signInToSaveButton:hover {
+  background-color: #0f766e;
+}
+
 @media (max-width: 768px) {
   .mainContainer {
     flex-direction: column;

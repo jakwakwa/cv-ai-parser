@@ -302,14 +302,14 @@ const ResumeUploader = ({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-6xl mx-auto">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600 mx-auto mb-4" />
-            <p className="text-gray-900 font-medium mb-2">
+      <div className={styles.fullScreenLoading}>
+        <div className={styles.loadingCard}>
+          <div className={styles.textCenter}>
+            <div className={styles.spinningLoader} />
+            <p className={styles.grayText900}>
               Creating your resume...
             </p>
-            <p className="text-gray-600 text-sm">
+            <p className={styles.grayText600Small}>
               Extracting text and analyzing content with Google Gemini...
             </p>
           </div>
@@ -319,9 +319,9 @@ const ResumeUploader = ({
   }
 
   return (
-    <div className="w-full rounded">
+    <div className={styles.fullWidthRounded}>
       <div className={styles.uploaderContainer}>
-        <div className="mt-8">
+        <div className={styles.marginTop8}>
           {!uploadedFile ? (
             // biome-ignore lint/a11y/noStaticElementInteractions: <>
             <div
@@ -362,7 +362,7 @@ const ResumeUploader = ({
                 Supports text files and PDFs (max 10MB)
               </p>
 
-              <div className="w-full max-w-[500px] flex flex-col mx-auto gap-4">
+              <div className={styles.fileContainer}>
                 <button
                   type="button"
                   className={styles.uploadButton}
@@ -380,7 +380,7 @@ const ResumeUploader = ({
                     link.click();
                     document.body.removeChild(link);
                   }}
-                  className="text-teal-600 hover:text-teal-700 font-medium text-sm underline mt-2"
+                  className={styles.downloadLink}
                 >
                   📄 Download Starter Resume Text File (optional)
                 </button>
@@ -422,16 +422,16 @@ const ResumeUploader = ({
               </div>
             </div>
           ) : (
-            <div className="md:pt-8 mt-8">
-              <div className="mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 p-6 md:h-24 shadow">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md-gap-0">
-                  <div className="flex justify-start w-full items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <div className="flex flex-col items-start justify-start">
-                      <p className="font-medium text-md text-left text-gray-900">
+            <div className={styles.paddingTop8Md}>
+              <div className={styles.fileUploadedCard}>
+                <div className={styles.fileInfoRow}>
+                  <div className={styles.fileInfoLeft}>
+                    <CheckCircle className={styles.greenCheckIcon} />
+                    <div className={styles.fileIconAndInfo}>
+                      <p className={styles.fileName}>
                         {uploadedFile.name}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className={styles.fileDetails}>
                         {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB •{' '}
                         {uploadedFile.type}
                       </p>
@@ -440,7 +440,7 @@ const ResumeUploader = ({
                   <button
                     type="button"
                     onClick={handleRemoveFile}
-                    className="text-red-600 hover:text-red-700 font-medium text-sm"
+                    className={styles.removeButton}
                   >
                     Remove
                   </button>
@@ -452,21 +452,21 @@ const ResumeUploader = ({
 
         {/* Step 2: Optional Profile Image */}
         {uploadedFile && (
-          <div className="mt-8">
-            <h2 className="md:ml-8 text-sm font-semibold text-gray-800 mb-4 ml-3 flex items-center">
-              <ImageIcon className="w-5 h-5 mr-2" />
+          <div className={styles.marginTop8}>
+            <h2 className={styles.sectionHeader}>
+              <ImageIcon className={styles.sectionIcon} />
               Profile Picture (Optional)
             </h2>
 
-            <div className="flex mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow md:h-20 px-2 py-4 px-4 md:px-6">
-              <div className="flex flex-col md:flex-row items-start md:items-center w-full md:justify-between gap-4 md:gap-0">
-                <p className="text-gray-600 text-xs md:text-sm text-left md:text-left">
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionCardContent}>
+                <p className={styles.sectionDescription}>
                   Add a professional profile picture to your resume
                 </p>
                 <button
                   type="button"
                   onClick={() => setShowProfileUploader(!showProfileUploader)}
-                  className="text-teal-600 text-xs hover:text-teal-700 font-medium md:text-sm"
+                  className={styles.sectionButton}
                 >
                   {showProfileUploader ? 'Hide' : 'Add Photo'}
                 </button>

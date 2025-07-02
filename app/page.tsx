@@ -252,7 +252,7 @@ export default function Home() {
       <AdSense
         adSlot="1234567890"
         adFormat="horizontal"
-        className="mx-auto my-4"
+        className={styles.headerAdContainer}
       />
 
       <main className={styles.mainUserContainer}>
@@ -269,22 +269,22 @@ export default function Home() {
                   <div className={styles.headerIcon}>
                     <Bot size={28} />
                   </div>
-                  <p className="text-xs">AI powered by Google Gemini</p>
-                  <p className="text-xl mt-4 max-w-md">
+                  <p className={styles.textSmall}>AI powered by Google Gemini</p>
+                  <p className={styles.textExtraLarge}>
                     Upload your existing resume and we'll create a beautiful
                     online version within seconds!
                   </p>
                   <Button
-                    className="mt-8"
+                    className={styles.heroButton}
                     type="button"
                     onClick={handleScrollToUploader}
                   >
                     Try it out!
                   </Button>
-                  <div className="flex flex-row gap-2 justify-start mt-2">
-                    <span className="text-xs">Free to use</span>
-                    <span className="text-xs">-</span>
-                    <span className="text-xs">No sign in required</span>
+                  <div className={styles.heroBottomRow}>
+                    <span className={styles.textSmall}>Free to use</span>
+                    <span className={styles.textSmall}>-</span>
+                    <span className={styles.textSmall}>No sign in required</span>
                   </div>
                 </div>
                 <div className={styles.userFeatures}>
@@ -366,7 +366,7 @@ export default function Home() {
                     });
                     setAuthModalOpen(true); // Open the modal
                   }}
-                  className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+                  className={styles.signInToSaveButton}
                 >
                   Sign In to Save
                 </button>
