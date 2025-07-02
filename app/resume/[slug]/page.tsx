@@ -10,9 +10,9 @@ import AdSense from '@/src/components/adsense/AdSense';
 import { AuthModal } from '@/src/components/auth-component/AuthModal'; // Import AuthModal
 import { useAuthModal } from '@/src/components/auth-component/AuthModalContext';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
-import DownloadButton from '@/src/components/DownloadButton/DownloadButton';
 import ResumeDisplay from '@/src/components/resume-display/ResumeDisplay';
 import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
+import ResumeDisplayButtons from '@/src/components/resume-display-buttons/ResumeDisplayButtons';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import { Button } from '@/src/components/ui/button';
 import styles from '../../page.module.css';
@@ -240,31 +240,12 @@ export default function ViewResumePage() {
         className="mx-auto my-4"
       />
 
-      <div className={styles.buttonContainer}>
-        <button
-          type="button"
-          onClick={handleEdit}
-          className={styles.editButton}
-        >
-          Edit Resume
-        </button>
-        <button
-          type="button"
-          onClick={() => router.push('/library')}
-          className={styles.myLibraryButton}
-        >
-          My Library
-        </button>
-        <DownloadButton onClick={handleDownloadPdf} />
-        <button
-          type="button"
-          onClick={() => router.push('/')}
-          className={styles.resetButton}
-        >
-          Upload New
-        </button>
-      </div>
       <main className={styles.mainUserContainer}>
+        <ResumeDisplayButtons
+          onDownloadPdf={handleDownloadPdf}
+          onEditResume={handleEdit}
+          isOnResumePage={true}
+        />
         <ResumeDisplay resumeData={resume.parsed_data} isAuth={!!user} />
 
         {/* Footer Ad */}
