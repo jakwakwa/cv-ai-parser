@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { Resume } from '@/lib/types'; // Import the Resume type
 import AdSense from '@/src/components/adsense/AdSense';
 import { AuthModal } from '@/src/components/auth-component/AuthModal'; // Import AuthModal
+import { useAuthModal } from '@/src/components/auth-component/AuthModalContext';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import DownloadButton from '@/src/components/DownloadButton/DownloadButton';
 import ResumeDisplay from '@/src/components/resume-display/ResumeDisplay';
@@ -28,7 +29,7 @@ export default function ViewResumePage() {
   const [resume, setResume] = useState<Resume | null>(null); // Change to 'resume' and Resume type
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [showAuthModal, setShowAuthModal] = useState(false); // State for modal visibility
+  const { setAuthModalOpen } = useAuthModal();
 
   const searchParams = useSearchParams();
 
@@ -226,8 +227,10 @@ export default function ViewResumePage() {
 
       {/* Auth Modal */}
       <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
+        onSuccess={() => {
+          // Handle successful authentication
+          setAuthModalOpen(false);
+        }}
       />
 
       {/* Header Ad */}
