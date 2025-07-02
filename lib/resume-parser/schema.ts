@@ -18,6 +18,7 @@ export const resumeSchema = z.object({
     .optional(),
   experience: z.array(
     z.object({
+      id: z.string().optional(),
       title: z.string().optional(),
       company: z.string().optional(),
       duration: z.string().optional().describe("e.g., 'Jan 2020 - Present'"),
@@ -27,6 +28,7 @@ export const resumeSchema = z.object({
   education: z
     .array(
       z.object({
+        id: z.string().optional(),
         degree: z.string(),
         institution: z.string(),
         duration: z.string().optional(),
