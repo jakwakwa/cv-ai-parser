@@ -5,9 +5,10 @@ import { Suspense, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import type { Resume } from '@/lib/types';
 import AdSense from '@/src/components/adsense/AdSense';
-import AuthComponent from '@/src/components/auth-component/AuthComponent';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
+import { useAuthModal } from '@/src/components/auth-component/AuthModalContext';
 import ResumeLibrary from '@/src/components/resume-library/ResumeLibrary';
+import { Button } from '@/src/components/ui/button';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import styles from '../page.module.css';
@@ -17,6 +18,7 @@ function LibraryPageContent() {
   const router = useRouter();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { setAuthModalOpen } = useAuthModal();
 
   const searchParams = useSearchParams();
 
@@ -29,6 +31,13 @@ function LibraryPageContent() {
       router.push('/library?toast=view_error');
     }
   };
+
+  // Auto-open the auth modal for unauthenticated users
+  useEffect(() => {
+    if (!user) {
+      setAuthModalOpen(true);
+    }
+  }, [user, setAuthModalOpen]);
 
   useEffect(() => {
     const toastMessage = searchParams.get('toast');
@@ -53,12 +62,16 @@ function LibraryPageContent() {
     <main className={styles.mainUserContainer}>
       {!user && (
         <div className="text-center bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-md mx-auto mt-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Welcome!</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Welcome to Your Library!</h2>
           <p className="text-gray-600 mb-6">
-            Please sign in or sign up to use the resume parser and manage your
-            library.
+            Please sign in or sign up to access your resume library and manage your documents.
           </p>
-          <AuthComponent />
+          <Button
+            onClick={() => setAuthModalOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+          >
+            Sign In / Sign Up
+          </Button>
         </div>
       )}
       {user && (
