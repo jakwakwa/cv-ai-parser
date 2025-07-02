@@ -3,7 +3,7 @@ import { generateObject } from 'ai';
 import { AI_MODEL } from '@/lib/config';
 import {
   getResumeParsingPrompt,
-  getResumeParsingPromptForPDF,
+  getStructuredResumeParsingPrompt,
 } from './prompts';
 import { type ParsedResume, resumeSchema } from './schema';
 
@@ -31,7 +31,7 @@ export async function parseWithAIPDF(file: File): Promise<ParsedResume> {
         content: [
           {
             type: 'text',
-            text: getResumeParsingPromptForPDF(),
+            text: getStructuredResumeParsingPrompt(),
           },
           {
             type: 'file',
