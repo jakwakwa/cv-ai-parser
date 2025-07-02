@@ -14,10 +14,12 @@ import {
   DropdownMenuTrigger,
 } from '@/src/components/ui/dropdown-menu';
 import { useAuth } from '../auth-provider/AuthProvider';
+import { useRouter } from 'next/navigation';
 import styles from './UserNav.module.css';
 
 export function UserNav() {
   const { user, signOut } = useAuth();
+  const router = useRouter();
 
   if (!user) {
     return null;
@@ -57,7 +59,13 @@ export function UserNav() {
           <Link href="/library">My Library</Link>
         </DropdownMenuItem>
 
-        <DropdownMenuItem className={styles.dropdownMenuItem} onClick={signOut}>
+        <DropdownMenuItem
+          className={styles.dropdownMenuItem}
+          onClick={async () => {
+            await signOut();
+            router.replace('/');
+          }}
+        >
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

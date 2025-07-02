@@ -258,7 +258,7 @@ export default function ViewResumePage() {
         <DownloadButton onClick={handleDownloadPdf} />
         <button
           type="button"
-          onClick={() => router.push('/')}
+          onClick={() => router.replace('/')}
           className={styles.resetButton}
         >
           Upload New

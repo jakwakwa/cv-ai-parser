@@ -14,6 +14,7 @@ export function MainNav({ onLogoClick }: MainNavProps) {
     <div className={styles.container}>
       <Link
         href="/"
+        replace
         className={styles.link}
         onClick={() => {
           setAuthModalOpen(false);
