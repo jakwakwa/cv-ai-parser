@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useToast } from '@/hooks/use-toast';
 import {
   Dialog,
   DialogContent,
@@ -17,6 +18,7 @@ interface AuthModalProps {
 
 export function AuthModal({ onSuccess }: AuthModalProps) {
   const { isAuthModalOpen, setAuthModalOpen } = useAuthModal();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (isAuthModalOpen) {
@@ -38,7 +40,18 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
             Sign in or create an account to continue.
           </DialogDescription>
         </DialogHeader>
-        <AuthComponent onSuccess={onSuccess} />
+        <AuthComponent
+          onSuccess={() => {
+            setAuthModalOpen(false);
+            toast({
+              title: 'Success',
+              description: 'Successfully signed in!',
+            });
+            if (onSuccess) {
+              onSuccess();
+            }
+          }}
+        />
       </DialogContent>
     </Dialog>
   );

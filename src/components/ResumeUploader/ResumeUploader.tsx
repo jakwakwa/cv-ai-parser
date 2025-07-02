@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  AlertTriangle,
-  CheckCircle,
-  ImageIcon,
-  Palette,
-  Upload,
-} from 'lucide-react';
+import { AlertTriangle, CheckCircle, ImageIcon, Palette } from 'lucide-react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useRef, useState } from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';

@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import { AuthModal } from '../auth-component/AuthModal';
 import { useAuthModal } from '../auth-component/AuthModalContext';

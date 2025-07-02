@@ -1,5 +1,5 @@
 'use client';
-import { Bot, FileText } from 'lucide-react';
+import { Bot } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import AdSense from '@/src/components/adsense/AdSense';
 import { AuthModal } from '@/src/components/auth-component/AuthModal';
+import { useAuthModal } from '@/src/components/auth-component/AuthModalContext';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import DownloadButton from '@/src/components/DownloadButton/DownloadButton';
 import ResumeUploader from '@/src/components/ResumeUploader/ResumeUploader';
@@ -29,6 +30,7 @@ interface ParseInfo {
 export default function Home() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
+  const { setAuthModalOpen } = useAuthModal();
   const _resumeContainerRef = useRef<HTMLDivElement>(null);
   const uploaderRef = useRef<HTMLDivElement>(null);
   const { isDownloading, downloadPdf } = usePdfDownloader();
@@ -42,7 +44,7 @@ export default function Home() {
   const [localCustomColors, setLocalCustomColors] = useState<
     Record<string, string>
   >({});
-  const [showAuthModal, setShowAuthModal] = useState(false); // State for modal visibility
+
   // New state to explicitly manage isAuthenticated status for prop passing
   const [isAuthenticatedState, setIsAuthenticatedState] = useState(false);
 
@@ -241,8 +243,9 @@ export default function Home() {
 
       {/* Auth Modal */}
       <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
+        onSuccess={() => {
+          // Optionally, redirect or show a toast
+        }}
       />
 
       {/* Header Ad */}
@@ -259,51 +262,54 @@ export default function Home() {
         {/* Show uploader for both auth and non-auth users */}
         {currentView === 'upload' && (
           <>
-            <div className={styles.hero}>
-              <div className={styles.header}>
-                <h1 className={styles.title}>AI Resume Generator</h1>
-                <div className={styles.headerIcon}>
-                  <Bot size={28} />
-                </div>
-                <p className="text-xs">AI powered by Google Gemini</p>
-                <p className="text-xl mt-4 max-w-md">
-                  Upload your existing resume and we'll create a beautiful
-                  online version within seconds!
-                </p>
-                <Button
-                  className="mt-8"
-                  type="button"
-                  onClick={handleScrollToUploader}
-                >
-                  Try it out!
-                </Button>
-                <div className="flex flex-row gap-2 justify-start mt-2">
-                  <span className="text-xs">Free to use</span>
-                  <span className="text-xs">-</span>
-                  <span className="text-xs">No sign in required</span>
-                </div>
-              </div>
-              <div className={styles.userFeatures}>
-                <div className={styles.feature}>
-                  <div className={styles.featureIcon}>
+            {!user && (
+              <div className={styles.hero}>
+                <div className={styles.header}>
+                  <h1 className={styles.title}>AI Resume Generator</h1>
+                  <div className={styles.headerIcon}>
                     <Bot size={28} />
                   </div>
-                  <h3>Smart Ai Parsing</h3>
-                  <p>
-                    AI-powered parsing when available, with intelligent fallback
-                    text analysis.
+                  <p className="text-xs">AI powered by Google Gemini</p>
+                  <p className="text-xl mt-4 max-w-md">
+                    Upload your existing resume and we'll create a beautiful
+                    online version within seconds!
                   </p>
+                  <Button
+                    className="mt-8"
+                    type="button"
+                    onClick={handleScrollToUploader}
+                  >
+                    Try it out!
+                  </Button>
+                  <div className="flex flex-row gap-2 justify-start mt-2">
+                    <span className="text-xs">Free to use</span>
+                    <span className="text-xs">-</span>
+                    <span className="text-xs">No sign in required</span>
+                  </div>
                 </div>
+                <div className={styles.userFeatures}>
+                  <div className={styles.feature}>
+                    <div className={styles.featureIcon}>
+                      <Bot size={28} />
+                    </div>
+                    <h3>Smart Ai Parsing</h3>
+                    <p>
+                      AI-powered parsing when available, with intelligent
+                      fallback text analysis.
+                    </p>
+                  </div>
 
-                {/* <div className={styles.feature}>
+                  {/* <div className={styles.feature}>
                    <div className={styles.featureIcon}>
                      <Smartphone size={28} />
                    </div>
                    <h3>Responsive</h3>
                    <p>Looks great on all devices and can be downloaded as PDF</p>
                  </div> */}
+                </div>
               </div>
-            </div>
+            )}
+
             <div ref={uploaderRef} style={{ width: '100%' }}>
               <ResumeUploader
                 onResumeUploaded={handleResumeUploaded}
@@ -358,7 +364,7 @@ export default function Home() {
                         'Please sign in using the button in the header to save your resume to your library.',
                       variant: 'default',
                     });
-                    setShowAuthModal(true); // Open the modal
+                    setAuthModalOpen(true); // Open the modal
                   }}
                   className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
                 >
