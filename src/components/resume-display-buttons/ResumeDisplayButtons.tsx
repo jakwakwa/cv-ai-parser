@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import { useAuthModal } from '@/src/components/auth-component/AuthModalContext';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/src/components/ui/button';
 import DownloadButton from '@/src/components/DownloadButton/DownloadButton';
 import styles from './ResumeDisplayButtons.module.css';
 
@@ -74,49 +75,49 @@ export const ResumeDisplayButtons: React.FC<ResumeDisplayButtonsProps> = ({
       {/* Authenticated user buttons */}
       {user ? (
         <>
-          <button
+          <Button
             type="button"
             onClick={handleEdit}
-            className={styles.editButton}
+            variant="default"
           >
             Edit Resume
-          </button>
+          </Button>
           {(isOnResumePage || onMyLibrary) && (
-            <button
+            <Button
               type="button"
               onClick={handleMyLibrary}
-              className={styles.myLibraryButton}
+              variant="default"
             >
               My Library
-            </button>
+            </Button>
           )}
           <DownloadButton onClick={onDownloadPdf} />
-          <button
+          <Button
             type="button"
             onClick={handleUploadNew}
-            className={styles.resetButton}
+            variant="default"
           >
             Upload New
-          </button>
+          </Button>
         </>
       ) : (
         /* Unauthenticated user buttons */
         <>
           <DownloadButton onClick={onDownloadPdf} />
-          <button
+          <Button
             type="button"
             onClick={handleUploadNew}
-            className={styles.resetButton}
+            variant="default"
           >
             Upload New
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
             onClick={handleSignInToSave}
-            className={styles.signInButton}
+            variant="default"
           >
             Sign In to Save
-          </button>
+          </Button>
         </>
       )}
     </div>
