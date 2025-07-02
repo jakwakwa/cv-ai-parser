@@ -399,7 +399,7 @@ const ResumeUploader = ({
                       Click for detailed instructions on converting Word to .txt
                     </p>
                   </DialogTrigger>
-                  <DialogContent className="max-w-md">
+                  <DialogContent className={styles.dialogMaxWidth}>
                     <DialogTitle>
                       To export a Word document as a plain text file (.txt):
                     </DialogTitle>
@@ -481,21 +481,21 @@ const ResumeUploader = ({
               )}
 
               {profileImage && !showProfileUploader && (
-                <div className="flex items-center">
+                <div className={styles.fileInfoLeft}>
                   {/** biome-ignore lint/performance/noImgElement: <> */}
                   <img
                     src={profileImage || '/placeholder.svg'}
                     alt="Profile preview"
-                    className="w-12 h-12 rounded-full object-cover mr-3"
+                    className={styles.profilePreview}
                   />
                   <div>
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className={styles.fileName}>
                       Profile picture added
                     </p>
                     <button
                       type="button"
                       onClick={() => setShowProfileUploader(true)}
-                      className="text-sm text-teal-600 hover:text-teal-700"
+                      className={styles.sectionButton}
                     >
                       Change photo
                     </button>
@@ -508,19 +508,19 @@ const ResumeUploader = ({
 
         {/* Step 3: Optional Color Customization */}
         {uploadedFile && (
-          <div className="mt-8">
-            <h2 className="md:ml-8 text-sm font-semibold text-gray-800 mb-4 ml-3 flex items-center">
-              <Palette className="w-5 h-5 mr-2" />
+          <div className={styles.marginTop8}>
+            <h2 className={styles.sectionHeader}>
+              <Palette className={styles.sectionIcon} />
               Customize Colors (Optional)
             </h2>
 
-            <div className="flex flex-col md:flex-row items-start   justify-start mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow h-28 md:h-20 py-3 px-4 md:px-6">
-              <div className="flex flex-col md:flex-row justify-center md:items-center w-full justify-between mb-0 gap-4">
-                <p className="text-gray-600 text-xs md:text-sm text-left w-full">
+            <div className={styles.colorCustomizationCard}>
+              <div className={styles.colorCardContent}>
+                <p className={styles.sectionDescription}>
                   Personalize your resume with custom colors and themes
                 </p>
               </div>
-              <div className="flex flex-row md:justify-end md:align-end md:w-full">
+              <div className={styles.colorPreviewContainer}>
                 {showColorPicker && (
                   <ColorPicker
                     currentColors={customColors}
@@ -529,23 +529,23 @@ const ResumeUploader = ({
                 )}
 
                 {!showColorPicker && (
-                  <div className="flex items-start mt-2 md:mt-0 mx-1">
-                    <div className="flex flex-row-reverse gap-1">
+                  <div className={styles.colorPreviewDots}>
+                    <div className={styles.colorDots}>
                       <div
-                        className="w-4 h-4 rounded-full border border-gray-300"
+                        className={styles.colorDot}
                         style={{
                           backgroundColor:
                             customColors['--resume-sidebar-background'],
                         }}
                       />
                       <div
-                        className="w-4 h-4 rounded-full border border-gray-300"
+                        className={styles.colorDot}
                         style={{
                           backgroundColor: customColors['--resume-main-icons'],
                         }}
                       />
                       <div
-                        className="w-4 h-4 rounded-full border border-gray-300"
+                        className={styles.colorDot}
                         style={{
                           backgroundColor: customColors['--resume-job-title'],
                         }}
@@ -557,7 +557,7 @@ const ResumeUploader = ({
               <button
                 type="button"
                 onClick={() => setShowColorPicker(!showColorPicker)}
-                className="text-teal-600 md:w-[350px] hover:text-teal-700 font-medium text-xs md:text-sm mx-0 mt-3 md:mt-0"
+                className={styles.colorCustomizeButton}
               >
                 {showColorPicker ? 'Hide' : 'Customize Colors'}
               </button>
@@ -568,12 +568,12 @@ const ResumeUploader = ({
         {/* Create Resume Button */}
         {uploadedFile && (
           <>
-            <div className="mt-8 md:mx-8">
+            <div className={styles.createResumeSection}>
               <button
                 type="button"
                 onClick={handleCreateResume}
                 disabled={isLoading}
-                className="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors duration-200"
+                className={styles.createResumeButton}
               >
                 {isLoading
                   ? 'Creating Resume...'
@@ -582,39 +582,39 @@ const ResumeUploader = ({
                     : 'Create Resume'}
               </button>
               {!isAuthenticated && (
-                <p className="mx-8 text-sm text-gray-600 my-2 text-center">
+                <p className={styles.signInPrompt}>
                   💡 Sign in to save your resume to your library and edit it
                   later
                 </p>
               )}
             </div>
-            <div className="pb-6" />
+            <div className={styles.bottomPadding} />
           </>
         )}
 
         {error && (
           <div className={styles.error}>
-            <AlertTriangle className="w-5 h-5 text-red-500 mr-2" />
+            <AlertTriangle className={styles.sectionIcon} />
             <p style={{ whiteSpace: 'pre-line' }}>{error}</p>
           </div>
         )}
 
         {/* Error Modal */}
         <Dialog open={showErrorModal} onOpenChange={setShowErrorModal}>
-          <DialogContent className="max-w-md">
+          <DialogContent className={styles.dialogMaxWidth}>
             <DialogTitle>
-              <div className="flex items-center text-red-600">
-                <AlertTriangle className="w-6 h-6 mr-2" />
+              <div className={styles.errorModalTitle}>
+                <AlertTriangle className={styles.errorModalIcon} />
                 Parsing Error
               </div>
             </DialogTitle>
             <DialogDescription className="whitespace-pre-line">
               {modalErrorMessage}
             </DialogDescription>
-            <div className="flex justify-end mt-4">
+            <div className={styles.errorModalActions}>
               <button
                 type="button"
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                className={styles.errorModalButton}
                 onClick={() => setShowErrorModal(false)}
               >
                 Close

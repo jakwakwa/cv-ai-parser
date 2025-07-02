@@ -430,6 +430,12 @@
     color: #b91c1c;
 }
 
+.grayTextSmall {
+    color: #6b7280;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
 /* Flex Utilities */
 .flex {
     display: flex;

@@ -363,6 +363,14 @@
   color: #6b7280;
 }
 
+.profilePreview {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  object-fit: cover;
+  margin-right: 0.75rem;
+}
+
 .removeButton {
   color: #dc2626;
   font-weight: 500;
@@ -672,6 +680,10 @@
 
 .errorModalButton:hover {
   background-color: #b91c1c;
+}
+
+.dialogMaxWidth {
+  max-width: 28rem;
 }
 
 @media (max-width: 768px) {

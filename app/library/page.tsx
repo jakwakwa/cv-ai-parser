@@ -11,6 +11,7 @@ import ResumeLibrary from '@/src/components/resume-library/ResumeLibrary';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import styles from '../page.module.css';
+import libraryStyles from './library.module.css';
 
 // Component that handles URL parameters - needs to be wrapped in Suspense
 function LibraryPageContent() {
@@ -52,9 +53,9 @@ function LibraryPageContent() {
   return (
     <main className={styles.mainUserContainer}>
       {!user && (
-        <div className="text-center bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-md mx-auto mt-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Welcome!</h2>
-          <p className="text-gray-600 mb-6">
+        <div className={libraryStyles.welcomeCard}>
+          <h2 className={libraryStyles.welcomeTitle}>Welcome!</h2>
+          <p className={libraryStyles.welcomeText}>
             Please sign in or sign up to use the resume parser and manage your
             library.
           </p>
@@ -80,7 +81,7 @@ export default function LibraryPage() {
       <AdSense
         adSlot="5678901234"
         adFormat="horizontal"
-        className="mx-auto my-4"
+        className={libraryStyles.adContainer}
       />
 
       <Suspense fallback={<div>Loading...</div>}>
@@ -91,7 +92,7 @@ export default function LibraryPage() {
       <AdSense
         adSlot="6789012345"
         adFormat="horizontal"
-        className="mx-auto my-8"
+        className={libraryStyles.adContainerLarge}
       />
     </div>
   );

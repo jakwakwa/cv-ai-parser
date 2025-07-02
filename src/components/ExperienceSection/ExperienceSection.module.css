@@ -60,3 +60,25 @@
     padding-left: 1rem;
     position: relative;
 }
+
+.experienceItem {
+  page-break-inside: avoid;
+  margin-bottom: 2.5rem;
+}
+
+.experienceItem:last-child {
+  margin-bottom: 0;
+}
+
+.experienceHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.grayTextSmall {
+  color: #4b5563;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}

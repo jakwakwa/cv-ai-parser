@@ -11,6 +11,7 @@ import {
 } from '@/src/components/ui/dialog';
 import AuthComponent from './AuthComponent';
 import { useAuthModal } from './AuthModalContext';
+import styles from './AuthModal.module.css';
 
 interface AuthModalProps {
   onSuccess?: () => void;
@@ -35,8 +36,8 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
     <Dialog open={isAuthModalOpen} onOpenChange={setAuthModalOpen}>
       <DialogContent className="dialog-content-custom-class">
         <DialogHeader>
-          <DialogTitle className="hidden">Authentication</DialogTitle>
-          <DialogDescription className="hidden">
+          <DialogTitle className={styles.hidden}>Authentication</DialogTitle>
+          <DialogDescription className={styles.hidden}>
             Sign in or create an account to continue.
           </DialogDescription>
         </DialogHeader>

@@ -16,6 +16,7 @@ import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import { Button } from '@/src/components/ui/button';
 import styles from '../../page.module.css';
+import resumeStyles from './resume-detail.module.css';
 
 export default function ViewResumePage() {
   const router = useRouter();
@@ -172,11 +173,11 @@ export default function ViewResumePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
-        <h2 className="text-xl font-semibold text-red-600 mb-4">Error</h2>
-        <p className="text-gray-700 mb-6 text-center">{error}</p>
+      <div className={resumeStyles.errorContainer}>
+        <h2 className={resumeStyles.errorTitle}>Error</h2>
+        <p className={resumeStyles.errorText}>{error}</p>
         <Button onClick={() => router.push('/library')}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Library
+          <ArrowLeft className={resumeStyles.iconSmall} /> Back to Library
         </Button>
       </div>
     );
@@ -185,15 +186,15 @@ export default function ViewResumePage() {
   if (!resume) {
     // Check for 'resume' object
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+      <div className={resumeStyles.errorContainer}>
+        <h2 className={resumeStyles.errorTitleGray}>
           Resume Not Found
         </h2>
-        <p className="text-gray-700 mb-6 text-center">
+        <p className={resumeStyles.errorText}>
           The resume you are looking for does not exist or is not public.
         </p>
         <Button onClick={() => router.push('/library')}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Library
+          <ArrowLeft className={resumeStyles.iconSmall} /> Back to Library
         </Button>
       </div>
     );
@@ -237,7 +238,7 @@ export default function ViewResumePage() {
       <AdSense
         adSlot="2345678901"
         adFormat="horizontal"
-        className="mx-auto my-4"
+        className={resumeStyles.adContainer}
       />
 
       <div className={styles.buttonContainer}>
@@ -271,7 +272,7 @@ export default function ViewResumePage() {
         <AdSense
           adSlot="4567890123"
           adFormat="horizontal"
-          className="mx-auto my-8"
+          className={resumeStyles.adContainerLarge}
         />
       </main>
     </div>

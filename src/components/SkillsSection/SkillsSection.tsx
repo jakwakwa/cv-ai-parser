@@ -36,7 +36,7 @@ const SkillsSection = ({ skills, customColors }: SkillsSectionProps) => {
         </div>
       ) : (
         <p
-          className="text-gray-600 text-sm"
+          className={styles.grayTextSmall}
           style={{ color: customColors['--resume-body-text'] }}
         >
           No skills listed.

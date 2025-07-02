@@ -843,7 +843,7 @@ const ResumeEditor = ({
               </CardHeader>
               <CardContent className={styles.spaceY4}>
                 {editedData.experience?.length === 0 && (
-                  <p className="text-gray-500 text-sm">
+                  <p className={styles.grayTextSmall}>
                     No experience added yet. Click "Add Experience" to start.
                   </p>
                 )}
@@ -884,7 +884,7 @@ const ResumeEditor = ({
               </CardHeader>
               <CardContent className={styles.spaceY4}>
                 {editedData.education?.length === 0 && (
-                  <p className="text-gray-500 text-sm">
+                  <p className={styles.grayTextSmall}>
                     No education added yet. Click "Add Education" to start.
                   </p>
                 )}
@@ -922,7 +922,7 @@ const ResumeEditor = ({
               </CardHeader>
               <CardContent className={styles.spaceY4}>
                 {editedData.certifications?.length === 0 && (
-                  <p className="text-gray-500 text-sm">
+                  <p className={styles.grayTextSmall}>
                     No certifications added yet. Click "Add Certification" to
                     start.
                   </p>
