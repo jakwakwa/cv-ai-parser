@@ -422,9 +422,9 @@ const ResumeUploader = ({
               </div>
             </div>
           ) : (
-            <div className="pt-8 mt-8">
-              <div className="mx-8 bg-white rounded-lg border border-gray-200 p-6 h-24 shadow">
-                <div className="flex items-center justify-between">
+            <div className="md:pt-8 mt-8">
+              <div className="mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 p-6 md:h-24 shadow">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md-gap-0">
                   <div className="flex justify-start w-full items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
                     <div className="flex flex-col items-start justify-start">
@@ -452,21 +452,21 @@ const ResumeUploader = ({
 
         {/* Step 2: Optional Profile Image */}
         {uploadedFile && (
-          <div className="m-8">
-            <h2 className="text-sm font-semibold text-gray-800 mb-4 ml-3 flex items-center">
+          <div className="mt-8">
+            <h2 className="md:ml-8 text-sm font-semibold text-gray-800 mb-4 ml-3 flex items-center">
               <ImageIcon className="w-5 h-5 mr-2" />
               Profile Picture (Optional)
             </h2>
 
-            <div className="flex justify-between w-full bg-white rounded-lg border border-gray-200 shadow h-20 px-6">
-              <div className="flex items-center w-full justify-between">
-                <p className="text-gray-600 text-sm">
+            <div className="flex mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow md:h-20 px-2 py-4 px-4 md:px-6">
+              <div className="flex flex-col md:flex-row items-start md:items-center w-full md:justify-between gap-4 md:gap-0">
+                <p className="text-gray-600 text-xs md:text-sm text-left md:text-left">
                   Add a professional profile picture to your resume
                 </p>
                 <button
                   type="button"
                   onClick={() => setShowProfileUploader(!showProfileUploader)}
-                  className="text-teal-600 hover:text-teal-700 font-medium text-sm"
+                  className="text-teal-600 text-xs hover:text-teal-700 font-medium md:text-sm"
                 >
                   {showProfileUploader ? 'Hide' : 'Add Photo'}
                 </button>
@@ -508,19 +508,19 @@ const ResumeUploader = ({
 
         {/* Step 3: Optional Color Customization */}
         {uploadedFile && (
-          <div className="m-8">
-            <h2 className="text-sm font-semibold text-gray-800 mb-4 ml-3 flex items-center">
+          <div className="mt-8">
+            <h2 className="md:ml-8 text-sm font-semibold text-gray-800 mb-4 ml-3 flex items-center">
               <Palette className="w-5 h-5 mr-2" />
               Customize Colors (Optional)
             </h2>
 
-            <div className="flex justify-center w-full bg-white rounded-lg border border-gray-200 shadow h-20 px-6">
-              <div className="flex items-center w-full justify-between mb-0">
-                <p className="text-gray-600 text-sm text-left w-full">
+            <div className="flex flex-col md:flex-row items-start   justify-start mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow h-28 md:h-20 py-3 px-4 md:px-6">
+              <div className="flex flex-col md:flex-row justify-center md:items-center w-full justify-between mb-0 gap-4">
+                <p className="text-gray-600 text-xs md:text-sm text-left w-full">
                   Personalize your resume with custom colors and themes
                 </p>
               </div>
-              <div className="flex flex-row justify-end align-end w-full">
+              <div className="flex flex-row md:justify-end md:align-end md:w-full">
                 {showColorPicker && (
                   <ColorPicker
                     currentColors={customColors}
@@ -529,7 +529,7 @@ const ResumeUploader = ({
                 )}
 
                 {!showColorPicker && (
-                  <div className="flex items-center mx-1">
+                  <div className="flex items-start mt-2 md:mt-0 mx-1">
                     <div className="flex flex-row-reverse gap-1">
                       <div
                         className="w-4 h-4 rounded-full border border-gray-300"
@@ -557,7 +557,7 @@ const ResumeUploader = ({
               <button
                 type="button"
                 onClick={() => setShowColorPicker(!showColorPicker)}
-                className="text-teal-600 w-[350px] hover:text-teal-700 font-medium text-sm mx-0"
+                className="text-teal-600 md:w-[350px] hover:text-teal-700 font-medium text-xs md:text-sm mx-0 mt-3 md:mt-0"
               >
                 {showColorPicker ? 'Hide' : 'Customize Colors'}
               </button>
@@ -568,7 +568,7 @@ const ResumeUploader = ({
         {/* Create Resume Button */}
         {uploadedFile && (
           <>
-            <div className="mt-8 mx-8">
+            <div className="mt-8 md:mx-8">
               <button
                 type="button"
                 onClick={handleCreateResume}
@@ -579,7 +579,7 @@ const ResumeUploader = ({
                   ? 'Creating Resume...'
                   : isAuthenticated
                     ? 'Create Resume'
-                    : 'Create Resume (Preview Only)'}
+                    : 'Create Resume'}
               </button>
               {!isAuthenticated && (
                 <p className="mx-8 text-sm text-gray-600 my-2 text-center">
