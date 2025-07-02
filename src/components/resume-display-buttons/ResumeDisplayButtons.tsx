@@ -91,7 +91,6 @@ export const ResumeDisplayButtons: React.FC<ResumeDisplayButtonsProps> = ({
               My Library
             </Button>
           )}
-          <DownloadButton onClick={onDownloadPdf} />
           <Button
             type="button"
             onClick={handleUploadNew}
@@ -99,11 +98,11 @@ export const ResumeDisplayButtons: React.FC<ResumeDisplayButtonsProps> = ({
           >
             Upload New
           </Button>
+          <DownloadButton onClick={onDownloadPdf} />
         </>
       ) : (
         /* Unauthenticated user buttons */
         <>
-          <DownloadButton onClick={onDownloadPdf} />
           <Button
             type="button"
             onClick={handleUploadNew}
@@ -118,6 +117,7 @@ export const ResumeDisplayButtons: React.FC<ResumeDisplayButtonsProps> = ({
           >
             Sign In to Save
           </Button>
+          <DownloadButton onClick={onDownloadPdf} />
         </>
       )}
     </div>

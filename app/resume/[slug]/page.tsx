@@ -241,12 +241,14 @@ export default function ViewResumePage() {
       />
 
       <main className={styles.mainUserContainer}>
-        <ResumeDisplayButtons
-          onDownloadPdf={handleDownloadPdf}
-          onEditResume={handleEdit}
-          isOnResumePage={true}
-        />
-        <ResumeDisplay resumeData={resume.parsed_data} isAuth={!!user} />
+        <div className={styles.resumeContainer}>
+          <ResumeDisplayButtons
+            onDownloadPdf={handleDownloadPdf}
+            onEditResume={handleEdit}
+            isOnResumePage={true}
+          />
+          <ResumeDisplay resumeData={resume.parsed_data} isAuth={!!user} />
+        </div>
 
         {/* Footer Ad */}
         <AdSense
