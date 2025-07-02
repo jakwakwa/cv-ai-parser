@@ -13,7 +13,7 @@ const SkillsSection = ({ skills, customColors }: SkillsSectionProps) => {
     <section className={styles.skillsSection}>
       <h2
         className={styles.sectionTitle}
-        style={{ color: customColors['--resume-profile-name'] }}
+        style={{ color: customColors['--resume-section-titles'] }}
       >
         <SkillsIcon fill={customColors['--resume-main-icons']} />
         Skills

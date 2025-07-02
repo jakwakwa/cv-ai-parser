@@ -9,7 +9,7 @@ interface Html2PdfOptions {
   image: { type: string; quality: number };
   html2canvas: { scale: number; useCORS: boolean };
   jsPDF: { unit: string; format: string; orientation: string };
-  pagebreak: { mode: string };
+  pagebreak: { mode: string | string[] };
 }
 
 // Define the html2pdf function on the window object
@@ -56,12 +56,12 @@ export const usePdfDownloader = () => {
       }
 
       const options = {
-        margin: 5,
+        margin: 2,
         filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: 'css' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
       };
       await window.html2pdf().from(element).set(options).save();
     } catch (error) {
