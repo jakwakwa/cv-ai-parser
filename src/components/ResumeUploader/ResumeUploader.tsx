@@ -2,7 +2,7 @@
 
 import { AlertTriangle, CheckCircle, ImageIcon, Palette } from 'lucide-react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
-import { useRef, useState } from 'react';
+import * as React from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import { resumeColors } from '@/src/utils/colors';
@@ -57,17 +57,17 @@ const ResumeUploader = ({
   isAuthenticated = false,
 }: ResumeUploaderProps) => {
   const { supabase } = useAuth();
-  const [dragActive, setDragActive] = useState(false);
-  const [error, setError] = useState('');
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [profileImage, setProfileImage] = useState('');
-  const [showProfileUploader, setShowProfileUploader] = useState(false);
-  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [dragActive, setDragActive] = React.useState(false);
+  const [error, setError] = React.useState('');
+  const [uploadedFile, setUploadedFile] = React.useState<File | null>(null);
+  const [profileImage, setProfileImage] = React.useState('');
+  const [showProfileUploader, setShowProfileUploader] = React.useState(false);
+  const [showColorPicker, setShowColorPicker] = React.useState(false);
   const [customColors, setCustomColors] =
-    useState<Record<string, string>>(resumeColors);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [modalErrorMessage, setModalErrorMessage] = useState('');
+    React.useState<Record<string, string>>(resumeColors);
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
+  const [showErrorModal, setShowErrorModal] = React.useState(false);
+  const [modalErrorMessage, setModalErrorMessage] = React.useState('');
 
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -424,7 +424,7 @@ const ResumeUploader = ({
           ) : (
             <div className="md:pt-8 mt-8">
               <div className="mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 p-6 md:h-24 shadow">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md-gap-0">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0">
                   <div className="flex justify-start w-full items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
                     <div className="flex flex-col items-start justify-start">
@@ -458,7 +458,7 @@ const ResumeUploader = ({
               Profile Picture (Optional)
             </h2>
 
-            <div className="flex mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow md:h-20 px-2 py-4 px-4 md:px-6">
+            <div className="flex mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow md:h-20 py-4 px-4 md:px-6">
               <div className="flex flex-col md:flex-row items-start md:items-center w-full md:justify-between gap-4 md:gap-0">
                 <p className="text-gray-600 text-xs md:text-sm text-left md:text-left">
                   Add a professional profile picture to your resume
