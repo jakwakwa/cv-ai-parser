@@ -10,6 +10,20 @@ import { AuthProvider } from '@/src/components/auth-provider/AuthProvider';
 import { Toaster } from '@/src/components/ui/toaster';
 import { DM_Sans, DM_Mono } from 'next/font/google';
 
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
+const dmMono = DM_Mono({
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
+  variable: '--font-mono',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title:
     'AI Resume Parser & Online CV Generator - Convert to PDF with Custom Colors',
@@ -61,20 +75,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const dmSans = DM_Sans({
-    subsets: ['latin'],
-    weight: ['400', '500', '700'],
-    variable: '--font-sans',
-    display: 'swap',
-  });
-
-  const dmMono = DM_Mono({
-    subsets: ['latin'],
-    weight: ['400', '500', '700'],
-    variable: '--font-mono',
-    display: 'swap',
-  });
-
   return (
     <html lang="en" className={`${dmSans.variable} ${dmMono.variable}`}>
       <head>

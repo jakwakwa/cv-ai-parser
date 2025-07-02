@@ -27,19 +27,13 @@ export const usePdfDownloader = () => {
   const [isDownloading, setIsDownloading] = useState(false);
   const { toast } = useToast();
 
-  const ensureHtml2PdfLoaded = async () => {
+  // Ensure the html2pdf.js library is present (it is injected from the CDN in
+  // `app/layout.tsx`). We avoid a dynamic `import('html2pdf.js')` here because
+  // bundling would pull the entire library into the client chunk. If the CDN
+  // script fails for some reason we simply show an error toast.
+  const ensureHtml2PdfLoaded = () => {
     if (typeof window === 'undefined') return;
-
-    // If the global helper already exists, nothing to do.
-    if (typeof window.html2pdf !== 'undefined') return;
-
-    // Dynamically import the lightweight ES module version on demand.
-    // This falls back gracefully if the CDN script failed for some reason.
-    try {
-      await import('html2pdf.js');
-    } catch (err) {
-      console.error('Failed to dynamically import html2pdf:', err);
-    }
+    return typeof window.html2pdf !== 'undefined';
   };
 
   const downloadPdf = async (
@@ -58,9 +52,7 @@ export const usePdfDownloader = () => {
     setIsDownloading(true);
 
     try {
-      await ensureHtml2PdfLoaded();
-
-      if (typeof window.html2pdf === 'undefined') {
+      if (!ensureHtml2PdfLoaded()) {
         toast({
           title: 'Error',
           description:
