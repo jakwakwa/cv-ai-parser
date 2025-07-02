@@ -1,7 +1,6 @@
 'use client';
 
 import { AlertTriangle, CheckCircle, ImageIcon, Palette } from 'lucide-react';
-import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useRef, useState } from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
@@ -17,21 +16,25 @@ import {
 } from '../ui/dialog';
 import styles from './ResumeUploader.module.css';
 
-declare global {
-  interface Window {
-    pdfjsLib: {
-      getDocument: (args: {
-        data: ArrayBuffer;
-        verbosity?: number;
-        disableAutoFetch?: boolean;
-        disableStream?: boolean;
-      }) => { promise: Promise<PDFDocumentProxy> };
-      GlobalWorkerOptions: {
-        workerSrc: string;
-      };
-    };
-  }
-}
+// Types for PDF processing
+type PDFPageProxy = {
+  getTextContent: () => Promise<{ items: Array<{ str: string }> }>;
+};
+
+type PDFDocumentProxy = {
+  numPages: number;
+  getPage: (pageNumber: number) => Promise<PDFPageProxy>;
+};
+
+// Lazy load PDF processing libraries
+const loadPDFLibs = async () => {
+  const pdfjs = await import('pdfjs-dist');
+  
+  // Configure worker
+  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+  
+  return pdfjs;
+};
 
 interface ParseInfo {
   resumeId?: string; // Optional for non-auth users

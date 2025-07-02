@@ -1,0 +1,44 @@
+[
+  {
+    "chunks": [
+      {
+        "name": "vendors-da73f0d27758d156.js",
+        "size": 1116
+      },
+      {
+        "name": "pdf-libs.9412566298fcd485.js",
+        "size": 858
+      },
+      {
+        "name": "polyfills-42372ed130431b0a.js",
+        "size": 110
+      },
+      {
+        "name": "90-bb92351a8ee8c8ad.js",
+        "size": 69
+      },
+      {
+        "name": "568-9332463927c7b17b.js",
+        "size": 16
+      },
+      {
+        "name": "webpack-49cb6404b3c40a68.js",
+        "size": 3
+      },
+      {
+        "name": "main-app-a85da205a74ca90d.js",
+        "size": 1
+      },
+      {
+        "name": "main-b630f2891da78e2f.js",
+        "size": 0
+      }
+    ],
+    "totalSize": 2173,
+    "largestChunk": {
+      "name": "vendors-da73f0d27758d156.js",
+      "size": 1116
+    },
+    "timestamp": "2025-07-02T16:17:59.113Z"
+  }
+]

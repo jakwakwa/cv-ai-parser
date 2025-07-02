@@ -4,10 +4,13 @@
   "private": true,
   "scripts": {
     "build": "next build",
+    "build:analyze": "ANALYZE=true next build",
     "dev": "next dev",
     "lint": "biome lint .",
     "format": "biome format --write .",
-    "start": "next start"
+    "start": "next start",
+    "analyze": "pnpm build:analyze",
+    "perf": "node scripts/performance-check.js"
   },
   "dependencies": {
     "@ai-sdk/google": "latest",
@@ -72,8 +75,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.6",
+    "@next/bundle-analyzer": "^15.3.4",
     "@types/node": "^22",
-    "@types/pdfjs-dist": "^2.10.378",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/uuid": "^10.0.0",

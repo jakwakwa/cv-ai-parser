@@ -1,5 +1,3 @@
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import { useState } from 'react';
 import { useToast } from './use-toast';
 
@@ -45,7 +43,13 @@ export const usePdfDownloader = () => {
     setIsDownloading(true);
 
     try {
-      if (typeof jsPDF === 'undefined' || typeof html2canvas === 'undefined') {
+      // Dynamic import for better code splitting
+      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+        import('html2canvas'),
+        import('jspdf'),
+      ]);
+
+      if (!html2canvas || !jsPDF) {
         toast({
           title: 'Error',
           description:
@@ -55,15 +59,36 @@ export const usePdfDownloader = () => {
         return;
       }
 
-      const options = {
-        margin: 5,
-        filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: 'css' },
-      };
-      await window.html2pdf().from(element).set(options).save();
+      // Create PDF using html2canvas and jsPDF directly
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.98);
+      const pdf = new jsPDF('portrait', 'mm', 'a4');
+      
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 295; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // Add first page
+      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      // Add additional pages if needed
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save(filename);
     } catch (error) {
       console.error('Error generating PDF:', error);
       toast({
