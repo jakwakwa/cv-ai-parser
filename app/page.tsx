@@ -31,7 +31,6 @@ export default function Home() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   const { setAuthModalOpen } = useAuthModal();
-  const _resumeContainerRef = useRef<HTMLDivElement>(null);
   const uploaderRef = useRef<HTMLDivElement>(null);
   const { isDownloading, downloadPdf } = usePdfDownloader();
   const { toast } = useToast();
