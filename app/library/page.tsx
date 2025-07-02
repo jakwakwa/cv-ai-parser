@@ -66,19 +66,20 @@ function LibraryPageContent() {
           <p className="text-gray-600 mb-6">
             Please sign in or sign up to access your resume library and manage your documents.
           </p>
-          <Button
-            onClick={() => setAuthModalOpen(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors mb-3"
-          >
-            Sign In / Sign Up
-          </Button>
-          <Button
-            onClick={() => router.push('/')}
-            variant="outline"
-            className="border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold py-2 px-6 rounded-lg transition-colors"
-          >
-            Upload New
-          </Button>
+          <div className="space-y-3">
+            <Button
+              onClick={() => setAuthModalOpen(true)}
+              variant="default"
+            >
+              Sign In / Sign Up
+            </Button>
+            <Button
+              onClick={() => router.push('/')}
+              variant="default"
+            >
+              Upload New
+            </Button>
+          </div>
         </div>
       )}
       {user && (
