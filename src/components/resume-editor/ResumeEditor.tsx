@@ -1,7 +1,8 @@
 'use client';
 
 import { Eye, EyeOff, Plus, Save, Trash2, X } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
@@ -19,20 +20,313 @@ import ProfileImageUploader from '../profile-image-uploader/ProfileImageUploader
 import styles from './ResumeEditor.module.css';
 
 type IncomingExperience = {
+  id?: string;
   company?: string;
   title?: string;
-  position?: string; // Add position
+  position?: string;
   duration?: string;
   details?: string | string[];
-  description?: string | string[]; // Add description
+  description?: string | string[];
 };
 
 interface ResumeEditorProps {
-  resumeData: ParsedResume; // Use ParsedResume for consistency
-  onSave: (data: ParsedResume) => void; // Ensure onSave expects ParsedResume
+  resumeData: ParsedResume;
+  onSave: (data: ParsedResume) => void;
   onCancel: () => void;
-  onCustomColorsChange?: (colors: Record<string, string>) => void; // Add this prop
+  onCustomColorsChange?: (colors: Record<string, string>) => void;
 }
+
+// Memoized ExperienceItem subcomponent
+interface ExperienceItemProps {
+  job: NonNullable<ParsedResume['experience']>[number];
+  index: number;
+  onChange: <
+    Field extends keyof NonNullable<ParsedResume['experience']>[number],
+  >(
+    index: number,
+    field: Field,
+    value: NonNullable<ParsedResume['experience']>[number][Field]
+  ) => void;
+  onRemove: (index: number) => void;
+}
+
+const ExperienceItem = memo(function ExperienceItem({
+  job,
+  index,
+  onChange,
+  onRemove,
+}: ExperienceItemProps) {
+  return (
+    <div className={styles.experienceItem}>
+      <div className={styles.experienceItemHeader}>
+        <h3 className={styles.experienceItemTitle}>Job #{index + 1}</h3>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onRemove(index)}
+          className={styles.removeExperienceButton}
+        >
+          <Trash2 className={styles.iconMd} />
+        </Button>
+      </div>
+      <div className={styles.formGridFull}>
+        <div className={styles.formField}>
+          <Label htmlFor={`experience-title-${index}`} className={styles.label}>
+            Job Title
+          </Label>
+          <Input
+            id={`experience-title-${index}`}
+            value={job.title || ''}
+            onChange={(e) => onChange(index, 'title', e.target.value)}
+            className={styles.input}
+          />
+        </div>
+        <div className={styles.formField}>
+          <Label
+            htmlFor={`experience-company-${index}`}
+            className={styles.label}
+          >
+            Company
+          </Label>
+          <Input
+            id={`experience-company-${index}`}
+            value={job.company || ''}
+            onChange={(e) => onChange(index, 'company', e.target.value)}
+            className={styles.input}
+          />
+        </div>
+        <div className={styles.formField}>
+          <Label
+            htmlFor={`experience-duration-${index}`}
+            className={styles.label}
+          >
+            Duration
+          </Label>
+          <Input
+            id={`experience-duration-${index}`}
+            value={job.duration || ''}
+            onChange={(e) => onChange(index, 'duration', e.target.value)}
+            className={styles.input}
+          />
+        </div>
+        <div className={styles.formField}>
+          <Label
+            htmlFor={`experience-details-${index}`}
+            className={styles.label}
+          >
+            Details (one per line)
+          </Label>
+          <Textarea
+            id={`experience-details-${index}`}
+            value={job.details?.join('\n') || ''}
+            onChange={(e) =>
+              onChange(index, 'details', e.target.value.split('\n'))
+            }
+            className={styles.textarea}
+            rows={4}
+          />
+        </div>
+      </div>
+    </div>
+  );
+});
+
+// Memoized EducationItem subcomponent
+interface EducationItemProps {
+  edu: NonNullable<ParsedResume['education']>[number];
+  index: number;
+  onChange: <
+    Field extends keyof NonNullable<ParsedResume['education']>[number],
+  >(
+    index: number,
+    field: Field,
+    value: NonNullable<ParsedResume['education']>[number][Field]
+  ) => void;
+  onRemove: (index: number) => void;
+}
+const EducationItem = memo(function EducationItem({
+  edu,
+  index,
+  onChange,
+  onRemove,
+}: EducationItemProps) {
+  return (
+    <div className={styles.experienceItem}>
+      <div className={styles.experienceItemHeader}>
+        <h3 className={styles.experienceItemTitle}>Education #{index + 1}</h3>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onRemove(index)}
+          className={styles.removeExperienceButton}
+        >
+          <Trash2 className={styles.iconMd} />
+        </Button>
+      </div>
+      <div className={styles.formGridFull}>
+        <div className={styles.formField}>
+          <Label htmlFor={`education-degree-${index}`} className={styles.label}>
+            Degree
+          </Label>
+          <Input
+            id={`education-degree-${index}`}
+            value={edu.degree || ''}
+            onChange={(e) => onChange(index, 'degree', e.target.value)}
+            className={styles.input}
+          />
+        </div>
+        <div className={styles.formField}>
+          <Label
+            htmlFor={`education-institution-${index}`}
+            className={styles.label}
+          >
+            Institution
+          </Label>
+          <Input
+            id={`education-institution-${index}`}
+            value={edu.institution || ''}
+            onChange={(e) => onChange(index, 'institution', e.target.value)}
+            className={styles.input}
+          />
+        </div>
+        <div className={styles.formField}>
+          <Label
+            htmlFor={`education-duration-${index}`}
+            className={styles.label}
+          >
+            Duration
+          </Label>
+          <Input
+            id={`education-duration-${index}`}
+            value={edu.duration || ''}
+            onChange={(e) => onChange(index, 'duration', e.target.value)}
+            className={styles.input}
+          />
+        </div>
+        <div className={styles.formField}>
+          <Label htmlFor={`education-note-${index}`} className={styles.label}>
+            Note (Optional)
+          </Label>
+          <Textarea
+            id={`education-note-${index}`}
+            value={edu.note || ''}
+            onChange={(e) => onChange(index, 'note', e.target.value)}
+            className={styles.textarea}
+            rows={2}
+          />
+        </div>
+      </div>
+    </div>
+  );
+});
+
+// Memoized CertificationItem subcomponent
+interface CertificationItemProps {
+  cert: NonNullable<ParsedResume['certifications']>[number];
+  index: number;
+  onChange: <
+    Field extends keyof NonNullable<ParsedResume['certifications']>[number],
+  >(
+    index: number,
+    field: Field,
+    value: NonNullable<ParsedResume['certifications']>[number][Field]
+  ) => void;
+  onRemove: (index: number) => void;
+}
+const CertificationItem = memo(function CertificationItem({
+  cert,
+  index,
+  onChange,
+  onRemove,
+}: CertificationItemProps) {
+  return (
+    <div className={styles.experienceItem}>
+      <div className={styles.experienceItemHeader}>
+        <h3 className={styles.experienceItemTitle}>
+          Certification #{index + 1}
+        </h3>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onRemove(index)}
+          className={styles.removeExperienceButton}
+        >
+          <Trash2 className={styles.iconMd} />
+        </Button>
+      </div>
+      <div className={styles.formGridFull}>
+        <div className={styles.formField}>
+          <Label htmlFor={`cert-name-${index}`} className={styles.label}>
+            Certification Name
+          </Label>
+          <Input
+            id={`cert-name-${index}`}
+            value={cert.name || ''}
+            onChange={(e) => onChange(index, 'name', e.target.value)}
+            className={styles.input}
+          />
+        </div>
+        <div className={styles.formField}>
+          <Label htmlFor={`cert-issuer-${index}`} className={styles.label}>
+            Issuer
+          </Label>
+          <Input
+            id={`cert-issuer-${index}`}
+            value={cert.issuer || ''}
+            onChange={(e) => onChange(index, 'issuer', e.target.value)}
+            className={styles.input}
+          />
+        </div>
+        <div className={styles.formField}>
+          <Label htmlFor={`cert-date-${index}`} className={styles.label}>
+            Date (Optional)
+          </Label>
+          <Input
+            id={`cert-date-${index}`}
+            value={cert.date || ''}
+            onChange={(e) => onChange(index, 'date', e.target.value)}
+            className={styles.input}
+          />
+        </div>
+        <div className={styles.formField}>
+          <Label htmlFor={`cert-id-${index}`} className={styles.label}>
+            Credential ID (Optional)
+          </Label>
+          <Input
+            id={`cert-id-${index}`}
+            value={cert.id || ''}
+            onChange={(e) => onChange(index, 'id', e.target.value)}
+            className={styles.input}
+          />
+        </div>
+      </div>
+    </div>
+  );
+});
+
+// Memoized SkillBadge subcomponent
+interface SkillBadgeProps {
+  skill: string;
+  onRemove: (skill: string) => void;
+}
+const SkillBadge = memo(function SkillBadge({
+  skill,
+  onRemove,
+}: SkillBadgeProps) {
+  return (
+    <Badge className={styles.skillBadge}>
+      {skill}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => onRemove(skill)}
+        className={styles.removeSkillButton}
+      >
+        <X className={styles.iconSm} />
+      </Button>
+    </Badge>
+  );
+});
 
 const ResumeEditor = ({
   resumeData,
@@ -40,13 +334,13 @@ const ResumeEditor = ({
   onCancel,
   onCustomColorsChange,
 }: ResumeEditorProps) => {
-  // Normalize experience data to ensure consistent field names
   const normalizeExperienceData = (
     experience: IncomingExperience[]
   ): ParsedResume['experience'] => {
     return experience.map((exp) => ({
+      id: exp.id || uuidv4(),
       company: exp.company || '',
-      title: exp.title || exp.position || '', // Map position to title
+      title: exp.title || exp.position || '',
       duration: exp.duration || '',
       details: Array.isArray(exp.details)
         ? exp.details.map(String)
@@ -56,13 +350,21 @@ const ResumeEditor = ({
             ? [String(exp.details)]
             : exp.description
               ? [String(exp.description)]
-              : [], // Ensure details are always string[]
+              : [],
     }));
   };
 
   const [editedData, setEditedData] = useState<ParsedResume>({
     ...resumeData,
     experience: normalizeExperienceData(resumeData.experience || []),
+    education: (resumeData.education || []).map((edu) => ({
+      ...edu,
+      id: edu.id || uuidv4(),
+    })),
+    certifications: (resumeData.certifications || []).map((cert) => ({
+      ...cert,
+      id: cert.id || uuidv4(),
+    })),
   });
   const [showPreview, setShowPreview] = useState(false);
   const [newSkill, setNewSkill] = useState('');
@@ -98,11 +400,8 @@ const ResumeEditor = ({
           ParsedResume[Section]
         >;
       } else if (section === 'contact') {
-        // Special handling for optional contact object
         currentSectionData = {} as NonNullable<ParsedResume[Section]>;
       } else {
-        // This case should ideally not be reached if the types are correctly defined,
-        // but as a fallback, ensure it's an object.
         currentSectionData = {} as NonNullable<ParsedResume[Section]>;
       }
 
@@ -116,6 +415,7 @@ const ResumeEditor = ({
     });
   };
 
+  // Memoize handlers for ExperienceItem
   const handleExperienceChange = useCallback(
     <Field extends keyof (typeof editedData.experience)[number]>(
       index: number,
@@ -132,29 +432,33 @@ const ResumeEditor = ({
         experience: updatedExperience,
       }));
     },
-    [editedData]
+    [editedData.experience]
+  );
+
+  const removeExperience = useCallback(
+    (index: number) => {
+      const updatedExperience = (editedData.experience || []).filter(
+        (__, i: number) => i !== index
+      );
+      setEditedData((prev: ParsedResume) => ({
+        ...prev,
+        experience: updatedExperience,
+      }));
+    },
+    [editedData.experience]
   );
 
   const addExperience = () => {
     const newExperience = {
+      id: uuidv4(),
       company: '',
       title: '',
       duration: '',
-      details: [], // Changed from description to details
+      details: [],
     };
     setEditedData((prev: ParsedResume) => ({
       ...prev,
       experience: [...(prev.experience || []), newExperience],
-    }));
-  };
-
-  const removeExperience = (index: number) => {
-    const updatedExperience = (editedData.experience || []).filter(
-      (__, i: number) => i !== index
-    );
-    setEditedData((prev: ParsedResume) => ({
-      ...prev,
-      experience: updatedExperience,
     }));
   };
 
@@ -187,7 +491,6 @@ const ResumeEditor = ({
     }));
   };
 
-  // New handler for color changes
   const handleColorsChange = (colors: Record<string, string>) => {
     setEditedData((prev: ParsedResume) => ({
       ...prev,
@@ -199,15 +502,76 @@ const ResumeEditor = ({
   };
 
   const handleSave = () => {
-    // The data is already in ParsedResume format due to useState<ParsedResume>
-    // and the type of handleExperienceChange. No explicit conversion needed here.
     onSave(editedData);
   };
+
+  // Memoize handlers for EducationItem
+  const handleEducationChange = useCallback(
+    <Field extends keyof NonNullable<ParsedResume['education']>[number]>(
+      index: number,
+      field: Field,
+      value: NonNullable<ParsedResume['education']>[number][Field]
+    ) => {
+      const updatedEducation = [...(editedData.education || [])];
+      updatedEducation[index] = {
+        ...updatedEducation[index],
+        [field]: value,
+      };
+      setEditedData((prev) => ({
+        ...prev,
+        education: updatedEducation,
+      }));
+    },
+    [editedData.education]
+  );
+  const removeEducation = useCallback(
+    (index: number) => {
+      const updatedEducation = (editedData.education || []).filter(
+        (__, i) => i !== index
+      );
+      setEditedData((prev) => ({
+        ...prev,
+        education: updatedEducation,
+      }));
+    },
+    [editedData.education]
+  );
+
+  // Memoize handlers for CertificationItem
+  const handleCertificationChange = useCallback(
+    <Field extends keyof NonNullable<ParsedResume['certifications']>[number]>(
+      index: number,
+      field: Field,
+      value: NonNullable<ParsedResume['certifications']>[number][Field]
+    ) => {
+      const updatedCerts = [...(editedData.certifications || [])];
+      updatedCerts[index] = {
+        ...updatedCerts[index],
+        [field]: value,
+      };
+      setEditedData((prev) => ({
+        ...prev,
+        certifications: updatedCerts,
+      }));
+    },
+    [editedData.certifications]
+  );
+  const removeCertification = useCallback(
+    (index: number) => {
+      const updatedCerts = (editedData.certifications || []).filter(
+        (__, i) => i !== index
+      );
+      setEditedData((prev) => ({
+        ...prev,
+        certifications: updatedCerts,
+      }));
+    },
+    [editedData.certifications]
+  );
 
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
-        {/* Header */}
         <div className={styles.header}>
           <div className={styles.headerContent}>
             <div>
@@ -248,9 +612,7 @@ const ResumeEditor = ({
         <div
           className={`${styles.grid} ${showPreview ? styles.gridTwoColumns : styles.gridOneColumn}`}
         >
-          {/* Editor Panel */}
           <div className={styles.editorPanel}>
-            {/* Profile Image */}
             <Card className={styles.card}>
               <CardHeader>
                 <CardTitle className={styles.cardTitle}>
@@ -265,7 +627,6 @@ const ResumeEditor = ({
               </CardContent>
             </Card>
 
-            {/* Personal Information */}
             <Card className={styles.card}>
               <CardHeader>
                 <CardTitle className={styles.cardTitle}>
@@ -318,7 +679,6 @@ const ResumeEditor = ({
               </CardContent>
             </Card>
 
-            {/* Contact Information */}
             <Card className={styles.card}>
               <CardHeader>
                 <CardTitle className={styles.cardTitle}>
@@ -434,7 +794,6 @@ const ResumeEditor = ({
               </CardContent>
             </Card>
 
-            {/* Skills */}
             <Card className={styles.card}>
               <CardHeader className={styles.experienceHeader}>
                 <CardTitle className={styles.cardTitle}>Skills</CardTitle>
@@ -462,23 +821,16 @@ const ResumeEditor = ({
                 </div>
                 <div className={`${styles.skillsList} ${styles.mt2}`}>
                   {editedData.skills?.map((skill) => (
-                    <Badge key={skill} className={styles.skillBadge}>
-                      {skill}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleSkillRemove(skill)}
-                        className={styles.removeSkillButton}
-                      >
-                        <X className={styles.iconSm} />
-                      </Button>
-                    </Badge>
+                    <SkillBadge
+                      key={skill}
+                      skill={skill}
+                      onRemove={handleSkillRemove}
+                    />
                   ))}
                 </div>
               </CardContent>
             </Card>
 
-            {/* Experience */}
             <Card className={styles.card}>
               <CardHeader className={styles.experienceHeader}>
                 <CardTitle className={styles.cardTitle}>Experience</CardTitle>
@@ -496,112 +848,17 @@ const ResumeEditor = ({
                   </p>
                 )}
                 {editedData.experience?.map((job, index) => (
-                  <div
-                    key={`${job.title}-${job.company}-${index}`}
-                    className={styles.experienceItem}
-                  >
-                    <div className={styles.experienceItemHeader}>
-                      <h3 className={styles.experienceItemTitle}>
-                        Job #{index + 1}
-                      </h3>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeExperience(index)}
-                        className={styles.removeExperienceButton}
-                      >
-                        <Trash2 className={styles.iconMd} />
-                      </Button>
-                    </div>
-                    <div className={styles.formGridFull}>
-                      <div className={styles.formField}>
-                        <Label
-                          htmlFor={`experience-title-${index}`}
-                          className={styles.label}
-                        >
-                          Job Title
-                        </Label>
-                        <Input
-                          id={`experience-title-${index}`}
-                          value={job.title || ''}
-                          onChange={(e) =>
-                            handleExperienceChange(
-                              index,
-                              'title',
-                              e.target.value
-                            )
-                          }
-                          className={styles.input}
-                        />
-                      </div>
-                      <div className={styles.formField}>
-                        <Label
-                          htmlFor={`experience-company-${index}`}
-                          className={styles.label}
-                        >
-                          Company
-                        </Label>
-                        <Input
-                          id={`experience-company-${index}`}
-                          value={job.company || ''}
-                          onChange={(e) =>
-                            handleExperienceChange(
-                              index,
-                              'company',
-                              e.target.value
-                            )
-                          }
-                          className={styles.input}
-                        />
-                      </div>
-                      <div className={styles.formField}>
-                        <Label
-                          htmlFor={`experience-duration-${index}`}
-                          className={styles.label}
-                        >
-                          Duration
-                        </Label>
-                        <Input
-                          id={`experience-duration-${index}`}
-                          value={job.duration || ''}
-                          onChange={(e) =>
-                            handleExperienceChange(
-                              index,
-                              'duration',
-                              e.target.value
-                            )
-                          }
-                          className={styles.input}
-                        />
-                      </div>
-                      <div className={styles.formField}>
-                        <Label
-                          htmlFor={`experience-details-${index}`}
-                          className={styles.label}
-                        >
-                          Details (one per line)
-                        </Label>
-                        <Textarea
-                          id={`experience-details-${index}`}
-                          value={job.details?.join('\n') || ''}
-                          onChange={(e) =>
-                            handleExperienceChange(
-                              index,
-                              'details',
-                              e.target.value.split('\n')
-                            )
-                          }
-                          className={styles.textarea}
-                          rows={4}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  <ExperienceItem
+                    key={job.id}
+                    job={job}
+                    index={index}
+                    onChange={handleExperienceChange}
+                    onRemove={removeExperience}
+                  />
                 ))}
               </CardContent>
             </Card>
 
-            {/* Education */}
             <Card className={styles.card}>
               <CardHeader className={styles.experienceHeader}>
                 <CardTitle className={styles.cardTitle}>Education</CardTitle>
@@ -611,7 +868,12 @@ const ResumeEditor = ({
                       ...prev,
                       education: [
                         ...(prev.education || []),
-                        { degree: '', institution: '', duration: '' },
+                        {
+                          id: uuidv4(),
+                          degree: '',
+                          institution: '',
+                          duration: '',
+                        },
                       ],
                     }));
                   }}
@@ -627,143 +889,17 @@ const ResumeEditor = ({
                   </p>
                 )}
                 {editedData.education?.map((edu, index) => (
-                  <div
-                    key={`${edu.degree}-${edu.institution}-${index}`}
-                    className={styles.experienceItem}
-                  >
-                    <div className={styles.experienceItemHeader}>
-                      <h3 className={styles.experienceItemTitle}>
-                        Education #{index + 1}
-                      </h3>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          setEditedData((prev) => ({
-                            ...prev,
-                            education: (prev.education || []).filter(
-                              (__, i: number) => i !== index
-                            ),
-                          }));
-                        }}
-                        className={styles.removeExperienceButton}
-                      >
-                        <Trash2 className={styles.iconMd} />
-                      </Button>
-                    </div>
-                    <div className={styles.formGridFull}>
-                      <div className={styles.formField}>
-                        <Label
-                          htmlFor={`education-degree-${index}`}
-                          className={styles.label}
-                        >
-                          Degree
-                        </Label>
-                        <Input
-                          id={`education-degree-${index}`}
-                          value={edu.degree || ''}
-                          onChange={(e) => {
-                            const updatedEducation = [
-                              ...(editedData.education || []),
-                            ];
-                            updatedEducation[index] = {
-                              ...updatedEducation[index],
-                              degree: e.target.value,
-                            };
-                            setEditedData((prev) => ({
-                              ...prev,
-                              education: updatedEducation,
-                            }));
-                          }}
-                          className={styles.input}
-                        />
-                      </div>
-                      <div className={styles.formField}>
-                        <Label
-                          htmlFor={`education-institution-${index}`}
-                          className={styles.label}
-                        >
-                          Institution
-                        </Label>
-                        <Input
-                          id={`education-institution-${index}`}
-                          value={edu.institution || ''}
-                          onChange={(e) => {
-                            const updatedEducation = [
-                              ...(editedData.education || []),
-                            ];
-                            updatedEducation[index] = {
-                              ...updatedEducation[index],
-                              institution: e.target.value,
-                            };
-                            setEditedData((prev) => ({
-                              ...prev,
-                              education: updatedEducation,
-                            }));
-                          }}
-                          className={styles.input}
-                        />
-                      </div>
-                      <div className={styles.formField}>
-                        <Label
-                          htmlFor={`education-duration-${index}`}
-                          className={styles.label}
-                        >
-                          Duration
-                        </Label>
-                        <Input
-                          id={`education-duration-${index}`}
-                          value={edu.duration || ''}
-                          onChange={(e) => {
-                            const updatedEducation = [
-                              ...(editedData.education || []),
-                            ];
-                            updatedEducation[index] = {
-                              ...updatedEducation[index],
-                              duration: e.target.value,
-                            };
-                            setEditedData((prev) => ({
-                              ...prev,
-                              education: updatedEducation,
-                            }));
-                          }}
-                          className={styles.input}
-                        />
-                      </div>
-                      <div className={styles.formField}>
-                        <Label
-                          htmlFor={`education-note-${index}`}
-                          className={styles.label}
-                        >
-                          Note (Optional)
-                        </Label>
-                        <Textarea
-                          id={`education-note-${index}`}
-                          value={edu.note || ''}
-                          onChange={(e) => {
-                            const updatedEducation = [
-                              ...(editedData.education || []),
-                            ];
-                            updatedEducation[index] = {
-                              ...updatedEducation[index],
-                              note: e.target.value,
-                            };
-                            setEditedData((prev) => ({
-                              ...prev,
-                              education: updatedEducation,
-                            }));
-                          }}
-                          className={styles.textarea}
-                          rows={2}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  <EducationItem
+                    key={edu.id}
+                    edu={edu}
+                    index={index}
+                    onChange={handleEducationChange}
+                    onRemove={removeEducation}
+                  />
                 ))}
               </CardContent>
             </Card>
 
-            {/* Certifications */}
             <Card className={styles.card}>
               <CardHeader className={styles.experienceHeader}>
                 <CardTitle className={styles.cardTitle}>
@@ -775,7 +911,7 @@ const ResumeEditor = ({
                       ...prev,
                       certifications: [
                         ...(prev.certifications || []),
-                        { name: '', issuer: '' },
+                        { id: uuidv4(), name: '', issuer: '' },
                       ],
                     }));
                   }}
@@ -792,142 +928,17 @@ const ResumeEditor = ({
                   </p>
                 )}
                 {editedData.certifications?.map((cert, index) => (
-                  <div
-                    key={`${cert.name}-${cert.issuer}-${index}`}
-                    className={styles.experienceItem}
-                  >
-                    <div className={styles.experienceItemHeader}>
-                      <h3 className={styles.experienceItemTitle}>
-                        Certification #{index + 1}
-                      </h3>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          setEditedData((prev) => ({
-                            ...prev,
-                            certifications: (prev.certifications || []).filter(
-                              (__, i: number) => i !== index
-                            ),
-                          }));
-                        }}
-                        className={styles.removeExperienceButton}
-                      >
-                        <Trash2 className={styles.iconMd} />
-                      </Button>
-                    </div>
-                    <div className={styles.formGridFull}>
-                      <div className={styles.formField}>
-                        <Label
-                          htmlFor={`cert-name-${index}`}
-                          className={styles.label}
-                        >
-                          Certification Name
-                        </Label>
-                        <Input
-                          id={`cert-name-${index}`}
-                          value={cert.name || ''}
-                          onChange={(e) => {
-                            const updatedCerts = [
-                              ...(editedData.certifications || []),
-                            ];
-                            updatedCerts[index] = {
-                              ...updatedCerts[index],
-                              name: e.target.value,
-                            };
-                            setEditedData((prev) => ({
-                              ...prev,
-                              certifications: updatedCerts,
-                            }));
-                          }}
-                          className={styles.input}
-                        />
-                      </div>
-                      <div className={styles.formField}>
-                        <Label
-                          htmlFor={`cert-issuer-${index}`}
-                          className={styles.label}
-                        >
-                          Issuer
-                        </Label>
-                        <Input
-                          id={`cert-issuer-${index}`}
-                          value={cert.issuer || ''}
-                          onChange={(e) => {
-                            const updatedCerts = [
-                              ...(editedData.certifications || []),
-                            ];
-                            updatedCerts[index] = {
-                              ...updatedCerts[index],
-                              issuer: e.target.value,
-                            };
-                            setEditedData((prev) => ({
-                              ...prev,
-                              certifications: updatedCerts,
-                            }));
-                          }}
-                          className={styles.input}
-                        />
-                      </div>
-                      <div className={styles.formField}>
-                        <Label
-                          htmlFor={`cert-date-${index}`}
-                          className={styles.label}
-                        >
-                          Date (Optional)
-                        </Label>
-                        <Input
-                          id={`cert-date-${index}`}
-                          value={cert.date || ''}
-                          onChange={(e) => {
-                            const updatedCerts = [
-                              ...(editedData.certifications || []),
-                            ];
-                            updatedCerts[index] = {
-                              ...updatedCerts[index],
-                              date: e.target.value,
-                            };
-                            setEditedData((prev) => ({
-                              ...prev,
-                              certifications: updatedCerts,
-                            }));
-                          }}
-                          className={styles.input}
-                        />
-                      </div>
-                      <div className={styles.formField}>
-                        <Label
-                          htmlFor={`cert-id-${index}`}
-                          className={styles.label}
-                        >
-                          Credential ID (Optional)
-                        </Label>
-                        <Input
-                          id={`cert-id-${index}`}
-                          value={cert.id || ''}
-                          onChange={(e) => {
-                            const updatedCerts = [
-                              ...(editedData.certifications || []),
-                            ];
-                            updatedCerts[index] = {
-                              ...updatedCerts[index],
-                              id: e.target.value,
-                            };
-                            setEditedData((prev) => ({
-                              ...prev,
-                              certifications: updatedCerts,
-                            }));
-                          }}
-                          className={styles.input}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  <CertificationItem
+                    key={cert.id}
+                    cert={cert}
+                    index={index}
+                    onChange={handleCertificationChange}
+                    onRemove={removeCertification}
+                  />
                 ))}
               </CardContent>
             </Card>
 
-            {/* Color Picker Section */}
             <Card className={styles.card}>
               <CardHeader>
                 <CardTitle>Color Scheme</CardTitle>
@@ -941,7 +952,6 @@ const ResumeEditor = ({
             </Card>
           </div>
 
-          {/* Preview Panel */}
           {showPreview && (
             <div className={styles.previewContainer}>
               <Card className={styles.card}>
@@ -974,7 +984,6 @@ const ResumeEditor = ({
                     </div>
                   </div>
 
-                  {/* Contact Info Preview */}
                   <div className={styles.previewSection}>
                     <div className={styles.previewSectionTitle}>Contact</div>
                     <div className={styles.previewContactInfo}>
@@ -996,7 +1005,6 @@ const ResumeEditor = ({
                     </div>
                   </div>
 
-                  {/* Skills Preview */}
                   <div className={styles.previewSection}>
                     <div className={styles.previewSectionTitle}>Skills</div>
                     <div className={styles.previewSkillsList}>
@@ -1019,14 +1027,13 @@ const ResumeEditor = ({
                     </div>
                   </div>
 
-                  {/* Experience Preview */}
                   <div className={styles.previewSection}>
                     <div className={styles.previewSectionTitle}>Experience</div>
                     {editedData.experience &&
                     editedData.experience.length > 0 ? (
-                      editedData.experience.slice(0, 3).map((job, index) => (
+                      editedData.experience.slice(0, 3).map((job) => (
                         <div
-                          key={`${job.title}-${job.company}-${index}`}
+                          key={job.id}
                           className={styles.previewExperienceItem}
                         >
                           <div className={styles.previewExperienceTitle}>
@@ -1065,15 +1072,11 @@ const ResumeEditor = ({
                       )}
                   </div>
 
-                  {/* Education Preview */}
                   <div className={styles.previewSection}>
                     <div className={styles.previewSectionTitle}>Education</div>
                     {editedData.education && editedData.education.length > 0 ? (
-                      editedData.education.slice(0, 2).map((edu, index) => (
-                        <div
-                          key={`${edu.degree}-${edu.institution}-${index}`}
-                          className={styles.mb2}
-                        >
+                      editedData.education.slice(0, 2).map((edu) => (
+                        <div key={edu.id} className={styles.mb2}>
                           <div className={styles.fontSemibold}>
                             {edu.degree}
                           </div>
@@ -1096,29 +1099,21 @@ const ResumeEditor = ({
                       )}
                   </div>
 
-                  {/* Certifications Preview */}
                   <div className={styles.previewSection}>
                     <div className={styles.previewSectionTitle}>
                       Certifications
                     </div>
                     {editedData.certifications &&
                     editedData.certifications.length > 0 ? (
-                      editedData.certifications
-                        .slice(0, 2)
-                        .map((cert, index) => (
-                          <div
-                            key={`${cert.name}-${cert.issuer}-${index}`}
-                            className={styles.mb2}
-                          >
-                            <div className={styles.fontSemibold}>
-                              {cert.name}
-                            </div>
-                            <div className={styles.textSm}>{cert.issuer}</div>
-                            {cert.date && (
-                              <div className={styles.textXs}>{cert.date}</div>
-                            )}
-                          </div>
-                        ))
+                      editedData.certifications.slice(0, 2).map((cert) => (
+                        <div key={cert.id} className={styles.mb2}>
+                          <div className={styles.fontSemibold}>{cert.name}</div>
+                          <div className={styles.textSm}>{cert.issuer}</div>
+                          {cert.date && (
+                            <div className={styles.textXs}>{cert.date}</div>
+                          )}
+                        </div>
+                      ))
                     ) : (
                       <span className={styles.textSm}>
                         No certifications listed.

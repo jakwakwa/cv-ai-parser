@@ -102,7 +102,7 @@ export async function POST(request: Request) {
     if (isAuthenticated && user) {
       const resumeTitle =
         parsedResume.name || file.name.split('.')[0] || 'Untitled Resume';
-      let generatedSlug = createSlug(resumeTitle);
+      let generatedSlug = `${createSlug(resumeTitle)}-${Math.floor(1000 + Math.random() * 9000)}`;
       const MAX_RETRIES = 5;
       let retries = 0;
 
@@ -128,7 +128,8 @@ export async function POST(request: Request) {
               'duplicate key value violates unique constraint "resumes_slug_key"'
             )
           ) {
-            generatedSlug = `${createSlug(resumeTitle)}-${uuidv4().substring(0, 8)}`;
+            // If a collision occurs, append a counter instead of a new uuid
+            generatedSlug = `${createSlug(resumeTitle)}-${Math.floor(1000 + Math.random() * 9000)}-${retries + 1}`;
             retries++;
           } else {
             throw dbError; // Re-throw other database errors
