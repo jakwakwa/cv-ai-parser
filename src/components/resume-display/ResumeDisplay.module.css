@@ -1,0 +1,39 @@
+.resumeGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+@media (min-width: 768px) {
+  .resumeGrid {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+.resumeSidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .resumeSidebar {
+    padding: 2rem;
+  }
+}
+
+.resumeMainContent {
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .resumeMainContent {
+    padding: 2rem;
+  }
+}
+
+.adSection {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}

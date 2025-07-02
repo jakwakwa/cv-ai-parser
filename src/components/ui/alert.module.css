@@ -1,0 +1,58 @@
+.alert {
+  position: relative;
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid hsl(var(--border));
+  padding: 1rem;
+}
+
+.alert svg {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  color: hsl(var(--foreground));
+  width: 1rem;
+  height: 1rem;
+}
+
+.alert svg ~ * {
+  padding-left: 1.75rem;
+}
+
+.alert svg + div {
+  transform: translateY(-3px);
+}
+
+/* Variants */
+.alert.default {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.alert.destructive {
+  border-color: hsl(var(--destructive) / 0.5);
+  color: hsl(var(--destructive));
+}
+
+.alert.destructive svg {
+  color: hsl(var(--destructive));
+}
+
+.dark .alert.destructive {
+  border-color: hsl(var(--destructive));
+}
+
+.alertTitle {
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+.alertDescription {
+  font-size: 0.875rem;
+}
+
+.alertDescription p {
+  line-height: 1.5;
+}

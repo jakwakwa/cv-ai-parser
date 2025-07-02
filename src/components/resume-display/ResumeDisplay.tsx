@@ -9,7 +9,8 @@ import ExperienceSection from '@/src/components/ExperienceSection/ExperienceSect
 import ProfileHeader from '@/src/components/ProfileHeader/ProfileHeader';
 import SkillsSection from '@/src/components/SkillsSection/SkillsSection';
 import { resumeColors } from '@/src/utils/colors';
-import styles from '../../../app/page.module.css';
+import pageStyles from '../../../app/page.module.css';
+import styles from './ResumeDisplay.module.css';
 
 interface ResumeDisplayProps {
   resumeData: ParsedResume;
@@ -32,7 +33,7 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
   return (
     <div
       id="resume-content"
-      className={styles.resumeContent}
+      className={pageStyles.resumeContent}
       ref={resumeContainerRef}
     >
       <ProfileHeader
@@ -42,9 +43,9 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
         summary={resumeData.summary || ''}
         customColors={resumeData.customColors || {}}
       />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
+      <div className={styles.resumeGrid}>
         <div
-          className="flex flex-col h-full md:col-span-1 p-6 md:p-8"
+          className={styles.resumeSidebar}
           style={{
             backgroundColor:
               resumeData.customColors?.['--resume-sidebar-background'] ||
@@ -69,7 +70,7 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
           />
         </div>
         <div
-          className="p-6 md:p-8 md:col-span-2"
+          className={styles.resumeMainContent}
           style={{
             color:
               resumeData.customColors?.['--resume-body-text'] ||
@@ -83,7 +84,7 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
         </div>
       </div>
       {/* Content Ad - Between resume sections */}
-      <AdSense adSlot="3456789012" adFormat="horizontal" className="my-6" />
+      <AdSense adSlot="3456789012" adFormat="horizontal" className={styles.adSection} />
     </div>
   );
 };

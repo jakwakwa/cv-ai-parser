@@ -18,5 +18,9 @@
   width: 100%;
   justify-content: center;
   align-items: center;
+}
 
+.signInButton {
+  border-radius: 9999px;
+  padding: 0;
 } 

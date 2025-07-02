@@ -8,6 +8,7 @@ import { AdSenseUnit } from '@/src/components/adsense/AdSenseUnit';
 import { AuthModalProvider } from '@/src/components/auth-component/AuthModalContext';
 import { AuthProvider } from '@/src/components/auth-provider/AuthProvider';
 import { Toaster } from '@/src/components/ui/toaster';
+import styles from './layout.module.css';
 
 export const metadata: Metadata = {
   title:
@@ -85,16 +86,16 @@ export default function RootLayout({
         </ToastProvider>
         <Analytics />
         <AdSenseUnit slot="1977334562" />
-        <footer className="py-8 w-full shrink-0 items-center px-4 md:px-6 text-white bg-[#1f2937]">
-          <nav className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center text-center text-sm">
+        <footer className={styles.footer}>
+          <nav className={styles.footerNav}>
             <a
-              className="hover:underline underline-offset-4"
+              className={styles.footerLink}
               href="/privacy-policy"
             >
               Privacy Policy
             </a>
             <a
-              className="hover:underline underline-offset-4"
+              className={styles.footerLink}
               href="/terms-and-conditions"
             >
               Terms and Conditions

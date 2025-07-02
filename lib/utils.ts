@@ -1,8 +1,11 @@
 import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 
+/**
+ * Utility function to merge class names
+ * Simplified version without tailwind-merge since we're using CSS modules
+ */
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return clsx(inputs);
 }
 
 export function createSlug(title: string): string {

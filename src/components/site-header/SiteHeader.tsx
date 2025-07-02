@@ -26,7 +26,7 @@ export function SiteHeader({ onLogoClick }: SiteHeaderProps) {
         ) : (
           <Button
             variant="ghost"
-            className="rounded-full p-0"
+            className={styles.signInButton}
             aria-label="Sign in"
             onClick={() => setAuthModalOpen(true)}
           >

@@ -1,87 +1,82 @@
 'use client';
 
-import type React from 'react';
+import React from 'react';
+import styles from './privacy-policy.module.css';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import BackButton from '@/src/components/ui/BackButton';
 
-const PrivacyPolicyPage: React.FC = () => {
+export default function PrivacyPolicy() {
   return (
-    <div className="container mx-auto p-4">
+    <div className={styles.container}>
       <SiteHeader />
-      <div className="text-white">
+      <div className={styles.textWhite}>
         <BackButton />
-        <h1 className="text-3xl font-bold mb-4">Privacy Policy</h1>
-        <p className="mb-2">
-          This Privacy Policy describes how your personal information is
-          collected, used, and shared when you visit or make a purchase from
-          airesumegen.com (the "Site").
+        <h1 className={styles.title}>Privacy Policy</h1>
+        <p className={styles.paragraph}>
+          Your privacy is important to us. This Privacy Policy explains how
+          resume.ai ('we', 'us', or 'our') collects, uses, discloses, and
+          safeguards your information when you use our resume parsing and
+          generation service.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-3">
-          Personal Information We Collect
+        <h2 className={styles.sectionTitle}>
+          Information We Collect
         </h2>
-        <p className="mb-2">
-          When you visit the Site, we automatically collect certain information
-          about your device, including information about your web browser, IP
-          address, time zone, and some of the cookies that are installed on your
-          device. Additionally, as you browse the Site, we collect information
-          about the individual web pages or products that you view, what
-          websites or search terms referred you to the Site, and information
-          about how you interact with the Site. We refer to this
-          automatically-collected information as "Device Information."
+        <p className={styles.paragraph}>
+          We collect information you provide directly to us, such as when you
+          create an account, upload a resume, or contact us for support. This
+          may include:
         </p>
-        <p className="mb-2">
-          We collect Device Information using the following technologies:
+        <p className={styles.paragraph}>
+          We may also collect certain information automatically when you use our
+          service, including your IP address, browser type, operating system,
+          and usage patterns.
         </p>
-        <ul className="list-disc list-inside ml-4">
-          <li>
-            "Cookies" are data files that are placed on your device or computer
-            and often include an anonymous unique identifier. For more
-            information about cookies, and how to disable cookies, visit
-            http://www.allaboutcookies.org.
-          </li>
-          <li>
-            "Log files" track actions occurring on the Site, and collect data
-            including your IP address, browser type, Internet service provider,
-            referring/exit pages, and date/time stamps.
-          </li>
-          <li>
-            "Web beacons," "tags," and "pixels" are electronic files used to
-            record information about how you browse the Site.
-          </li>
+
+        <ul className={styles.list}>
+          <li>Personal information (name, email address, phone number)</li>
+          <li>Professional information (work experience, education, skills)</li>
+          <li>Resume files and documents you upload</li>
+          <li>Account credentials and preferences</li>
+          <li>Communication history with our support team</li>
+          <li>Payment information (if applicable)</li>
+          <li>Usage data and analytics</li>
+          <li>Device information and technical data</li>
+          <li>Cookies and similar tracking technologies</li>
+          <li>Social media information (if you choose to connect accounts)</li>
+          <li>Third-party integrations data</li>
+          <li>Feedback and survey responses</li>
+          <li>Error logs and debugging information</li>
+          <li>Security-related information</li>
+          <li>Location data (general geographic area)</li>
+          <li>Browser preferences and settings</li>
+          <li>Time zone and language preferences</li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-3">
-          How We Use Your Personal Information
+        <h2 className={styles.sectionTitle}>
+          How We Use Your Information
         </h2>
-        <p className="mb-2">
-          We use the Device Information that we collect to help us screen for
-          potential risk and fraud (in particular, your IP address), and more
-          generally to improve and optimize our Site (for example, by generating
-          analytics about how our customers browse and interact with the Site,
-          and to assess the success of our marketing and advertising campaigns).
-          We also utilize Google AdSense and other third-party advertising
-          partners to serve ads on our site, which may use cookies and similar
-          technologies to collect information about your browsing activities to
-          provide you with personalized advertisements.
+        <p className={styles.paragraph}>
+          We use the information we collect to provide, maintain, and improve
+          our services, process your requests, communicate with you, and comply
+          with legal obligations. We may also use your information for research
+          and development purposes to enhance our AI-powered resume parsing and
+          generation capabilities.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-3">Changes</h2>
-        <p className="mb-2">
-          We may update this privacy policy from time to time in order to
-          reflect, for example, changes to our practices or for other
-          operational, legal or regulatory reasons.
+        <h2 className={styles.sectionTitle}>Changes</h2>
+        <p className={styles.paragraph}>
+          We may update this Privacy Policy from time to time. We will notify
+          you of any changes by posting the new Privacy Policy on this page and
+          updating the 'Last updated' date.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-3">Contact Us</h2>
-        <p className="mb-2">
-          For more information about our privacy practices, if you have
-          questions, or if you would like to make a complaint, please contact us
-          by e-mail at jakwakwa@gmail.com.
+        <h2 className={styles.sectionTitle}>Contact Us</h2>
+        <p className={styles.paragraph}>
+          If you have any questions about this Privacy Policy, please contact us
+          at privacy@resume.ai
         </p>
       </div>
     </div>
   );
-};
-
-export default PrivacyPolicyPage;
+}
