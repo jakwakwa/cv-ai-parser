@@ -472,13 +472,27 @@ const ResumeUploader = ({
                 </button>
               </div>
 
-              {showProfileUploader && (
-                <ProfileImageUploader
-                  currentImage={profileImage}
-                  onImageChange={handleProfileImageChange}
-                  showPrompt={false}
-                />
-              )}
+              {/* Profile image uploader modal */}
+              <Dialog
+                open={showProfileUploader}
+                onOpenChange={setShowProfileUploader}
+              >
+                <DialogContent className="p-0 bg-transparent border-none shadow-none max-w-fit">
+                  <ProfileImageUploader
+                    currentImage={profileImage}
+                    onImageChange={handleProfileImageChange}
+                    showPrompt={false}
+                  />
+                  {/* Hide button to close the dialog */}
+                  <button
+                    type="button"
+                    onClick={() => setShowProfileUploader(false)}
+                    className="mt-4 text-teal-600 text-sm hover:text-teal-700 font-medium mx-auto block"
+                  >
+                    Hide
+                  </button>
+                </DialogContent>
+              </Dialog>
 
               {profileImage && !showProfileUploader && (
                 <div className="flex items-center">
