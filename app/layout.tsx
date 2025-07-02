@@ -8,6 +8,7 @@ import { AdSenseUnit } from '@/src/components/adsense/AdSenseUnit';
 import { AuthModalProvider } from '@/src/components/auth-component/AuthModalContext';
 import { AuthProvider } from '@/src/components/auth-provider/AuthProvider';
 import { Toaster } from '@/src/components/ui/toaster';
+import { DM_Sans, DM_Mono } from 'next/font/google';
 
 export const metadata: Metadata = {
   title:
@@ -60,14 +61,24 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const dmSans = DM_Sans({
+    subsets: ['latin'],
+    weight: ['400', '500', '700'],
+    variable: '--font-sans',
+    display: 'swap',
+  });
+
+  const dmMono = DM_Mono({
+    subsets: ['latin'],
+    weight: ['400', '500', '700'],
+    variable: '--font-mono',
+    display: 'swap',
+  });
+
   return (
-    <html lang="en">
+    <html lang="en" className={`${dmSans.variable} ${dmMono.variable}`}>
       <head>
         <meta name="google-adsense-account" content="ca-pub-7169177467099391" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500;700&display=swap"
-          rel="stylesheet"
-        />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" />
         {/* Google AdSense */}
         <script
