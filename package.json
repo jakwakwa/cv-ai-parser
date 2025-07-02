@@ -72,6 +72,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.6",
+    "@types/next": "^9.0.0",
     "@types/node": "^22",
     "@types/pdfjs-dist": "^2.10.378",
     "@types/react": "^19",
