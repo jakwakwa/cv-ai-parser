@@ -82,8 +82,6 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
           />
         </div>
       </div>
-      {/* Content Ad - Between resume sections */}
-      <AdSense adSlot="3456789012" adFormat="horizontal" className="my-6" />
     </div>
   );
 };
