@@ -324,7 +324,7 @@ const ResumeUploader = ({
       <div className={styles.uploaderContainer}>
         <div className="mt-8">
           {!uploadedFile ? (
-            // biome-ignore lint/a11y/noStaticElementInteractions: <>
+            // biome-ignore lint/a11y/noStaticElementInteractions
             <div
               className={`${styles.dropZone} ${dragActive ? styles.dragActive : ''}`}
               onDragEnter={handleDrag}
@@ -501,7 +501,7 @@ const ResumeUploader = ({
 
               {profileImage && !showProfileUploader && (
                 <div className="flex items-center">
-                  {/** biome-ignore lint/performance/noImgElement: <> */}
+                  {/** biome-ignore lint/performance/noImgElement */}
                   <img
                     src={profileImage || '/placeholder.svg'}
                     alt="Profile preview"
