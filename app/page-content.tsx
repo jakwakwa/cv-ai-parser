@@ -2,18 +2,15 @@
 
 import { Bot } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
-import { AuthModal } from '@/src/components/auth-component/AuthModal';
-import { useAuthModal } from '@/src/components/auth-component/AuthModalContext';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import ResumeUploader from '@/src/components/ResumeUploader/ResumeUploader';
 import ResumeDisplay from '@/src/components/resume-display/ResumeDisplay';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/ResumeDisplayButtons';
 import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
-import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import { Button } from '@/src/components/ui/button';
 import { migrateOldResumeColorsToNew } from '@/src/utils/colors';
@@ -30,8 +27,6 @@ interface ParseInfo {
 export default function PageContent() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
-  const { setAuthModalOpen } = useAuthModal();
-  const _resumeContainerRef = useRef<HTMLDivElement>(null);
   const uploaderRef = useRef<HTMLDivElement>(null);
   const { isDownloading, downloadPdf } = usePdfDownloader();
   const { toast } = useToast();
