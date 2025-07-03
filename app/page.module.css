@@ -35,7 +35,7 @@
   justify-content: flex-start;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 0rem;
   width: 100%;
   max-width: 64rem;
   margin: 2rem auto;
