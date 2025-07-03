@@ -60,3 +60,24 @@
     padding-left: 1rem;
     position: relative;
 }
+
+/* Converted from Tailwind classes */
+.experienceItem {
+    margin-bottom: 1.25rem; /* mb-5 */
+}
+
+.experienceItem:last-child {
+    margin-bottom: 0; /* last:mb-0 */
+}
+
+.jobHeader {
+    display: flex; /* flex */
+    justify-content: space-between; /* justify-between */
+    align-items: flex-start; /* items-start */
+    margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.noExperienceMessage {
+    color: #6b7280; /* text-gray-600 */
+    font-size: 0.875rem; /* text-sm */
+}
