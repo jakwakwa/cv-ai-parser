@@ -1,5 +1,5 @@
 {
-  "agentCanUpdateSnapshot": false,
+  "agentCanUpdateSnapshot": true,
   "install": "pnpm install",
   "start": "pnpm dev",
   "terminals": [
