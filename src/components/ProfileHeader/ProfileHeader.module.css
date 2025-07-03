@@ -73,6 +73,37 @@
   line-height: 1.35;
 }
 
+/* New typography styles converted from Tailwind */
+.cvHeader {
+  /* font-dm-mono-header text-md */
+  letter-spacing: 0.3rem;
+  font-family: var(--font-dm-mono);
+  margin-bottom: 3px;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.profileName {
+  /* text-2xl font-bold mb-1 */
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.jobTitle {
+  /* text-md mb-4 font-dm-mono-subheading */
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  line-height: 1;
+  font-family: var(--font-dm-mono);
+}
+
+.summarySection {
+  /* w-full */
+  width: 100%;
+}
+
 /* Mobile responsive */
 @media (max-width: 767px) {
   .header {
