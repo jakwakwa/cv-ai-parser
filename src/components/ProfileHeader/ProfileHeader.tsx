@@ -51,26 +51,26 @@ const ProfileHeader = ({
         className={`${styles.right} ${!hasProfileImage ? styles.fullWidth : ''}`}
       >
         <h1
-          className="font-dm-mono-header text-md"
+          className={styles.cvHeader}
           style={{ color: customColors['--resume-profile-name'] }}
         >
           CURRICULUM VITAE
         </h1>
         <h2
-          className="text-2xl font-bold mb-1"
+          className={styles.profileName}
           style={{ color: customColors['--resume-profile-name'] }}
         >
           {name}
         </h2>
         {showTitle && (
           <p
-            className="text-md mb-4 font-dm-mono-subheading"
+            className={styles.jobTitle}
             style={{ color: customColors['--resume-job-title'] }}
           >
             {title}
           </p>
         )}
-        <section className="w-full">
+        <section className={styles.summarySection}>
           <p
             className={styles.contentBody}
             style={{ color: customColors['--resume-body-text'] }}
