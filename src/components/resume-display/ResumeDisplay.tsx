@@ -41,9 +41,9 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
         summary={resumeData.summary || ''}
         customColors={resumeData.customColors || {}}
       />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
+      <div className={styles.resumeGrid}>
         <div
-          className="flex flex-col h-full md:col-span-1 p-6 md:p-8"
+          className={styles.resumeSidebar}
           style={{
             backgroundColor:
               resumeData.customColors?.['--resume-sidebar-background'] ||
@@ -68,7 +68,7 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
           />
         </div>
         <div
-          className="p-6 md:p-8 md:col-span-2"
+          className={styles.resumeMainContent}
           style={{
             color:
               resumeData.customColors?.['--resume-body-text'] ||
