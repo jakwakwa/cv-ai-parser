@@ -3,8 +3,8 @@ import type React from 'react';
 import '../styles/globals.css';
 import '../src/index.css';
 import { Analytics } from '@vercel/analytics/next';
+import Script from 'next/script';
 import { ToastProvider } from '@/hooks/use-toast';
-import { AdSenseUnit } from '@/src/components/adsense/AdSenseUnit';
 import { AuthModalProvider } from '@/src/components/auth-component/AuthModalContext';
 import { AuthProvider } from '@/src/components/auth-provider/AuthProvider';
 import { Toaster } from '@/src/components/ui/toaster';
@@ -63,22 +63,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="google-adsense-account" content="ca-pub-7169177467099391" />
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7169177467099391"
-          crossOrigin="anonymous"
-        />
+        {/* <meta name="google-adsense-account" content="ca-pub-7169177467099391" /> */}
         <link
           href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" />
         {/* Google AdSense */}
-        <script
+        <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7169177467099391"
           crossOrigin="anonymous"
+          strategy="lazyOnload"
         />
       </head>
       <body>
@@ -86,10 +82,11 @@ export default function RootLayout({
           <AuthProvider>
             <AuthModalProvider>{children}</AuthModalProvider>
           </AuthProvider>
-          <Toaster />
+          <ToastProvider>
+            <Toaster />
+          </ToastProvider>
         </ToastProvider>
         <Analytics />
-        <AdSenseUnit slot="1977334562" />
         <footer className="py-8 w-full shrink-0 items-center px-4 md:px-6 text-white bg-[#1f2937]">
           <nav className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center text-center text-sm">
             <a
