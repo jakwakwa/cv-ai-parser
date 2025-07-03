@@ -1,4 +1,4 @@
-import { CSSProperties, FC, useEffect, useState } from 'react';
+import { type CSSProperties, type FC, useEffect, useState } from 'react';
 import styles from './AdBanner.module.css';
 
 declare global {
