@@ -32,7 +32,7 @@ const EducationSection = ({
         education.map((edu) => (
           <div
             key={`${edu.degree}-${edu.institution}`}
-            className="mb-4 last:mb-0"
+            className={styles.educationItem}
           >
             <p
               className="subject"
@@ -66,7 +66,7 @@ const EducationSection = ({
         ))
       ) : (
         <p
-          className="text-gray-600 text-sm"
+          className={styles.emptyState}
           style={{ color: customColors['--resume-body-text'] }}
         >
           No education details available.

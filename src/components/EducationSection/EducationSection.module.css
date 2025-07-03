@@ -54,3 +54,17 @@ margin-top: 13px !important;
     font-size: 0.5rem;
     color: var(--charcoal, #565854);
 }
+
+/* New styles for Tailwind conversion */
+.educationItem {
+    margin-bottom: 1rem;
+}
+
+.educationItem:last-child {
+    margin-bottom: 0;
+}
+
+.emptyState {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
