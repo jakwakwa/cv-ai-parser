@@ -2,11 +2,11 @@
 
 import { AlertTriangle, CheckCircle, ImageIcon, Palette } from 'lucide-react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import { resumeColors } from '@/src/utils/colors';
-import ColorPicker from '../color-picker/ColorPicker';
+import ColorPickerDialog from '../color-picker/ColorPickerDialog';
 import ProfileImageUploader from '../profile-image-uploader/ProfileImageUploader';
 import {
   Dialog,
@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import styles from './ResumeUploader.module.css';
 
 declare global {
@@ -57,17 +58,17 @@ const ResumeUploader = ({
   isAuthenticated = false,
 }: ResumeUploaderProps) => {
   const { supabase } = useAuth();
-  const [dragActive, setDragActive] = useState(false);
-  const [error, setError] = useState('');
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [profileImage, setProfileImage] = useState('');
-  const [showProfileUploader, setShowProfileUploader] = useState(false);
-  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [dragActive, setDragActive] = React.useState(false);
+  const [error, setError] = React.useState('');
+  const [uploadedFile, setUploadedFile] = React.useState<File | null>(null);
+  const [profileImage, setProfileImage] = React.useState('');
+  const [showProfileUploader, setShowProfileUploader] = React.useState(false);
+  const [showColorDialog, setShowColorDialog] = React.useState(false);
   const [customColors, setCustomColors] =
-    useState<Record<string, string>>(resumeColors);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [modalErrorMessage, setModalErrorMessage] = useState('');
+    React.useState<Record<string, string>>(resumeColors);
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
+  const [showErrorModal, setShowErrorModal] = React.useState(false);
+  const [modalErrorMessage, setModalErrorMessage] = React.useState('');
 
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -323,7 +324,7 @@ const ResumeUploader = ({
       <div className={styles.uploaderContainer}>
         <div className="mt-8">
           {!uploadedFile ? (
-            // biome-ignore lint/a11y/noStaticElementInteractions: <>
+            // biome-ignore lint/a11y/noStaticElementInteractions
             <div
               className={`${styles.dropZone} ${dragActive ? styles.dragActive : ''}`}
               onDragEnter={handleDrag}
@@ -424,7 +425,7 @@ const ResumeUploader = ({
           ) : (
             <div className="md:pt-8 mt-8">
               <div className="mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 p-6 md:h-24 shadow">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md-gap-0">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0">
                   <div className="flex justify-start w-full items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
                     <div className="flex flex-col items-start justify-start">
@@ -458,7 +459,7 @@ const ResumeUploader = ({
               Profile Picture (Optional)
             </h2>
 
-            <div className="flex mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow md:h-20 px-2 py-4 px-4 md:px-6">
+            <div className="flex mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow md:h-20 py-4 px-4 md:px-6">
               <div className="flex flex-col md:flex-row items-start md:items-center w-full md:justify-between gap-4 md:gap-0">
                 <p className="text-gray-600 text-xs md:text-sm text-left md:text-left">
                   Add a professional profile picture to your resume
@@ -472,17 +473,35 @@ const ResumeUploader = ({
                 </button>
               </div>
 
-              {showProfileUploader && (
-                <ProfileImageUploader
-                  currentImage={profileImage}
-                  onImageChange={handleProfileImageChange}
-                  showPrompt={false}
-                />
-              )}
+              {/* Profile image uploader modal */}
+              <Dialog
+                open={showProfileUploader}
+                onOpenChange={setShowProfileUploader}
+              >
+                <DialogContent className="p-0 bg-transparent border-none shadow-none max-w-fit">
+                  {/* Accessible title for screen readers */}
+                  <VisuallyHidden>
+                    <DialogTitle>Profile Image Uploader</DialogTitle>
+                  </VisuallyHidden>
+                  <ProfileImageUploader
+                    currentImage={profileImage}
+                    onImageChange={handleProfileImageChange}
+                    showPrompt={false}
+                  />
+                  {/* Hide button to close the dialog */}
+                  <button
+                    type="button"
+                    onClick={() => setShowProfileUploader(false)}
+                    className="mt-4 text-teal-600 text-sm hover:text-teal-700 font-medium mx-auto block"
+                  >
+                    Hide
+                  </button>
+                </DialogContent>
+              </Dialog>
 
               {profileImage && !showProfileUploader && (
                 <div className="flex items-center">
-                  {/** biome-ignore lint/performance/noImgElement: <> */}
+                  {/** biome-ignore lint/performance/noImgElement */}
                   <img
                     src={profileImage || '/placeholder.svg'}
                     alt="Profile preview"
@@ -514,54 +533,52 @@ const ResumeUploader = ({
               Customize Colors (Optional)
             </h2>
 
-            <div className="flex flex-col md:flex-row items-start   justify-start mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow h-28 md:h-20 py-3 px-4 md:px-6">
+            <div className="flex flex-col md:flex-row items-start justify-start mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow h-20 py-3 px-4 md:px-6">
               <div className="flex flex-col md:flex-row justify-center md:items-center w-full justify-between mb-0 gap-4">
                 <p className="text-gray-600 text-xs md:text-sm text-left w-full">
                   Personalize your resume with custom colors and themes
                 </p>
               </div>
               <div className="flex flex-row md:justify-end md:align-end md:w-full">
-                {showColorPicker && (
-                  <ColorPicker
-                    currentColors={customColors}
-                    onColorsChange={handleColorsChange}
-                  />
-                )}
-
-                {!showColorPicker && (
-                  <div className="flex items-start mt-2 md:mt-0 mx-1">
-                    <div className="flex flex-row-reverse gap-1">
-                      <div
-                        className="w-4 h-4 rounded-full border border-gray-300"
-                        style={{
-                          backgroundColor:
-                            customColors['--resume-sidebar-background'],
-                        }}
-                      />
-                      <div
-                        className="w-4 h-4 rounded-full border border-gray-300"
-                        style={{
-                          backgroundColor: customColors['--resume-main-icons'],
-                        }}
-                      />
-                      <div
-                        className="w-4 h-4 rounded-full border border-gray-300"
-                        style={{
-                          backgroundColor: customColors['--resume-job-title'],
-                        }}
-                      />
-                    </div>
+                <div className="flex items-start mt-2 md:mt-0 mx-1">
+                  <div className="flex flex-row-reverse gap-1">
+                    <div
+                      className="w-4 h-4 rounded-full border border-gray-300"
+                      style={{
+                        backgroundColor:
+                          customColors['--resume-sidebar-background'],
+                      }}
+                    />
+                    <div
+                      className="w-4 h-4 rounded-full border border-gray-300"
+                      style={{
+                        backgroundColor: customColors['--resume-main-icons'],
+                      }}
+                    />
+                    <div
+                      className="w-4 h-4 rounded-full border border-gray-300"
+                      style={{
+                        backgroundColor: customColors['--resume-job-title'],
+                      }}
+                    />
                   </div>
-                )}
+                </div>
               </div>
               <button
                 type="button"
-                onClick={() => setShowColorPicker(!showColorPicker)}
+                onClick={() => setShowColorDialog(true)}
                 className="text-teal-600 md:w-[350px] hover:text-teal-700 font-medium text-xs md:text-sm mx-0 mt-3 md:mt-0"
               >
-                {showColorPicker ? 'Hide' : 'Customize Colors'}
+                Choose Custom Theme
               </button>
             </div>
+
+            <ColorPickerDialog
+              open={showColorDialog}
+              onOpenChange={setShowColorDialog}
+              currentColors={customColors}
+              onColorsChange={handleColorsChange}
+            />
           </div>
         )}
 

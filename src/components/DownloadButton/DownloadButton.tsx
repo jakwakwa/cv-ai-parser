@@ -1,13 +1,14 @@
-import styles from './DownloadButton.module.css';
+import { Button } from '@/src/components/ui/button';
 
 interface DownloadButtonProps {
   onClick: () => void;
+  className?: string;
 }
 
-const DownloadButton = ({ onClick }: DownloadButtonProps) => (
-  <button type="button" onClick={onClick} className={styles.downloadBtn}>
+const DownloadButton = ({ onClick, className }: DownloadButtonProps) => (
+  <Button type="button" onClick={onClick} variant="secondary" className={className}>
     Download as PDF
-  </button>
+  </Button>
 );
 
 export default DownloadButton;

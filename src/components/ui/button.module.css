@@ -33,12 +33,13 @@
 
 /* Variant styles */
 .button.default {
-    background-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
+    background-color: #a77046;
+    color: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .button.default:hover {
-    background-color: hsl(var(--primary) / 0.9);
+    background-color: #8e5d39;
 }
 
 .button.destructive {
@@ -61,12 +62,13 @@
 }
 
 .button.secondary {
-    background-color: hsl(var(--secondary));
-    color: hsl(var(--secondary-foreground));
+    background-color: #5450f1;
+    color: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .button.secondary:hover {
-    background-color: hsl(var(--secondary) / 0.8);
+    background-color: #3f3bc2;
 }
 
 .button.ghost:hover {
