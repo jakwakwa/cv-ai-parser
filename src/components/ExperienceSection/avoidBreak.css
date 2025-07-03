@@ -1,0 +1,4 @@
+.avoid-break {
+    break-inside: avoid;
+    page-break-inside: avoid;
+}

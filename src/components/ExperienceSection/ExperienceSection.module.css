@@ -64,8 +64,6 @@
 /* Converted from Tailwind classes */
 .experienceItem {
     margin-bottom: 1.25rem; /* mb-5 */
-    break-inside: avoid; /* avoid-break functionality */
-    page-break-inside: avoid; /* avoid-break functionality */
 }
 
 .experienceItem:last-child {
