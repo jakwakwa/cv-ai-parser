@@ -130,6 +130,22 @@ export class ResumeDatabase {
     return resumeData;
   }
 
+  // Get all public resumes for sitemap
+  static async getAllPublicResumes(
+    supabase: SupabaseClient
+  ): Promise<{ slug: string; updated_at: string }[]> {
+    const { data, error } = await supabase
+      .from('resumes')
+      .select('slug, updated_at')
+      .eq('is_public', true);
+
+    if (error) {
+      throw new Error(`Failed to fetch public resumes: ${error.message}`);
+    }
+
+    return data || [];
+  }
+
   // Update resume
   static async updateResume(
     supabase: SupabaseClient,
