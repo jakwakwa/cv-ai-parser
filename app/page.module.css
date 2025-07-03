@@ -478,7 +478,7 @@
 
 @media (min-width: 768px) {
   .resumeMainContent {
-    grid-column: span 2;
+    grid-column: span 1;
     padding: 2rem;
   }
 }
