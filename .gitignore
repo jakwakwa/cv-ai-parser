@@ -29,5 +29,3 @@ next-env.d.ts
 .yarn.lock
 .DS_Store
 
-/.cursor/
-.cursorignore
