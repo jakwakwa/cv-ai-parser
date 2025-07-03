@@ -1,0 +1,103 @@
+/* ColorPickerDialog CSS Module */
+
+.dialogContent {
+  max-width: 56rem; /* max-w-4xl */
+  max-height: 90vh; /* max-h-[90vh] */
+  overflow-y: auto; /* overflow-y-auto */
+  padding: 0; /* p-0 */
+}
+
+.dialogHeader {
+  padding-left: 1.5rem; /* px-6 */
+  padding-right: 1.5rem;
+  padding-top: 1rem; /* py-4 */
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb; /* border-b */
+}
+
+.headerContainer {
+  display: flex; /* flex */
+  align-items: center; /* items-center */
+  justify-content: space-between; /* justify-between */
+}
+
+.dialogTitle {
+  font-size: 1.125rem; /* text-lg */
+  line-height: 1.75rem;
+  font-weight: 600; /* font-semibold */
+}
+
+.dialogDescription {
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem;
+  color: #4b5563; /* text-gray-600 */
+  margin-top: 0.25rem; /* mt-1 */
+}
+
+.closeButton {
+  height: 2rem; /* h-8 */
+  width: 2rem; /* w-8 */
+  padding: 0; /* p-0 */
+}
+
+.contentContainer {
+  padding-left: 1.5rem; /* px-6 */
+  padding-right: 1.5rem;
+  padding-top: 1rem; /* py-4 */
+  padding-bottom: 1rem;
+}
+
+.footerContainer {
+  padding-left: 1.5rem; /* px-6 */
+  padding-right: 1.5rem;
+  padding-top: 1rem; /* py-4 */
+  padding-bottom: 1rem;
+  border-top: 1px solid #e5e7eb; /* border-t */
+  background-color: #f9fafb; /* bg-gray-50 */
+  display: flex; /* flex */
+  justify-content: flex-end; /* justify-end */
+}
+
+.hideButton {
+  margin-right: 0.5rem; /* mr-2 */
+}
+
+/* Responsive adjustments for mobile devices */
+@media (max-width: 768px) {
+  .dialogContent {
+    max-width: calc(100vw - 2rem);
+    max-height: 85vh;
+  }
+  
+  .dialogHeader,
+  .contentContainer,
+  .footerContainer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .headerContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .closeButton {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .dialogContent {
+    max-height: 80vh;
+  }
+  
+  .dialogHeader,
+  .contentContainer,
+  .footerContainer {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+}
