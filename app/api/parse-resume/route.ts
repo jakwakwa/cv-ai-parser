@@ -2,7 +2,7 @@ import { IS_AI_PARSING_ENABLED } from '@/lib/config';
 import { ResumeDatabase } from '@/lib/database';
 import { parseWithAI, parseWithAIPDF } from '@/lib/resume-parser/ai-parser';
 import { parseWithRegex } from '@/lib/resume-parser/regex-parser';
-import type { ParsedResume } from '@/lib/resume-parser/schema';
+import type { AIParsedResume, ParsedResume } from '@/lib/resume-parser/schema';
 import { createClient } from '@/lib/supabase/server';
 import { createSlug } from '@/lib/utils';
 
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       }
     }
 
-    let parsedResume: ParsedResume;
+    let parsedResume: AIParsedResume | ParsedResume;
     let parseMethod: 'ai' | 'ai_pdf' | 'regex' | 'regex_fallback' = 'regex';
     let confidence = 0;
 
@@ -59,7 +59,8 @@ export async function POST(request: Request) {
           parseMethod = 'ai';
           confidence = 95;
         }
-      } catch (_aiError) {
+      } catch (aiError) {
+        console.error('AI parsing failed:', aiError); // Log the detailed error
         // Fallback to regex for text files only
         if (file.type === 'text/plain') {
           const fileContent = await file.text();
@@ -145,7 +146,7 @@ export async function POST(request: Request) {
 
     return new Response(
       JSON.stringify({
-        data: parsedResume,
+        data: finalParsedData,
         meta: {
           method: parseMethod,
           confidence,

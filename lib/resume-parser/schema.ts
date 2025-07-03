@@ -49,5 +49,10 @@ export const resumeSchema = z.object({
   skills: z.array(z.string()),
 });
 
+export const aiResumeSchema = resumeSchema.omit({
+  customColors: true,
+});
+
 // Infer the TypeScript type from the Zod schema
 export type ParsedResume = z.infer<typeof resumeSchema>;
+export type AIParsedResume = z.infer<typeof aiResumeSchema>;
