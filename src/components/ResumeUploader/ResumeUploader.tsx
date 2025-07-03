@@ -2,11 +2,11 @@
 
 import { AlertTriangle, CheckCircle, ImageIcon, Palette } from 'lucide-react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
-import * as React from 'react';
+import React, { useRef, useState } from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import { resumeColors } from '@/src/utils/colors';
-import ColorPicker from '../color-picker/ColorPicker';
+import ColorPickerDialog from '../color-picker/ColorPickerDialog';
 import ProfileImageUploader from '../profile-image-uploader/ProfileImageUploader';
 import {
   Dialog,
@@ -63,7 +63,7 @@ const ResumeUploader = ({
   const [uploadedFile, setUploadedFile] = React.useState<File | null>(null);
   const [profileImage, setProfileImage] = React.useState('');
   const [showProfileUploader, setShowProfileUploader] = React.useState(false);
-  const [showColorPicker, setShowColorPicker] = React.useState(false);
+  const [showColorDialog, setShowColorDialog] = React.useState(false);
   const [customColors, setCustomColors] =
     React.useState<Record<string, string>>(resumeColors);
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
@@ -533,54 +533,52 @@ const ResumeUploader = ({
               Customize Colors (Optional)
             </h2>
 
-            <div className="flex flex-col md:flex-row items-start   justify-start mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow h-28 md:h-20 py-3 px-4 md:px-6">
+            <div className="flex flex-col md:flex-row items-start justify-start mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow h-20 py-3 px-4 md:px-6">
               <div className="flex flex-col md:flex-row justify-center md:items-center w-full justify-between mb-0 gap-4">
                 <p className="text-gray-600 text-xs md:text-sm text-left w-full">
                   Personalize your resume with custom colors and themes
                 </p>
               </div>
               <div className="flex flex-row md:justify-end md:align-end md:w-full">
-                {showColorPicker && (
-                  <ColorPicker
-                    currentColors={customColors}
-                    onColorsChange={handleColorsChange}
-                  />
-                )}
-
-                {!showColorPicker && (
-                  <div className="flex items-start mt-2 md:mt-0 mx-1">
-                    <div className="flex flex-row-reverse gap-1">
-                      <div
-                        className="w-4 h-4 rounded-full border border-gray-300"
-                        style={{
-                          backgroundColor:
-                            customColors['--resume-sidebar-background'],
-                        }}
-                      />
-                      <div
-                        className="w-4 h-4 rounded-full border border-gray-300"
-                        style={{
-                          backgroundColor: customColors['--resume-main-icons'],
-                        }}
-                      />
-                      <div
-                        className="w-4 h-4 rounded-full border border-gray-300"
-                        style={{
-                          backgroundColor: customColors['--resume-job-title'],
-                        }}
-                      />
-                    </div>
+                <div className="flex items-start mt-2 md:mt-0 mx-1">
+                  <div className="flex flex-row-reverse gap-1">
+                    <div
+                      className="w-4 h-4 rounded-full border border-gray-300"
+                      style={{
+                        backgroundColor:
+                          customColors['--resume-sidebar-background'],
+                      }}
+                    />
+                    <div
+                      className="w-4 h-4 rounded-full border border-gray-300"
+                      style={{
+                        backgroundColor: customColors['--resume-main-icons'],
+                      }}
+                    />
+                    <div
+                      className="w-4 h-4 rounded-full border border-gray-300"
+                      style={{
+                        backgroundColor: customColors['--resume-job-title'],
+                      }}
+                    />
                   </div>
-                )}
+                </div>
               </div>
               <button
                 type="button"
-                onClick={() => setShowColorPicker(!showColorPicker)}
+                onClick={() => setShowColorDialog(true)}
                 className="text-teal-600 md:w-[350px] hover:text-teal-700 font-medium text-xs md:text-sm mx-0 mt-3 md:mt-0"
               >
-                {showColorPicker ? 'Hide' : 'Customize Colors'}
+                Choose Custom Theme
               </button>
             </div>
+
+            <ColorPickerDialog
+              open={showColorDialog}
+              onOpenChange={setShowColorDialog}
+              currentColors={customColors}
+              onColorsChange={handleColorsChange}
+            />
           </div>
         )}
 

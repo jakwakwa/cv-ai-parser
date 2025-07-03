@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import { IS_AI_PARSING_ENABLED } from '@/lib/config';
 import { ResumeDatabase } from '@/lib/database';
 import { parseWithAI, parseWithAIPDF } from '@/lib/resume-parser/ai-parser';
