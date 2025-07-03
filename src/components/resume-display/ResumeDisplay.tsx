@@ -1,7 +1,6 @@
 import type React from 'react';
 import { useEffect, useRef } from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
-import AdSense from '@/src/components/adsense/AdSense';
 import CertificationsSection from '@/src/components/CertificationsSection/CertificationsSection';
 import ContactSection from '@/src/components/ContactSection/ContactSection';
 import EducationSection from '@/src/components/EducationSection/EducationSection';
@@ -82,8 +81,6 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
           />
         </div>
       </div>
-      {/* Content Ad - Between resume sections */}
-      <AdSense adSlot="3456789012" adFormat="horizontal" className="my-6" />
     </div>
   );
 };
