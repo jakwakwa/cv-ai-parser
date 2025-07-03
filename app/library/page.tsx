@@ -4,13 +4,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import type { Resume } from '@/lib/types';
-import AdSense from '@/src/components/adsense/AdSense';
-import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import { useAuthModal } from '@/src/components/auth-component/AuthModalContext';
+import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import ResumeLibrary from '@/src/components/resume-library/ResumeLibrary';
-import { Button } from '@/src/components/ui/button';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
+import { Button } from '@/src/components/ui/button';
 import styles from '../page.module.css';
 
 // Component that handles URL parameters - needs to be wrapped in Suspense
@@ -62,21 +61,18 @@ function LibraryPageContent() {
     <main className={styles.mainUserContainer}>
       {!user && (
         <div className="text-center bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-md mx-auto mt-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Welcome to Your Library!</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Welcome to Your Library!
+          </h2>
           <p className="text-gray-600 mb-6">
-            Please sign in or sign up to access your resume library and manage your documents.
+            Please sign in or sign up to access your resume library and manage
+            your documents.
           </p>
           <div className="space-x-3">
-            <Button
-              onClick={() => setAuthModalOpen(true)}
-              variant="default"
-            >
+            <Button onClick={() => setAuthModalOpen(true)} variant="default">
               Sign In / Sign Up
             </Button>
-            <Button
-              onClick={() => router.push('/')}
-              variant="default"
-            >
+            <Button onClick={() => router.push('/')} variant="default">
               Upload New
             </Button>
           </div>
@@ -98,22 +94,12 @@ export default function LibraryPage() {
       <SiteHeader />
 
       {/* Header Ad */}
-      <AdSense
-        adSlot="5678901234"
-        adFormat="horizontal"
-        className="mx-auto my-4"
-      />
 
       <Suspense fallback={<div>Loading...</div>}>
         <LibraryPageContent />
       </Suspense>
 
       {/* Footer Ad */}
-      <AdSense
-        adSlot="6789012345"
-        adFormat="horizontal"
-        className="mx-auto my-8"
-      />
     </div>
   );
 }

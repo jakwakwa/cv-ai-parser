@@ -6,13 +6,10 @@ import { useEffect, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import type { Resume } from '@/lib/types'; // Import the Resume type
-import AdSense from '@/src/components/adsense/AdSense';
-import { AuthModal } from '@/src/components/auth-component/AuthModal'; // Import AuthModal
-import { useAuthModal } from '@/src/components/auth-component/AuthModalContext';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import ResumeDisplay from '@/src/components/resume-display/ResumeDisplay';
-import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/ResumeDisplayButtons';
+import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import { Button } from '@/src/components/ui/button';
 import styles from '../../page.module.css';
@@ -29,7 +26,6 @@ export default function ViewResumePage() {
   const [resume, setResume] = useState<Resume | null>(null); // Change to 'resume' and Resume type
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { setAuthModalOpen } = useAuthModal();
 
   const searchParams = useSearchParams();
 
@@ -225,21 +221,6 @@ export default function ViewResumePage() {
     <div className={styles.pageWrapper}>
       <SiteHeader />
 
-      {/* Auth Modal */}
-      <AuthModal
-        onSuccess={() => {
-          // Handle successful authentication
-          setAuthModalOpen(false);
-        }}
-      />
-
-      {/* Header Ad */}
-      <AdSense
-        adSlot="2345678901"
-        adFormat="horizontal"
-        className="mx-auto my-4"
-      />
-
       <main className={styles.mainUserContainer}>
         <div className={styles.resumeContainer}>
           <ResumeDisplayButtons
@@ -249,13 +230,6 @@ export default function ViewResumePage() {
           />
           <ResumeDisplay resumeData={resume.parsed_data} isAuth={!!user} />
         </div>
-
-        {/* Footer Ad */}
-        <AdSense
-          adSlot="4567890123"
-          adFormat="horizontal"
-          className="mx-auto my-8"
-        />
       </main>
     </div>
   );
