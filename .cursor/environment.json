@@ -1,0 +1,11 @@
+{
+  "agentCanUpdateSnapshot": false,
+  "install": "pnpm install",
+  "start": "pnpm dev",
+  "terminals": [
+    {
+      "name": "zsh",
+      "command": "git status"
+    }
+  ]
+}
