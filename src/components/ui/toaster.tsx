@@ -9,6 +9,7 @@ import {
   ToastTitle,
   ToastViewport,
 } from '@/src/components/ui/toast';
+import styles from './toaster.module.css';
 
 export function Toaster() {
   const { toasts } = useToast();

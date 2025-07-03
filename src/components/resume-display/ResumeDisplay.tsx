@@ -8,7 +8,7 @@ import ExperienceSection from '@/src/components/ExperienceSection/ExperienceSect
 import ProfileHeader from '@/src/components/ProfileHeader/ProfileHeader';
 import SkillsSection from '@/src/components/SkillsSection/SkillsSection';
 import { resumeColors } from '@/src/utils/colors';
-import styles from '../../../app/page.module.css';
+import styles from './ResumeDisplay.module.css';
 
 interface ResumeDisplayProps {
   resumeData: ParsedResume;

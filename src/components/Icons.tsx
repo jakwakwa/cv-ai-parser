@@ -1,4 +1,5 @@
 import type React from 'react';
+import styles from './Icons.module.css';
 
 interface IconProps extends React.SVGProps<SVGSVGElement> {}
 

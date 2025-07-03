@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import styles from './skeleton.module.css';
 
 function Skeleton({
   className,

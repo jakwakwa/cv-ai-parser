@@ -4,6 +4,7 @@ import type { SupabaseClient, User } from '@supabase/supabase-js';
 import type React from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import styles from './AuthProvider.module.css';
 
 interface AuthContextType {
   user: User | null;

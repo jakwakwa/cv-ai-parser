@@ -2,8 +2,8 @@
 
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import * as React from 'react';
-
 import { cn } from '@/lib/utils';
+import styles from './scroll-area.module.css';
 
 const ScrollArea = React.forwardRef<
   React.ElementRef<typeof ScrollAreaPrimitive.Root>,
