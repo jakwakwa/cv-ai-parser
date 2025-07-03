@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from '@/src/components/ui/dialog';
 import ColorPicker from './ColorPicker';
+import styles from './color-picker-dialog.module.css';
 
 interface ColorPickerDialogProps {
   open: boolean;
