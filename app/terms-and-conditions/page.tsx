@@ -6,7 +6,7 @@ import BackButton from '@/src/components/ui/BackButton';
 
 const TermsAndConditionsPage: React.FC = () => {
   return (
-    <div className="container mx-auto p-4">
+    <div className="container bg-black mx-auto p-4">
       <SiteHeader />
       <div className="text-white">
         <BackButton />
