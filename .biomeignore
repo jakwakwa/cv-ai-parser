@@ -1,5 +1,6 @@
 .next/
 .next/**/*
+.cursor/**/*
 node_modules/
 node_modules/**/*
 dist/
@@ -10,4 +11,4 @@ build/
 .next/server/**/*
 .next/standalone/**/*
 .next/trace/**/*
-.next/types/**/* 
+.next/types/**/*

@@ -35,8 +35,20 @@
       "**/*.jsx",
       "**/*.ts",
       "**/*.tsx",
+      "!**/.cursor/**",
       "!**/.next/**",
       "!**/node_modules/**"
     ]
-  }
+  },
+  "overrides": [
+    {
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": "off"
+          }
+        }
+      }
+    }
+  ]
 }

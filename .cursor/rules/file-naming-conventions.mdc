@@ -1,0 +1,192 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: project naming conventions
+globs: ["**/*.tsx","**/*.ts"]
+alwaysApply: true
+---
+
+Follow these naming conventions consistently across the entire project for better maintainability and team collaboration.
+
+## File and Folder Naming
+
+### Cross-Project Rules
+
+* **Always use kebab-case** for file and folder names.
+
+    * **✅ Do:** `components/user-profile.tsx`
+
+    * **❌ Don't:** `components/UserProfile.tsx` (can cause case sensitivity problems on Linux)
+
+* **Do** maintain consistency.
+
+* **Don't** mix naming conventions.
+
+### Components
+
+* **React Components**: Use kebab-case for component files.
+    (Example: `user-profile.tsx`, `data-table.tsx`, `navigation-bar.tsx` within a `components/` directory.)
+
+### Pages and Routes (Next.js)
+
+* **Page files**: Use kebab-case for page files in `/pages` or `/app` directory.
+
+    * **✅ Good:** `user-profile.tsx`, `about-us.tsx`, `contact.tsx`
+
+    * **❌ Bad:** `UserProfile.tsx`, `aboutUs.tsx`
+
+### API Routes
+
+* **API endpoints**: Use kebab-case for API route files.
+
+    * **✅ Good:** `user-data.ts`, `send-email.ts`
+
+    * **❌ Bad:** `userData.ts`, `sendEmail.ts`
+
+### Utility and Helper Files
+
+* **Utilities**: Use kebab-case for utility files.
+
+    * **✅ Good:** `date-utils.ts`, `api-helpers.ts`, `form-validation.ts`
+
+    * **❌ Bad:** `dateUtils.ts`, `apiHelpers.ts`
+
+### Folders
+
+* **All folders**: Use kebab-case consistently.
+
+    * **✅ Good:** `user-management/`, `api-helpers/`, `shared-components/`
+
+    * **❌ Bad:** `userManagement/`, `apiHelpers/`, `sharedComponents/`
+
+## File Extensions
+
+* Use **`.tsx`** for files containing JSX (React components).
+
+* Use **`.ts`** for utility files without JSX.
+
+* Use **`.js`** or **`.jsx`** only if not using TypeScript.
+
+## Constants
+
+* **Constants**: Use `SCREAMING_SNAKE_CASE`.
+
+    ```typescript
+    // ✅ Good
+    const API_BASE_URL = '[https://api.example.com](mdc:https:/api.example.com)';
+    const MAX_RETRY_ATTEMPTS = 3;
+    const DEFAULT_THEME_COLOR = '#007bff';
+    ```typescript
+    // ❌ Bad
+    const apiBaseUrl = '[https://api.example.com](mdc:https:/api.example.com)';
+    const maxRetryAttempts = 3;
+    ```
+
+## Interfaces and Types (TypeScript)
+
+* **Interfaces**: Use `PascalCase` with descriptive names.
+
+    ```typescript
+    // ✅ Good
+    interface UserProfile {
+      id: string;
+      name: string;
+    }
+
+    interface ApiResponse<T> {
+      data: T;
+      status: number;
+    }
+
+    // ❌ Bad
+    interface userProfile { /* ... */ }
+    interface IUserProfile { /* ... */ } // Avoid Hungarian notation
+    ```
+
+* **Type Aliases**: Use `PascalCase`.
+
+    ```typescript
+    // ✅ Good
+    type ButtonVariant = 'primary' | 'secondary' | 'danger';
+    type UserRole = 'admin' | 'user' | 'guest';
+    ```
+
+## Project Structure Conventions
+
+### Component Organisation
+
+(Details on how components should be organised within the `components/` directory, e.g., `ui/`, `forms/`, `layout/` for reusable UI, form-specific, and layout components respectively.)
+
+### Page Organisation (App Router)
+
+(Details on how pages should be organised within the `app/` directory, including route groups, dynamic routes, and API routes.)
+
+## Naming Patterns
+
+### Event Handlers
+
+* Prefix with `handle` or `on`.
+
+    ```typescript
+    // ✅ Good
+    const handleSubmit = () => { /* ... */ }
+    const onUserClick = () => { /* ... */ }
+    const handleFormChange = () => { /* ... */ }
+    ```
+
+### Boolean Variables
+
+* Use descriptive prefixes: `is`, `has`, `can`, `should`.
+
+    ```typescript
+    // ✅ Good
+    const isLoading = false;
+    const hasPermission = true;
+    const canEdit = false;
+    const shouldShowModal = true;
+    ```
+
+### Custom Hooks
+
+* Prefix with `use`.
+
+    ```typescript
+    // ✅ Good
+    const useUserData = () => { /* ... */ }
+    const useLocalStorage = () => { /* ... */ }
+    const useApiCall = () => { /* ... */ }
+    ```
+
+## Import/Export Conventions
+
+* Prefer **named exports** over default exports for components.
+
+* Use **default exports** for pages in Next.js.
+
+* **Group imports**: external libraries first, then internal modules.
+
+    ```typescript
+    // ✅ Good import order
+    import React from 'react';
+    import { NextPage } from 'next';
+    import { Button } from '@/components/ui/Button';
+    import { validateEmail } from '@/utils/form-validation';
+    ```
+
+## Variables and Functions
+
+* **Variables**: Use `camelCase`.
+
+    ```typescript
+    // ✅ Good
+    const userName = 'john';
+    const isLoggedIn = true;
+    const userPreferences = {};
+    ```typescript
+    // ❌ Bad
+    const user_name = 'john';
+    const IsLoggedIn = true;
+    ```

@@ -1,0 +1,48 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Frontend component standards and API validation rules
+globs: ["components/**/*", "api/**/*"]
+alwaysApply: false
+---
+
+This rule provides standards for frontend components:
+
+When working in components directory:
+
+- Never use Tailwind for styling
+- Use Framer Motion for animations
+- Follow component naming conventions
+
+This rule enforces validation for API endpoints:
+
+In API directory:
+
+- Use zod for all validation
+- Define return types with zod schemas
+- Export types generated from schemas
+
+This rule enforces naming convention:
+
+In components directrory:
+
+components/
+├── user-profile.tsx
+├── data-table.tsx
+└── navigation-bar.tsx
+
+Next.js App Router Alignment
+app/
+├── dashboard/          # /dashboard
+│   ├── settings/       # /dashboard/settings
+│   │   └── page.tsx
+│   └── analytics/      # /dashboard/analytics
+│       └── page.tsx
+└── profile/            # /profile
+    └── page.tsx
+
+// File: pages/blog-posts/[slug].tsx
+// URL: /blog-posts/my-awesome-post   
