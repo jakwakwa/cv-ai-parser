@@ -2,7 +2,7 @@
 
 import { AlertTriangle, CheckCircle, ImageIcon, Palette } from 'lucide-react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import { resumeColors } from '@/src/utils/colors';
@@ -57,17 +57,17 @@ const ResumeUploader = ({
   isAuthenticated = false,
 }: ResumeUploaderProps) => {
   const { supabase } = useAuth();
-  const [dragActive, setDragActive] = useState(false);
-  const [error, setError] = useState('');
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [profileImage, setProfileImage] = useState('');
-  const [showProfileUploader, setShowProfileUploader] = useState(false);
-  const [showColorDialog, setShowColorDialog] = useState(false);
+  const [dragActive, setDragActive] = React.useState(false);
+  const [error, setError] = React.useState('');
+  const [uploadedFile, setUploadedFile] = React.useState<File | null>(null);
+  const [profileImage, setProfileImage] = React.useState('');
+  const [showProfileUploader, setShowProfileUploader] = React.useState(false);
+  const [showColorDialog, setShowColorDialog] = React.useState(false);
   const [customColors, setCustomColors] =
-    useState<Record<string, string>>(resumeColors);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [modalErrorMessage, setModalErrorMessage] = useState('');
+    React.useState<Record<string, string>>(resumeColors);
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
+  const [showErrorModal, setShowErrorModal] = React.useState(false);
+  const [modalErrorMessage, setModalErrorMessage] = React.useState('');
 
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
