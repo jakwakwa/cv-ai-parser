@@ -1,8 +1,10 @@
-import { type CSSProperties, type FC, useEffect, useState } from 'react';
+import type { CSSProperties, FC } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './AdBanner.module.css';
 
 declare global {
   interface Window {
+    // biome-ignore lint/suspicious/noExplicitAny: <any is ok here>
     googletag: any;
   }
 }
