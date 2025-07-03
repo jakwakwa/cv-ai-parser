@@ -1,4 +1,15 @@
 {
+  "agentCanUpdateSnapshot": false,
+  "install": "pnpm install",
+  "start": "pnpm dev",
+  "terminals": [
+    {
+      "name": "zsh",
+      "command": "git status"
+    }
+  ]
+}
+{
   "agentCanUpdateSnapshot": true,
   "snapshot": "snapshot-20250702-aa85a566-87e4-4028-bd0f-6afe3dc798fd",
   "install": "pmpn install",
