@@ -5,12 +5,16 @@ import {
   getResumeParsingPrompt,
   getResumeParsingPromptForPDF,
 } from './prompts';
-import { type ParsedResume, resumeSchema } from './schema';
+import {
+  type AIParsedResume,
+  aiResumeSchema,
+  type ParsedResume,
+} from './schema';
 
-export async function parseWithAI(content: string): Promise<ParsedResume> {
+export async function parseWithAI(content: string): Promise<AIParsedResume> {
   const { object } = await generateObject({
     model: google(AI_MODEL),
-    schema: resumeSchema,
+    schema: aiResumeSchema,
     prompt: getResumeParsingPrompt(content),
   });
 
@@ -19,12 +23,12 @@ export async function parseWithAI(content: string): Promise<ParsedResume> {
 }
 
 // New function for PDF parsing
-export async function parseWithAIPDF(file: File): Promise<ParsedResume> {
+export async function parseWithAIPDF(file: File): Promise<AIParsedResume> {
   console.log(`Starting PDF AI parsing with model: ${AI_MODEL}`);
 
   const { object } = await generateObject({
     model: google(AI_MODEL),
-    schema: resumeSchema,
+    schema: aiResumeSchema,
     messages: [
       {
         role: 'user',
