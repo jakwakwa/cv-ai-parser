@@ -31,9 +31,9 @@ const ExperienceSection = ({
         experience.map((job, index) => (
           <div
             key={`${job.company}-${job.title}-${index}`}
-            className="avoid-break mb-5 last:mb-0"
+            className={`${styles.experienceItem} avoid-break`}
           >
-            <div className="flex justify-between items-start mb-2">
+            <div className={styles.jobHeader}>
               <div>
                 <h3
                   className={styles.jobTitle}
@@ -76,7 +76,7 @@ const ExperienceSection = ({
         ))
       ) : (
         <p
-          className="text-gray-600 text-sm"
+          className={styles.noExperienceMessage}
           style={{ color: customColors['--resume-body-text'] }}
         >
           No experience details available.
