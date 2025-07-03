@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import styles from './ResumeUploader.module.css';
 
 declare global {
@@ -323,7 +324,7 @@ const ResumeUploader = ({
       <div className={styles.uploaderContainer}>
         <div className="mt-8">
           {!uploadedFile ? (
-            // biome-ignore lint/a11y/noStaticElementInteractions: <>
+            // biome-ignore lint/a11y/noStaticElementInteractions
             <div
               className={`${styles.dropZone} ${dragActive ? styles.dragActive : ''}`}
               onDragEnter={handleDrag}
@@ -424,7 +425,7 @@ const ResumeUploader = ({
           ) : (
             <div className="md:pt-8 mt-8">
               <div className="mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 p-6 md:h-24 shadow">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md-gap-0">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0">
                   <div className="flex justify-start w-full items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
                     <div className="flex flex-col items-start justify-start">
@@ -458,7 +459,7 @@ const ResumeUploader = ({
               Profile Picture (Optional)
             </h2>
 
-            <div className="flex mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow md:h-20 px-2 py-4 px-4 md:px-6">
+            <div className="flex mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow md:h-20 py-4 px-4 md:px-6">
               <div className="flex flex-col md:flex-row items-start md:items-center w-full md:justify-between gap-4 md:gap-0">
                 <p className="text-gray-600 text-xs md:text-sm text-left md:text-left">
                   Add a professional profile picture to your resume
@@ -472,17 +473,35 @@ const ResumeUploader = ({
                 </button>
               </div>
 
-              {showProfileUploader && (
-                <ProfileImageUploader
-                  currentImage={profileImage}
-                  onImageChange={handleProfileImageChange}
-                  showPrompt={false}
-                />
-              )}
+              {/* Profile image uploader modal */}
+              <Dialog
+                open={showProfileUploader}
+                onOpenChange={setShowProfileUploader}
+              >
+                <DialogContent className="p-0 bg-transparent border-none shadow-none max-w-fit">
+                  {/* Accessible title for screen readers */}
+                  <VisuallyHidden>
+                    <DialogTitle>Profile Image Uploader</DialogTitle>
+                  </VisuallyHidden>
+                  <ProfileImageUploader
+                    currentImage={profileImage}
+                    onImageChange={handleProfileImageChange}
+                    showPrompt={false}
+                  />
+                  {/* Hide button to close the dialog */}
+                  <button
+                    type="button"
+                    onClick={() => setShowProfileUploader(false)}
+                    className="mt-4 text-teal-600 text-sm hover:text-teal-700 font-medium mx-auto block"
+                  >
+                    Hide
+                  </button>
+                </DialogContent>
+              </Dialog>
 
               {profileImage && !showProfileUploader && (
                 <div className="flex items-center">
-                  {/** biome-ignore lint/performance/noImgElement: <> */}
+                  {/** biome-ignore lint/performance/noImgElement */}
                   <img
                     src={profileImage || '/placeholder.svg'}
                     alt="Profile preview"
