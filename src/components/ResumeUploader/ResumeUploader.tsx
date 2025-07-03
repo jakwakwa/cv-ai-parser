@@ -1,8 +1,9 @@
 'use client';
 
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { AlertTriangle, CheckCircle, ImageIcon, Palette } from 'lucide-react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import { resumeColors } from '@/src/utils/colors';
@@ -15,7 +16,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import styles from './ResumeUploader.module.css';
 
 declare global {
@@ -324,7 +324,7 @@ const ResumeUploader = ({
       <div className={styles.uploaderContainer}>
         <div className="mt-8">
           {!uploadedFile ? (
-            // biome-ignore lint/a11y/noStaticElementInteractions
+            // biome-ignore lint/a11y/noStaticElementInteractions: <expected>
             <div
               className={`${styles.dropZone} ${dragActive ? styles.dragActive : ''}`}
               onDragEnter={handleDrag}
@@ -501,7 +501,7 @@ const ResumeUploader = ({
 
               {profileImage && !showProfileUploader && (
                 <div className="flex items-center">
-                  {/** biome-ignore lint/performance/noImgElement */}
+                  {/** biome-ignore lint/performance/noImgElement: <expected> */}
                   <img
                     src={profileImage || '/placeholder.svg'}
                     alt="Profile preview"
