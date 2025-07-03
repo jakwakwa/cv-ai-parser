@@ -34,25 +34,11 @@ Your task is to extract information from the provided resume (PDF content) and f
       "type": "string"
     },
     "customColors": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The name of the custom color (e.g., 'primary', 'secondary')."
-          },
-          "value": {
-            "type": "string",
-            "description": "The hexadecimal or named CSS color value (e.g., '#FF0000', 'blue')."
-          }
-        },
-        "required": [
-          "name",
-          "value"
-        ]
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
       },
-      "description": "A list of custom color definitions, each with a name and a value."
+      "description": "A map of custom color names to their hexadecimal or named CSS color values."
     },
     "contact": {
       "type": "object",
