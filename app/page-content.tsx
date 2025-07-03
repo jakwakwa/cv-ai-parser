@@ -10,9 +10,9 @@ import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import ResumeUploader from '@/src/components/ResumeUploader/ResumeUploader';
 import ResumeDisplay from '@/src/components/resume-display/ResumeDisplay';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/ResumeDisplayButtons';
-import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import { Button } from '@/src/components/ui/button';
+import ResumeEditor from '@/src/features/resume-editor/ResumeEditor';
 import { migrateOldResumeColorsToNew } from '@/src/utils/colors';
 import styles from './page.module.css';
 
