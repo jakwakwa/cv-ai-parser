@@ -68,11 +68,11 @@
     "tesseract.js": "^5.1.0",
     "uuid": "^11.1.0",
     "vaul": "latest",
-    "zod": "latest"
+    "zod": "latest",
+    "@radix-ui/react-visually-hidden": "^1.2.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.6",
-    "@radix-ui/react-visually-hidden": "^1.2.3",
     "@types/node": "^22",
     "@types/pdfjs-dist": "^2.10.378",
     "@types/react": "19.1.8",
