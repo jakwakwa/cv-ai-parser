@@ -15,8 +15,8 @@ import {
 import { Input } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
 import { Textarea } from '@/src/components/ui/textarea';
-import ColorPicker from '../color-picker/ColorPicker';
-import ProfileImageUploader from '../profile-image-uploader/ProfileImageUploader';
+import ColorPicker from '../../components/color-picker/ColorPicker';
+import ProfileImageUploader from '../../components/profile-image-uploader/ProfileImageUploader';
 import styles from './ResumeEditor.module.css';
 
 type IncomingExperience = {

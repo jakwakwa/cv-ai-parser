@@ -9,9 +9,9 @@ import type { Resume } from '@/lib/types'; // Import the Resume type
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import ResumeDisplay from '@/src/components/resume-display/ResumeDisplay';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/ResumeDisplayButtons';
-import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import { Button } from '@/src/components/ui/button';
+import ResumeEditor from '@/src/features/resume-editor/ResumeEditor';
 import styles from '../../page.module.css';
 
 export default function ViewResumePage() {
