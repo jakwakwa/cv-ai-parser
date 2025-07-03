@@ -43,6 +43,11 @@
     display: inline-block;
 }
 
+.emptyStateMessage {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
 .avoid-break {
     break-inside: avoid;
     page-break-inside: avoid;
