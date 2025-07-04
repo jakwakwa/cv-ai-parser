@@ -80,3 +80,8 @@
     color: #6b7280; /* text-gray-600 */
     font-size: 0.875rem; /* text-sm */
 }
+
+.avoidBreak {
+    break-inside: avoid;
+    page-break-inside: avoid;
+}

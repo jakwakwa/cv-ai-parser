@@ -1,5 +1,4 @@
 import styles from './experience-section.module.css';
-import '@/styles/avoid-brreaks.css';
 
 interface ExperienceItem {
   title?: string;
@@ -31,7 +30,7 @@ const ExperienceSection = ({
         experience.map((job, index) => (
           <div
             key={`${job.company}-${job.title}-${index}`}
-            className={`${styles.experienceItem} avoid-break`}
+            className={`${styles.experienceItem} ${styles.avoidBreak}`}
           >
             <div className={styles.jobHeader}>
               <div>
