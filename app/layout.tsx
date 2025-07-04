@@ -6,7 +6,7 @@ import { Analytics } from '@vercel/analytics/next';
 import Script from 'next/script';
 import { ToastProvider } from '@/hooks/use-toast';
 import { AuthModalProvider } from '@/src/components/auth-component/AuthModalContext';
-import { AuthProvider } from '@/src/components/auth-provider/AuthProvider';
+import { AuthProvider } from '@/src/components/auth-provider/auth-provider';
 import { Toaster } from '@/src/components/ui/toaster';
 
 export const metadata: Metadata = {

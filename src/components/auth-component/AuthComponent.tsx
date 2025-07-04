@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type React from 'react';
 import { useState } from 'react';
-import { useAuth } from '../auth-provider/AuthProvider';
+import { useAuth } from '../auth-provider/auth-provider';
 import styles from './authComponent.module.css';
 
 interface AuthComponentProps {

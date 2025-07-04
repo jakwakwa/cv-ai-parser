@@ -1,21 +1,20 @@
-'use client';
-
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { AlertTriangle, CheckCircle, ImageIcon, Palette } from 'lucide-react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import React from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
-import { useAuth } from '@/src/components/auth-provider/AuthProvider';
-import { resumeColors } from '@/src/utils/colors';
-import ColorPickerDialog from '../color-picker/ColorPickerDialog';
-import ProfileImageUploader from '../profile-image-uploader/ProfileImageUploader';
+import { useAuth } from '@/src/components/auth-provider/auth-provider';
+import ColorPickerDialog from '@/src/components/color-picker/color-picker-dialog/color-picker-dialog';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from '../ui/dialog';
+} from '@/src/components/ui/dialog';
+import { Button } from '@/src/components/ui/ui-button/button';
+import ProfileImageUploader from '@/src/containers/profile-image-uploader/profile-image-uploader';
+import { resumeColors } from '@/src/utils/colors';
 import styles from './ResumeUploader.module.css';
 
 declare global {
@@ -364,15 +363,17 @@ const ResumeUploader = ({
               </p>
 
               <div className="w-full max-w-[500px] flex flex-col mx-auto gap-4">
-                <button
+                <Button
                   type="button"
+                  variant="primary"
                   className={styles.uploadButton}
                   onClick={onButtonClick}
                 >
                   Choose File
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
+                  variant="ghost"
                   onClick={() => {
                     const link = document.createElement('a');
                     link.href = '/resume-upload-text.txt';
@@ -381,10 +382,9 @@ const ResumeUploader = ({
                     link.click();
                     document.body.removeChild(link);
                   }}
-                  className="text-teal-600 hover:text-teal-700 font-medium text-sm underline mt-2"
                 >
                   📄 Download Starter Resume Text File (optional)
-                </button>
+                </Button>
                 <Dialog>
                   <DialogTrigger asChild>
                     <p
@@ -424,12 +424,12 @@ const ResumeUploader = ({
             </div>
           ) : (
             <div className="md:pt-8 mt-8">
-              <div className="mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 p-6 md:h-24 shadow">
+              <div className="mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 p-6 shadow">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0">
                   <div className="flex justify-start w-full items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
                     <div className="flex flex-col items-start justify-start">
-                      <p className="font-medium text-md text-left text-gray-900">
+                      <p className="font-medium text-xs md:text-sm text-left text-gray-900">
                         {uploadedFile.name}
                       </p>
                       <p className="text-xs text-gray-500">
@@ -441,7 +441,7 @@ const ResumeUploader = ({
                   <button
                     type="button"
                     onClick={handleRemoveFile}
-                    className="text-red-600 hover:text-red-700 font-medium text-sm"
+                    className="text-red-600 hover:text-red-700 font-medium text-xs md:text-sm"
                   >
                     Remove
                   </button>
@@ -489,13 +489,14 @@ const ResumeUploader = ({
                     showPrompt={false}
                   />
                   {/* Hide button to close the dialog */}
-                  <button
+                  <Button
                     type="button"
+                    variant="default"
                     onClick={() => setShowProfileUploader(false)}
-                    className="mt-4 text-teal-600 text-sm hover:text-teal-700 font-medium mx-auto block"
+                    className="mt-4 text-teal-600 text-xs md:text-sm hover:text-teal-700 font-medium mx-auto block bg-white rounded-lg border border-gray-200 p-2"
                   >
                     Hide
-                  </button>
+                  </Button>
                 </DialogContent>
               </Dialog>
 
@@ -533,7 +534,7 @@ const ResumeUploader = ({
               Customize Colors (Optional)
             </h2>
 
-            <div className="flex flex-col md:flex-row items-start justify-start mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow h-20 py-3 px-4 md:px-6">
+            <div className="flex flex-col md:flex-row items-start justify-start mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow py-3 px-4 md:px-6">
               <div className="flex flex-col md:flex-row justify-center md:items-center w-full justify-between mb-0 gap-4">
                 <p className="text-gray-600 text-xs md:text-sm text-left w-full">
                   Personalize your resume with custom colors and themes
@@ -569,7 +570,7 @@ const ResumeUploader = ({
                 onClick={() => setShowColorDialog(true)}
                 className="text-teal-600 md:w-[350px] hover:text-teal-700 font-medium text-xs md:text-sm mx-0 mt-3 md:mt-0"
               >
-                Choose Custom Theme
+                Choose Theme
               </button>
             </div>
 

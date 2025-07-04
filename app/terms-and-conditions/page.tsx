@@ -1,7 +1,7 @@
 'use client';
 
 import type React from 'react';
-import { SiteHeader } from '@/src/components/site-header/SiteHeader';
+import { SiteHeader } from '@/src/components/site-header/site-header';
 import BackButton from '@/src/components/ui/BackButton';
 
 const TermsAndConditionsPage: React.FC = () => {
