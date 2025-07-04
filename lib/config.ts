@@ -24,3 +24,5 @@ export const REGEX_CONFIDENCE_THRESHOLD = 30;
  * This ensures that AI-parsed results are always considered more reliable.
  */
 export const MAX_REGEX_CONFIDENCE = 85;
+
+export const IS_JOB_TAILORING_ENABLED = false;

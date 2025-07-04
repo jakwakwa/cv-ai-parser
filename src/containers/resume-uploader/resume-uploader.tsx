@@ -2,6 +2,7 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { AlertTriangle, CheckCircle, ImageIcon, Palette } from 'lucide-react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import React from 'react';
+import { IS_JOB_TAILORING_ENABLED } from '@/lib/config';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import ColorPickerDialog from '@/src/components/color-picker/color-picker-dialog/color-picker-dialog';
@@ -69,6 +70,20 @@ const ResumeUploader = ({
   const [showErrorModal, setShowErrorModal] = React.useState(false);
   const [modalErrorMessage, setModalErrorMessage] = React.useState('');
 
+  // New state for JobFit Tailor fields
+  const [jobSpecMethod, setJobSpecMethod] = React.useState<'paste' | 'upload'>(
+    'paste'
+  );
+  const [jobSpecText, setJobSpecText] = React.useState('');
+  const [jobSpecFile, setJobSpecFile] = React.useState<File | null>(null);
+  const [tone, setTone] = React.useState<'Formal' | 'Neutral' | 'Creative'>(
+    'Neutral'
+  );
+  const [extraPrompt, setExtraPrompt] = React.useState('');
+
+  // Using the imported flag from lib/config.ts
+  const isJobTailoringEnabled = IS_JOB_TAILORING_ENABLED;
+
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -94,6 +109,31 @@ const ResumeUploader = ({
     if (e.target.files?.[0]) {
       handleFileSelection(e.target.files[0]);
     }
+  };
+
+  const handleJobSpecFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) {
+      setJobSpecFile(e.target.files[0]);
+    }
+  };
+
+  const handleJobSpecMethodChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setJobSpecMethod(e.target.value as 'paste' | 'upload');
+    // Clear previously selected job spec data when method changes
+    setJobSpecText('');
+    setJobSpecFile(null);
+  };
+
+  const handleToneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTone(e.target.value as 'Formal' | 'Neutral' | 'Creative');
+  };
+
+  const handleExtraPromptChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setExtraPrompt(e.target.value);
   };
 
   const handleFileSelection = (file: File) => {
@@ -153,9 +193,24 @@ const ResumeUploader = ({
       formData.append('customColors', JSON.stringify(customColors));
       formData.append('isAuthenticated', isAuthenticated.toString());
 
+      // Append JobFit Tailor fields if enabled
+      if (isJobTailoringEnabled) {
+        if (jobSpecMethod === 'paste' && jobSpecText) {
+          formData.append('jobSpecText', jobSpecText);
+          formData.append('tone', tone);
+          if (extraPrompt) formData.append('extraPrompt', extraPrompt);
+        } else if (jobSpecMethod === 'upload' && jobSpecFile) {
+          formData.append('jobSpecFile', jobSpecFile);
+          formData.append('tone', tone);
+          if (extraPrompt) formData.append('extraPrompt', extraPrompt);
+        }
+        // Always append tone, even if job spec is not provided, in case user only wants tone adjustment
+        // formData.append('tone', tone); // Already appended above if jobSpecMethod is set
+      }
+
       // Send file directly to server for parsing
       const response = await fetch(
-        `${window.location.origin}/api/parse-resume`,
+        `${window.location.origin}/api/${isJobTailoringEnabled ? 'parse-resume-enhanced' : 'parse-resume'}`,
         {
           method: 'POST',
           body: formData, // Send FormData instead of JSON
@@ -319,327 +374,232 @@ const ResumeUploader = ({
   }
 
   return (
-    <div className="w-full rounded">
-      <div className={styles.uploaderContainer}>
-        <div className="mt-8">
-          {!uploadedFile ? (
-            // biome-ignore lint/a11y/noStaticElementInteractions: <expected>
-            <div
-              className={`${styles.dropZone} ${dragActive ? styles.dragActive : ''}`}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-            >
-              <input
-                ref={fileInputRef}
-                type="file"
-                className={styles.fileInput}
-                accept=".txt, .pdf" // Always accept both
-                onChange={handleChange}
-              />
-              <div className={styles.uploadIcon}>
-                <svg
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  aria-label="Upload icon"
-                  role="img"
-                >
-                  <title>Upload icon</title>
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17,8 12,3 7,8" />
-                  <line x1="12" y1="3" x2="12" y2="15" />
-                </svg>
-              </div>
-              <p className={styles.dropText}>
-                <strong>Click to upload</strong> or drag and drop your resume
-              </p>
-              <p className={styles.fileTypes}>
-                Supports text files and PDFs (max 10MB)
-              </p>
+    <div className={styles.uploaderContainer}>
+      <Dialog open={showErrorModal} onOpenChange={setShowErrorModal}>
+        <DialogContent>
+          <DialogTitle className={styles.errorTitle}>
+            <AlertTriangle size={24} /> Parsing Error
+          </DialogTitle>
+          <DialogDescription className={styles.errorDescription}>
+            {modalErrorMessage}
+          </DialogDescription>
+          <Button onClick={() => setShowErrorModal(false)}>Close</Button>
+        </DialogContent>
+      </Dialog>
 
-              <div className="w-full max-w-[500px] flex flex-col mx-auto gap-4">
-                <Button
-                  type="button"
-                  variant="primary"
-                  className={styles.uploadButton}
-                  onClick={onButtonClick}
-                >
-                  Choose File
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => {
-                    const link = document.createElement('a');
-                    link.href = '/resume-upload-text.txt';
-                    link.download = 'resume-upload-text.txt';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                  }}
-                >
-                  📄 Download Starter Resume Text File (optional)
-                </Button>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <p
-                      className={styles.fileTypes}
-                      style={{
-                        fontSize: '0.8rem',
-                        marginTop: '0.5rem',
-                        opacity: 0.7,
-                        textDecoration: 'underline',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      Click for detailed instructions on converting Word to .txt
-                    </p>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-md">
-                    <DialogTitle>
-                      To export a Word document as a plain text file (.txt):
-                    </DialogTitle>
-                    <DialogDescription>
-                      Follow these steps to convert your Word file to plain
-                      text. 1. Open the document in Word.
-                      <br />
-                      2. Go to "File" then "Save As".
-                      <br />
-                      3. Choose "Plain Text (.txt)" as the file type.
-                      <br />
-                      4. Select a location, and click "Save".
-                      <br />
-                      5. If prompted with a "File Conversion" dialog, ensure
-                      "Windows (Default)" is selected and click "OK".
-                      <br />
-                    </DialogDescription>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </div>
-          ) : (
-            <div className="md:pt-8 mt-8">
-              <div className="mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 p-6 shadow">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0">
-                  <div className="flex justify-start w-full items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <div className="flex flex-col items-start justify-start">
-                      <p className="font-medium text-xs md:text-sm text-left text-gray-900">
-                        {uploadedFile.name}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB •{' '}
-                        {uploadedFile.type}
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleRemoveFile}
-                    className="text-red-600 hover:text-red-700 font-medium text-xs md:text-sm"
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+      <div
+        className={styles.dropZone}
+        onDragEnter={handleDrag}
+        onDragLeave={handleDrag}
+        onDragOver={handleDrag}
+        onDrop={handleDrop}
+        onClick={onButtonClick}
+      >
+        <VisuallyHidden>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleChange}
+            className={styles.fileInput}
+            accept=".pdf,.txt"
+          />
+        </VisuallyHidden>
+        <div className={styles.uploadIcon}>
+          <ImageIcon size={48} />
         </div>
-
-        {/* Step 2: Optional Profile Image */}
-        {uploadedFile && (
-          <div className="mt-8">
-            <h2 className="md:ml-8 text-sm font-semibold text-gray-800 mb-4 ml-3 flex items-center">
-              <ImageIcon className="w-5 h-5 mr-2" />
-              Profile Picture (Optional)
-            </h2>
-
-            <div className="flex mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow md:h-20 py-4 px-4 md:px-6">
-              <div className="flex flex-col md:flex-row items-start md:items-center w-full md:justify-between gap-4 md:gap-0">
-                <p className="text-gray-600 text-xs md:text-sm text-left md:text-left">
-                  Add a professional profile picture to your resume
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setShowProfileUploader(!showProfileUploader)}
-                  className="text-teal-600 text-xs hover:text-teal-700 font-medium md:text-sm"
-                >
-                  {showProfileUploader ? 'Hide' : 'Add Photo'}
-                </button>
-              </div>
-
-              {/* Profile image uploader modal */}
-              <Dialog
-                open={showProfileUploader}
-                onOpenChange={setShowProfileUploader}
-              >
-                <DialogContent className="p-0 bg-transparent border-none shadow-none max-w-fit">
-                  {/* Accessible title for screen readers */}
-                  <VisuallyHidden>
-                    <DialogTitle>Profile Image Uploader</DialogTitle>
-                  </VisuallyHidden>
-                  <ProfileImageUploader
-                    currentImage={profileImage}
-                    onImageChange={handleProfileImageChange}
-                    showPrompt={false}
-                  />
-                  {/* Hide button to close the dialog */}
-                  <Button
-                    type="button"
-                    variant="default"
-                    onClick={() => setShowProfileUploader(false)}
-                    className="mt-4 text-teal-600 text-xs md:text-sm hover:text-teal-700 font-medium mx-auto block bg-white rounded-lg border border-gray-200 p-2"
-                  >
-                    Hide
-                  </Button>
-                </DialogContent>
-              </Dialog>
-
-              {profileImage && !showProfileUploader && (
-                <div className="flex items-center">
-                  {/** biome-ignore lint/performance/noImgElement: <expected> */}
-                  <img
-                    src={profileImage || '/placeholder.svg'}
-                    alt="Profile preview"
-                    className="w-12 h-12 rounded-full object-cover mr-3"
-                  />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      Profile picture added
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => setShowProfileUploader(true)}
-                      className="text-sm text-teal-600 hover:text-teal-700"
-                    >
-                      Change photo
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Step 3: Optional Color Customization */}
-        {uploadedFile && (
-          <div className="mt-8">
-            <h2 className="md:ml-8 text-sm font-semibold text-gray-800 mb-4 ml-3 flex items-center">
-              <Palette className="w-5 h-5 mr-2" />
-              Customize Colors (Optional)
-            </h2>
-
-            <div className="flex flex-col md:flex-row items-start justify-start mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow py-3 px-4 md:px-6">
-              <div className="flex flex-col md:flex-row justify-center md:items-center w-full justify-between mb-0 gap-4">
-                <p className="text-gray-600 text-xs md:text-sm text-left w-full">
-                  Personalize your resume with custom colors and themes
-                </p>
-              </div>
-              <div className="flex flex-row md:justify-end md:align-end md:w-full">
-                <div className="flex items-start mt-2 md:mt-0 mx-1">
-                  <div className="flex flex-row-reverse gap-1">
-                    <div
-                      className="w-4 h-4 rounded-full border border-gray-300"
-                      style={{
-                        backgroundColor:
-                          customColors['--resume-sidebar-background'],
-                      }}
-                    />
-                    <div
-                      className="w-4 h-4 rounded-full border border-gray-300"
-                      style={{
-                        backgroundColor: customColors['--resume-main-icons'],
-                      }}
-                    />
-                    <div
-                      className="w-4 h-4 rounded-full border border-gray-300"
-                      style={{
-                        backgroundColor: customColors['--resume-job-title'],
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowColorDialog(true)}
-                className="text-teal-600 md:w-[350px] hover:text-teal-700 font-medium text-xs md:text-sm mx-0 mt-3 md:mt-0"
-              >
-                Choose Theme
-              </button>
-            </div>
-
-            <ColorPickerDialog
-              open={showColorDialog}
-              onOpenChange={setShowColorDialog}
-              currentColors={customColors}
-              onColorsChange={handleColorsChange}
-            />
-          </div>
-        )}
-
-        {/* Create Resume Button */}
-        {uploadedFile && (
-          <>
-            <div className="mt-8 md:mx-8">
-              <button
-                type="button"
-                onClick={handleCreateResume}
-                disabled={isLoading}
-                className="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors duration-200"
-              >
-                {isLoading
-                  ? 'Creating Resume...'
-                  : isAuthenticated
-                    ? 'Create Resume'
-                    : 'Create Resume'}
-              </button>
-              {!isAuthenticated && (
-                <p className="mx-8 text-sm text-gray-600 my-2 text-center">
-                  💡 Sign in to save your resume to your library and edit it
-                  later
-                </p>
-              )}
-            </div>
-            <div className="pb-6" />
-          </>
-        )}
-
+        <p className={styles.dropText}>
+          {uploadedFile ? (
+            <>
+              File selected: <strong>{uploadedFile.name}</strong>
+              <br />
+              <span className={styles.fileTypes}>
+                (Click to change or drag another file here)
+              </span>
+            </>
+          ) : (
+            'Drag & drop your resume here, or click to upload'
+          )}
+        </p>
+        <span className={styles.fileTypes}>
+          Supports .txt and .pdf files (Max 10MB)
+        </span>
         {error && (
-          <div className={styles.error}>
-            <AlertTriangle className="w-5 h-5 text-red-500 mr-2" />
-            <p style={{ whiteSpace: 'pre-line' }}>{error}</p>
-          </div>
+          <p className={styles.error}>
+            <AlertTriangle size={16} /> {error}
+          </p>
         )}
+      </div>
 
-        {/* Error Modal */}
-        <Dialog open={showErrorModal} onOpenChange={setShowErrorModal}>
-          <DialogContent className="max-w-md">
-            <DialogTitle>
-              <div className="flex items-center text-red-600">
-                <AlertTriangle className="w-6 h-6 mr-2" />
-                Parsing Error
-              </div>
+      {isJobTailoringEnabled && (
+        <div className={styles.jobSpecSection}>
+          <h3>Job Specification (Optional)</h3>
+          <p>Provide a job description to tailor your resume automatically</p>
+
+          <div className={styles.inputMethod}>
+            <label>
+              <input
+                type="radio"
+                name="jobSpecMethod"
+                value="paste"
+                checked={jobSpecMethod === 'paste'}
+                onChange={handleJobSpecMethodChange}
+              />
+              Paste job description
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="jobSpecMethod"
+                value="upload"
+                checked={jobSpecMethod === 'upload'}
+                onChange={handleJobSpecMethodChange}
+              />
+              Upload job description file
+            </label>
+          </div>
+
+          {jobSpecMethod === 'paste' && (
+            <textarea
+              className={styles.jobSpecTextarea}
+              placeholder="Paste job description here (max 1000 chars)..."
+              maxLength={1000}
+              value={jobSpecText}
+              onChange={(e) => setJobSpecText(e.target.value)}
+            />
+          )}
+
+          {jobSpecMethod === 'upload' && (
+            <input
+              type="file"
+              accept=".pdf,.txt"
+              className={styles.jobSpecFileInput}
+              onChange={handleJobSpecFileChange}
+            />
+          )}
+
+          <h4 className={styles.toneSelector}>Resume Tone</h4>
+          <div className={styles.toneOptions}>
+            <label className={styles.toneOption}>
+              <input
+                type="radio"
+                name="tone"
+                value="Formal"
+                checked={tone === 'Formal'}
+                onChange={handleToneChange}
+              />
+              <span>Formal</span>
+              <small>Conservative, traditional language</small>
+            </label>
+            <label className={styles.toneOption}>
+              <input
+                type="radio"
+                name="tone"
+                value="Neutral"
+                checked={tone === 'Neutral'}
+                onChange={handleToneChange}
+              />
+              <span>Neutral</span>
+              <small>Balanced, professional tone</small>
+            </label>
+            <label className={styles.toneOption}>
+              <input
+                type="radio"
+                name="tone"
+                value="Creative"
+                checked={tone === 'Creative'}
+                onChange={handleToneChange}
+              />
+              <span>Creative</span>
+              <small>Dynamic, engaging language</small>
+            </label>
+          </div>
+
+          <textarea
+            className={styles.extraPromptTextarea}
+            placeholder="Add any extra instructions for the AI (e.g., 'Focus on leadership skills', 'Exclude projects before 2020'). Max 300 characters."
+            maxLength={300}
+            value={extraPrompt}
+            onChange={handleExtraPromptChange}
+          />
+        </div>
+      )}
+
+      <Button
+        onClick={handleCreateResume}
+        disabled={isLoading || !uploadedFile}
+        className={styles.uploadButton}
+      >
+        {isLoading ? 'Processing...' : 'Create My Resume'}
+      </Button>
+
+      <Dialog open={showColorDialog} onOpenChange={setShowColorDialog}>
+        <DialogTrigger asChild>
+          <Button variant="outline" className={styles.colorButton}>
+            <Palette size={20} className={styles.buttonIcon} /> Choose Colors
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <ColorPickerDialog
+            initialColors={customColors}
+            onColorsChange={handleColorsChange}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {showProfileUploader && (
+        <Dialog
+          open={showProfileUploader}
+          onOpenChange={setShowProfileUploader}
+        >
+          <DialogContent>
+            <DialogTitle className={styles.dialogTitle}>
+              <CheckCircle size={24} /> Resume Parsed Successfully!
             </DialogTitle>
-            <DialogDescription className="whitespace-pre-line">
-              {modalErrorMessage}
+            <DialogDescription className={styles.dialogDescription}>
+              Your resume has been successfully parsed. Now, optionally upload a
+              profile image or proceed to view your resume.
             </DialogDescription>
-            <div className="flex justify-end mt-4">
-              <button
-                type="button"
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                onClick={() => setShowErrorModal(false)}
-              >
-                Close
-              </button>
-            </div>
+            <ProfileImageUploader onUploadComplete={handleProfileImageChange} />
+            <Button
+              onClick={() => setShowProfileUploader(false)}
+              className={styles.viewResumeButton}
+            >
+              View My Resume
+            </Button>
           </DialogContent>
         </Dialog>
+      )}
+
+      <div className={styles.features}>
+        <div className={styles.feature}>
+          <div className={styles.featureIcon}>
+            <ImageIcon size={32} />
+          </div>
+          <h3>Visual Design</h3>
+          <p>
+            Choose from professional templates and customize colors to match
+            your personal brand.
+          </p>
+        </div>
+        <div className={styles.feature}>
+          <div className={styles.featureIcon}>
+            <ImageIcon size={32} />
+          </div>
+          <h3>AI Optimization</h3>
+          <p>
+            Our AI analyzes your content for clarity, impact, and keyword
+            optimization to improve your chances.
+          </p>
+        </div>
+        <div className={styles.feature}>
+          <div className={styles.featureIcon}>
+            <ImageIcon size={32} />
+          </div>
+          <h3>Instant Downloads</h3>
+          <p>
+            Download your tailored resume in various formats, ready to impress.
+          </p>
+        </div>
       </div>
     </div>
   );
