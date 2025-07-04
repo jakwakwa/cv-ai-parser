@@ -15,7 +15,7 @@ import {
 import { Button } from '@/src/components/ui/ui-button/button';
 import ProfileImageUploader from '@/src/containers/profile-image-uploader/profile-image-uploader';
 import { resumeColors } from '@/src/utils/colors';
-import styles from './ResumeUploader.module.css';
+import styles from './resume-uploader.module.css';
 
 declare global {
   interface Window {
