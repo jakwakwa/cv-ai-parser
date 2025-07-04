@@ -66,14 +66,15 @@
 
 ```mermaid
 flowchart TD
-    A[Client Form\nresume + jobSpec + tone + context] --> B[/api/parse-resume-enhanced/]
+    A[Client Form<br/>resume + jobSpec + tone + context] --> B[/api/parse-resume-enhanced/]
     B --> C{Job Spec?}
-    C -- No --> D[Legacy Parser\n(existing flow)]
-    C -- Yes --> E[Job Spec Extraction\n(jobSpecExtractor)]
-    E --> F[Prompt Factory\n(dynamicPromptGenerator)]
-    D & F --> G[AI Rewrite Service\ntailorResume()]
-    G --> H[Persistence Layer\nResumeDatabase (+Context)]
-    H --> I[Response to Client\n{ tailoredResume, meta }]
+    C -- No --> D[Legacy Parser<br/>(existing flow)]
+    C -- Yes --> E[Job Spec Extraction<br/>(jobSpecExtractor)]
+    E --> F[Prompt Factory<br/>(dynamicPromptGenerator)]
+    D --> G[AI Rewrite Service<br/>tailorResume()]
+    F --> G
+    G --> H[Persistence Layer<br/>ResumeDatabase (+Context)]
+    H --> I[Response to Client<br/>{ tailoredResume, meta }]
 ```
 
 *Green = new components*
