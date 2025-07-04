@@ -7,12 +7,12 @@ import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/auth-provider';
-import ResumeUploader from '@/src/components/ResumeUploader/ResumeUploader';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import { Button } from '@/src/components/ui/ui-button/button';
 import ResumeDisplay from '@/src/containers/resume-display/resume-display';
 import ResumeEditor from '@/src/containers/resume-editor/resume-editor';
+import ResumeUploader from '@/src/containers/resume-uploader/resume-uploader';
 import { migrateOldResumeColorsToNew } from '@/src/utils/colors';
 
 interface ParseInfo {
