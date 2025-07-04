@@ -5,7 +5,8 @@ import React from 'react';
 import { IS_JOB_TAILORING_ENABLED } from '@/lib/config';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/auth-provider';
-import ColorPickerDialog from '@/src/components/color-picker/color-picker-dialog/color-picker-dialog';
+import ColorPicker from '@/src/components/color-picker/color-picker';
+import { Card } from '@/src/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -71,6 +72,8 @@ const ResumeUploader = ({
   const [modalErrorMessage, setModalErrorMessage] = React.useState('');
 
   // New state for JobFit Tailor fields
+  const [isJobTailoringToggled, setIsJobTailoringToggled] =
+    React.useState(false);
   const [jobSpecMethod, setJobSpecMethod] = React.useState<'paste' | 'upload'>(
     'paste'
   );
@@ -170,6 +173,22 @@ const ResumeUploader = ({
       return;
     }
 
+    // Validation for JobFit Tailor fields when toggle is enabled
+    if (isJobTailoringEnabled && isJobTailoringToggled) {
+      if (jobSpecMethod === 'paste' && !jobSpecText.trim()) {
+        setError(
+          'Please provide a job description when job tailoring is enabled.'
+        );
+        return;
+      }
+      if (jobSpecMethod === 'upload' && !jobSpecFile) {
+        setError(
+          'Please upload a job specification file when job tailoring is enabled.'
+        );
+        return;
+      }
+    }
+
     setError('');
     setModalErrorMessage('');
     setShowErrorModal(false);
@@ -193,8 +212,8 @@ const ResumeUploader = ({
       formData.append('customColors', JSON.stringify(customColors));
       formData.append('isAuthenticated', isAuthenticated.toString());
 
-      // Append JobFit Tailor fields if enabled
-      if (isJobTailoringEnabled) {
+      // Append JobFit Tailor fields if enabled and toggled
+      if (isJobTailoringEnabled && isJobTailoringToggled) {
         if (jobSpecMethod === 'paste' && jobSpecText) {
           formData.append('jobSpecText', jobSpecText);
           formData.append('tone', tone);
@@ -204,13 +223,11 @@ const ResumeUploader = ({
           formData.append('tone', tone);
           if (extraPrompt) formData.append('extraPrompt', extraPrompt);
         }
-        // Always append tone, even if job spec is not provided, in case user only wants tone adjustment
-        // formData.append('tone', tone); // Already appended above if jobSpecMethod is set
       }
 
       // Send file directly to server for parsing
       const response = await fetch(
-        `${window.location.origin}/api/${isJobTailoringEnabled ? 'parse-resume-enhanced' : 'parse-resume'}`,
+        `${window.location.origin}/api/${isJobTailoringEnabled && isJobTailoringToggled ? 'parse-resume-enhanced' : 'parse-resume'}`,
         {
           method: 'POST',
           body: formData, // Send FormData instead of JSON
@@ -393,182 +410,257 @@ const ResumeUploader = ({
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
-        onClick={onButtonClick}
       >
-        <VisuallyHidden>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleChange}
-            className={styles.fileInput}
-            accept=".pdf,.txt"
-          />
-        </VisuallyHidden>
-        <div className={styles.uploadIcon}>
-          <ImageIcon size={48} />
-        </div>
-        <p className={styles.dropText}>
-          {uploadedFile ? (
-            <>
-              File selected: <strong>{uploadedFile.name}</strong>
-              <br />
-              <span className={styles.fileTypes}>
-                (Click to change or drag another file here)
-              </span>
-            </>
-          ) : (
-            'Drag & drop your resume here, or click to upload'
-          )}
-        </p>
-        <span className={styles.fileTypes}>
-          Supports .txt and .pdf files (Max 10MB)
-        </span>
+        <button
+          type="button"
+          onClick={onButtonClick}
+          className={styles.dropZoneButton}
+        >
+          <VisuallyHidden>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleChange}
+              className={styles.fileInput}
+              accept=".pdf,.txt"
+            />
+          </VisuallyHidden>
+          <div className={styles.uploadIcon}>
+            <ImageIcon size={48} />
+          </div>
+          <p className={styles.dropText}>
+            {uploadedFile ? (
+              <>
+                File selected: <strong>{uploadedFile.name}</strong>
+                <br />
+                <span className={styles.fileTypes}>
+                  (Click to change or drag another file here)
+                </span>
+              </>
+            ) : (
+              'Drag & drop your resume here, or click to upload'
+            )}
+          </p>
+          <span className={styles.fileTypes}>
+            Supports .txt and .pdf files (Max 10MB)
+          </span>
+        </button>
         {error && (
           <p className={styles.error}>
             <AlertTriangle size={16} /> {error}
           </p>
         )}
+        {/* Remove file button if file is selected */}
+        {uploadedFile && (
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={handleRemoveFile}
+            className={styles.removeFileButton}
+          >
+            x
+          </Button>
+        )}
       </div>
 
+      {/* JobFit Tailor Toggle */}
       {isJobTailoringEnabled && (
-        <div className={styles.jobSpecSection}>
-          <h3>Job Specification (Optional)</h3>
-          <p>Provide a job description to tailor your resume automatically</p>
-
-          <div className={styles.inputMethod}>
-            <label>
-              <input
-                type="radio"
-                name="jobSpecMethod"
-                value="paste"
-                checked={jobSpecMethod === 'paste'}
-                onChange={handleJobSpecMethodChange}
-              />
-              Paste job description
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="jobSpecMethod"
-                value="upload"
-                checked={jobSpecMethod === 'upload'}
-                onChange={handleJobSpecMethodChange}
-              />
-              Upload job description file
-            </label>
-          </div>
-
-          {jobSpecMethod === 'paste' && (
-            <textarea
-              className={styles.jobSpecTextarea}
-              placeholder="Paste job description here (max 1000 chars)..."
-              maxLength={1000}
-              value={jobSpecText}
-              onChange={(e) => setJobSpecText(e.target.value)}
-            />
-          )}
-
-          {jobSpecMethod === 'upload' && (
+        <div className={styles.jobTailoringToggle}>
+          <label className={styles.toggleLabel}>
             <input
-              type="file"
-              accept=".pdf,.txt"
-              className={styles.jobSpecFileInput}
-              onChange={handleJobSpecFileChange}
+              type="checkbox"
+              checked={isJobTailoringToggled}
+              onChange={(e) => {
+                setIsJobTailoringToggled(e.target.checked);
+                // Reset job tailor fields when toggling off
+                if (!e.target.checked) {
+                  setJobSpecText('');
+                  setJobSpecFile(null);
+                  setTone('Neutral');
+                  setExtraPrompt('');
+                }
+              }}
+              className={styles.toggleCheckbox}
             />
-          )}
-
-          <h4 className={styles.toneSelector}>Resume Tone</h4>
-          <div className={styles.toneOptions}>
-            <label className={styles.toneOption}>
-              <input
-                type="radio"
-                name="tone"
-                value="Formal"
-                checked={tone === 'Formal'}
-                onChange={handleToneChange}
-              />
-              <span>Formal</span>
-              <small>Conservative, traditional language</small>
-            </label>
-            <label className={styles.toneOption}>
-              <input
-                type="radio"
-                name="tone"
-                value="Neutral"
-                checked={tone === 'Neutral'}
-                onChange={handleToneChange}
-              />
-              <span>Neutral</span>
-              <small>Balanced, professional tone</small>
-            </label>
-            <label className={styles.toneOption}>
-              <input
-                type="radio"
-                name="tone"
-                value="Creative"
-                checked={tone === 'Creative'}
-                onChange={handleToneChange}
-              />
-              <span>Creative</span>
-              <small>Dynamic, engaging language</small>
-            </label>
-          </div>
-
-          <textarea
-            className={styles.extraPromptTextarea}
-            placeholder="Add any extra instructions for the AI (e.g., 'Focus on leadership skills', 'Exclude projects before 2020'). Max 300 characters."
-            maxLength={300}
-            value={extraPrompt}
-            onChange={handleExtraPromptChange}
-          />
+            <span className={styles.toggleSlider} />
+            <span className={styles.toggleText}>
+              Tailor resume to job specification
+            </span>
+          </label>
+          <p className={styles.toggleDescription}>
+            Upload a job description to automatically optimize your resume for
+            that specific role
+          </p>
         </div>
       )}
 
-      <Button
-        onClick={handleCreateResume}
-        disabled={isLoading || !uploadedFile}
-        className={styles.uploadButton}
-      >
-        {isLoading ? 'Processing...' : 'Create My Resume'}
-      </Button>
+      {/* JobFit Tailor Fields - Only show when toggled */}
+      {isJobTailoringEnabled && isJobTailoringToggled && (
+        // TODO: uploaderStepSections --> groupedInputContainer
+        <div className={styles.uploaderStepSections}>
+          <div
+            className={styles.groupedInputs}
+            style={{ width: '100%', marginTop: '0rem' }}
+          >
+            <h4 className={styles.extraPromptLabel}>Job Specification *</h4>
 
-      <Dialog open={showColorDialog} onOpenChange={setShowColorDialog}>
-        <DialogTrigger asChild>
-          <Button variant="outline" className={styles.colorButton}>
-            <Palette size={20} className={styles.buttonIcon} /> Choose Colors
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <ColorPickerDialog
-            initialColors={customColors}
-            onColorsChange={handleColorsChange}
-          />
-        </DialogContent>
-      </Dialog>
+            <p>Provide a job description to tailor your resume automatically</p>
+            <div className={styles.userSubmitResumeBtn}>
+              <div className={styles.inputMethod}>
+                <label>
+                  <input
+                    type="radio"
+                    name="jobSpecMethod"
+                    value="paste"
+                    checked={jobSpecMethod === 'paste'}
+                    onChange={handleJobSpecMethodChange}
+                  />
+                  Paste job description
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="jobSpecMethod"
+                    value="upload"
+                    checked={jobSpecMethod === 'upload'}
+                    onChange={handleJobSpecMethodChange}
+                  />
+                  Upload job description file
+                </label>
+              </div>
 
-      {showProfileUploader && (
-        <Dialog
-          open={showProfileUploader}
-          onOpenChange={setShowProfileUploader}
-        >
-          <DialogContent>
-            <DialogTitle className={styles.dialogTitle}>
-              <CheckCircle size={24} /> Resume Parsed Successfully!
-            </DialogTitle>
-            <DialogDescription className={styles.dialogDescription}>
-              Your resume has been successfully parsed. Now, optionally upload a
-              profile image or proceed to view your resume.
-            </DialogDescription>
-            <ProfileImageUploader onUploadComplete={handleProfileImageChange} />
-            <Button
-              onClick={() => setShowProfileUploader(false)}
-              className={styles.viewResumeButton}
-            >
-              View My Resume
+              {jobSpecMethod === 'paste' && (
+                <textarea
+                  className={styles.jobSpecTextarea}
+                  placeholder="Paste job description here (max 1000 chars)..."
+                  maxLength={1000}
+                  value={jobSpecText}
+                  onChange={(e) => setJobSpecText(e.target.value)}
+                  required
+                />
+              )}
+
+              {jobSpecMethod === 'upload' && (
+                <input
+                  type="file"
+                  accept=".pdf,.txt"
+                  className={styles.jobSpecFileInput}
+                  onChange={handleJobSpecFileChange}
+                  required
+                />
+              )}
+            </div>
+          </div>
+          {/* TONE CHOICE */}
+          <div className={styles.groupedInputs}>
+            <h4 className={styles.toneSelector}>Resume Tone *</h4>
+            <div className={styles.toneOptions}>
+              <label className={styles.toneOption}>
+                <input
+                  type="radio"
+                  name="tone"
+                  value="Formal"
+                  checked={tone === 'Formal'}
+                  onChange={handleToneChange}
+                />
+                <span>Formal</span>
+                <small>Conservative, traditional language</small>
+              </label>
+              <label className={styles.toneOption}>
+                <input
+                  type="radio"
+                  name="tone"
+                  value="Neutral"
+                  checked={tone === 'Neutral'}
+                  onChange={handleToneChange}
+                />
+                <span>Neutral</span>
+                <small>Balanced, professional tone</small>
+              </label>
+              <label className={styles.toneOption}>
+                <input
+                  type="radio"
+                  name="tone"
+                  value="Creative"
+                  checked={tone === 'Creative'}
+                  onChange={handleToneChange}
+                />
+                <span>Creative</span>
+                <small>Dynamic, engaging language</small>
+              </label>
+            </div>
+          </div>
+          <div className={styles.groupedInputs}>
+            <h4 className={styles.extraPromptLabel}>
+              Additional Instructions (Optional)
+            </h4>
+            <textarea
+              className={styles.extraPromptTextarea}
+              placeholder="Add any extra instructions for the AI (e.g., 'Focus on leadership skills', 'Exclude projects before 2020'). Max 300 characters."
+              maxLength={300}
+              value={extraPrompt}
+              onChange={handleExtraPromptChange}
+            />
+          </div>
+        </div>
+      )}
+
+      <div className={styles.uploaderStepSections}>
+        <Dialog open={showColorDialog} onOpenChange={setShowColorDialog}>
+          <DialogTrigger asChild>
+            <Button variant="default" className={styles.colorButton}>
+              <Palette size={20} className={styles.buttonIcon} /> Choose Colors
             </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <VisuallyHidden>
+              <DialogTitle>Choose Colors</DialogTitle>
+            </VisuallyHidden>
+            <ColorPicker
+              currentColors={customColors}
+              onColorsChange={handleColorsChange}
+            />
           </DialogContent>
         </Dialog>
-      )}
+
+        {showProfileUploader && (
+          <Dialog
+            open={showProfileUploader}
+            onOpenChange={setShowProfileUploader}
+          >
+            <DialogContent>
+              <DialogTitle className={styles.dialogTitle}>
+                <CheckCircle size={24} /> Resume Parsed Successfully!
+              </DialogTitle>
+              <DialogDescription className={styles.dialogDescription}>
+                Your resume has been successfully parsed. Now, optionally upload
+                a profile image or proceed to view your resume.
+              </DialogDescription>
+              <ProfileImageUploader onImageChange={handleProfileImageChange} />
+              <Button
+                onClick={() => setShowProfileUploader(false)}
+                className={styles.viewResumeButton}
+              >
+                View My Resume
+              </Button>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+
+      <div className={styles.userSubmitResumeBtn}>
+        <Button
+          onClick={handleCreateResume}
+          disabled={isLoading || !uploadedFile}
+          className={styles.uploadButton}
+        >
+          {isLoading
+            ? 'Processing...'
+            : isJobTailoringEnabled && isJobTailoringToggled
+              ? 'Create Tailored Resume'
+              : 'Create My Resume'}
+        </Button>
+      </div>
 
       <div className={styles.features}>
         <div className={styles.feature}>

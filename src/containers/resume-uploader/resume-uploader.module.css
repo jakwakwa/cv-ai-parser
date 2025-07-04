@@ -1,16 +1,20 @@
 .uploaderContainer {
+  position: relative;
+  z-index: 0;
   max-width: 800px;
   width: 100%;
   margin: 0 auto;
   padding: 0px;
   text-align: center;
-  background-color: #d6d6d6;
+  background-color: #5a676e20;
+  padding: 20px;
   border-radius: 14px;
   margin-top: 0rem;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.2);
+  border-radius: 50px;
+  background: #2c3844;
+  /* box-shadow:  -20px 20px 60px #25303a,
+               20px -20px 60px #33404e; */
 }
-
-
 
 .title {
   font-size: 2.5rem;
@@ -47,9 +51,10 @@
 }
 
 .dropZone {
+
   border: 2px dashed #d1d5db;
   border-radius: 0.75rem;
-  padding: 3rem 2rem;
+  padding: 0;
   text-align: center;
   background-color: #ffffff;
   transition: all 0.2s ease-in-out;
@@ -62,6 +67,30 @@
 .dropZone:hover {
   border-color: #0d9488;
   background-color: #f0fdfa;
+}
+
+.dropZoneButton {
+  position: relative;
+  width: 100%;
+  padding: 3rem 2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.dropZoneButton:hover {
+  background-color: transparent;
+}
+
+.dropZoneButton:focus {
+  box-shadow: inset 0 -1px 10px 0 rgba(15, 69, 82, 0.05), inset 0 -1px 5px 0 rgba(15, 69, 82, 0.3);
+  border-radius: 0.75rem;
+  outline: 3px solid #0d9488;
+  background-color: #d1f4d1;
+  outline-offset: 2px;
 }
 
 .dragActive {
@@ -126,7 +155,10 @@
   display: flex;
   align-items: center;
 }
-
+.groupedInputs > p {
+color: #dbfbfa !important;
+margin-bottom: 1.5rem;
+}
 .features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -135,7 +167,7 @@
   padding: 2rem;
   background-color: #ffffff;
   border-radius: 0.75rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #e5ebe9;
 }
 
 .feature {
@@ -207,26 +239,65 @@
   color: #6b7280;
 }
 
-.jobSpecSection {
-  background-color: #f8f8f8;
-  border: 1px solid #e0e0e0;
-  border-radius: 0.75rem;
+/* needs to be a reusable set of styles */
+.uploaderStepSections {
+
+  /* margin-bottom: 2rem; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+
+  gap: 2rem;
+  margin-bottom: 2rem;
+  /* height: 80px; */
   padding: 1.5rem;
-  margin-top: 2rem;
-  text-align: left;
+  /* border-radius: 50px; */
+  /* border-radius: 50px; */
+  /* background: linear-gradient(145deg, #f2e9e9, #cbc4c4);
+  box-shadow:  20px 20px 60px #c0b9b9,
+               -20px -20px 60px #fffbfb; */
+/* 
+
+               border-radius: 50px;
+background: linear-gradient(145deg, #f2e9e9, #cbc4c4);
+box-shadow:  20px 20px 60px #c0b9b9,
+             -20px -20px 60px #fffbfb; */
+
+/* 
+             border-radius: 50px;
+background: linear-gradient(145deg, #4c4c4c, #404040);
+box-shadow:  20px 20px 60px #3c3c3c,
+             -20px -20px 60px #525252; */
+
+/* beige nice  */
+             border-radius: 50px;
+background: #2c3844;
+box-shadow:  -20px 20px 60px #25303a,
+             20px -20px 60px #33404e;
+
+             /* dark nice */
+
+             border-radius: 50px;
+background: #2c3844;
+box-shadow:  -20px 20px 60px #25303a,
+             20px -20px 60px #33404e;
 }
 
 .jobSpecSection h3 {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  color: #1f2937;
+  color: #0d9488;
   margin-bottom: 0.5rem;
+  font-family: var(--font-dm-sans);
 }
 
 .jobSpecSection p {
-  font-size: 0.95rem;
   color: #6b7280;
   margin-bottom: 1rem;
+  font-size: 0.875rem;
+  font-family: var(--font-dm-sans);
 }
 
 .inputMethod {
@@ -234,6 +305,9 @@
   gap: 1.5rem;
   margin-bottom: 1rem;
 }
+
+
+
 
 .inputMethod label {
   display: flex;
@@ -253,73 +327,129 @@
   font-size: 0.9rem;
   resize: vertical;
   font-family: var(--font-dm-sans);
+border-radius: 13px;
+background: #f9f5f5;
+box-shadow: inset 7px 7px 14px #cecece,inset -7px -7px 14px #f2f2f2;
+
+border-radius: 11px;
+border-radius: 11px;
+background: #e0e0e0;
+box-shadow: inset 5px 5px 8px #acacac,
+            inset -5px -5px 8px #ffffff;
 }
 
-.jobSpecFileInput {
+/* new group conter old jobSpecFileInput */
+.groupedInputs {
+  display: inline-block;
+  text-align: left;
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
+  padding: 1.5rem 2rem;
+  border: 1px solid #5388d7;
+  border-radius: 1.5rem;
   font-size: 0.9rem;
-  background-color: #ffffff;
+  border-radius: 50px;
+background: #425fb5;
+
+
+box-shadow: inset 20px 20px 60px #334680,
+            inset -20px -20px 60px #455ead;
+            border-radius: 50px;
+/* background: #e0e0e0; */
+/* box-shadow:  20px 20px 60px #bebebe, -20px -20px 60px #ffffff; */
+
+
+}
+
+/* current outer container of jobsepc and tone */
+.jobSpecFileInput {
+  /* border-radius: 50px; */
+  gap: 2rem;
+
+  width: 100%;
+  padding-left: 2rem;
+  padding: 0.95rem;
+  border: 1px solid #2884cbc2;
+  border-radius: 19px;
+  background: linear-gradient(145deg, #28323d, #2f3c49);
+  box-shadow:  7px 7px 14px #252f39;
+  font-size: 0.9rem;
+  overflow: hidden;
+  /* background-color: #e240acae; */
   cursor: pointer;
+  overflow: hidden;
+  border-radius: 30px;
 }
 
 .toneSelector {
-  background-color: #f8f8f8;
-  border: 1px solid #e0e0e0;
-  border-radius: 0.75rem;
-  padding: 1.5rem;
   margin-top: 1.5rem;
-  text-align: left;
-}
-
-.toneSelector h4 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1f2937;
   margin-bottom: 1rem;
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #cbd9ec;
+
+  font-family: var(--font-dm-sans);
 }
 
 .toneOptions {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
+  color: white;
 }
 
 .toneOption {
   display: flex;
+
   flex-direction: column;
   align-items: flex-start;
+  color: white;
   padding: 1rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid #256ad2;
   border-radius: 0.5rem;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+
+  border-radius: 30px;
+  overflow: hidden;
+   border-radius: 20px;
+  background: #2d4dac;
+background: linear-gradient(145deg, #2c6097, #24346a);
+box-shadow:  5px 5px 11px #10283e68,
+             -5px -3px 7px #28344226;
 }
 
 .toneOption:hover {
   border-color: #0d9488;
-  background-color: #f0fdfa;
+  /* background-color: #f0fdfa; */
+  background: #263564;
+  border-radius: 20px;
+
+  
 }
 
 .toneOption input[type="radio"] {
   margin-bottom: 0.5rem;
+  color: white;
 }
 
 .toneOption span {
   font-weight: 500;
+
+
   color: #374151;
+  color: white;
 }
 
 .toneOption small {
   font-size: 0.75rem;
-  color: #6b7280;
+
+  color: rgb(200, 222, 246);
   margin-top: 0.25rem;
 }
 
-.toneOption input[type="radio"]:checked + span {
-  color: #0d9488;
+.toneOption input[type="radio"]:checked+span {
+  color: #1ddbcb;
   font-weight: 600;
 }
 
@@ -327,12 +457,260 @@
   width: 100%;
   min-height: 80px;
   padding: 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid #cacef0;
   border-radius: 0.5rem;
   font-size: 0.9rem;
   resize: vertical;
   font-family: var(--font-dm-sans);
   margin-top: 1rem;
+  border-radius: 30px;
+  border-radius: 9px;
+  background: #e0e0e0;
+  box-shadow: inset 4px 4px 13px #4f4b4b8b, inset -4px -4px 2px #ebebeb;
+}
+
+.extraPromptLabel {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #a9c7f1;
+  font-family: var(--font-dm-sans);
+}
+
+.removeFileButton {
+  top: 0;
+  right: 0;
+  height: 20px !important;
+  width: 20px !important;
+  margin: 15px;
+  position: absolute;
+  margin-bottom: 1rem;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 0 !important;
+  line-height: 0 !important;
+  /* padding: 0.5rem 1rem; */
+  border-radius: 0.375rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.removeFileButton:hover {
+  background-color: #dc2626;
+}
+
+/* JobFit Tailor Toggle Styles */
+.jobTailoringToggle {
+
+  margin-bottom: 2rem;
+  color: #fff;
+  padding: 1.5rem;
+  /* background-color: #10173f !important; */
+  border-radius: 0.75rem;
+  /* border: 1px solid #e5e7eb; */
+  border-radius: 50px;
+  overflow: hidden;
+  border-radius: 50px;
+background: #3c5296;
+box-shadow:  20px 20px 60px #334680, -20px -20px 60px #455ead;
+border-radius: 50px;
+background: #3c5296;
+box-shadow:  20px 20px 60px #334680,
+             -20px -20px 60px #455ead;
+/* border-radius: 50px;
+background: #3a545e;
+box-shadow:  20px 20px 60px #39333e,
+             -20px -20px 60px #4d4554; */
+
+             border-radius: 50px;
+background: #3c5296;
+box-shadow: inset -20px -20px 60px #334680,
+            inset 20px 20px 60px #455ead;
+          
+
+}
+
+  
+.userSubmitResumeBtn label,
+.jobTailoringToggle > p,
+.jobTailoringToggle span,
+.jobTailoringToggle label,
+.jobTailoringToggle input {
+  color: hsl(232, 88%, 90%) !important;
+  font-size: 0.75rem;
+  
+}
+
+.userSubmitResumeBtn {
+  border-radius: 50px;
+  border-radius: 50px;
+  width: 100%;
+  margin-top: 1px;
+  margin-bottom: 2rem;
+  color: #fff;
+  border-radius: 20px;
+  /* border-radius: 50px; */
+background: linear-gradient(145deg, #4058a1, #364a87);
+/* box-shadow:  7px 7px 14px #32457e,   -7px -7px 14px #465fae; */
+
+
+  /* background: linear-gradient(145deg, #f0f0f0, #cacaca); */
+  /* background:#4f405e; */
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+
+  padding: 20px;
+box-shadow:  2px 4px 40px #0316296b;
+             
+
+}
+
+.toggleLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+  color: #1f2937;
+  font-family: var(--font-dm-sans);
+  margin-bottom: 0.5rem;
+  
+}
+
+.toggleCheckbox {
+  display: none;
+}
+
+.toggleSlider {
+  position: relative;
+  width: 3rem;
+  height: 1.5rem;
+  background-color: #d1d5db;
+  border-radius: 1rem;
+  margin-right: 0.75rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.toggleSlider::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* .colorAndSubmitBtnGroup {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: nowrap;
+  flex-direction: row-reverse;
+  align-items: center;
+  height: 200px;
+} */
+
+.toggleCheckbox:checked+.toggleSlider {
+  background-color: #0d9488;
+}
+
+.toggleCheckbox:checked+.toggleSlider::before {
+  transform: translateX(1.5rem);
+}
+
+.toggleText {
+  font-size: 1rem;
+  color: #21dcd0;
+}
+
+.toggleDescription {
+  font-size: 0.875rem;
+  color: #b8d0c6;
+  margin: 0;
+  text-align: left;
+  margin-left: 3.75rem;
+  line-height: 1.4;
+  font-family: var(--font-dm-sans);
+}
+
+.colorButton {
+  /* margin-bottom: 2rem; */
+  background-color: #6366f1;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.colorButton:hover {
+  background-color: #4f46e5;
+}
+
+.buttonIcon {
+  margin-right: 0.5rem;
+}
+
+/* Error Modal Styles */
+.errorTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #dc2626;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.errorDescription {
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  white-space: pre-line;
+}
+
+/* Dialog Styles */
+.dialogTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #059669;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.dialogDescription {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.viewResumeButton {
+  background-color: #0d9488;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.viewResumeButton:hover {
+  background-color: #0f766e;
 }
 
 @media (max-width: 768px) {

@@ -153,9 +153,10 @@ body {
   padding: 2rem 2rem 80px 2rem;
   background-color: #e2e2e2;
   border-radius: 0.75rem;
-  box-shadow:
-    0 4px 6px -1px rgb(0 0 0 / 0.1),
-    0 2px 4px -2px rgb(0 0 0 / 0.1);
+  border-radius: 50px;
+  background: #2c3844;
+  box-shadow:  -20px 20px 60px #25303a,
+               20px -20px 60px #33404e;
 }
 
 .mainContainer {
