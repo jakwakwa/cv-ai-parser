@@ -204,9 +204,41 @@ export function buildTailorPrompt(args: {
 * **Streaming** – Send partial tailored resume chunks to client for progressive rendering.  
 * **Caching** – Deduplicate identical job spec uploads (hash on content).  
 
+## 5. LLM Orchestration & Responsibility Split
+
+The diagram and table below clarify which parts of the enhanced pipeline are handled by **your backend code** and which are performed by the **LLM (Google Gemini)**.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Client
+    participant Backend as Next.js API / Services
+    participant Gemini as Google Gemini (LLM)
+
+    Client->>Backend: POST /api/parse-resume-enhanced  (Resume + Job Spec + Tone + Extra)
+    Backend->>Gemini: Prompt #1 – Parse **resume** → aiResumeSchema
+    Gemini-->>Backend: parsedResume (JSON)
+
+    Backend->>Gemini: Prompt #2 – Parse **job spec** → jobSpecSchema
+    Gemini-->>Backend: parsedJobSpec (JSON)
+
+    Backend->>Gemini: Prompt #3 – Rewrite resume using {parsedResume, parsedJobSpec, tone, extraPrompt}
+    Gemini-->>Backend: tailoredResume (JSON, resumeSchema)
+
+    Backend-->>Client: tailoredResume + meta
+```
+
+| Stage | LLM’s Responsibility | Backend Responsibility |
+|-------|----------------------|------------------------|
+| **Extraction** | Understand free-form text and emit JSON exactly matching the schema supplied in the prompt. | Craft prompts, supply schema via `generateObject`, validate with Zod, retry or fallback if invalid. |
+| **Tailoring** | Rewrite resume content, inject keywords, adjust tone, return JSON in agreed shape. | Combine extracted JSON blobs + tone/context into a single instruction prompt; enforce length/style constraints; validate output. |
+| **Persistence & Business Rules** | *N/A* | Decide whether to tailor, handle feature flags, store all versions, measure confidence, throttle/cost-guard, etc. |
+
+**Key takeaway:** the LLM performs the semantic heavy-lifting (parsing & rewriting), but reliable output requires orchestration, validation, and storage logic provided by your code.
+
 ---
 
-## 5. Conclusion
+## 6. Conclusion
 
 The proposed architecture introduces isolated, testable services (`jobSpecExtractor`, `dynamicPromptGenerator`, `tailorResume`) that slot into the existing parsing pipeline with minimal surface-area change.  
 It preserves robustness (schema validation & fallbacks), remains maintainable (modular files, typed Zod schemas), and keeps performance in check (parallelism, caching).  
