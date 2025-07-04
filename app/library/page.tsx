@@ -4,11 +4,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import type { Resume } from '@/lib/types';
-import { useAuthModal } from '@/src/components/auth-component/AuthModalContext';
 import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import { SiteHeader } from '@/src/components/site-header/site-header';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
-import { Button } from '@/src/components/ui/ui-button/button';
 import ResumeLibrary from '@/src/containers/resume-library/resume-library';
 
 // Component that handles URL parameters - needs to be wrapped in Suspense
@@ -16,7 +14,6 @@ function LibraryPageContent() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   const { toast } = useToast();
-  const { setAuthModalOpen } = useAuthModal();
   const [countdown, setCountdown] = useState(3);
 
   const searchParams = useSearchParams();
@@ -102,13 +99,9 @@ export default function LibraryPage() {
     <div className="pageWrapper">
       <SiteHeader />
 
-      {/* Header Ad */}
-
       <Suspense fallback={<div>Loading...</div>}>
         <LibraryPageContent />
       </Suspense>
-
-      {/* Footer Ad */}
     </div>
   );
 }
