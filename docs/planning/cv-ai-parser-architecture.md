@@ -66,18 +66,21 @@
 
 ```mermaid
 flowchart TD
-    A[Client Form<br/>resume + jobSpec + tone + context] --> B[/api/parse-resume-enhanced/]
-    B --> C{Job Spec?}
-    C -- No --> D[Legacy Parser<br/>(existing flow)]
-    C -- Yes --> E[Job Spec Extraction<br/>(jobSpecExtractor)]
-    E --> F[Prompt Factory<br/>(dynamicPromptGenerator)]
-    D --> G[AI Rewrite Service<br/>tailorResume()]
+    A["Client Form<br/>resume + jobSpec + tone + context"] --> B["API: parse-resume-enhanced"]
+    B --> C{Job Spec provided?}
+    C -- "No" --> D["Legacy Parser"]
+    C -- "Yes" --> E["Job Spec Extraction"]
+    E --> F["Prompt Factory"]
+    D --> G["AI Rewrite Service"]
     F --> G
-    G --> H[Persistence Layer<br/>ResumeDatabase (+Context)]
-    H --> I[Response to Client<br/>{ tailoredResume, meta }]
+    G --> H["Persistence Layer"]
+    H --> I["Response to Client"]
 ```
 
 *Green = new components*
+
+> **Diagram validation**  
+> All Mermaid diagrams are linted in CI using `@mermaid-js/mermaid-cli` (`mmdc -e`) to prevent parse errors from reaching `main`. See implementation guide Phase 5 for the script.
 
 ### 3.2 Component Breakdown
 
