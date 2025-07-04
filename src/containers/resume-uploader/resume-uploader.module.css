@@ -207,6 +207,134 @@
   color: #6b7280;
 }
 
+.jobSpecSection {
+  background-color: #f8f8f8;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.jobSpecSection h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.jobSpecSection p {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.inputMethod {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.inputMethod label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #374151;
+  cursor: pointer;
+}
+
+.jobSpecTextarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  resize: vertical;
+  font-family: var(--font-dm-sans);
+}
+
+.jobSpecFileInput {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+.toneSelector {
+  background-color: #f8f8f8;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.toneSelector h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.toneOptions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.toneOption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.toneOption:hover {
+  border-color: #0d9488;
+  background-color: #f0fdfa;
+}
+
+.toneOption input[type="radio"] {
+  margin-bottom: 0.5rem;
+}
+
+.toneOption span {
+  font-weight: 500;
+  color: #374151;
+}
+
+.toneOption small {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.toneOption input[type="radio"]:checked + span {
+  color: #0d9488;
+  font-weight: 600;
+}
+
+.extraPromptTextarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  resize: vertical;
+  font-family: var(--font-dm-sans);
+  margin-top: 1rem;
+}
+
 @media (max-width: 768px) {
   .uploaderContainer {
     padding: 1rem;
@@ -223,5 +351,14 @@
   .features {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+
+  .inputMethod {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .toneOptions {
+    grid-template-columns: 1fr;
   }
 }

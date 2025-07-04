@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/complexity/noStaticOnlyClass: <> */
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Resume } from './types';
+import type { Resume, UserAdditionalContext } from './types';
 
 export class ResumeDatabase {
   // Save a new resume
@@ -18,6 +18,7 @@ export class ResumeDatabase {
       userId,
       slug,
       customColors,
+      additionalContext,
     }: {
       title: string;
       originalFilename?: string;
@@ -30,6 +31,7 @@ export class ResumeDatabase {
       userId: string;
       slug: string;
       customColors?: Record<string, string>;
+      additionalContext?: UserAdditionalContext;
     }
   ) {
     const { data, error } = await supabase
@@ -46,6 +48,7 @@ export class ResumeDatabase {
         is_public: isPublic,
         slug: slug,
         custom_colors: customColors,
+        additional_context: additionalContext,
       })
       .select()
       .single();
@@ -99,6 +102,24 @@ export class ResumeDatabase {
       },
     };
     return resumeData;
+  }
+
+  // New method for retrieving context
+  static async getResumeWithContext(
+    supabase: SupabaseClient,
+    id: string
+  ): Promise<Resume & { additional_context: UserAdditionalContext | null }> {
+    const { data, error } = await supabase
+      .from('resumes')
+      .select('*, additional_context')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      throw new Error(`Failed to fetch resume with context: ${error.message}`);
+    }
+
+    return data;
   }
 
   // Get public resume by slug
