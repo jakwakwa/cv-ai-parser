@@ -213,6 +213,13 @@ export default function PageContent() {
     });
   };
 
+  // Reset scroll position when loading state becomes active
+  useEffect(() => {
+    if (isLoading) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [isLoading]);
+
   if (authLoading) {
     return (
       <div className="loadingContainer">
@@ -227,6 +234,15 @@ export default function PageContent() {
       <div className="loadingContainer">
         <div className="loadingSpinner" />
         <p className="loadingText">Downloading PDF...</p>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="loadingContainer">
+        <div className="loadingSpinner" />
+        <p className="loadingText">Creating Resume...</p>
       </div>
     );
   }
