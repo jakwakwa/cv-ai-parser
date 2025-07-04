@@ -25,4 +25,4 @@ export const REGEX_CONFIDENCE_THRESHOLD = 30;
  */
 export const MAX_REGEX_CONFIDENCE = 85;
 
-export const IS_JOB_TAILORING_ENABLED = false;
+export const IS_JOB_TAILORING_ENABLED = true;
