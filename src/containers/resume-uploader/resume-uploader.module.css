@@ -1,84 +1,188 @@
+/* =================================================================
+   Resume Uploader Component Styles
+   ================================================================= */
+
+/* CSS Custom Properties (Design System Variables) */
+:root {
+  --color-primary-dark: #2c3844;
+  --color-primary-darker: #25303a;
+  --color-primary-lighter: #33404e;
+  --color-primary-overlay: #5a676e20;
+  
+  --color-secondary-blue: #425fb5;
+  --color-secondary-blue-dark: #334680;
+  --color-secondary-blue-light: #455ead;
+  
+  --color-accent-teal: #0d9488;
+  --color-accent-teal-dark: #0f766e;
+  --color-accent-teal-light: #f0fdfa;
+  --color-accent-teal-bright: #1ddbcb;
+  
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-text-light: #374151;
+  --color-text-muted: #a9c7f1;
+  --color-text-accent: #21dcd0;
+  --color-text-description: #b8d0c6;
+  --color-text-bright: #dbfbfa;
+  --color-text-info: #0369a1;
+  --color-text-success: #059669;
+  --color-text-special: rgb(200, 222, 246);
+  --color-text-white: white;
+  --color-text-highlight: hsl(232, 88%, 90%);
+  
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f9f5f5;
+  --color-background-neutral: #e0e0e0;
+  --color-background-info: #f0f9ff;
+  --color-background-hover: #263564;
+  
+  --color-border-light: #d1d5db;
+  --color-border-info: #0ea5e9;
+  --color-border-neutral: #e5ebe9;
+  --color-border-input: #cacef0;
+  --color-border-special: #2884cbc2;
+  --color-border-accent: #256ad2;
+  
+  --color-success-light: #d1f4d1;
+  --color-error-bg: #fef2f2;
+  --color-error-border: #fecaca;
+  --color-error-text: #dc2626;
+  --color-error-button: #ef4444;
+  
+  --color-disabled: #9ca3af;
+  --color-spinner-track: #e5e7eb;
+  
+  --color-gradient-primary: linear-gradient(145deg, #28323d, #2f3c49);
+  --color-gradient-secondary: linear-gradient(145deg, #2c6097, #24346a);
+  --color-gradient-button: linear-gradient(145deg, #4058a1, #364a87);
+  
+  --color-shadow-primary: -20px 20px 60px var(--color-primary-darker), 20px -20px 60px var(--color-primary-lighter);
+  --color-shadow-secondary: 20px 20px 60px var(--color-secondary-blue-dark), -20px -20px 60px var(--color-secondary-blue-light);
+  --color-shadow-button: 2px 4px 40px #0316296b;
+  --color-shadow-input: inset 4px 4px 13px #4f4b4b8b, inset -4px -4px 2px #ebebeb;
+  --color-shadow-textarea: inset 7px 7px 14px #cecece, inset -7px -7px 14px #f2f2f2;
+  --color-shadow-neutral: inset 5px 5px 8px #acacac, inset -5px -5px 8px #ffffff;
+  --color-shadow-tone: 5px 5px 11px #10283e68, -5px -3px 7px #28344226;
+  
+  --border-radius-small: 0.375rem;
+  --border-radius-medium: 0.5rem;
+  --border-radius-large: 0.75rem;
+  --border-radius-xlarge: 1.5rem;
+  --border-radius-rounded: 50px;
+  
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+  
+  --font-family-primary: var(--font-dm-sans);
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 0.9rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 2rem;
+  --font-size-3xl: 2.5rem;
+  
+  --transition-fast: 0.2s ease-in-out;
+  --transition-medium: all 0.2s ease-in-out;
+}
+
+/* =================================================================
+   Main Container
+   ================================================================= */
+
 .uploaderContainer {
   position: relative;
   z-index: 0;
   max-width: 800px;
   width: 100%;
   margin: 0 auto;
-  padding: 0px;
+  padding: var(--spacing-xl);
   text-align: center;
-  background-color: #5a676e20;
-  padding: 20px;
-  border-radius: 14px;
-  margin-top: 0rem;
-  border-radius: 50px;
-  background: #2c3844;
-  /* box-shadow:  -20px 20px 60px #25303a,
-               20px -20px 60px #33404e; */
+  background-color: var(--color-primary-overlay);
+  border-radius: var(--border-radius-rounded);
+  background: var(--color-primary-dark);
+  box-shadow: var(--color-shadow-primary);
 }
 
+/* =================================================================
+   Typography
+   ================================================================= */
+
 .title {
-  font-size: 2.5rem;
+  font-size: var(--font-size-3xl);
   font-weight: bold;
-  color: #1f2937;
-  margin-bottom: 0.5rem;
-  font-family: var(--font-dm-sans);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+  font-family: var(--font-family-primary);
 }
 
 .subtitle {
-  font-size: 1.125rem;
-  color: #6b7280;
-  margin-bottom: 1rem;
-  font-family: var(--font-dm-sans);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-family-primary);
 }
 
+/* =================================================================
+   Parse Information Display
+   ================================================================= */
+
 .parseInfo {
-  margin-top: 1rem;
-  padding: 1rem;
-  background-color: #f0f9ff;
-  border: 1px solid #0ea5e9;
-  border-radius: 0.5rem;
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: var(--color-background-info);
+  border: 1px solid var(--color-border-info);
+  border-radius: var(--border-radius-medium);
 }
 
 .parseMethod {
   font-weight: 600;
-  color: #0369a1;
-  margin-bottom: 0.25rem;
+  color: var(--color-text-info);
+  margin-bottom: var(--spacing-xs);
 }
 
 .confidenceScore {
-  font-size: 0.875rem;
-  color: #059669;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-success);
 }
 
-.dropZone {
+/* =================================================================
+   File Upload Drop Zone
+   ================================================================= */
 
-  border: 2px dashed #d1d5db;
-  border-radius: 0.75rem;
+.dropZone {
+  border: 2px dashed var(--color-border-light);
+  border-radius: var(--border-radius-large);
   padding: 0;
   text-align: center;
-  background-color: #ffffff;
-  transition: all 0.2s ease-in-out;
+  background-color: var(--color-background-primary);
+  transition: var(--transition-medium);
   cursor: pointer;
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
   position: relative;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 .dropZone:hover {
-  border-color: #0d9488;
-  background-color: #f0fdfa;
+  border-color: var(--color-accent-teal);
+  background-color: var(--color-accent-teal-light);
 }
 
 .dropZoneButton {
   position: relative;
   width: 100%;
-  padding: 3rem 2rem;
+  padding: var(--spacing-xxl) var(--spacing-xl);
   background: transparent;
   border: none;
   cursor: pointer;
   font-family: inherit;
   text-align: center;
-  transition: all 0.2s ease-in-out;
+  transition: var(--transition-medium);
 }
 
 .dropZoneButton:hover {
@@ -87,57 +191,61 @@
 
 .dropZoneButton:focus {
   box-shadow: inset 0 -1px 10px 0 rgba(15, 69, 82, 0.05), inset 0 -1px 5px 0 rgba(15, 69, 82, 0.3);
-  border-radius: 0.75rem;
-  outline: 3px solid #0d9488;
-  background-color: #d1f4d1;
+  border-radius: var(--border-radius-large);
+  outline: 3px solid var(--color-accent-teal);
+  background-color: var(--color-success-light);
   outline-offset: 2px;
 }
 
 .dragActive {
-  border-color: #0d9488 !important;
-  background-color: #f0fdfa !important;
+  border-color: var(--color-accent-teal) !important;
+  background-color: var(--color-accent-teal-light) !important;
   transform: scale(1.02);
 }
 
+/* =================================================================
+   Upload Zone Content
+   ================================================================= */
+
 .uploadIcon {
-  color: #6b7280;
-  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-md);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .dropText {
-  font-size: 1.125rem;
-  color: #374151;
-  margin-bottom: 0.5rem;
-  font-family: var(--font-dm-sans);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-sm);
+  font-family: var(--font-family-primary);
 }
 
 .fileTypes {
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin-bottom: 1.5rem;
-  font-family: var(--font-dm-sans);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-lg);
+  font-family: var(--font-family-primary);
 }
 
 .uploadButton {
-  background-color: #0d9488;
-  color: white;
+  background-color: var(--color-accent-teal);
+  color: var(--color-text-white);
   border: none;
-  padding: 0.75rem 2rem;
-  border-radius: 0.5rem;
+  padding: var(--spacing-sm) var(--spacing-xl);
+  border-radius: var(--border-radius-medium);
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: var(--transition-fast);
 }
 
 .uploadButton:hover {
-  background-color: #0f766e;
+  background-color: var(--color-accent-teal-dark);
 }
 
 .uploadButton:disabled {
-  background-color: #9ca3af;
+  background-color: var(--color-disabled);
   cursor: not-allowed;
 }
 
@@ -145,430 +253,314 @@
   display: none;
 }
 
+/* =================================================================
+   Error Display
+   ================================================================= */
+
 .error {
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  margin-bottom: 1.5rem;
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  color: var(--color-error-text);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-medium);
+  margin-bottom: var(--spacing-lg);
   display: flex;
   align-items: center;
 }
-.groupedInputs > p {
-color: #dbfbfa !important;
-margin-bottom: 1.5rem;
-}
+
+/* =================================================================
+   Features Grid
+   ================================================================= */
+
 .features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-top: 0rem;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 0.75rem;
-  border: 1px solid #e5ebe9;
+  gap: var(--spacing-xl);
+  margin-top: 0;
+  padding: var(--spacing-xl);
+  background-color: var(--color-background-primary);
+  border-radius: var(--border-radius-large);
+  border: 1px solid var(--color-border-neutral);
 }
 
 .feature {
   text-align: center;
-  padding: 1.5rem;
+  padding: var(--spacing-lg);
 }
 
 .featureIcon {
-  color: #0d9488;
-  margin-bottom: 1rem;
+  color: var(--color-accent-teal);
+  margin-bottom: var(--spacing-md);
   display: flex;
   justify-content: center;
 }
 
 .feature h3 {
-  font-size: 1.25rem;
+  font-size: var(--font-size-xl);
   font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 0.5rem;
-  font-family: var(--font-dm-sans);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+  font-family: var(--font-family-primary);
 }
 
 .feature p {
-  color: #6b7280;
-  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
   line-height: 1.5;
-  font-family: var(--font-dm-sans);
+  font-family: var(--font-family-primary);
 }
+
+/* =================================================================
+   Loading States
+   ================================================================= */
 
 .loadingContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
+  padding: var(--spacing-xxl);
   text-align: center;
 }
 
 .spinner {
-  width: 2rem;
-  height: 2rem;
-  border: 2px solid #e5e7eb;
-  border-top: 2px solid #0d9488;
+  width: var(--spacing-xl);
+  height: var(--spacing-xl);
+  border: 2px solid var(--color-spinner-track);
+  border-top: 2px solid var(--color-accent-teal);
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .loadingText {
-  font-size: 1.125rem;
+  font-size: var(--font-size-lg);
   font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 0.5rem;
-  font-family: var(--font-dm-sans);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+  font-family: var(--font-family-primary);
 }
 
 .loadingSubtext {
-  font-size: 0.875rem;
-  color: #6b7280;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
 }
 
-/* needs to be a reusable set of styles */
-.uploaderStepSections {
+/* =================================================================
+   Step Sections Container
+   ================================================================= */
 
-  /* margin-bottom: 2rem; */
+.uploaderStepSections {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
   align-items: center;
-
-  gap: 2rem;
-  margin-bottom: 2rem;
-  /* height: 80px; */
-  padding: 1.5rem;
-  /* border-radius: 50px; */
-  /* border-radius: 50px; */
-  /* background: linear-gradient(145deg, #f2e9e9, #cbc4c4);
-  box-shadow:  20px 20px 60px #c0b9b9,
-               -20px -20px 60px #fffbfb; */
-/* 
-
-               border-radius: 50px;
-background: linear-gradient(145deg, #f2e9e9, #cbc4c4);
-box-shadow:  20px 20px 60px #c0b9b9,
-             -20px -20px 60px #fffbfb; */
-
-/* 
-             border-radius: 50px;
-background: linear-gradient(145deg, #4c4c4c, #404040);
-box-shadow:  20px 20px 60px #3c3c3c,
-             -20px -20px 60px #525252; */
-
-/* beige nice  */
-             border-radius: 50px;
-background: #2c3844;
-box-shadow:  -20px 20px 60px #25303a,
-             20px -20px 60px #33404e;
-
-             /* dark nice */
-
-             border-radius: 50px;
-background: #2c3844;
-box-shadow:  -20px 20px 60px #25303a,
-             20px -20px 60px #33404e;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-rounded);
+  background: var(--color-primary-dark);
+  box-shadow: var(--color-shadow-primary);
 }
 
+/* =================================================================
+   Job Specification Section
+   ================================================================= */
+
 .jobSpecSection h3 {
-  font-size: 1.25rem;
+  font-size: var(--font-size-xl);
   font-weight: 600;
-  color: #0d9488;
-  margin-bottom: 0.5rem;
-  font-family: var(--font-dm-sans);
+  color: var(--color-accent-teal);
+  margin-bottom: var(--spacing-sm);
+  font-family: var(--font-family-primary);
 }
 
 .jobSpecSection p {
-  color: #6b7280;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
-  font-family: var(--font-dm-sans);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family-primary);
 }
 
 .inputMethod {
   display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1rem;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
 }
-
-
-
 
 .inputMethod label {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: #374151;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-base);
+  color: var(--color-text-light);
   cursor: pointer;
 }
+
+/* =================================================================
+   Form Controls
+   ================================================================= */
 
 .jobSpecTextarea {
   width: 100%;
   min-height: 120px;
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 0.9rem;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-medium);
+  font-size: var(--font-size-base);
   resize: vertical;
-  font-family: var(--font-dm-sans);
-border-radius: 13px;
-background: #f9f5f5;
-box-shadow: inset 7px 7px 14px #cecece,inset -7px -7px 14px #f2f2f2;
-
-border-radius: 11px;
-border-radius: 11px;
-background: #e0e0e0;
-box-shadow: inset 5px 5px 8px #acacac,
-            inset -5px -5px 8px #ffffff;
-}
-
-/* new group conter old jobSpecFileInput */
-.groupedInputs {
-  display: inline-block;
-  text-align: left;
-  width: 100%;
-  padding: 1.5rem 2rem;
-  border: 1px solid #5388d7;
-  border-radius: 1.5rem;
-  font-size: 0.9rem;
-  border-radius: 50px;
-background: #425fb5;
-
-
-box-shadow: inset 20px 20px 60px #334680,
-            inset -20px -20px 60px #455ead;
-            border-radius: 50px;
-/* background: #e0e0e0; */
-/* box-shadow:  20px 20px 60px #bebebe, -20px -20px 60px #ffffff; */
-
-
-}
-
-/* current outer container of jobsepc and tone */
-.jobSpecFileInput {
-  /* border-radius: 50px; */
-  gap: 2rem;
-
-  width: 100%;
-  padding-left: 2rem;
-  padding: 0.95rem;
-  border: 1px solid #2884cbc2;
-  border-radius: 19px;
-  background: linear-gradient(145deg, #28323d, #2f3c49);
-  box-shadow:  7px 7px 14px #252f39;
-  font-size: 0.9rem;
-  overflow: hidden;
-  /* background-color: #e240acae; */
-  cursor: pointer;
-  overflow: hidden;
-  border-radius: 30px;
-}
-
-.toneSelector {
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
-  color: white;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #cbd9ec;
-
-  font-family: var(--font-dm-sans);
-}
-
-.toneOptions {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-  color: white;
-}
-
-.toneOption {
-  display: flex;
-
-  flex-direction: column;
-  align-items: flex-start;
-  color: white;
-  padding: 1rem;
-  border: 1px solid #256ad2;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-
-  border-radius: 30px;
-  overflow: hidden;
-   border-radius: 20px;
-  background: #2d4dac;
-background: linear-gradient(145deg, #2c6097, #24346a);
-box-shadow:  5px 5px 11px #10283e68,
-             -5px -3px 7px #28344226;
-}
-
-.toneOption:hover {
-  border-color: #0d9488;
-  /* background-color: #f0fdfa; */
-  background: #263564;
-  border-radius: 20px;
-
-  
-}
-
-.toneOption input[type="radio"] {
-  margin-bottom: 0.5rem;
-  color: white;
-}
-
-.toneOption span {
-  font-weight: 500;
-
-
-  color: #374151;
-  color: white;
-}
-
-.toneOption small {
-  font-size: 0.75rem;
-
-  color: rgb(200, 222, 246);
-  margin-top: 0.25rem;
-}
-
-.toneOption input[type="radio"]:checked+span {
-  color: #1ddbcb;
-  font-weight: 600;
+  font-family: var(--font-family-primary);
+  background: var(--color-background-secondary);
+  box-shadow: var(--color-shadow-textarea);
 }
 
 .extraPromptTextarea {
   width: 100%;
   min-height: 80px;
-  padding: 0.75rem;
-  border: 1px solid #cacef0;
-  border-radius: 0.5rem;
-  font-size: 0.9rem;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--border-radius-rounded);
+  font-size: var(--font-size-base);
   resize: vertical;
-  font-family: var(--font-dm-sans);
-  margin-top: 1rem;
-  border-radius: 30px;
-  border-radius: 9px;
-  background: #e0e0e0;
-  box-shadow: inset 4px 4px 13px #4f4b4b8b, inset -4px -4px 2px #ebebeb;
+  font-family: var(--font-family-primary);
+  margin-top: var(--spacing-md);
+  background: var(--color-background-neutral);
+  box-shadow: var(--color-shadow-input);
 }
 
 .extraPromptLabel {
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-  font-size: 1.125rem;
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-lg);
   font-weight: 600;
-  color: #a9c7f1;
-  font-family: var(--font-dm-sans);
+  color: var(--color-text-muted);
+  font-family: var(--font-family-primary);
 }
 
-.removeFileButton {
-  top: 0;
-  right: 0;
-  height: 20px !important;
-  width: 20px !important;
-  margin: 15px;
-  position: absolute;
-  margin-bottom: 1rem;
-  background-color: #ef4444;
-  color: white;
-  border: none;
-  padding: 0 !important;
-  line-height: 0 !important;
-  /* padding: 0.5rem 1rem; */
-  border-radius: 0.375rem;
-  font-size: 0.7rem;
-  font-weight: 500;
+/* =================================================================
+   Grouped Input Container
+   ================================================================= */
+
+.groupedInputs {
+  display: inline-block;
+  text-align: left;
+  width: 100%;
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border: 1px solid var(--color-border-accent);
+  border-radius: var(--border-radius-rounded);
+  font-size: var(--font-size-base);
+  background: var(--color-secondary-blue);
+  box-shadow: inset 20px 20px 60px var(--color-secondary-blue-dark), inset -20px -20px 60px var(--color-secondary-blue-light);
+}
+
+.groupedInputs > p {
+  color: var(--color-text-bright) !important;
+  margin-bottom: var(--spacing-lg);
+}
+
+.jobSpecFileInput {
+  gap: var(--spacing-xl);
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border-special);
+  border-radius: 19px;
+  background: var(--color-gradient-primary);
+  box-shadow: 7px 7px 14px var(--color-primary-darker);
+  font-size: var(--font-size-base);
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.removeFileButton:hover {
-  background-color: #dc2626;
-}
-
-/* JobFit Tailor Toggle Styles */
-.jobTailoringToggle {
-
-  margin-bottom: 2rem;
-  color: #fff;
-  padding: 1.5rem;
-  /* background-color: #10173f !important; */
-  border-radius: 0.75rem;
-  /* border: 1px solid #e5e7eb; */
-  border-radius: 50px;
   overflow: hidden;
-  border-radius: 50px;
-background: #3c5296;
-box-shadow:  20px 20px 60px #334680, -20px -20px 60px #455ead;
-border-radius: 50px;
-background: #3c5296;
-box-shadow:  20px 20px 60px #334680,
-             -20px -20px 60px #455ead;
-/* border-radius: 50px;
-background: #3a545e;
-box-shadow:  20px 20px 60px #39333e,
-             -20px -20px 60px #4d4554; */
-
-             border-radius: 50px;
-background: #3c5296;
-box-shadow: inset -20px -20px 60px #334680,
-            inset 20px 20px 60px #455ead;
-          
-
+  border-radius: 30px;
 }
 
-  
-.userSubmitResumeBtn label,
+/* =================================================================
+   Tone Selection
+   ================================================================= */
+
+.toneSelector {
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-white);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  font-family: var(--font-family-primary);
+}
+
+.toneOptions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-md);
+  color: var(--color-text-white);
+}
+
+.toneOption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: var(--color-text-white);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border-accent);
+  border-radius: var(--spacing-sm);
+  cursor: pointer;
+  transition: var(--transition-medium);
+  border-radius: 20px;
+  background: var(--color-gradient-secondary);
+  box-shadow: var(--color-shadow-tone);
+  overflow: hidden;
+}
+
+.toneOption:hover {
+  border-color: var(--color-accent-teal);
+  background: var(--color-background-hover);
+}
+
+.toneOption input[type="radio"] {
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-white);
+}
+
+.toneOption span {
+  font-weight: 500;
+  color: var(--color-text-white);
+}
+
+.toneOption small {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-special);
+  margin-top: var(--spacing-xs);
+}
+
+.toneOption input[type="radio"]:checked + span {
+  color: var(--color-accent-teal-bright);
+  font-weight: 600;
+}
+
+/* =================================================================
+   Job Tailoring Toggle
+   ================================================================= */
+
+.jobTailoringToggle {
+  margin-bottom: var(--spacing-xl);
+  color: var(--color-text-white);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-rounded);
+  background: var(--color-secondary-blue);
+  box-shadow: inset -20px -20px 60px var(--color-secondary-blue-dark), inset 20px 20px 60px var(--color-secondary-blue-light);
+  overflow: hidden;
+}
+
 .jobTailoringToggle > p,
 .jobTailoringToggle span,
 .jobTailoringToggle label,
 .jobTailoringToggle input {
-  color: hsl(232, 88%, 90%) !important;
-  font-size: 0.75rem;
-  
-}
-
-.userSubmitResumeBtn {
-  border-radius: 50px;
-  border-radius: 50px;
-  width: 100%;
-  margin-top: 1px;
-  margin-bottom: 2rem;
-  color: #fff;
-  border-radius: 20px;
-  /* border-radius: 50px; */
-background: linear-gradient(145deg, #4058a1, #364a87);
-/* box-shadow:  7px 7px 14px #32457e,   -7px -7px 14px #465fae; */
-
-
-  /* background: linear-gradient(145deg, #f0f0f0, #cacaca); */
-  /* background:#4f405e; */
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-
-  padding: 20px;
-box-shadow:  2px 4px 40px #0316296b;
-             
-
+  color: var(--color-text-highlight) !important;
+  font-size: var(--font-size-xs);
 }
 
 .toggleLabel {
@@ -576,10 +568,9 @@ box-shadow:  2px 4px 40px #0316296b;
   align-items: center;
   cursor: pointer;
   font-weight: 600;
-  color: #1f2937;
-  font-family: var(--font-dm-sans);
-  margin-bottom: 0.5rem;
-  
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
+  margin-bottom: var(--spacing-sm);
 }
 
 .toggleCheckbox {
@@ -590,10 +581,10 @@ box-shadow:  2px 4px 40px #0316296b;
   position: relative;
   width: 3rem;
   height: 1.5rem;
-  background-color: #d1d5db;
-  border-radius: 1rem;
-  margin-right: 0.75rem;
-  transition: background-color 0.2s ease-in-out;
+  background-color: var(--color-border-light);
+  border-radius: var(--spacing-md);
+  margin-right: var(--spacing-sm);
+  transition: var(--transition-fast);
 }
 
 .toggleSlider::before {
@@ -603,137 +594,184 @@ box-shadow:  2px 4px 40px #0316296b;
   left: 2px;
   width: 1.25rem;
   height: 1.25rem;
-  background-color: white;
+  background-color: var(--color-text-white);
   border-radius: 50%;
-  transition: transform 0.2s ease-in-out;
+  transition: var(--transition-fast);
 }
 
-/* .colorAndSubmitBtnGroup {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  flex-wrap: nowrap;
-  flex-direction: row-reverse;
-  align-items: center;
-  height: 200px;
-} */
-
-.toggleCheckbox:checked+.toggleSlider {
-  background-color: #0d9488;
+.toggleCheckbox:checked + .toggleSlider {
+  background-color: var(--color-accent-teal);
 }
 
-.toggleCheckbox:checked+.toggleSlider::before {
+.toggleCheckbox:checked + .toggleSlider::before {
   transform: translateX(1.5rem);
 }
 
 .toggleText {
-  font-size: 1rem;
-  color: #21dcd0;
+  font-size: var(--font-size-md);
+  color: var(--color-text-accent);
 }
 
 .toggleDescription {
-  font-size: 0.875rem;
-  color: #b8d0c6;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-description);
   margin: 0;
   text-align: left;
   margin-left: 3.75rem;
   line-height: 1.4;
-  font-family: var(--font-dm-sans);
+  font-family: var(--font-family-primary);
 }
 
+/* =================================================================
+   Submit Button
+   ================================================================= */
+
+.userSubmitResumeBtn {
+  border-radius: var(--border-radius-rounded);
+  width: 100%;
+  margin-top: 1px;
+  margin-bottom: var(--spacing-xl);
+  color: var(--color-text-white);
+  background: var(--color-gradient-button);
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  padding: var(--spacing-xl);
+  box-shadow: var(--color-shadow-button);
+}
+
+.userSubmitResumeBtn label {
+  color: var(--color-text-highlight) !important;
+  font-size: var(--font-size-xs);
+}
+
+/* =================================================================
+   Utility Buttons
+   ================================================================= */
+
 .colorButton {
-  /* margin-bottom: 2rem; */
   background-color: #6366f1;
-  color: white;
+  color: var(--color-text-white);
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-medium);
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .colorButton:hover {
   background-color: #4f46e5;
 }
 
-.buttonIcon {
-  margin-right: 0.5rem;
+.removeFileButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 20px !important;
+  width: 20px !important;
+  margin: 15px;
+  margin-bottom: var(--spacing-md);
+  background-color: var(--color-error-button);
+  color: var(--color-text-white);
+  border: none;
+  padding: 0 !important;
+  line-height: 0 !important;
+  border-radius: var(--border-radius-small);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
 }
 
-/* Error Modal Styles */
-.errorTitle {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #dc2626;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.errorDescription {
-  color: #6b7280;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-  white-space: pre-line;
-}
-
-/* Dialog Styles */
-.dialogTitle {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #059669;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.dialogDescription {
-  color: #6b7280;
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
+.removeFileButton:hover {
+  background-color: var(--color-error-text);
 }
 
 .viewResumeButton {
-  background-color: #0d9488;
-  color: white;
+  background-color: var(--color-accent-teal);
+  color: var(--color-text-white);
   border: none;
-  padding: 0.75rem 2rem;
-  border-radius: 0.5rem;
+  padding: var(--spacing-sm) var(--spacing-xl);
+  border-radius: var(--border-radius-medium);
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: var(--transition-fast);
 }
 
 .viewResumeButton:hover {
-  background-color: #0f766e;
+  background-color: var(--color-accent-teal-dark);
 }
+
+.buttonIcon {
+  margin-right: var(--spacing-sm);
+}
+
+/* =================================================================
+   Modal and Dialog Styles
+   ================================================================= */
+
+.errorTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-error-text);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+}
+
+.errorDescription {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-lg);
+  white-space: pre-line;
+}
+
+.dialogTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-text-success);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+}
+
+.dialogDescription {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.5;
+}
+
+/* =================================================================
+   Responsive Design
+   ================================================================= */
 
 @media (max-width: 768px) {
   .uploaderContainer {
-    padding: 1rem;
+    padding: var(--spacing-md);
   }
 
   .title {
-    font-size: 2rem;
+    font-size: var(--font-size-2xl);
   }
 
   .dropZone {
-    padding: 2rem 1rem;
+    padding: var(--spacing-xl) var(--spacing-md);
   }
 
   .features {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: var(--spacing-lg);
   }
 
   .inputMethod {
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--spacing-md);
   }
 
   .toneOptions {
