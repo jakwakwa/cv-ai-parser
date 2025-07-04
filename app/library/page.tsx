@@ -5,12 +5,11 @@ import { Suspense, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import type { Resume } from '@/lib/types';
 import { useAuthModal } from '@/src/components/auth-component/AuthModalContext';
-import { useAuth } from '@/src/components/auth-provider/AuthProvider';
-import ResumeLibrary from '@/src/components/resume-library/ResumeLibrary';
-import { SiteHeader } from '@/src/components/site-header/SiteHeader';
+import { useAuth } from '@/src/components/auth-provider/auth-provider';
+import { SiteHeader } from '@/src/components/site-header/site-header';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
-import { Button } from '@/src/components/ui/button';
-import styles from '../page.module.css';
+import { Button } from '@/src/components/ui/ui-button/button';
+import ResumeLibrary from '@/src/containers/resume-library/resume-library';
 
 // Component that handles URL parameters - needs to be wrapped in Suspense
 function LibraryPageContent() {
@@ -32,11 +31,6 @@ function LibraryPageContent() {
   };
 
   // Auto-open the auth modal for unauthenticated users
-  useEffect(() => {
-    if (!user) {
-      setAuthModalOpen(true);
-    }
-  }, [user, setAuthModalOpen]);
 
   useEffect(() => {
     const toastMessage = searchParams.get('toast');
@@ -58,24 +52,11 @@ function LibraryPageContent() {
   }, [searchParams, router, toast]);
 
   return (
-    <main className={styles.mainUserContainer}>
+    <main className="mainUserContainer">
       {!user && (
         <div className="text-center bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-md mx-auto mt-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            Welcome to Your Library!
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Please sign in or sign up to access your resume library and manage
-            your documents.
-          </p>
-          <div className="space-x-3">
-            <Button onClick={() => setAuthModalOpen(true)} variant="default">
-              Sign In / Sign Up
-            </Button>
-            <Button onClick={() => router.push('/')} variant="default">
-              Upload New
-            </Button>
-          </div>
+          Redirecting to home screen.
+          <br /> Login to view your content
         </div>
       )}
       {user && (
@@ -90,7 +71,7 @@ function LibraryPageContent() {
 
 export default function LibraryPage() {
   return (
-    <div className={styles.pageWrapper}>
+    <div className="pageWrapper">
       <SiteHeader />
 
       {/* Header Ad */}
