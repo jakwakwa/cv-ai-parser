@@ -225,3 +225,541 @@
     gap: 1.5rem;
   }
 }
+
+/* Loading State Styles */
+.loadingWrapper {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingBox {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  padding: 2rem;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.loadingContent {
+  text-align: center;
+}
+
+.loadingSpinner {
+  animation: spin 1s linear infinite;
+  border-radius: 9999px;
+  height: 2rem;
+  width: 2rem;
+  border-width: 2px;
+  border-color: transparent;
+  border-bottom-color: #0d9488;
+  margin: 0 auto 1rem auto;
+}
+
+.loadingTitle {
+  color: #111827;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.loadingDescription {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* Main Container */
+.mainWrapper {
+  width: 100%;
+  border-radius: 0.25rem;
+}
+
+/* Content Spacing */
+.contentSection {
+  margin-top: 2rem;
+}
+
+/* Button Container */
+.buttonContainer {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  gap: 1rem;
+}
+
+/* Download Link Button */
+.downloadLink {
+  color: #0d9488;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  margin-top: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s ease-in-out;
+}
+
+.downloadLink:hover {
+  color: #0f766e;
+}
+
+/* File Upload Success */
+.fileUploadedContainer {
+  margin-top: 2rem;
+}
+
+@media (min-width: 768px) {
+  .fileUploadedContainer {
+    padding-top: 2rem;
+  }
+}
+
+.fileUploadedBox {
+  margin: 0;
+  background-color: white;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+@media (min-width: 768px) {
+  .fileUploadedBox {
+    margin: 0 2rem;
+    height: 6rem;
+  }
+}
+
+.fileInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .fileInfo {
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+  }
+}
+
+.fileDetails {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  align-items: center;
+}
+
+.checkIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #10b981;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+}
+
+.fileNameContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.fileName {
+  font-weight: 500;
+  font-size: 1rem;
+  text-align: left;
+  color: #111827;
+}
+
+.fileSize {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.removeButton {
+  color: #dc2626;
+  font-weight: 500;
+  font-size: 0.875rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s ease-in-out;
+}
+
+.removeButton:hover {
+  color: #b91c1c;
+}
+
+/* Section Headers */
+.sectionHeader {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  margin-left: 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .sectionHeader {
+    margin-left: 2rem;
+  }
+}
+
+.sectionIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.5rem;
+}
+
+/* Profile Image Section */
+.profileImageBox {
+  display: flex;
+  margin: 0;
+  background-color: white;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .profileImageBox {
+    margin: 0 2rem;
+    height: 5rem;
+    padding: 1rem 1.5rem;
+  }
+}
+
+.profileImageContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .profileImageContent {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+  }
+}
+
+.profileImageText {
+  color: #6b7280;
+  font-size: 0.75rem;
+  text-align: left;
+}
+
+@media (min-width: 768px) {
+  .profileImageText {
+    font-size: 0.875rem;
+  }
+}
+
+.profileImageButton {
+  color: #0d9488;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s ease-in-out;
+}
+
+@media (min-width: 768px) {
+  .profileImageButton {
+    font-size: 0.875rem;
+  }
+}
+
+.profileImageButton:hover {
+  color: #0f766e;
+}
+
+.hideButton {
+  margin-top: 1rem;
+  color: #0d9488;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 1rem auto 0 auto;
+  display: block;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s ease-in-out;
+}
+
+.hideButton:hover {
+  color: #0f766e;
+}
+
+.profilePreview {
+  display: flex;
+  align-items: center;
+}
+
+.profileImage {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  object-fit: cover;
+  margin-right: 0.75rem;
+}
+
+.profileImageInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.profileImageLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #111827;
+}
+
+.changePhotoButton {
+  font-size: 0.875rem;
+  color: #0d9488;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s ease-in-out;
+}
+
+.changePhotoButton:hover {
+  color: #0f766e;
+}
+
+/* Color Customization Section */
+.colorBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin: 0;
+  background-color: white;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  height: 5rem;
+  padding: 0.75rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .colorBox {
+    flex-direction: row;
+    margin: 0 2rem;
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+.colorContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: 0;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .colorContent {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.colorText {
+  color: #6b7280;
+  font-size: 0.75rem;
+  text-align: left;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .colorText {
+    font-size: 0.875rem;
+  }
+}
+
+.colorPreviewContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+@media (min-width: 768px) {
+  .colorPreviewContainer {
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 100%;
+  }
+}
+
+.colorPreview {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 0.5rem;
+  margin-left: 0.25rem;
+}
+
+@media (min-width: 768px) {
+  .colorPreview {
+    margin-top: 0;
+  }
+}
+
+.colorSwatches {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 0.25rem;
+}
+
+.colorSwatch {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 9999px;
+  border: 1px solid #d1d5db;
+}
+
+.colorButton {
+  color: #0d9488;
+  font-weight: 500;
+  font-size: 0.75rem;
+  margin: 0;
+  margin-top: 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s ease-in-out;
+}
+
+@media (min-width: 768px) {
+  .colorButton {
+    width: 350px;
+    font-size: 0.875rem;
+    margin-top: 0;
+  }
+}
+
+.colorButton:hover {
+  color: #0f766e;
+}
+
+/* Create Resume Section */
+.createResumeSection {
+  margin-top: 2rem;
+}
+
+@media (min-width: 768px) {
+  .createResumeSection {
+    margin: 2rem 2rem 0 2rem;
+  }
+}
+
+.createResumeButton {
+  width: 100%;
+  background-color: #0d9488;
+  color: white;
+  font-weight: bold;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 1.125rem;
+  transition: background-color 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.createResumeButton:hover {
+  background-color: #0f766e;
+}
+
+.createResumeButton:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.signInHint {
+  margin: 0.5rem 2rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.bottomSpacing {
+  padding-bottom: 1.5rem;
+}
+
+/* Error Icon in error div */
+.errorIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #ef4444;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Modal Error Styles */
+.modalErrorHeader {
+  display: flex;
+  align-items: center;
+  color: #dc2626;
+}
+
+.modalErrorIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.modalErrorText {
+  white-space: pre-line;
+}
+
+.modalButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.modalCloseButton {
+  padding: 0.5rem 1rem;
+  background-color: #dc2626;
+  color: white;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.modalCloseButton:hover {
+  background-color: #b91c1c;
+}
+
+/* Dialog content override styles */
+.transparentDialog {
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  max-width: fit-content;
+}
+
+.maxWidthDialog {
+  max-width: 28rem;
+}

@@ -303,14 +303,14 @@ const ResumeUploader = ({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-6xl mx-auto">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600 mx-auto mb-4" />
-            <p className="text-gray-900 font-medium mb-2">
+      <div className={styles.loadingWrapper}>
+        <div className={styles.loadingBox}>
+          <div className={styles.loadingContent}>
+            <div className={styles.loadingSpinner} />
+            <p className={styles.loadingTitle}>
               Creating your resume...
             </p>
-            <p className="text-gray-600 text-sm">
+            <p className={styles.loadingDescription}>
               Extracting text and analyzing content with Google Gemini...
             </p>
           </div>
@@ -320,9 +320,9 @@ const ResumeUploader = ({
   }
 
   return (
-    <div className="w-full rounded">
+    <div className={styles.mainWrapper}>
       <div className={styles.uploaderContainer}>
-        <div className="mt-8">
+        <div className={styles.contentSection}>
           {!uploadedFile ? (
             // biome-ignore lint/a11y/noStaticElementInteractions
             <div
@@ -363,7 +363,7 @@ const ResumeUploader = ({
                 Supports text files and PDFs (max 10MB)
               </p>
 
-              <div className="w-full max-w-[500px] flex flex-col mx-auto gap-4">
+              <div className={styles.buttonContainer}>
                 <button
                   type="button"
                   className={styles.uploadButton}
@@ -381,7 +381,7 @@ const ResumeUploader = ({
                     link.click();
                     document.body.removeChild(link);
                   }}
-                  className="text-teal-600 hover:text-teal-700 font-medium text-sm underline mt-2"
+                  className={styles.downloadLink}
                 >
                   📄 Download Starter Resume Text File (optional)
                 </button>
@@ -400,7 +400,7 @@ const ResumeUploader = ({
                       Click for detailed instructions on converting Word to .txt
                     </p>
                   </DialogTrigger>
-                  <DialogContent className="max-w-md">
+                  <DialogContent className={styles.maxWidthDialog}>
                     <DialogTitle>
                       To export a Word document as a plain text file (.txt):
                     </DialogTitle>
@@ -423,16 +423,16 @@ const ResumeUploader = ({
               </div>
             </div>
           ) : (
-            <div className="md:pt-8 mt-8">
-              <div className="mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 p-6 md:h-24 shadow">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0">
-                  <div className="flex justify-start w-full items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <div className="flex flex-col items-start justify-start">
-                      <p className="font-medium text-md text-left text-gray-900">
+            <div className={styles.fileUploadedContainer}>
+              <div className={styles.fileUploadedBox}>
+                <div className={styles.fileInfo}>
+                  <div className={styles.fileDetails}>
+                    <CheckCircle className={styles.checkIcon} />
+                    <div className={styles.fileNameContainer}>
+                      <p className={styles.fileName}>
                         {uploadedFile.name}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className={styles.fileSize}>
                         {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB •{' '}
                         {uploadedFile.type}
                       </p>
@@ -441,7 +441,7 @@ const ResumeUploader = ({
                   <button
                     type="button"
                     onClick={handleRemoveFile}
-                    className="text-red-600 hover:text-red-700 font-medium text-sm"
+                    className={styles.removeButton}
                   >
                     Remove
                   </button>
@@ -453,21 +453,21 @@ const ResumeUploader = ({
 
         {/* Step 2: Optional Profile Image */}
         {uploadedFile && (
-          <div className="mt-8">
-            <h2 className="md:ml-8 text-sm font-semibold text-gray-800 mb-4 ml-3 flex items-center">
-              <ImageIcon className="w-5 h-5 mr-2" />
+          <div className={styles.contentSection}>
+            <h2 className={styles.sectionHeader}>
+              <ImageIcon className={styles.sectionIcon} />
               Profile Picture (Optional)
             </h2>
 
-            <div className="flex mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow md:h-20 py-4 px-4 md:px-6">
-              <div className="flex flex-col md:flex-row items-start md:items-center w-full md:justify-between gap-4 md:gap-0">
-                <p className="text-gray-600 text-xs md:text-sm text-left md:text-left">
+            <div className={styles.profileImageBox}>
+              <div className={styles.profileImageContent}>
+                <p className={styles.profileImageText}>
                   Add a professional profile picture to your resume
                 </p>
                 <button
                   type="button"
                   onClick={() => setShowProfileUploader(!showProfileUploader)}
-                  className="text-teal-600 text-xs hover:text-teal-700 font-medium md:text-sm"
+                  className={styles.profileImageButton}
                 >
                   {showProfileUploader ? 'Hide' : 'Add Photo'}
                 </button>
@@ -478,7 +478,7 @@ const ResumeUploader = ({
                 open={showProfileUploader}
                 onOpenChange={setShowProfileUploader}
               >
-                <DialogContent className="p-0 bg-transparent border-none shadow-none max-w-fit">
+                <DialogContent className={styles.transparentDialog}>
                   {/* Accessible title for screen readers */}
                   <VisuallyHidden>
                     <DialogTitle>Profile Image Uploader</DialogTitle>
@@ -492,7 +492,7 @@ const ResumeUploader = ({
                   <button
                     type="button"
                     onClick={() => setShowProfileUploader(false)}
-                    className="mt-4 text-teal-600 text-sm hover:text-teal-700 font-medium mx-auto block"
+                    className={styles.hideButton}
                   >
                     Hide
                   </button>
@@ -500,21 +500,21 @@ const ResumeUploader = ({
               </Dialog>
 
               {profileImage && !showProfileUploader && (
-                <div className="flex items-center">
+                <div className={styles.profilePreview}>
                   {/** biome-ignore lint/performance/noImgElement */}
                   <img
                     src={profileImage || '/placeholder.svg'}
                     alt="Profile preview"
-                    className="w-12 h-12 rounded-full object-cover mr-3"
+                    className={styles.profileImage}
                   />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
+                  <div className={styles.profileImageInfo}>
+                    <p className={styles.profileImageLabel}>
                       Profile picture added
                     </p>
                     <button
                       type="button"
                       onClick={() => setShowProfileUploader(true)}
-                      className="text-sm text-teal-600 hover:text-teal-700"
+                      className={styles.changePhotoButton}
                     >
                       Change photo
                     </button>
@@ -527,36 +527,36 @@ const ResumeUploader = ({
 
         {/* Step 3: Optional Color Customization */}
         {uploadedFile && (
-          <div className="mt-8">
-            <h2 className="md:ml-8 text-sm font-semibold text-gray-800 mb-4 ml-3 flex items-center">
-              <Palette className="w-5 h-5 mr-2" />
+          <div className={styles.contentSection}>
+            <h2 className={styles.sectionHeader}>
+              <Palette className={styles.sectionIcon} />
               Customize Colors (Optional)
             </h2>
 
-            <div className="flex flex-col md:flex-row items-start justify-start mx-0 md:mx-8 bg-white rounded-lg border border-gray-200 shadow h-20 py-3 px-4 md:px-6">
-              <div className="flex flex-col md:flex-row justify-center md:items-center w-full justify-between mb-0 gap-4">
-                <p className="text-gray-600 text-xs md:text-sm text-left w-full">
+            <div className={styles.colorBox}>
+              <div className={styles.colorContent}>
+                <p className={styles.colorText}>
                   Personalize your resume with custom colors and themes
                 </p>
               </div>
-              <div className="flex flex-row md:justify-end md:align-end md:w-full">
-                <div className="flex items-start mt-2 md:mt-0 mx-1">
-                  <div className="flex flex-row-reverse gap-1">
+              <div className={styles.colorPreviewContainer}>
+                <div className={styles.colorPreview}>
+                  <div className={styles.colorSwatches}>
                     <div
-                      className="w-4 h-4 rounded-full border border-gray-300"
+                      className={styles.colorSwatch}
                       style={{
                         backgroundColor:
                           customColors['--resume-sidebar-background'],
                       }}
                     />
                     <div
-                      className="w-4 h-4 rounded-full border border-gray-300"
+                      className={styles.colorSwatch}
                       style={{
                         backgroundColor: customColors['--resume-main-icons'],
                       }}
                     />
                     <div
-                      className="w-4 h-4 rounded-full border border-gray-300"
+                      className={styles.colorSwatch}
                       style={{
                         backgroundColor: customColors['--resume-job-title'],
                       }}
@@ -567,7 +567,7 @@ const ResumeUploader = ({
               <button
                 type="button"
                 onClick={() => setShowColorDialog(true)}
-                className="text-teal-600 md:w-[350px] hover:text-teal-700 font-medium text-xs md:text-sm mx-0 mt-3 md:mt-0"
+                className={styles.colorButton}
               >
                 Choose Custom Theme
               </button>
@@ -585,12 +585,12 @@ const ResumeUploader = ({
         {/* Create Resume Button */}
         {uploadedFile && (
           <>
-            <div className="mt-8 md:mx-8">
+            <div className={styles.createResumeSection}>
               <button
                 type="button"
                 onClick={handleCreateResume}
                 disabled={isLoading}
-                className="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors duration-200"
+                className={styles.createResumeButton}
               >
                 {isLoading
                   ? 'Creating Resume...'
@@ -599,39 +599,39 @@ const ResumeUploader = ({
                     : 'Create Resume'}
               </button>
               {!isAuthenticated && (
-                <p className="mx-8 text-sm text-gray-600 my-2 text-center">
+                <p className={styles.signInHint}>
                   💡 Sign in to save your resume to your library and edit it
                   later
                 </p>
               )}
             </div>
-            <div className="pb-6" />
+            <div className={styles.bottomSpacing} />
           </>
         )}
 
         {error && (
           <div className={styles.error}>
-            <AlertTriangle className="w-5 h-5 text-red-500 mr-2" />
+            <AlertTriangle className={styles.errorIcon} />
             <p style={{ whiteSpace: 'pre-line' }}>{error}</p>
           </div>
         )}
 
         {/* Error Modal */}
         <Dialog open={showErrorModal} onOpenChange={setShowErrorModal}>
-          <DialogContent className="max-w-md">
+          <DialogContent className={styles.maxWidthDialog}>
             <DialogTitle>
-              <div className="flex items-center text-red-600">
-                <AlertTriangle className="w-6 h-6 mr-2" />
+              <div className={styles.modalErrorHeader}>
+                <AlertTriangle className={styles.modalErrorIcon} />
                 Parsing Error
               </div>
             </DialogTitle>
-            <DialogDescription className="whitespace-pre-line">
+            <DialogDescription className={styles.modalErrorText}>
               {modalErrorMessage}
             </DialogDescription>
-            <div className="flex justify-end mt-4">
+            <div className={styles.modalButtonContainer}>
               <button
                 type="button"
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                className={styles.modalCloseButton}
                 onClick={() => setShowErrorModal(false)}
               >
                 Close
