@@ -55,13 +55,14 @@ This appendix expands on **Section 4.2 – Performance Considerations** of the m
 • **Long-term:** Redis/Memcached (vercel KV, upstash) keyed by hashed input.  
 • **Persistent historical:** Supabase `resume_versions` (already present) can act as cold cache. |
 | **Cache Strategy** | ```ts
-| | if (await kv.exists(cacheKey)) return kv.get(cacheKey);
+| | const cached = await kv.get(cacheKey);
+| | if (cached) return cached;
 | | const tailored = await tailorResume(...);
 | | kv.set(cacheKey, tailored, { ex: 3600 });
 | | ``` |
 | **LLM Cost Guardrail** | Wrap calls behind a `cacheFirst()` utility so missed keys are the only ones billed. Use queue metrics to monitor hit-ratio. |
 | **Hash Generation** | Use streaming digests for large PDFs to avoid memory spikes. |
-| **Invalidation** | Version the cache key (<code>v2::</code>) when prompt templates or schemas evolve. |
+| **Invalidation** | Version the cache key (`v2::`) when prompt templates or schemas evolve. |
 
 ---
 
