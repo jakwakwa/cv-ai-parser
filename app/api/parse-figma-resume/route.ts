@@ -24,15 +24,84 @@ interface FigmaNode {
   }>;
 }
 
-// Quick-and-dirty HTML generator. This is **not** production-grade but
-// demonstrates the round-trip of taking Figma JSON → code.
-function mapTextContent(text: string): string {
+// Enhanced text content mapping based on Figma layer names and content
+function mapTextContent(text: string, layerName: string): string {
   const lower = text.toLowerCase();
-  if (lower.includes('name')) return '{resume.name}';
-  if (lower.includes('title') || lower.includes('profession')) return '{resume.title}';
-  if (lower.includes('summary') || lower.includes('about')) return '{resume.summary}';
-  if (lower.includes('email')) return '{resume.contact?.email}';
-  if (lower.includes('phone')) return '{resume.contact?.phone}';
+  const layerLower = layerName.toLowerCase();
+  
+  // Map based on layer names from Figma structure
+  if (layerLower.includes('summary-name') || layerLower.includes('name')) {
+    return '{resume.name}';
+  }
+  if (layerLower.includes('summary-text') || layerLower.includes('summary-content')) {
+    return '{resume.summary}';
+  }
+  if (layerLower.includes('exp-title') || layerLower.includes('job-title')) {
+    return '{resume.experience?.[0]?.position || "Position"}';
+  }
+  if (layerLower.includes('exp-company') || layerLower.includes('company')) {
+    return '{resume.experience?.[0]?.company || "Company"}';
+  }
+  if (layerLower.includes('exp-period') || layerLower.includes('period')) {
+    return '{resume.experience?.[0]?.startDate && resume.experience?.[0]?.endDate ? `${resume.experience[0].startDate} - ${resume.experience[0].endDate}` : "Period"}';
+  }
+  if (layerLower.includes('exp-desc') || layerLower.includes('description')) {
+    return '{resume.experience?.[0]?.description || "Job description"}';
+  }
+  if (layerLower.includes('contact-email') || layerLower.includes('email')) {
+    return '{resume.contact?.email}';
+  }
+  if (layerLower.includes('contact-phone') || layerLower.includes('phone')) {
+    return '{resume.contact?.phone}';
+  }
+  if (layerLower.includes('contact-location') || layerLower.includes('location')) {
+    return '{resume.contact?.location}';
+  }
+  if (layerLower.includes('education-degree') || layerLower.includes('degree')) {
+    return '{resume.education?.[0]?.degree || "Degree"}';
+  }
+  if (layerLower.includes('education-school') || layerLower.includes('school')) {
+    return '{resume.education?.[0]?.institution || "School"}';
+  }
+  if (layerLower.includes('education-year') || layerLower.includes('year')) {
+    return '{resume.education?.[0]?.year || "Year"}';
+  }
+  if (layerLower.includes('certificate-degree') || layerLower.includes('certification')) {
+    return '{resume.certifications?.[0]?.name || "Certification"}';
+  }
+  if (layerLower.includes('certificate-school') || layerLower.includes('issuer')) {
+    return '{resume.certifications?.[0]?.issuer || "Issuer"}';
+  }
+  if (layerLower.includes('certificate-year') || layerLower.includes('cert-year')) {
+    return '{resume.certifications?.[0]?.year || "Year"}';
+  }
+  if (layerLower.includes('skill') && !layerLower.includes('skills-list')) {
+    return '{resume.skills?.[0] || "Skill"}';
+  }
+  
+  // Section titles
+  if (lower.includes('experience') && layerLower.includes('sectiontitle')) {
+    return '{"Experience"}';
+  }
+  if (lower.includes('education') && layerLower.includes('sectiontitle')) {
+    return '{"Education"}';
+  }
+  if (lower.includes('contact') && layerLower.includes('sectiontitle')) {
+    return '{"Contact"}';
+  }
+  if (lower.includes('certification') && layerLower.includes('sectiontitle')) {
+    return '{"Certifications"}';
+  }
+  if (lower.includes('skills') && layerLower.includes('sectiontitle')) {
+    return '{"Skills"}';
+  }
+  
+  // Generic content mapping based on text content
+  if (lower.includes('curriculum vitae') || lower.includes('resume')) {
+    return '{resume.name}';
+  }
+  
+  // Default fallback
   return `{\`${text}\`}`;
 }
 
@@ -75,16 +144,73 @@ function rgbaToHex(r: number, g: number, b: number, a: number): string {
 function nodeToJsx(node: FigmaNode): string {
   switch (node.type) {
     case 'TEXT':
-      return `<p>${mapTextContent(node.characters || '')}</p>`;
+      return `<p>${mapTextContent(node.characters || '', node.name)}</p>`;
     case 'RECTANGLE':
     case 'FRAME':
     case 'GROUP': {
-      const childrenJsx = node.children?.map(nodeToJsx).join('\n') || '';
+      const nodeName = node.name.toLowerCase();
       const className = node.name.replace(/\s+/g, '').toLowerCase();
       // Use bracket notation for CSS class names to handle hyphens and special characters
       const classNameAccess = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(className) 
         ? `styles.${className}` 
         : `styles['${className}']`;
+      
+      // Handle repeated sections with mapping
+      if (nodeName.includes('experience-list')) {
+        return `<div className={${classNameAccess}}>{resume.experience?.map((exp, index) => (
+          <div key={index} className={styles['experience-item']}>
+            <div className={styles['exp-title']}><p>{exp.position || "Position"}</p></div>
+            <div className={styles['exp-company']}><p>{exp.company || "Company"}</p></div>
+            <div className={styles['exp-period']}><p>{exp.startDate && exp.endDate ? \`\${exp.startDate} - \${exp.endDate}\` : "Period"}</p></div>
+            <div className={styles['exp-desc']}><p>{exp.description || "Job description"}</p></div>
+          </div>
+        )) || []}</div>`;
+      }
+      
+      if (nodeName.includes('education-list') && !nodeName.includes('education-degree') && !nodeName.includes('education-year') && !nodeName.includes('education-school')) {
+        return `<div className={${classNameAccess}}>{resume.education?.map((edu, index) => (
+          <div key={index}>
+            <p>{edu.degree || "Degree"}</p>
+            <p>{edu.institution || "School"}</p>
+            <p>{edu.year || "Year"}</p>
+          </div>
+        )) || []}</div>`;
+      }
+      
+      if (nodeName.includes('certification-list') && !nodeName.includes('certificate-degree') && !nodeName.includes('certificate-school') && !nodeName.includes('certificate-year')) {
+        return `<div className={${classNameAccess}}>{resume.certifications?.map((cert, index) => (
+          <div key={index}>
+            <p>{cert.name || "Certification"}</p>
+            <p>{cert.issuer || "Issuer"}</p>
+            <p>{cert.year || "Year"}</p>
+          </div>
+        )) || []}</div>`;
+      }
+      
+      if (nodeName.includes('skills-list')) {
+        return `<div className={${classNameAccess}}>{resume.skills?.map((skill, index) => (
+          <div key={index} className={styles.skill}>
+            <p>{skill}</p>
+          </div>
+        )) || []}</div>`;
+      }
+      
+      if (nodeName.includes('contact-list')) {
+        return `<div className={${classNameAccess}}>
+          <p>{resume.contact?.email}</p>
+          <p>{resume.contact?.phone}</p>
+          <p>{resume.contact?.location}</p>
+        </div>`;
+      }
+      
+      // Skip individual experience-item, education-list items, etc. if they're inside a list
+      if (nodeName.includes('experience-item') || 
+          (nodeName.includes('education-list') && (nodeName.includes('degree') || nodeName.includes('school') || nodeName.includes('year'))) ||
+          (nodeName.includes('certification-list') && (nodeName.includes('certificate') || nodeName.includes('issuer')))) {
+        return ''; // Skip these as they're handled by the parent list
+      }
+      
+      const childrenJsx = node.children?.map(nodeToJsx).join('\n') || '';
       return `<div className={${classNameAccess}}>${childrenJsx}</div>`;
     }
     default:
