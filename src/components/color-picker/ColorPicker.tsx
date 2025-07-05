@@ -49,7 +49,7 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
     '--resume-dates': '#565854',
     '--resume-body-text': '#3e2f22',
     '--resume-profile-header-background': '#faf4ec',
-    '--resume-skill-border': '#a49990c7',
+    '--resume-skill-border': '#a49990',
   };
 
   const colorSchemes: ColorScheme[] = [
