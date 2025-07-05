@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Eye, FileText, Download, Check } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import styles from './FigmaPreview.module.css';
@@ -9,7 +9,14 @@ interface FigmaPreviewProps {
   componentName: string;
   jsxCode: string;
   cssCode: string;
-  rawFigma?: unknown;
+  rawFigma?: Record<string, any>;
+}
+
+type TabType = 'preview' | 'jsx' | 'css';
+
+interface CopyState {
+  type: string;
+  success: boolean;
 }
 
 const FigmaPreview: React.FC<FigmaPreviewProps> = ({
@@ -18,30 +25,73 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
   cssCode,
   rawFigma
 }) => {
-  const [activeTab, setActiveTab] = useState<'preview' | 'jsx' | 'css'>('preview');
+  const [activeTab, setActiveTab] = useState<TabType>('preview');
   const [copied, setCopied] = useState<string | null>(null);
+  const [copyError, setCopyError] = useState<string | null>(null);
 
-  const handleCopy = async (content: string, type: string) => {
+  // Validate props after hooks
+  const hasValidData = componentName && jsxCode && cssCode;
+
+  const handleCopy = useCallback(async (content: string, type: string) => {
+    if (!content.trim()) {
+      setCopyError('No content to copy');
+      setTimeout(() => setCopyError(null), 3000);
+      return;
+    }
+
     try {
       await navigator.clipboard.writeText(content);
       setCopied(type);
+      setCopyError(null);
       setTimeout(() => setCopied(null), 2000);
     } catch (err) {
       console.error('Failed to copy:', err);
+      setCopyError('Failed to copy to clipboard');
+      setTimeout(() => setCopyError(null), 3000);
     }
-  };
+  }, []);
 
-  const handleDownload = (content: string, filename: string) => {
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
+  const handleDownload = useCallback((content: string, filename: string) => {
+    if (!content.trim()) {
+      setCopyError('No content to download');
+      setTimeout(() => setCopyError(null), 3000);
+      return;
+    }
+
+    try {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Failed to download:', err);
+      setCopyError('Failed to download file');
+      setTimeout(() => setCopyError(null), 3000);
+    }
+  }, []);
+
+  const handleTabChange = useCallback((tab: TabType) => {
+    setActiveTab(tab);
+    setCopyError(null);
+  }, []);
+
+  if (!hasValidData) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h3 className={styles.title}>Error: Invalid Component Data</h3>
+          <p className={styles.subtitle}>
+            Missing required component information. Please try generating the component again.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -56,7 +106,8 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
         <button
           type="button"
           className={`${styles.tab} ${activeTab === 'preview' ? styles.tabActive : ''}`}
-          onClick={() => setActiveTab('preview')}
+          onClick={() => handleTabChange('preview')}
+          aria-label="View component preview"
         >
           <Eye className={styles.tabIcon} />
           Preview
@@ -64,7 +115,8 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
         <button
           type="button"
           className={`${styles.tab} ${activeTab === 'jsx' ? styles.tabActive : ''}`}
-          onClick={() => setActiveTab('jsx')}
+          onClick={() => handleTabChange('jsx')}
+          aria-label="View JSX code"
         >
           <FileText className={styles.tabIcon} />
           JSX
@@ -72,12 +124,19 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
         <button
           type="button"
           className={`${styles.tab} ${activeTab === 'css' ? styles.tabActive : ''}`}
-          onClick={() => setActiveTab('css')}
+          onClick={() => handleTabChange('css')}
+          aria-label="View CSS code"
         >
           <FileText className={styles.tabIcon} />
           CSS
         </button>
       </div>
+
+      {copyError && (
+        <div className={styles.errorMessage}>
+          {copyError}
+        </div>
+      )}
 
       <div className={styles.content}>
         {activeTab === 'preview' && (
