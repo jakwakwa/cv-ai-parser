@@ -36,6 +36,7 @@ This documentation provides comprehensive guidance for integrating Model Context
 | [`04-api-reference.md`](./04-api-reference.md) | API endpoints and integration details | Backend Developers |
 | [`05-testing-strategy.md`](./05-testing-strategy.md) | Testing approaches and validation procedures | QA Engineers, Developers |
 | [`figma-upload-robustness-strategy.md`](./figma-upload-robustness-strategy.md) | Strategy for robust, intelligent, and durable Figma parsing | Technical Leadership, Full-stack Developers |
+| [`user-experience-philosophy.md`](./user-experience-philosophy.md) | **"Complex Backend, Simple Frontend"** - Our UX philosophy | Product Managers, UX Designers |
 
 ### Configuration & Examples
 
