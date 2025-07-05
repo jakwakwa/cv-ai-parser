@@ -1,5 +1,7 @@
 import Markdown from '@/src/components/docs/Markdown';
 
+export const dynamic = "force-dynamic";
+
 const md = `
 # Uploading a Resume File
 
