@@ -37,9 +37,10 @@ function extractFileKeyAndNodeId(figmaUrl: string): { fileKey: string; nodeId?: 
   try {
     const url = new URL(figmaUrl);
     const segments = url.pathname.split('/');
-    const fileIndex = segments.indexOf('file');
-    if (fileIndex === -1 || segments.length <= fileIndex + 1) return null;
-    const fileKey = segments[fileIndex + 1];
+    // Figma links can use either /file/FILEKEY or /design/FILEKEY now.
+    const fileSegmentIndex = segments.findIndex((seg) => seg === 'file' || seg === 'design');
+    if (fileSegmentIndex === -1 || segments.length <= fileSegmentIndex + 1) return null;
+    const fileKey = segments[fileSegmentIndex + 1];
 
     const nodeId = url.searchParams.get('node-id') || undefined;
     return { fileKey, nodeId };
