@@ -214,14 +214,14 @@ const ResumeUploader = ({
 
       // Append JobFit Tailor fields if enabled and toggled
       if (isJobTailoringEnabled && isJobTailoringToggled) {
+        // Always send tone when job tailoring is enabled
+        formData.append('tone', tone);
+        if (extraPrompt) formData.append('extraPrompt', extraPrompt);
+        
         if (jobSpecMethod === 'paste' && jobSpecText) {
           formData.append('jobSpecText', jobSpecText);
-          formData.append('tone', tone);
-          if (extraPrompt) formData.append('extraPrompt', extraPrompt);
         } else if (jobSpecMethod === 'upload' && jobSpecFile) {
           formData.append('jobSpecFile', jobSpecFile);
-          formData.append('tone', tone);
-          if (extraPrompt) formData.append('extraPrompt', extraPrompt);
         }
       }
 

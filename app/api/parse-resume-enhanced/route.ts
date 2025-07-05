@@ -36,8 +36,10 @@ export async function POST(request: NextRequest) {
       hasFile: !!file,
       hasJobSpecFile: !!jobSpecFile,
       hasJobSpecText: !!jobSpecText,
+      jobSpecTextLength: jobSpecText?.length || 0,
       tone,
       hasExtraPrompt: !!extraPrompt,
+      allFormDataKeys: Array.from(formData.keys()),
     });
 
     // Validate inputs
@@ -52,7 +54,7 @@ export async function POST(request: NextRequest) {
     let additionalContext: UserAdditionalContext | undefined = undefined;
     const hasJobSpec = (jobSpecFile && jobSpecFile.size > 0) || (jobSpecText && jobSpecText.trim().length > 0);
 
-    // Only validate job tailoring fields if job spec is provided
+    // Enhanced endpoint expects job tailoring data, but allow graceful fallback to regular parsing
     if (hasJobSpec) {
       // Validate that tone is provided when job spec is given
       if (!tone || !['Formal', 'Neutral', 'Creative'].includes(tone)) {
@@ -80,7 +82,7 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // Validate job spec text length
+      // Validate job spec text length and content
       if (finalJobSpecText && finalJobSpecText.length > 1000) {
         return Response.json(
           { error: 'Job specification text is too long. Maximum 1000 characters allowed.' },
@@ -88,12 +90,20 @@ export async function POST(request: NextRequest) {
         );
       }
 
+      // Ensure we have meaningful job spec text
+      if (!finalJobSpecText || finalJobSpecText.trim().length < 10) {
+        return Response.json(
+          { error: 'Job specification text is too short. Please provide at least 10 characters of meaningful job description.' },
+          { status: 400 }
+        );
+      }
+
       const contextData = {
         jobSpecSource: jobSpecFile ? 'upload' : ('pasted' as const),
-        jobSpecText: finalJobSpecText || undefined,
+        jobSpecText: finalJobSpecText.trim(),
         jobSpecFileUrl: undefined, // TODO: Handle file upload to storage in future
         tone: tone as 'Formal' | 'Neutral' | 'Creative',
-        extraPrompt: extraPrompt || undefined,
+        extraPrompt: extraPrompt?.trim() || undefined,
       };
 
       // Validate context structure
