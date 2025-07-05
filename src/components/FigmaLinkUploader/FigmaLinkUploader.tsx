@@ -198,32 +198,24 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
       let errorMessage = 'An unexpected error occurred. Please try again.';
       let canRetry = false;
 
-             if (err instanceof Error) {
-         if (err.name === 'AbortError') {
-           errorMessage = 'Request timed out. The Figma file might be too large or the server is busy.';
-           canRetry = true;
-         }
-         
-         if (err.message.includes('fetch') || err.message.includes('network')) {
-           errorMessage = 'Network error: Unable to connect to the server. Please check your connection.';
-           canRetry = true;
-         }
-         
-         if (err.message.includes('Rate limit')) {
-           errorMessage = err.message;
-           canRetry = false;
-         }
-         
-         if (err.message.includes('Access denied')) {
-           errorMessage = err.message;
-           canRetry = false;
-         }
-         
-         if (!canRetry && !err.message.includes('Rate limit') && !err.message.includes('Access denied')) {
-           errorMessage = err.message;
-           canRetry = retryCount < 2; // Allow up to 3 attempts
-         }
-       }
+      if (err instanceof Error) {
+        if (err.name === 'AbortError') {
+          errorMessage = 'Request timed out. The Figma file might be too large or the server is busy.';
+          canRetry = true;
+        } else if (err.message.includes('fetch') || err.message.includes('network')) {
+          errorMessage = 'Network error: Unable to connect to the server. Please check your connection.';
+          canRetry = true;
+        } else if (err.message.includes('Rate limit')) {
+          errorMessage = err.message;
+          canRetry = false;
+        } else if (err.message.includes('Access denied')) {
+          errorMessage = err.message;
+          canRetry = false;
+        } else if (!canRetry && !err.message.includes('Rate limit') && !err.message.includes('Access denied')) {
+          errorMessage = err.message;
+          canRetry = retryCount < 2; // Allow up to 3 attempts
+        }
+      }
 
       setError(errorMessage);
       
