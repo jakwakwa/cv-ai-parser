@@ -1,7 +1,5 @@
 # AI CV GEN
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
-
 This project is an AI-powered CV/Resume parser that allows users to upload their resumes, parse them using AI, and then generate or edit professional CVs.
 
 ## Features
@@ -21,10 +19,3 @@ This project is an AI-powered CV/Resume parser that allows users to upload their
 * **Vercel**: Platform for frontend frameworks and static sites.
 
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/jaco-ks-projects/v0-cv)
-
-
-## Deployment
-
-Your project is live at:
-
-**[https://vercel.com/jaco-ks-projects/v0-cv](https://vercel.com/jaco-ks-projects/v0-cv)**
