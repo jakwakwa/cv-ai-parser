@@ -709,7 +709,7 @@
 
 @media (max-width: 768px) {
   .uploaderContainer {
-    padding: var(--spacing-lg); /* Increase from md to lg for better mobile spacing */
+    padding: var(--spacing-md); /* Reduce padding further */
   }
 
   .title {
@@ -717,7 +717,7 @@
   }
 
   .dropZone {
-    padding: var(--spacing-xl) var(--spacing-lg); /* Increase padding for better mobile UX */
+    padding: var(--spacing-lg) var(--spacing-md); /* Reduce padding */
   }
 
   .features {
@@ -736,10 +736,16 @@
 
   /* Better mobile padding for grouped inputs */
   .groupedInputs {
-    padding: var(--spacing-md) var(--spacing-lg);
+    padding: var(--spacing-sm) var(--spacing-md);
   }
 
   .uploaderStepSections {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .jobTailoringToggle {
     padding: var(--spacing-md);
   }
 }
