@@ -13,10 +13,10 @@ export const jobSpecSchema = z.object({
 export const userAdditionalContextSchema = z
   .object({
     jobSpecSource: z.enum(['upload', 'pasted']),
-    jobSpecText: z.string().max(1000).optional(),
+    jobSpecText: z.string().max(2000).optional(), // Increased from 1000 to 2000
     jobSpecFileUrl: z.string().url().optional(),
     tone: z.enum(['Formal', 'Neutral', 'Creative']),
-    extraPrompt: z.string().max(300).optional(),
+    extraPrompt: z.string().max(500).optional(), // Increased from 300 to 500
   })
   .refine((data) => data.jobSpecText || data.jobSpecFileUrl, {
     message: 'Either jobSpecText or jobSpecFileUrl must be provided',
