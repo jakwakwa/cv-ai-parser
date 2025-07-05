@@ -31,6 +31,15 @@ export async function POST(request: NextRequest) {
     const tone = formData.get('tone') as string;
     const extraPrompt = formData.get('extraPrompt') as string | null;
 
+    // Debug logging
+    console.log('Enhanced API called with:', {
+      hasFile: !!file,
+      hasJobSpecFile: !!jobSpecFile,
+      hasJobSpecText: !!jobSpecText,
+      tone,
+      hasExtraPrompt: !!extraPrompt,
+    });
+
     // Validate inputs
     if (!file) {
       return Response.json(
@@ -41,20 +50,42 @@ export async function POST(request: NextRequest) {
 
     // Build additional context object
     let additionalContext: UserAdditionalContext | undefined = undefined;
-    const hasJobSpec = jobSpecFile || jobSpecText;
+    const hasJobSpec = (jobSpecFile && jobSpecFile.size > 0) || (jobSpecText && jobSpecText.trim().length > 0);
 
-    if (hasJobSpec && tone) {
+    // Only validate job tailoring fields if job spec is provided
+    if (hasJobSpec) {
+      // Validate that tone is provided when job spec is given
+      if (!tone || !['Formal', 'Neutral', 'Creative'].includes(tone)) {
+        return Response.json(
+          { error: 'Valid tone (Formal, Neutral, or Creative) is required when job specification is provided' },
+          { status: 400 }
+        );
+      }
       // Extract text from job spec file if uploaded
       let finalJobSpecText = jobSpecText;
       if (jobSpecFile && !jobSpecText) {
         try {
           finalJobSpecText = await jobSpecFile.text();
+          if (!finalJobSpecText || finalJobSpecText.trim().length === 0) {
+            return Response.json(
+              { error: 'Job specification file is empty or contains no readable text' },
+              { status: 400 }
+            );
+          }
         } catch (error) {
           return Response.json(
-            { error: 'Failed to read job specification file' },
+            { error: 'Failed to read job specification file. Please ensure it\'s a valid text or PDF file.' },
             { status: 400 }
           );
         }
+      }
+
+      // Validate job spec text length
+      if (finalJobSpecText && finalJobSpecText.length > 1000) {
+        return Response.json(
+          { error: 'Job specification text is too long. Maximum 1000 characters allowed.' },
+          { status: 400 }
+        );
       }
 
       const contextData = {
@@ -68,15 +99,20 @@ export async function POST(request: NextRequest) {
       // Validate context structure
       const validation = userAdditionalContextSchema.safeParse(contextData);
       if (!validation.success) {
+        console.error('Validation failed:', validation.error.issues);
         return Response.json(
           {
-            error: 'Invalid additional context',
-            details: validation.error.issues,
+            error: 'Invalid job specification data',
+            details: validation.error.issues.map(issue => `${issue.path.join('.')}: ${issue.message}`).join(', '),
           },
           { status: 400 }
         );
       }
       additionalContext = validation.data;
+    } else if (!hasJobSpec) {
+      // Enhanced endpoint called without job tailoring - this is allowed
+      // Just proceed with regular resume parsing
+      console.log('Enhanced API called without job specification - proceeding with regular parsing');
     }
 
     // Authentication check
