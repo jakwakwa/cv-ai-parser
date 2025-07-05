@@ -4,6 +4,24 @@ interface FigmaNode {
   type: string;
   characters?: string;
   children?: FigmaNode[];
+  fills?: Array<{
+    type: string;
+    color?: {
+      r: number;
+      g: number;
+      b: number;
+      a?: number;
+    };
+  }>;
+  strokes?: Array<{
+    type: string;
+    color?: {
+      r: number;
+      g: number;
+      b: number;
+      a?: number;
+    };
+  }>;
 }
 
 // Quick-and-dirty HTML generator. This is **not** production-grade but
@@ -16,6 +34,42 @@ function mapTextContent(text: string): string {
   if (lower.includes('email')) return '{resume.contact?.email}';
   if (lower.includes('phone')) return '{resume.contact?.phone}';
   return `{\`${text}\`}`;
+}
+
+function extractColorsFromNode(node: FigmaNode, colors: Set<string>): void {
+  // Extract colors from fills
+  if (node.fills) {
+    for (const fill of node.fills) {
+      if (fill.type === 'SOLID' && fill.color) {
+        const { r, g, b, a = 1 } = fill.color;
+        const hex = rgbaToHex(r, g, b, a);
+        colors.add(hex);
+      }
+    }
+  }
+  
+  // Extract colors from strokes
+  if (node.strokes) {
+    for (const stroke of node.strokes) {
+      if (stroke.type === 'SOLID' && stroke.color) {
+        const { r, g, b, a = 1 } = stroke.color;
+        const hex = rgbaToHex(r, g, b, a);
+        colors.add(hex);
+      }
+    }
+  }
+  
+  // Recursively extract from children
+  if (node.children) {
+    for (const child of node.children) {
+      extractColorsFromNode(child, colors);
+    }
+  }
+}
+
+function rgbaToHex(r: number, g: number, b: number, a: number): string {
+  const toHex = (n: number) => Math.round(n * 255).toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}${a < 1 ? toHex(a) : ''}`;
 }
 
 function nodeToJsx(node: FigmaNode): string {
@@ -158,6 +212,12 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
           componentName: mockComponentName, 
           rawFigma: { mockData: true, fileKey, nodeId }, 
           customColors,
+          extractedColors: {
+            primary: '#116964',
+            secondary: '#565854',
+            accent: '#a49990',
+            all: ['#116964', '#565854', '#a49990', '#3e2f22']
+          },
           success: true,
           message: 'Mock component generated (FIGMA_API_KEY not configured)'
         }),
@@ -286,6 +346,12 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
           componentName: mockComponentName, 
           rawFigma: { fallback: true, fileKey, nodeId, error: fetchError instanceof Error ? fetchError.message : 'Unknown error' }, 
           customColors,
+          extractedColors: {
+            primary: '#116964',
+            secondary: '#565854',
+            accent: '#a49990',
+            all: ['#116964', '#565854', '#a49990', '#3e2f22']
+          },
           success: true,
           message: 'Fallback component generated (Figma API unavailable)'
         }),
@@ -312,10 +378,119 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
 
     const componentName = `FigmaResume${firstNode.name.replace(/[^a-zA-Z0-9]/g, '')}`;
     const jsxBody = nodeToJsx(firstNode);
+    
+    // Extract colors from the Figma node
+    const extractedColors = new Set<string>();
+    extractColorsFromNode(firstNode, extractedColors);
+    const colorsArray = Array.from(extractedColors);
+    
+    // Create color variables for CSS
+    const primaryColor = colorsArray[0] || '#0891b2';
+    const secondaryColor = colorsArray[1] || '#64748b';
+    const accentColor = colorsArray[2] || '#06b6d4';
 
     const jsxCode = `import React from 'react';\nimport type { ParsedResume } from '@/lib/resume-parser/schema';\nimport styles from './${componentName}.module.css';\n\nexport const ${componentName}: React.FC<{ resume: ParsedResume }> = ({ resume }) => {\n  return (\n    ${jsxBody}\n  );\n};\n`;
 
-    const cssModule = `/* Placeholder styles generated from Figma */\n.${firstNode.name.replace(/\s+/g, '').toLowerCase()} {\n  /* TODO: add real styles */\n}\n`;
+    const cssModule = `/* Styles generated from Figma with extracted colors */
+/* Primary: ${primaryColor}, Secondary: ${secondaryColor}, Accent: ${accentColor} */
+
+.${firstNode.name.replace(/\s+/g, '').toLowerCase()} {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: ${secondaryColor};
+}
+
+.header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid ${primaryColor};
+}
+
+.name {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: ${primaryColor};
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: ${secondaryColor};
+  margin-bottom: 1rem;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: ${primaryColor};
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid ${primaryColor}33;
+}
+
+.experience-item {
+  margin-bottom: 1.5rem;
+}
+
+.job-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: ${primaryColor};
+  margin-bottom: 0.25rem;
+}
+
+.company {
+  font-size: 0.9rem;
+  color: ${secondaryColor};
+  margin-bottom: 0.5rem;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skill {
+  background-color: ${primaryColor}15;
+  color: ${primaryColor};
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .${firstNode.name.replace(/\s+/g, '').toLowerCase()} {
+    padding: 1rem;
+  }
+  
+  .name {
+    font-size: 2rem;
+  }
+  
+  .contact {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+`;
 
     // Persist component on the server (development/demo).
     try {
@@ -341,6 +516,12 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
         componentName, 
         rawFigma: nodeResponseJson, 
         customColors,
+        extractedColors: {
+          primary: primaryColor,
+          secondary: secondaryColor,
+          accent: accentColor,
+          all: colorsArray
+        },
         success: true,
         message: `Component ${componentName} generated successfully`
       }),

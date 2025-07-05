@@ -319,3 +319,72 @@
   color: #1f2937;
   font-weight: 600;
 }
+
+/* Figma color styling */
+.figmaStyled {
+  color: var(--figma-primary, #0891b2) !important;
+}
+
+.figmaStyled.sectionTitle {
+  border-bottom-color: var(--figma-primary, #0891b2) !important;
+}
+
+.figmaStyled.skillTag {
+  background-color: var(--figma-primary, #0891b2)15 !important;
+  color: var(--figma-primary, #0891b2) !important;
+}
+
+/* Color palette display */
+.colorPalette {
+  padding: 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  margin-top: 1rem;
+}
+
+.colorPaletteTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.75rem 0;
+}
+
+.colorSwatches {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.colorSwatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 80px;
+}
+
+.colorCircle {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.colorLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-align: center;
+}
+
+.colorValue {
+  font-size: 0.625rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  color: #4b5563;
+  text-align: center;
+  background: #f3f4f6;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}

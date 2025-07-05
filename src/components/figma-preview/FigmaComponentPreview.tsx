@@ -11,6 +11,46 @@ interface FigmaComponentPreviewProps {
   cssCode: string;
 }
 
+// Function to extract colors from CSS code
+function extractColorsFromCSS(cssCode: string) {
+  const colors = {
+    primary: '#0891b2',
+    secondary: '#64748b',
+    accent: '#06b6d4',
+    background: '#ffffff',
+    text: '#1f2937'
+  };
+
+  // Extract hex colors from CSS
+  const hexColors = cssCode.match(/#[0-9a-fA-F]{6}(?:[0-9a-fA-F]{2})?/g) || [];
+  
+  // Extract rgb/rgba colors
+  const rgbColors = cssCode.match(/rgba?\([^)]+\)/g) || [];
+  
+  // Extract hsl colors
+  const hslColors = cssCode.match(/hsla?\([^)]+\)/g) || [];
+  
+  const allColors = [...hexColors, ...rgbColors, ...hslColors];
+  
+  if (allColors.length > 0) {
+    // Use the first few colors found as theme colors
+    colors.primary = allColors[0] || colors.primary;
+    colors.secondary = allColors[1] || colors.secondary;
+    colors.accent = allColors[2] || colors.accent;
+    
+    // Look for specific color patterns in CSS
+    const primaryMatch = cssCode.match(/(?:primary|main|brand)[^:]*:\s*([^;]+)/i);
+    const secondaryMatch = cssCode.match(/(?:secondary|sub|muted)[^:]*:\s*([^;]+)/i);
+    const accentMatch = cssCode.match(/(?:accent|highlight|focus)[^:]*:\s*([^;]+)/i);
+    
+    if (primaryMatch) colors.primary = primaryMatch[1].trim();
+    if (secondaryMatch) colors.secondary = secondaryMatch[1].trim();
+    if (accentMatch) colors.accent = accentMatch[1].trim();
+  }
+  
+  return colors;
+}
+
 // Function to extract actual content from generated JSX
 function extractContentFromJSX(jsxCode: string) {
   const extractedContent = {
@@ -143,6 +183,9 @@ export const FigmaComponentPreview: React.FC<FigmaComponentPreviewProps> = ({
 
   // Extract actual content from the generated JSX
   const actualContent = useMemo(() => extractContentFromJSX(jsxCode), [jsxCode]);
+  
+  // Extract colors from the generated CSS
+  const figmaColors = useMemo(() => extractColorsFromCSS(cssCode), [cssCode]);
 
   // Create a safe component preview using iframe-like approach
   const _createPreviewComponent = useMemo(() => {
@@ -167,8 +210,17 @@ export const FigmaComponentPreview: React.FC<FigmaComponentPreviewProps> = ({
   };
 
   const renderStaticPreview = () => {
+    // Create dynamic styles using extracted Figma colors
+    const dynamicStyles = {
+      '--figma-primary': figmaColors.primary,
+      '--figma-secondary': figmaColors.secondary,
+      '--figma-accent': figmaColors.accent,
+      '--figma-background': figmaColors.background,
+      '--figma-text': figmaColors.text,
+    } as React.CSSProperties;
+
     return (
-      <div className={styles.staticPreview}>
+      <div className={styles.staticPreview} style={dynamicStyles}>
         <div className={styles.mockupContainer}>
           <div className={styles.mockupHeader}>
             <div className={styles.mockupControls}>
@@ -176,13 +228,13 @@ export const FigmaComponentPreview: React.FC<FigmaComponentPreviewProps> = ({
               <span className={styles.mockupDot} />
               <span className={styles.mockupDot} />
             </div>
-            <span className={styles.mockupTitle}>Resume Preview - Real Figma Content</span>
+            <span className={styles.mockupTitle}>Resume Preview - Real Figma Content & Colors</span>
           </div>
           
           <div className={styles.mockupContent}>
             <div className={styles.resumeSection}>
-              <h1 className={styles.mockName}>{actualContent.name}</h1>
-              <h2 className={styles.mockTitle}>{actualContent.title}</h2>
+              <h1 className={`${styles.mockName} ${styles.figmaStyled}`}>{actualContent.name}</h1>
+              <h2 className={`${styles.mockTitle} ${styles.figmaStyled}`}>{actualContent.title}</h2>
               <div className={styles.mockContact}>
                 <span>{actualContent.contact.email}</span>
                 <span>{actualContent.contact.phone}</span>
@@ -191,21 +243,21 @@ export const FigmaComponentPreview: React.FC<FigmaComponentPreviewProps> = ({
             </div>
             
             <div className={styles.resumeSection}>
-              <h3 className={styles.sectionTitle}>Summary</h3>
+              <h3 className={`${styles.sectionTitle} ${styles.figmaStyled}`}>Summary</h3>
               <p className={styles.mockSummary}>{actualContent.summary || "Summary content extracted from your Figma design"}</p>
             </div>
             
             <div className={styles.resumeSection}>
-              <h3 className={styles.sectionTitle}>Experience</h3>
+              <h3 className={`${styles.sectionTitle} ${styles.figmaStyled}`}>Experience</h3>
               {actualContent.experience.length > 0 ? actualContent.experience.map((exp, index) => (
                 <div key={`exp-${index}-${exp.position}`} className={styles.experienceItem}>
-                  <h4 className={styles.jobTitle}>{exp.position}</h4>
+                  <h4 className={`${styles.jobTitle} ${styles.figmaStyled}`}>{exp.position}</h4>
                   <span className={styles.company}>{exp.company} • {exp.duration}</span>
                   <p className={styles.jobDescription}>{exp.description}</p>
                 </div>
               )) : (
                 <div className={styles.experienceItem}>
-                  <h4 className={styles.jobTitle}>Experience from Figma</h4>
+                  <h4 className={`${styles.jobTitle} ${styles.figmaStyled}`}>Experience from Figma</h4>
                   <span className={styles.company}>Content extracted from your design</span>
                   <p className={styles.jobDescription}>Your experience details will be populated from the Figma design structure.</p>
                 </div>
@@ -213,10 +265,10 @@ export const FigmaComponentPreview: React.FC<FigmaComponentPreviewProps> = ({
             </div>
             
             <div className={styles.resumeSection}>
-              <h3 className={styles.sectionTitle}>Skills</h3>
+              <h3 className={`${styles.sectionTitle} ${styles.figmaStyled}`}>Skills</h3>
               <div className={styles.skillsList}>
                 {actualContent.skills.map((skill) => (
-                  <span key={skill} className={styles.skillTag}>{skill}</span>
+                  <span key={skill} className={`${styles.skillTag} ${styles.figmaStyled}`}>{skill}</span>
                 ))}
               </div>
             </div>
@@ -226,8 +278,29 @@ export const FigmaComponentPreview: React.FC<FigmaComponentPreviewProps> = ({
         <div className={styles.previewNote}>
           <Eye className={styles.noteIcon} />
           <div>
-            <p><strong>Live Preview with Figma Content</strong></p>
-            <p>This preview shows content extracted from your actual Figma design. The generated component will use your exact Figma styling and layout.</p>
+            <p><strong>Live Preview with Figma Content & Colors</strong></p>
+            <p>This preview shows content and colors extracted from your actual Figma design. The generated component will use your exact Figma styling and layout.</p>
+          </div>
+        </div>
+        
+        <div className={styles.colorPalette}>
+          <h4 className={styles.colorPaletteTitle}>Extracted Colors</h4>
+          <div className={styles.colorSwatches}>
+            <div className={styles.colorSwatch}>
+              <div className={styles.colorCircle} style={{ backgroundColor: figmaColors.primary }} />
+              <span className={styles.colorLabel}>Primary</span>
+              <span className={styles.colorValue}>{figmaColors.primary}</span>
+            </div>
+            <div className={styles.colorSwatch}>
+              <div className={styles.colorCircle} style={{ backgroundColor: figmaColors.secondary }} />
+              <span className={styles.colorLabel}>Secondary</span>
+              <span className={styles.colorValue}>{figmaColors.secondary}</span>
+            </div>
+            <div className={styles.colorSwatch}>
+              <div className={styles.colorCircle} style={{ backgroundColor: figmaColors.accent }} />
+              <span className={styles.colorLabel}>Accent</span>
+              <span className={styles.colorValue}>{figmaColors.accent}</span>
+            </div>
           </div>
         </div>
       </div>
