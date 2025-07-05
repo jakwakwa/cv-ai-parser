@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import DocsLayout from '@/src/components/docs/DocsLayout';
 import styles from './layout.module.css';
+import '@vercel/themes/index.css';
 
 export default function DocsRootLayout({ children }: { children: ReactNode }) {
   return (
