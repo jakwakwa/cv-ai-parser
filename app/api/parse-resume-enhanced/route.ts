@@ -221,23 +221,29 @@ export async function POST(request: NextRequest) {
     // Save to database if authenticated
     let savedResume: Resume | undefined;
     if (isAuthenticated && user) {
-      const resumeTitle: string =
-        parsedResume.name || file.name.split('.')[0] || 'Untitled Resume';
-      const slug = `${createSlug(resumeTitle)}-${Math.floor(1000 + Math.random() * 9000)}`;
+      try {
+        const resumeTitle: string =
+          parsedResume.name || file.name.split('.')[0] || 'Untitled Resume';
+        const slug = `${createSlug(resumeTitle)}-${Math.floor(1000 + Math.random() * 9000)}`;
 
-      savedResume = await ResumeDatabase.saveResume(supabase, {
-        userId: user.id,
-        title: resumeTitle,
-        originalFilename: file.name,
-        fileType: file.type,
-        fileSize: file.size,
-        parsedData: finalParsedData,
-        parseMethod: 'ai_enhanced',
-        confidenceScore: 98,
-        isPublic: true,
-        slug,
-        additionalContext,
-      });
+        savedResume = await ResumeDatabase.saveResume(supabase, {
+          userId: user.id,
+          title: resumeTitle,
+          originalFilename: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+          parsedData: finalParsedData,
+          parseMethod: 'ai_enhanced',
+          confidenceScore: 98,
+          isPublic: true,
+          slug,
+          additionalContext,
+        });
+      } catch (error) {
+        console.error('Database save failed (missing migration?), continuing without save:', error);
+        // Continue without saving - user will still get the tailored resume
+        // TODO: Remove this try-catch after running the database migration
+      }
     }
 
     return Response.json({
