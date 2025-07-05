@@ -6,6 +6,19 @@ This document provides comprehensive API reference for the Figma integration end
 
 ## Authentication
 
+### API Token Strategy
+
+This integration uses **different token strategies** for different use cases:
+
+| Use Case | Token Type | Location | Purpose |
+|----------|------------|----------|---------|
+| **Developer Workflow** | Personal Developer Tokens | Local `.env.local` | MCP server for component generation |
+| **User Upload Feature** | Service Account Token | Server environment | Production API for user requests |
+
+> **📖 Complete Guide**: See [`figma-api-tokens-guide.md`](./figma-api-tokens-guide.md) for detailed token management instructions.
+
+### API Endpoint Authentication
+
 All API endpoints require proper authentication when `isAuthenticated` is set to `true`.
 
 ```typescript
@@ -13,6 +26,11 @@ All API endpoints require proper authentication when `isAuthenticated` is set to
 {
   "Content-Type": "application/json",
   "Authorization": "Bearer <session_token>" // Handled by Supabase client
+}
+
+// Server-side Figma API authentication
+{
+  "X-Figma-Token": process.env.FIGMA_API_KEY // Service token for production
 }
 ```
 

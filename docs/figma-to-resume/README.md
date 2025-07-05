@@ -40,6 +40,7 @@ This documentation provides comprehensive guidance for integrating Model Context
 
 | File | Description | Usage |
 |------|-------------|-------|
+| [`figma-api-tokens-guide.md`](./figma-api-tokens-guide.md) | **Comprehensive token management guide** | **Essential setup for both use cases** |
 | [`config/mcp-server-config.json`](./config/mcp-server-config.json) | MCP server configuration templates | Copy to `.cursor/mcp.json` |
 | [`config/environment-variables.env`](./config/environment-variables.env) | Required environment variables | Add to `.env.local` |
 | [`examples/component-generation.md`](./examples/component-generation.md) | Real-world component generation examples | Reference for prompts |
@@ -57,18 +58,19 @@ This documentation provides comprehensive guidance for integrating Model Context
 
 ### For Use Case 1 (Developer Workflow) - 15 minutes
 
-1. **Get Figma API Token**
+1. **Set Up Personal API Token**
    ```bash
+   # IMPORTANT: Each developer needs their own personal token
+   # See figma-api-tokens-guide.md for detailed instructions
    # Visit https://www.figma.com/settings → Account → Personal access tokens
-   # Create token and add to .env.local
-   echo "FIGMA_API_KEY=your_token_here" >> .env.local
+   echo "FIGMA_API_KEY=figd_your_personal_token_here" >> .env.local
    ```
 
 2. **Configure MCP Server**
    ```bash
    # Copy configuration from this documentation
    cp docs/figma-to-resume/config/mcp-server-config.json .cursor/mcp.json
-   # Replace YOUR_FIGMA_API_KEY with your actual token
+   # Token will be read from your local .env.local file
    ```
 
 3. **Test Integration**
@@ -76,6 +78,8 @@ This documentation provides comprehensive guidance for integrating Model Context
    # In Cursor Composer, try:
    # "Generate a React component from this Figma design: [FIGMA_URL]"
    ```
+
+> **⚠️ Important**: Use Case 1 requires personal developer tokens, while Use Case 2 needs a dedicated service token. See [`figma-api-tokens-guide.md`](./figma-api-tokens-guide.md) for the complete token strategy.
 
 ### For Use Case 2 (User Upload Feature) - 2-3 days
 
@@ -170,7 +174,25 @@ This documentation provides comprehensive guidance for integrating Model Context
 - Implement data retention policies
 - Encrypt stored design data
 
-## 📞 Support & Resources
+## � Important: Dual Token Strategy
+
+**This integration uses different API token strategies for each use case:**
+
+### Use Case 1: Developer Workflow
+- **Token Type**: Personal developer tokens (one per developer)
+- **Location**: Local `.env.local` files
+- **Purpose**: MCP server for AI-powered component generation
+- **Benefits**: Individual rate limits, personal file access, zero setup complexity
+
+### Use Case 2: User Upload Feature  
+- **Token Type**: Dedicated service account token
+- **Location**: Server-side environment variables
+- **Purpose**: Production API for processing user Figma uploads
+- **Benefits**: Centralized management, secure server-side processing, consistent access
+
+> **📖 Complete Setup Guide**: [`figma-api-tokens-guide.md`](./figma-api-tokens-guide.md) provides detailed instructions for both token strategies.
+
+## �📞 Support & Resources
 
 ### Documentation Links
 - [Figma API Documentation](https://www.figma.com/developers/api)

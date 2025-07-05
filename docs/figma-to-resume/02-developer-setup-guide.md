@@ -18,7 +18,11 @@ This guide provides step-by-step instructions for setting up MCP (Model Context 
 
 ## Step 1: Get Your Figma API Token
 
-### Create Personal Access Token
+> **📖 Complete Token Guide**: This section provides a quick overview. For comprehensive token management including security, permissions, and production setup, see [`figma-api-tokens-guide.md`](./figma-api-tokens-guide.md).
+
+### Create Personal Developer Token
+
+**Important**: For Use Case 1 (Developer Workflow), each developer should create their own personal token.
 
 1. **Visit Figma Settings**
    - Go to [https://www.figma.com/settings](https://www.figma.com/settings)
@@ -26,21 +30,31 @@ This guide provides step-by-step instructions for setting up MCP (Model Context 
 
 2. **Generate New Token**
    - Click **"Create a new personal access token"**
-   - **Name**: Use descriptive name (e.g., "MCP Development Token")
-   - **Expiration**: Set to 90 days or longer for production use
-   - **Scope**: Keep default (full access)
+   - **Name**: Use descriptive name (e.g., "MCP Development - [Your Name]")
+   - **Expiration**: Set to 90 days or longer
+   - **Scope**: Default (read access to files you have access to)
 
 3. **Save Token Securely**
    ```bash
    # Copy the token immediately - it won't be shown again
-   # Example token format: figd_abc123...xyz789
+   # Token format: figd_abc123...xyz789
    ```
 
-### Important Security Notes
+### Token Permissions & Access
 
-⚠️ **Never commit tokens to version control**  
-⚠️ **Store tokens in environment variables only**  
-⚠️ **Regenerate tokens regularly (every 90 days)**
+Your personal token will have access to:
+- ✅ **Your personal files** (private and public)
+- ✅ **Team files** (if you're a team member)
+- ✅ **Public community files**
+- ✅ **Files shared with you**
+
+### Security Guidelines
+
+⚠️ **Critical Security Rules**:
+- Never commit tokens to version control
+- Store in local `.env.local` files only
+- Don't share tokens between developers
+- Regenerate tokens every 90 days
 
 ## Step 2: Configure MCP Server
 
