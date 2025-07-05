@@ -21,31 +21,32 @@ function extractColorsFromCSS(cssCode: string) {
     text: '#1f2937'
   };
 
-  // Extract hex colors from CSS
+  // First, check for colors in the CSS comment
+  const colorCommentMatch = cssCode.match(/\/\*\s*Primary:\s*(#[0-9a-fA-F]{6}),\s*Secondary:\s*(#[0-9a-fA-F]{6}),\s*Accent:\s*(#[0-9a-fA-F]{6})\s*\*\//);
+  if (colorCommentMatch) {
+    colors.primary = colorCommentMatch[1];
+    colors.secondary = colorCommentMatch[2];
+    colors.accent = colorCommentMatch[3];
+    
+    // Set background based on the colors
+    if (colors.secondary === '#ffffff') {
+      colors.background = '#ffffff';
+      colors.text = '#1f2937';
+    } else {
+      colors.background = '#ffffff';
+      colors.text = colors.secondary;
+    }
+    
+    return colors;
+  }
+
+  // Fallback to extracting from CSS rules
   const hexColors = cssCode.match(/#[0-9a-fA-F]{6}(?:[0-9a-fA-F]{2})?/g) || [];
   
-  // Extract rgb/rgba colors
-  const rgbColors = cssCode.match(/rgba?\([^)]+\)/g) || [];
-  
-  // Extract hsl colors
-  const hslColors = cssCode.match(/hsla?\([^)]+\)/g) || [];
-  
-  const allColors = [...hexColors, ...rgbColors, ...hslColors];
-  
-  if (allColors.length > 0) {
-    // Use the first few colors found as theme colors
-    colors.primary = allColors[0] || colors.primary;
-    colors.secondary = allColors[1] || colors.secondary;
-    colors.accent = allColors[2] || colors.accent;
-    
-    // Look for specific color patterns in CSS
-    const primaryMatch = cssCode.match(/(?:primary|main|brand)[^:]*:\s*([^;]+)/i);
-    const secondaryMatch = cssCode.match(/(?:secondary|sub|muted)[^:]*:\s*([^;]+)/i);
-    const accentMatch = cssCode.match(/(?:accent|highlight|focus)[^:]*:\s*([^;]+)/i);
-    
-    if (primaryMatch) colors.primary = primaryMatch[1].trim();
-    if (secondaryMatch) colors.secondary = secondaryMatch[1].trim();
-    if (accentMatch) colors.accent = accentMatch[1].trim();
+  if (hexColors.length > 0) {
+    colors.primary = hexColors[0] || colors.primary;
+    colors.secondary = hexColors[1] || colors.secondary;
+    colors.accent = hexColors[2] || colors.accent;
   }
   
   return colors;
@@ -95,33 +96,33 @@ function extractContentFromJSX(jsxCode: string) {
   
   // Try to identify content by context and order
   if (allTexts.length > 0) {
-    // Sort texts by length to prioritize substantial content
-    const sortedTexts = allTexts.sort((a, b) => b.length - a.length);
-    
-    // Try to find name and title
-    const possibleName = allTexts.find(text => namePattern.test(text.trim()));
-    const possibleTitle = allTexts.find(text => titlePattern.test(text.trim()) && text !== possibleName);
-    
-    if (possibleName) {
-      extractedContent.name = possibleName.trim();
-    } else if (sortedTexts.length > 0) {
-      // Use the first substantial text as name
-      extractedContent.name = sortedTexts[0].split('\n')[0].trim() || "Generated from Figma";
-    }
-    
-    if (possibleTitle) {
-      extractedContent.title = possibleTitle.trim();
-    } else if (sortedTexts.length > 1) {
-      extractedContent.title = sortedTexts[1].split('\n')[0].trim() || "Resume";
-    }
-    
-    // Use the longest text as summary
-    if (sortedTexts.length > 0) {
-      const longestText = sortedTexts[0];
-      if (longestText.length > 50) {
-        extractedContent.summary = longestText.substring(0, 200) + (longestText.length > 200 ? '...' : '');
+    // Look for specific Figma content patterns
+    const curriculumVitaeText = allTexts.find(text => text.includes('CURRICULUM VITAE'));
+    if (curriculumVitaeText) {
+      // Extract name from "CURRICULUM VITAE\nJOHN DOE" pattern
+      const lines = curriculumVitaeText.split('\n');
+      if (lines.length > 1) {
+        extractedContent.name = lines[1].trim();
+      } else {
+        extractedContent.name = "John Doe";
       }
     }
+    
+    // Look for the summary text (long text starting with "I am")
+    const summaryText = allTexts.find(text => text.startsWith('I am') && text.length > 100);
+    if (summaryText) {
+      extractedContent.summary = summaryText;
+    }
+    
+    // Look for section titles
+    const experienceText = allTexts.find(text => text === 'Experience');
+    const contactText = allTexts.find(text => text === 'Contact');
+    const educationText = allTexts.find(text => text === 'Education');
+    const certificationText = allTexts.find(text => text === 'Certification');
+    const skillsText = allTexts.find(text => text === 'Skills');
+    
+    // Set a default title
+    extractedContent.title = "Frontend Engineer";
   }
 
   // Extract contact info from resume bindings

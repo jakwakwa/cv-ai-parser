@@ -565,10 +565,13 @@ function generateCSSFromFigmaStructure(node: FigmaNode, primaryColor: string, se
   return css;
 }
 
-function nodeToJsx(node: FigmaNode): string {
+function nodeToJsx(node: FigmaNode, parentNode?: FigmaNode): string {
   switch (node.type) {
-    case 'TEXT':
-      return `<p>${mapTextContent(node.characters || '', node.name)}</p>`;
+    case 'TEXT': {
+      // Use parent node name for context when mapping text content
+      const contextName = parentNode?.name || node.name;
+      return `<p>${mapTextContent(node.characters || '', contextName)}</p>`;
+    }
     case 'RECTANGLE':
     case 'FRAME':
     case 'GROUP': {
@@ -580,7 +583,7 @@ function nodeToJsx(node: FigmaNode): string {
         : `styles['${className}']`;
       
       // Handle repeated sections with mapping
-      if (nodeName.includes('experience-list')) {
+      if (nodeName === 'experience-list') {
         return `<div className={${classNameAccess}}>{resume.experience?.map((exp, index) => (
           <div key={index} className={styles['experience-item']}>
             <div className={styles['exp-title']}><p>{exp.position || "Position"}</p></div>
@@ -591,17 +594,29 @@ function nodeToJsx(node: FigmaNode): string {
         )) || []}</div>`;
       }
       
-      if (nodeName.includes('education-list') && !nodeName.includes('education-degree') && !nodeName.includes('education-year') && !nodeName.includes('education-school')) {
-        return `<div className={${classNameAccess}}>{resume.education?.map((edu, index) => (
-          <div key={index}>
-            <p>{edu.degree || "Degree"}</p>
-            <p>{edu.institution || "School"}</p>
-            <p>{edu.year || "Year"}</p>
-          </div>
-        )) || []}</div>`;
+      // Handle education container that has education-list children
+      if (nodeName === 'education' && node.children?.some(child => child.name.toLowerCase() === 'education-list')) {
+        // Find the education-list child and generate its content
+        const educationList = node.children.find(child => child.name.toLowerCase() === 'education-list');
+        if (educationList) {
+          return `<div className={${classNameAccess}}>
+            <div className={styles['education-list']}>{resume.education?.map((edu, index) => (
+              <div key={index}>
+                <p>{edu.degree || "Degree"}</p>
+                <p>{edu.institution || "School"}</p>
+                <p>{edu.year || "Year"}</p>
+              </div>
+            )) || []}</div>
+          </div>`;
+        }
       }
       
-      if (nodeName.includes('certification-list') && !nodeName.includes('certificate-degree') && !nodeName.includes('certificate-school') && !nodeName.includes('certificate-year')) {
+      // Skip standalone education-list as it's handled by parent
+      if (nodeName === 'education-list') {
+        return '';
+      }
+      
+      if (nodeName === 'certification-list') {
         return `<div className={${classNameAccess}}>{resume.certifications?.map((cert, index) => (
           <div key={index}>
             <p>{cert.name || "Certification"}</p>
@@ -611,7 +626,7 @@ function nodeToJsx(node: FigmaNode): string {
         )) || []}</div>`;
       }
       
-      if (nodeName.includes('skills-list')) {
+      if (nodeName === 'skills-list') {
         return `<div className={${classNameAccess}}>{resume.skills?.map((skill, index) => (
           <div key={index} className={styles.skill}>
             <p>{skill}</p>
@@ -619,7 +634,7 @@ function nodeToJsx(node: FigmaNode): string {
         )) || []}</div>`;
       }
       
-      if (nodeName.includes('contact-list')) {
+      if (nodeName === 'contact-list') {
         return `<div className={${classNameAccess}}>
           <p>{resume.contact?.email}</p>
           <p>{resume.contact?.phone}</p>
@@ -627,22 +642,8 @@ function nodeToJsx(node: FigmaNode): string {
         </div>`;
       }
       
-      // Skip individual experience-item, education-list items, etc. if they're inside a list
-      if (nodeName.includes('experience-item') || 
-          (nodeName.includes('education-list') && (nodeName.includes('degree') || nodeName.includes('school') || nodeName.includes('year'))) ||
-          (nodeName.includes('certification-list') && (nodeName.includes('certificate') || nodeName.includes('issuer')))) {
-        return ''; // Skip these as they're handled by the parent list
-      }
-      
-      // Skip duplicate education/certification lists that are just containers for individual items
-      if ((nodeName === 'education' || nodeName === 'certification') && node.children?.some(child => 
-          child.name.toLowerCase().includes('education-list') || 
-          child.name.toLowerCase().includes('certification-list'))) {
-        const childrenJsx = node.children?.map(nodeToJsx).filter(jsx => jsx !== '').join('\n') || '';
-        return `<div className={${classNameAccess}}>${childrenJsx}</div>`;
-      }
-      
-      const childrenJsx = node.children?.map(nodeToJsx).join('\n') || '';
+      // Process children with parent context
+      const childrenJsx = node.children?.map(child => nodeToJsx(child, node)).join('\n') || '';
       return `<div className={${classNameAccess}}>${childrenJsx}</div>`;
     }
     default:
@@ -935,7 +936,7 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
     }
 
     const componentName = `FigmaResume${firstNode.name.replace(/[^a-zA-Z0-9]/g, '')}`;
-    const jsxBody = nodeToJsx(firstNode);
+    const jsxBody = nodeToJsx(firstNode, undefined);
     
     // Extract colors from the Figma node
     const extractedColors = new Set<string>();
