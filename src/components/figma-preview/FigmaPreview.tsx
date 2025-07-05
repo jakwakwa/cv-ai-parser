@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useCallback } from 'react';
+import type React from 'react';
+import { useState, useCallback } from 'react';
 import { Eye, FileText, Download, Check } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import styles from './FigmaPreview.module.css';
@@ -9,15 +10,10 @@ interface FigmaPreviewProps {
   componentName: string;
   jsxCode: string;
   cssCode: string;
-  rawFigma?: Record<string, any>;
+  rawFigma?: Record<string, unknown>;
 }
 
 type TabType = 'preview' | 'jsx' | 'css';
-
-interface CopyState {
-  type: string;
-  success: boolean;
-}
 
 const FigmaPreview: React.FC<FigmaPreviewProps> = ({
   componentName,
@@ -28,6 +24,7 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
   const [activeTab, setActiveTab] = useState<TabType>('preview');
   const [copied, setCopied] = useState<string | null>(null);
   const [copyError, setCopyError] = useState<string | null>(null);
+  const [isDownloading, setIsDownloading] = useState<string | null>(null);
 
   // Validate props after hooks
   const hasValidData = componentName && jsxCode && cssCode;
@@ -51,19 +48,26 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
     }
   }, []);
 
-  const handleDownload = useCallback((content: string, filename: string) => {
+  const handleDownload = useCallback(async (content: string, filename: string) => {
     if (!content.trim()) {
       setCopyError('No content to download');
       setTimeout(() => setCopyError(null), 3000);
       return;
     }
 
+    setIsDownloading(filename);
+    setCopyError(null);
+
     try {
+      // Add a small delay to show loading state
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       const blob = new Blob([content], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = filename;
+      a.style.display = 'none';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -72,6 +76,8 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
       console.error('Failed to download:', err);
       setCopyError('Failed to download file');
       setTimeout(() => setCopyError(null), 3000);
+    } finally {
+      setIsDownloading(null);
     }
   }, []);
 
@@ -146,11 +152,23 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
                 <Eye className={styles.previewIcon} />
                 <h4>Component Preview</h4>
                 <p>
-                  Component saved to <code>src/generated-resumes/</code>
+                  Component <strong>{componentName}</strong> saved to <code>src/generated-resumes/</code>
                 </p>
+                <div className={styles.fileList}>
+                  <div className={styles.fileItem}>
+                    <FileText className={styles.fileIcon} />
+                    <code>{componentName}.tsx</code>
+                    <span className={styles.fileSize}>({jsxCode.length} chars)</span>
+                  </div>
+                  <div className={styles.fileItem}>
+                    <FileText className={styles.fileIcon} />
+                    <code>{componentName}.module.css</code>
+                    <span className={styles.fileSize}>({cssCode.length} chars)</span>
+                  </div>
+                </div>
                 <p className={styles.previewNote}>
                   Open the generated files in your editor to see the actual component.
-                  The preview will be available once you import and use the component.
+                  The preview will be available once you import and use the component in your app.
                 </p>
               </div>
             </div>
@@ -176,9 +194,10 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
                   size="sm"
                   onClick={() => handleDownload(jsxCode, `${componentName}.tsx`)}
                   className={styles.actionButton}
+                  disabled={isDownloading === `${componentName}.tsx`}
                 >
                   <Download className={styles.actionIcon} />
-                  Download
+                  {isDownloading === `${componentName}.tsx` ? 'Downloading...' : 'Download'}
                 </Button>
               </div>
             </div>
@@ -207,9 +226,10 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
                   size="sm"
                   onClick={() => handleDownload(cssCode, `${componentName}.module.css`)}
                   className={styles.actionButton}
+                  disabled={isDownloading === `${componentName}.module.css`}
                 >
                   <Download className={styles.actionIcon} />
-                  Download
+                  {isDownloading === `${componentName}.module.css` ? 'Downloading...' : 'Download'}
                 </Button>
               </div>
             </div>
@@ -226,7 +246,7 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
             View Raw Figma Data (Debug)
           </summary>
           <pre className={styles.rawDataContent}>
-            <code>{JSON.stringify(rawFigma as any, null, 2)}</code>
+            <code>{JSON.stringify(rawFigma, null, 2)}</code>
           </pre>
         </details>
       )}

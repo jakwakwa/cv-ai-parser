@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import type React from 'react';
+import { useState, useCallback } from 'react';
 import { AlertTriangle, Palette, CheckCircle } from 'lucide-react';
 import { resumeColors } from '@/src/utils/colors';
 import ColorPickerDialog from '../color-picker/ColorPickerDialog';
@@ -9,7 +10,7 @@ interface FigmaApiResponse {
   jsx: string;
   css: string;
   componentName: string;
-  rawFigma: Record<string, any>;
+  rawFigma: Record<string, unknown>;
   customColors: Record<string, string>;
   success: boolean;
   message: string;
@@ -24,7 +25,7 @@ interface FigmaGeneratedComponent {
   componentName: string;
   jsxCode: string;
   cssCode: string;
-  rawFigma: Record<string, any>;
+  rawFigma: Record<string, unknown>;
 }
 
 interface FigmaLinkUploaderProps {
@@ -46,6 +47,7 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [validationWarning, setValidationWarning] = useState('');
+  const [retryCount, setRetryCount] = useState(0);
   const [customColors, setCustomColors] = useState<Record<string, string>>(resumeColors);
   const [showColorDialog, setShowColorDialog] = useState(false);
 
@@ -54,6 +56,7 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
     setFigmaLink(value);
     setError('');
     setSuccess('');
+    setRetryCount(0);
     
     // Show validation warning for incomplete links
     if (value.trim() && !value.includes('figma.com')) {
@@ -62,6 +65,8 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
       setValidationWarning('');
     }
   }, []);
+
+
   
   // Enhanced Figma link validation
   const validateFigmaLink = useCallback((link: string): FigmaLinkValidation => {
@@ -112,7 +117,7 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
     }
   }, []);
 
-  const handleGenerate = useCallback(async () => {
+  const handleGenerate = useCallback(async (isRetry = false) => {
     // Clear previous states
     setError('');
     setSuccess('');
@@ -124,6 +129,10 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
       return;
     }
 
+    if (!isRetry) {
+      setRetryCount(0);
+    }
+
     setIsLoading(true);
 
     try {
@@ -131,8 +140,12 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
         figmaLink: figmaLink.trim(),
         customColors,
         fileKey: validation.fileKey,
-        nodeId: validation.nodeId
+        nodeId: validation.nodeId,
+        retryAttempt: retryCount
       };
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
       const response = await fetch('/api/parse-figma-resume', {
         method: 'POST',
@@ -141,12 +154,25 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
           'Accept': 'application/json'
         },
         body: JSON.stringify(requestBody),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       const responseData: FigmaApiResponse | FigmaApiError = await response.json();
 
       if (!response.ok) {
         const errorData = responseData as FigmaApiError;
+        
+        // Handle specific error cases
+        if (response.status === 429) {
+          throw new Error('Rate limit exceeded. Please wait a moment before trying again.');
+        } else if (response.status === 401 || response.status === 403) {
+          throw new Error('Access denied. Please check if the Figma file is public or if you have permission to access it.');
+        } else if (response.status >= 500) {
+          throw new Error('Server error. Please try again in a few moments.');
+        }
+        
         throw new Error(errorData.error || `HTTP ${response.status}: Failed to generate component`);
       }
 
@@ -157,6 +183,7 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
       }
 
       setSuccess(data.message || `Successfully generated ${data.componentName} component!`);
+      setRetryCount(0);
       
       onResumeGenerated({
         componentName: data.componentName,
@@ -168,17 +195,48 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
     } catch (err: unknown) {
       console.error('Figma generation error:', err);
       
-      if (err instanceof TypeError && err.message.includes('fetch')) {
-        setError('Network error: Unable to connect to the server. Please check your connection and try again.');
-      } else if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unexpected error occurred. Please try again.');
+      let errorMessage = 'An unexpected error occurred. Please try again.';
+      let canRetry = false;
+
+             if (err instanceof Error) {
+         if (err.name === 'AbortError') {
+           errorMessage = 'Request timed out. The Figma file might be too large or the server is busy.';
+           canRetry = true;
+         } else if (err.message.includes('fetch') || err.message.includes('network')) {
+           errorMessage = 'Network error: Unable to connect to the server. Please check your connection.';
+           canRetry = true;
+         } else if (err.message.includes('Rate limit')) {
+           errorMessage = err.message;
+           canRetry = false;
+         } else if (err.message.includes('Access denied')) {
+           errorMessage = err.message;
+           canRetry = false;
+         }
+         
+         if (!canRetry && !err.message.includes('Rate limit') && !err.message.includes('Access denied')) {
+           errorMessage = err.message;
+           canRetry = retryCount < 2; // Allow up to 3 attempts
+         }
+       }
+
+      setError(errorMessage);
+      
+      // Auto-retry for certain types of errors
+      if (canRetry && retryCount < 2 && (errorMessage.includes('timeout') || errorMessage.includes('network'))) {
+        setRetryCount(prev => prev + 1);
+        setTimeout(() => {
+          handleGenerate(true);
+        }, 2000 * (retryCount + 1)); // Exponential backoff
       }
     } finally {
       setIsLoading(false);
     }
-  }, [figmaLink, customColors, validateFigmaLink, setIsLoading, onResumeGenerated]);
+  }, [figmaLink, customColors, validateFigmaLink, setIsLoading, onResumeGenerated, retryCount]);
+
+  // Wrapper for button click handler
+  const handleGenerateClick = useCallback(() => {
+    handleGenerate(false);
+  }, [handleGenerate]);
 
   return (
     <div className={styles.container}>
@@ -208,6 +266,16 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
           <div className={styles.error} id="figma-error">
             <AlertTriangle style={{ width: '1rem', height: '1rem', marginRight: '0.25rem' }} /> 
             {error}
+            {(error.includes('timeout') || error.includes('network') || error.includes('Server error')) && !isLoading && (
+              <button 
+                type="button"
+                onClick={handleGenerateClick}
+                className={styles.retryButton}
+                disabled={isLoading}
+              >
+                Retry
+              </button>
+            )}
           </div>
         )}
         
@@ -222,7 +290,7 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
       <div className={styles.actionsRow}>
         <button 
           type="button" 
-          onClick={handleGenerate} 
+          onClick={handleGenerateClick} 
           className={styles.generateBtn} 
           disabled={isLoading || !figmaLink.trim()}
           aria-label={isLoading ? 'Generating component...' : 'Generate resume component from Figma design'}
@@ -230,7 +298,12 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
           {isLoading && (
             <span className={styles.loadingSpinner} aria-hidden="true" />
           )}
-          {isLoading ? 'Generating…' : 'Generate Resume'}
+          {isLoading 
+            ? retryCount > 0 
+              ? `Retrying... (${retryCount}/3)` 
+              : 'Generating…' 
+            : 'Generate Resume'
+          }
         </button>
         
         <button 
