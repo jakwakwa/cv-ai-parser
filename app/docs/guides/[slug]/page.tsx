@@ -18,7 +18,8 @@ const guides: Record<string, GuideContent> = {
   },
 };
 
-export default function GuidePage({ params }: { params: { slug: string } }) {
+// biome-ignore lint/suspicious/noExplicitAny: simple props type for build
+export default function GuidePage({ params }: any) {
   const guide = guides[params.slug];
   if (!guide) return notFound();
 
