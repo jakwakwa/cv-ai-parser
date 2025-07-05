@@ -307,21 +307,223 @@ function generateExperienceLoop(experiences: any[]): string {
    - Validate file names and extensions
    - Implement cleanup for old generated files
 
+## Advanced Usage Patterns
+
+### Batch Processing Multiple Designs
+```typescript
+const processFigmaDesigns = async (designs: string[]) => {
+  const results = await Promise.allSettled(
+    designs.map(async (figmaLink) => {
+      const response = await fetch('/api/parse-figma-resume', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ figmaLink })
+      });
+      return response.json();
+    })
+  );
+  
+  return results.filter(result => result.status === 'fulfilled');
+};
+```
+
+### Custom Field Mapping
+```typescript
+// Extend the mapping function for custom fields
+const customFieldMappings = {
+  'portfolio': '{resume.portfolio}',
+  'github': '{resume.contact?.github}',
+  'certifications': '{resume.certifications?.join(", ")}',
+  'languages': '{resume.languages?.map(l => l.name).join(", ")}'
+};
+
+function enhancedMapTextContent(text: string): string {
+  const lower = text.toLowerCase();
+  
+  // Check custom mappings first
+  for (const [key, mapping] of Object.entries(customFieldMappings)) {
+    if (lower.includes(key)) {
+      return mapping;
+    }
+  }
+  
+  // Fall back to default mappings
+  return mapTextContent(text);
+}
+```
+
+### Error Recovery Strategies
+```typescript
+const robustFigmaProcessing = async (figmaLink: string, maxRetries = 3) => {
+  let lastError: Error;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch('/api/parse-figma-resume', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          figmaLink, 
+          retryAttempt: attempt 
+        })
+      });
+      
+      if (response.ok) {
+        return await response.json();
+      }
+      
+      // Handle specific error cases
+      if (response.status === 429) {
+        // Rate limited - wait before retry
+        await new Promise(resolve => 
+          setTimeout(resolve, Math.pow(2, attempt) * 1000)
+        );
+        continue;
+      }
+      
+      throw new Error(`HTTP ${response.status}`);
+    } catch (error) {
+      lastError = error as Error;
+      
+      if (attempt === maxRetries) {
+        throw lastError;
+      }
+      
+      // Exponential backoff
+      await new Promise(resolve => 
+        setTimeout(resolve, Math.pow(2, attempt) * 1000)
+      );
+    }
+  }
+};
+```
+
+## Integration with AI Workflows
+
+### Smart Component Generation
+```typescript
+// AI-enhanced component generation
+const generateIntelligentComponent = async (figmaData: any) => {
+  // Analyze the design structure
+  const designAnalysis = analyzeDesignComplexity(figmaData);
+  
+  // Generate optimized component based on analysis
+  if (designAnalysis.hasRepeatingElements) {
+    return generateLoopBasedComponent(figmaData);
+  } else {
+    return generateStaticComponent(figmaData);
+  }
+};
+
+function analyzeDesignComplexity(figmaData: any) {
+  return {
+    hasRepeatingElements: detectRepeatingPatterns(figmaData),
+    isResponsive: hasResponsiveConstraints(figmaData),
+    usesComponents: hasComponentInstances(figmaData),
+    complexity: calculateComplexityScore(figmaData)
+  };
+}
+```
+
+### Automated Testing Integration
+```typescript
+// Generate tests for Figma components
+const generateComponentTests = (componentName: string, jsxCode: string) => {
+  return `
+import { render, screen } from '@testing-library/react';
+import { ${componentName} } from './${componentName}';
+import { mockResumeData } from '../__mocks__/resumeData';
+
+describe('${componentName}', () => {
+  it('renders resume data correctly', () => {
+    render(<${componentName} resume={mockResumeData} />);
+    
+    expect(screen.getByText(mockResumeData.name)).toBeInTheDocument();
+    expect(screen.getByText(mockResumeData.title)).toBeInTheDocument();
+  });
+  
+  it('handles missing data gracefully', () => {
+    const incompleteData = { name: 'Test User' };
+    render(<${componentName} resume={incompleteData} />);
+    
+    expect(screen.getByText('Test User')).toBeInTheDocument();
+  });
+});
+  `;
+};
+```
+
+## Performance Optimization
+
+### Caching Strategy
+```typescript
+// Implement caching for Figma data
+const figmaCache = new Map<string, any>();
+
+const getCachedFigmaData = async (fileKey: string, nodeId?: string) => {
+  const cacheKey = `${fileKey}:${nodeId || 'root'}`;
+  
+  if (figmaCache.has(cacheKey)) {
+    return figmaCache.get(cacheKey);
+  }
+  
+  const data = await fetchFigmaData(fileKey, nodeId);
+  figmaCache.set(cacheKey, data);
+  
+  // Cache expiry (24 hours)
+  setTimeout(() => figmaCache.delete(cacheKey), 24 * 60 * 60 * 1000);
+  
+  return data;
+};
+```
+
+### Incremental Updates
+```typescript
+// Track component versions for incremental updates
+const trackComponentVersion = (componentName: string, hash: string) => {
+  const versionFile = `src/generated-resumes/.versions.json`;
+  const versions = JSON.parse(fs.readFileSync(versionFile, 'utf8') || '{}');
+  
+  versions[componentName] = {
+    hash,
+    timestamp: Date.now(),
+    version: (versions[componentName]?.version || 0) + 1
+  };
+  
+  fs.writeFileSync(versionFile, JSON.stringify(versions, null, 2));
+};
+```
+
 ## Future Enhancements
 
 1. **Advanced Node Processing**
    - Support for Figma components and variants
    - Auto-generation of responsive layouts
    - Integration with Figma design tokens
+   - Smart detection of design patterns
 
 2. **Enhanced Data Binding**
-   - Smart field detection using AI
+   - AI-powered field detection and mapping
    - Support for nested data structures
-   - Dynamic section generation
+   - Dynamic section generation with loops
+   - Context-aware content placement
 
 3. **Performance Optimizations**
-   - Caching of Figma data
+   - Intelligent caching with invalidation
    - Incremental component updates
    - Batch processing of multiple designs
+   - CDN integration for generated assets
 
-This integration provides a powerful foundation for AI agents to work with Figma designs in the resume generation workflow.
+4. **Developer Experience**
+   - Visual component editor
+   - Real-time preview updates
+   - Automated testing generation
+   - Performance monitoring and analytics
+
+5. **AI Integration**
+   - Smart layout optimization
+   - Automated accessibility improvements
+   - Content-aware styling suggestions
+   - Design pattern recognition
+
+This comprehensive integration provides AI agents with powerful tools for converting Figma designs into production-ready React components, complete with error handling, performance optimization, and extensibility for future enhancements.

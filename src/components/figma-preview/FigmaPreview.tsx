@@ -4,6 +4,7 @@ import type React from 'react';
 import { useState, useCallback } from 'react';
 import { Eye, FileText, Download, Check } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
+import { FigmaComponentPreview } from './FigmaComponentPreview';
 import styles from './FigmaPreview.module.css';
 
 interface FigmaPreviewProps {
@@ -146,33 +147,11 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
 
       <div className={styles.content}>
         {activeTab === 'preview' && (
-          <div className={styles.previewContainer}>
-            <div className={styles.previewFrame}>
-              <div className={styles.previewPlaceholder}>
-                <Eye className={styles.previewIcon} />
-                <h4>Component Preview</h4>
-                <p>
-                  Component <strong>{componentName}</strong> saved to <code>src/generated-resumes/</code>
-                </p>
-                <div className={styles.fileList}>
-                  <div className={styles.fileItem}>
-                    <FileText className={styles.fileIcon} />
-                    <code>{componentName}.tsx</code>
-                    <span className={styles.fileSize}>({jsxCode.length} chars)</span>
-                  </div>
-                  <div className={styles.fileItem}>
-                    <FileText className={styles.fileIcon} />
-                    <code>{componentName}.module.css</code>
-                    <span className={styles.fileSize}>({cssCode.length} chars)</span>
-                  </div>
-                </div>
-                <p className={styles.previewNote}>
-                  Open the generated files in your editor to see the actual component.
-                  The preview will be available once you import and use the component in your app.
-                </p>
-              </div>
-            </div>
-          </div>
+          <FigmaComponentPreview
+            componentName={componentName}
+            jsxCode={jsxCode}
+            cssCode={cssCode}
+          />
         )}
 
         {activeTab === 'jsx' && (

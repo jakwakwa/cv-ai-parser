@@ -202,13 +202,19 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
          if (err.name === 'AbortError') {
            errorMessage = 'Request timed out. The Figma file might be too large or the server is busy.';
            canRetry = true;
-         } else if (err.message.includes('fetch') || err.message.includes('network')) {
+         }
+         
+         if (err.message.includes('fetch') || err.message.includes('network')) {
            errorMessage = 'Network error: Unable to connect to the server. Please check your connection.';
            canRetry = true;
-         } else if (err.message.includes('Rate limit')) {
+         }
+         
+         if (err.message.includes('Rate limit')) {
            errorMessage = err.message;
            canRetry = false;
-         } else if (err.message.includes('Access denied')) {
+         }
+         
+         if (err.message.includes('Access denied')) {
            errorMessage = err.message;
            canRetry = false;
          }

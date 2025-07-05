@@ -1,15 +1,17 @@
 "use client";
 
-import React from 'react';
+import type React from 'react';
+// @ts-ignore - react-markdown types issue
 import ReactMarkdown from 'react-markdown';
 
-interface MDProps {
+interface MarkdownProps {
   children: string;
+  className?: string;
 }
 
-export default function Markdown({ children }: MDProps) {
+export default function Markdown({ children, className = "vds-prose" }: MarkdownProps) {
   return (
-    <div className="vds-prose">
+    <div className={className}>
       <ReactMarkdown>{children}</ReactMarkdown>
     </div>
   );
