@@ -35,6 +35,7 @@ This documentation provides comprehensive guidance for integrating Model Context
 | [`03-user-upload-implementation.md`](./03-user-upload-implementation.md) | Detailed implementation guide for user upload feature | Full-stack Developers |
 | [`04-api-reference.md`](./04-api-reference.md) | API endpoints and integration details | Backend Developers |
 | [`05-testing-strategy.md`](./05-testing-strategy.md) | Testing approaches and validation procedures | QA Engineers, Developers |
+| [`figma-upload-robustness-strategy.md`](./figma-upload-robustness-strategy.md) | Strategy for robust, intelligent, and durable Figma parsing | Technical Leadership, Full-stack Developers |
 
 ### Configuration & Examples
 
