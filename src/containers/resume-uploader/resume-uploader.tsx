@@ -384,6 +384,23 @@ const ResumeUploader = ({
     fileInputRef.current?.click();
   };
 
+  // Validation function to check if form can be submitted
+  const isFormValid = () => {
+    if (!uploadedFile) return false;
+    
+    if (isJobTailoringEnabled && isJobTailoringToggled) {
+      // Check job spec is provided
+      if (jobSpecMethod === 'paste' && !jobSpecText.trim()) return false;
+      if (jobSpecMethod === 'upload' && !jobSpecFile) return false;
+      
+      // Check character limits
+      if (jobSpecMethod === 'paste' && jobSpecText.length > 2000) return false;
+      if (extraPrompt && extraPrompt.length > 500) return false;
+    }
+    
+    return true;
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -542,14 +559,27 @@ const ResumeUploader = ({
               </div>
 
               {jobSpecMethod === 'paste' && (
-                <textarea
-                  className={styles.jobSpecTextarea}
-                  placeholder="Paste job description here (max 2000 chars)..."
-                  maxLength={2000}
-                  value={jobSpecText}
-                  onChange={(e) => setJobSpecText(e.target.value)}
-                  required
-                />
+                <div>
+                  <textarea
+                    className={styles.jobSpecTextarea}
+                    placeholder="Paste job description here (max 2000 chars)..."
+                    maxLength={2000}
+                    value={jobSpecText}
+                    onChange={(e) => setJobSpecText(e.target.value)}
+                    required
+                  />
+                  <div className={styles.characterCount}>
+                    <span className={
+                      jobSpecText.length > 2000 
+                        ? styles.characterCountError
+                        : jobSpecText.length > 1800 
+                        ? styles.characterCountWarning
+                        : ''
+                    }>
+                      {jobSpecText.length}/2000 characters
+                    </span>
+                  </div>
+                </div>
               )}
 
               {jobSpecMethod === 'upload' && (
@@ -606,13 +636,26 @@ const ResumeUploader = ({
             <h4 className={styles.extraPromptLabel}>
               Additional Instructions (Optional)
             </h4>
-            <textarea
-              className={styles.extraPromptTextarea}
-              placeholder="Add any extra instructions for the AI (e.g., 'Focus on leadership skills', 'Exclude projects before 2020'). Max 500 characters."
-              maxLength={500}
-              value={extraPrompt}
-              onChange={handleExtraPromptChange}
-            />
+            <div>
+              <textarea
+                className={styles.extraPromptTextarea}
+                placeholder="Add any extra instructions for the AI (e.g., 'Focus on leadership skills', 'Exclude projects before 2020'). Max 500 characters."
+                maxLength={500}
+                value={extraPrompt}
+                onChange={handleExtraPromptChange}
+              />
+              <div className={styles.characterCount}>
+                <span className={
+                  extraPrompt.length > 500 
+                    ? styles.characterCountError
+                    : extraPrompt.length > 450 
+                    ? styles.characterCountWarning
+                    : ''
+                }>
+                  {extraPrompt.length}/500 characters
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -663,7 +706,7 @@ const ResumeUploader = ({
       <div className={styles.userSubmitResumeBtn}>
         <Button
           onClick={handleCreateResume}
-          disabled={isLoading || !uploadedFile}
+          disabled={isLoading || !isFormValid()}
           className={styles.uploadButton}
         >
           {isLoading
