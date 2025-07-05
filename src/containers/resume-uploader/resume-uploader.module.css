@@ -736,8 +736,14 @@
 
   /* Better mobile padding for grouped inputs */
   .groupedInputs {
-    padding-left: 0;
-    padding-right: 0; /* Remove side padding */
+    padding-left: 0.5rem; /* Restore minimal side padding */
+    padding-right: 0.5rem;
+    border-radius: 10px;
+  }
+
+  /* Ensure textareas respect 10px radius */
+  .jobSpecTextarea,
+  .extraPromptTextarea {
     border-radius: 10px;
   }
 
