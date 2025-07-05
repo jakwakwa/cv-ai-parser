@@ -103,6 +103,12 @@ export default function RootLayout({
             >
               Terms and Conditions
             </a>
+            <a
+              className="hover:underline underline-offset-4"
+              href="/docs"
+            >
+              Docs
+            </a>
           </nav>
         </footer>
       </body>
