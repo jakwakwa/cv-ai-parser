@@ -105,6 +105,68 @@ If you encounter issues:
 - `JSONB`: Optimized JSON data type that supports indexing and efficient queries
 - Used for `additional_context` to store flexible job specification data
 
+## Temporary Workaround (Current Status)
+
+⚠️ **Important**: A temporary workaround is currently implemented in the codebase to handle the missing `additional_context` column.
+
+### What's Currently Active
+
+**File**: `app/api/parse-resume-enhanced/route.ts`  
+**Location**: Database save operation (around line 205)
+
+**Temporary Fix**:
+```typescript
+try {
+  savedResume = await ResumeDatabase.saveResume(supabase, {
+    // ... resume data including additionalContext
+  });
+} catch (error) {
+  console.error('Database save failed (missing migration?), continuing without save:', error);
+  // Continue without saving - user will still get the tailored resume
+  // TODO: Remove this try-catch after running the database migration
+}
+```
+
+### What This Means
+
+- ✅ **Job tailoring feature works** - users get tailored resumes
+- ✅ **No API crashes** - graceful error handling
+- ⚠️ **Database saves fail silently** - resumes aren't saved to database until migration is run
+- 📝 **Console warnings** - you'll see database save errors in logs
+
+### How to Remove the Temporary Fix
+
+After running the `002-add-additional-context.sql` migration:
+
+1. **Test the feature** - ensure database saves work
+2. **Remove the try-catch block** in `app/api/parse-resume-enhanced/route.ts`
+3. **Revert to original code**:
+
+```typescript
+// REMOVE the try-catch wrapper and restore:
+savedResume = await ResumeDatabase.saveResume(supabase, {
+  userId: user.id,
+  title: resumeTitle,
+  originalFilename: file.name,
+  fileType: file.type,
+  fileSize: file.size,
+  parsedData: finalParsedData,
+  parseMethod: 'ai_enhanced',
+  confidenceScore: 98,
+  isPublic: true,
+  slug,
+  additionalContext,
+});
+```
+
+4. **Remove the TODO comment** and cleanup
+
+### Why This Workaround Was Added
+
+- **Error**: `Could not find the 'additional_context' column of 'resumes' in the schema cache`
+- **Impact**: Job tailoring feature crashed when trying to save to database
+- **Solution**: Allow feature to work while database migration is pending
+
 ## Best Practices
 
 1. **Always backup** your database before running migrations
