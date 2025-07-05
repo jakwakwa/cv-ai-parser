@@ -370,6 +370,23 @@
   border-color: var(--color-accent-teal);
 }
 
+.characterCount {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  text-align: right;
+  margin-top: var(--spacing-xs);
+}
+
+.characterCountError {
+  color: var(--color-error-text);
+  font-weight: 600;
+}
+
+.characterCountWarning {
+  color: #f59e0b;
+  font-weight: 500;
+}
+
 .extraPromptLabel {
   margin-top: var(--spacing-lg);
   margin-bottom: var(--spacing-sm);
