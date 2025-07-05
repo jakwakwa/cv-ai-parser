@@ -72,104 +72,89 @@ function extractContentFromJSX(jsxCode: string) {
     skills: [] as string[]
   };
 
-  // Extract text content from template literals and static strings
-  const templateLiterals = jsxCode.match(/{\`([^`]+)\`}/g) || [];
-  const staticTexts = templateLiterals.map(match => 
-    match.replace(/{\`|\`}/g, '').trim()
-  );
-  
-  // Also extract direct text content from JSX
-  const directTextMatches = jsxCode.match(/>\s*([^<>{]+)\s*</g) || [];
-  const directTexts = directTextMatches
-    .map(match => match.replace(/>\s*|\s*</g, '').trim())
-    .filter(text => text.length > 0 && !text.includes('className') && !text.includes('styles'));
-  
-  // Combine all text content
-  const allTexts = [...staticTexts, ...directTexts];
+  // Extract the figmaExtractedContent export from the JSX
+  const figmaContentMatch = jsxCode.match(/export const figmaExtractedContent = ({[\s\S]*?});/);
+  if (figmaContentMatch) {
+    try {
+      const figmaContent = JSON.parse(figmaContentMatch[1]);
+      if (figmaContent.name) extractedContent.name = figmaContent.name;
+      if (figmaContent.summary) extractedContent.summary = figmaContent.summary;
+      if (figmaContent.contact) {
+        extractedContent.contact = { ...extractedContent.contact, ...figmaContent.contact };
+      }
+    } catch (e) {
+      console.warn('Could not parse figma extracted content:', e);
+    }
+  }
 
-  // Extract resume data bindings
-  const resumeBindings: string[] = jsxCode.match(/{resume\.[^}]+}/g) || [];
+  // Extract the defaultResume object from the JSX
+  const defaultResumeMatch = jsxCode.match(/const defaultResume: ParsedResume = ({[\s\S]*?});/);
+  if (defaultResumeMatch) {
+    try {
+      const defaultResume = JSON.parse(defaultResumeMatch[1]);
+      if (defaultResume.name && !extractedContent.name) extractedContent.name = defaultResume.name;
+      if (defaultResume.summary && !extractedContent.summary) extractedContent.summary = defaultResume.summary;
+      if (defaultResume.contact && (!extractedContent.contact.email || !extractedContent.contact.phone)) {
+        extractedContent.contact = { ...extractedContent.contact, ...defaultResume.contact };
+      }
+      if (defaultResume.experience && defaultResume.experience.length > 0) {
+        extractedContent.experience = defaultResume.experience.map((exp: any) => ({
+          position: exp.position || "Position",
+          company: exp.company || "Company", 
+          duration: exp.startDate && exp.endDate ? `${exp.startDate} - ${exp.endDate}` : "Period",
+          description: exp.description || "Job description"
+        }));
+      }
+      if (defaultResume.skills && defaultResume.skills.length > 0) {
+        extractedContent.skills = defaultResume.skills;
+      }
+    } catch (e) {
+      console.warn('Could not parse default resume:', e);
+    }
+  }
 
-  // Look for name/title patterns (define outside the if block)
-  const namePattern = /^[A-Z][a-z]+ [A-Z][a-z]+$/; // Simple name pattern
-  const titlePattern = /^[A-Z][a-z]+ [A-Z][a-z]+|Engineer|Developer|Designer|Manager|Analyst/i;
-  
-  // Try to identify content by context and order
-  if (allTexts.length > 0) {
+  // Fallback: Extract text content from template literals and static strings
+  if (!extractedContent.name || !extractedContent.summary) {
+    const templateLiterals = jsxCode.match(/{\`([^`]+)\`}/g) || [];
+    const staticTexts = templateLiterals.map(match => 
+      match.replace(/{\`|\`}/g, '').trim()
+    );
+    
     // Look for specific Figma content patterns
-    const curriculumVitaeText = allTexts.find(text => text.includes('CURRICULUM VITAE'));
-    if (curriculumVitaeText) {
-      // Extract name from "CURRICULUM VITAE\nJOHN DOE" pattern
+    const curriculumVitaeText = staticTexts.find(text => text.includes('CURRICULUM VITAE'));
+    if (curriculumVitaeText && !extractedContent.name) {
       const lines = curriculumVitaeText.split('\n');
       if (lines.length > 1) {
         extractedContent.name = lines[1].trim();
-      } else {
-        extractedContent.name = "John Doe";
       }
     }
     
     // Look for the summary text (long text starting with "I am")
-    const summaryText = allTexts.find(text => text.startsWith('I am') && text.length > 100);
-    if (summaryText) {
+    const summaryText = staticTexts.find(text => text.startsWith('I am') && text.length > 100);
+    if (summaryText && !extractedContent.summary) {
       extractedContent.summary = summaryText;
     }
-    
-    // Look for section titles
-    const experienceText = allTexts.find(text => text === 'Experience');
-    const contactText = allTexts.find(text => text === 'Contact');
-    const educationText = allTexts.find(text => text === 'Education');
-    const certificationText = allTexts.find(text => text === 'Certification');
-    const skillsText = allTexts.find(text => text === 'Skills');
-    
-    // Set a default title
-    extractedContent.title = "Frontend Engineer";
   }
 
-  // Extract contact info from resume bindings
-  const emailBinding = '{resume.contact?.email}';
-  const phoneBinding = '{resume.contact?.phone}';
-  const titleBinding = '{resume.title}';
-  
-  if (resumeBindings.includes(emailBinding)) {
-    extractedContent.contact.email = "email@example.com";
-  }
-  if (resumeBindings.includes(phoneBinding)) {
-    extractedContent.contact.phone = "+1 (555) 123-4567";
-  }
-  if (resumeBindings.includes(titleBinding)) {
-    extractedContent.title = extractedContent.title || "Your Title";
-  }
-
-  // Extract static text for other sections
-  const experienceTexts = allTexts.filter(text => 
-    text.toLowerCase().includes('company') || 
-    text.toLowerCase().includes('period') ||
-    text.toLowerCase().includes('experience') ||
-    (text.length > 50 && text.length < 200) // Likely description text
-  );
-
-  if (experienceTexts.length > 0) {
+  // Set defaults if nothing was extracted
+  if (!extractedContent.name) extractedContent.name = "John Doe";
+  if (!extractedContent.summary) extractedContent.summary = "Professional summary from your Figma design";
+  if (!extractedContent.contact.email) extractedContent.contact.email = "email@example.com";
+  if (!extractedContent.contact.phone) extractedContent.contact.phone = "+1 (555) 123-4567";
+  if (!extractedContent.contact.location) extractedContent.contact.location = "Your Location";
+  if (extractedContent.experience.length === 0) {
     extractedContent.experience.push({
       position: "Position from Figma",
       company: "Company from Figma",
       duration: "Period from Figma",
-      description: experienceTexts[0].substring(0, 150) + (experienceTexts[0].length > 150 ? '...' : '')
+      description: "Job description from your Figma design"
     });
   }
-
-  // Extract skills - look for shorter texts that might be skills
-  const skillTexts = allTexts.filter(text => 
-    text.length < 30 && text.length > 2 && 
-    !namePattern.test(text) && 
-    !text.toLowerCase().includes('resume') &&
-    !text.toLowerCase().includes('contact')
-  );
-  
-  if (skillTexts.length > 0) {
-    extractedContent.skills = skillTexts.slice(0, 6); // Take first 6 as skills
-  } else {
+  if (extractedContent.skills.length === 0) {
     extractedContent.skills = ["Skills from Figma"];
   }
+
+  extractedContent.title = "Frontend Engineer";
 
   return extractedContent;
 }

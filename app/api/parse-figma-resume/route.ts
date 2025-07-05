@@ -25,21 +25,95 @@ interface FigmaNode {
 }
 
 // Enhanced text content mapping based on Figma layer names and content
+// Global store for extracted Figma content
+const figmaContentStore: {
+  name?: string;
+  summary?: string;
+  experience?: Array<{
+    position?: string;
+    company?: string;
+    period?: string;
+    description?: string;
+  }>;
+  contact?: {
+    email?: string;
+    phone?: string;
+    location?: string;
+  };
+  education?: Array<{
+    degree?: string;
+    school?: string;
+    year?: string;
+  }>;
+  certifications?: Array<{
+    name?: string;
+    issuer?: string;
+    year?: string;
+  }>;
+  skills?: string[];
+} = {};
+
+function extractAndStoreContent(text: string, layerName: string): void {
+  const lower = text.toLowerCase();
+  const layerLower = layerName.toLowerCase();
+  const cleanText = text.trim();
+  
+  // Extract name from CURRICULUM VITAE text
+  if (layerLower.includes('summary-name') && cleanText.includes('CURRICULUM VITAE')) {
+    const lines = cleanText.split('\n').map(line => line.trim()).filter(line => line);
+    if (lines.length > 1) {
+      figmaContentStore.name = lines[1]; // Second line should be the name
+    }
+  }
+  
+  // Extract summary content
+  if (layerLower.includes('summary-content') && cleanText.length > 50) {
+    figmaContentStore.summary = cleanText;
+  }
+  
+  // Extract contact information
+  if (layerLower.includes('contact') && cleanText.includes('@')) {
+    if (!figmaContentStore.contact) figmaContentStore.contact = {};
+    figmaContentStore.contact.email = cleanText;
+  }
+  if (layerLower.includes('contact') && /[\+\(]?\d[\d\s\-\(\)]{8,}/.test(cleanText)) {
+    if (!figmaContentStore.contact) figmaContentStore.contact = {};
+    figmaContentStore.contact.phone = cleanText;
+  }
+  if (layerLower.includes('contact') && !cleanText.includes('@') && !/[\+\(]?\d[\d\s\-\(\)]{8,}/.test(cleanText) && cleanText.length > 3) {
+    if (!figmaContentStore.contact) figmaContentStore.contact = {};
+    figmaContentStore.contact.location = cleanText;
+  }
+}
+
 function mapTextContent(text: string, layerName: string): string {
   const lower = text.toLowerCase();
   const layerLower = layerName.toLowerCase();
   
+  // First, extract and store the content
+  extractAndStoreContent(text, layerName);
+  
   // Map based on layer names from Figma structure
   if (layerLower.includes('summary-name')) {
-    // Check if the text contains name-like content
-    if (lower.includes('curriculum vitae') || lower.includes('john doe') || lower.includes('name')) {
-      return '{resume.name}';
+    // Extract name from Figma text and use it as fallback
+    if (text.includes('CURRICULUM VITAE')) {
+      const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+      if (lines.length > 1) {
+        return `{resume.name || "${lines[1]}"}`;
+      }
     }
-    return '{resume.name}';
+    return '{resume.name || "Your Name"}';
   }
+  
   if (layerLower.includes('summary-text') || layerLower.includes('summary-content')) {
-    return '{resume.summary}';
+    // Use actual Figma text as fallback
+    if (text.length > 20) {
+      const escapedText = text.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+      return `{resume.summary || \`${escapedText}\`}`;
+    }
+    return '{resume.summary || "Your professional summary"}';
   }
+  
   if (layerLower.includes('exp-title') || layerLower.includes('job-title')) {
     return '{resume.experience?.[0]?.position || "Position"}';
   }
@@ -52,15 +126,18 @@ function mapTextContent(text: string, layerName: string): string {
   if (layerLower.includes('exp-desc') || layerLower.includes('description')) {
     return '{resume.experience?.[0]?.description || "Job description"}';
   }
-  if (layerLower.includes('contact-email') || layerLower.includes('email')) {
-    return '{resume.contact?.email}';
+  
+  // Contact fields with Figma content as fallback
+  if (layerLower.includes('contact-email') || (layerLower.includes('contact') && text.includes('@'))) {
+    return `{resume.contact?.email || "${text}"}`;
   }
-  if (layerLower.includes('contact-phone') || layerLower.includes('phone')) {
-    return '{resume.contact?.phone}';
+  if (layerLower.includes('contact-phone') || (layerLower.includes('contact') && /[\+\(]?\d[\d\s\-\(\)]{8,}/.test(text))) {
+    return `{resume.contact?.phone || "${text}"}`;
   }
-  if (layerLower.includes('contact-location') || layerLower.includes('location')) {
-    return '{resume.contact?.location}';
+  if (layerLower.includes('contact-location') || (layerLower.includes('contact') && !text.includes('@') && !/[\+\(]?\d[\d\s\-\(\)]{8,}/.test(text))) {
+    return `{resume.contact?.location || "${text}"}`;
   }
+  
   if (layerLower.includes('education-degree') || layerLower.includes('degree')) {
     return '{resume.education?.[0]?.degree || "Degree"}';
   }
@@ -83,26 +160,32 @@ function mapTextContent(text: string, layerName: string): string {
     return '{resume.skills?.[0] || "Skill"}';
   }
   
-  // Section titles
+  // Section titles - use actual text from Figma
   if (lower.includes('experience') && layerLower.includes('sectiontitle')) {
-    return '{"Experience"}';
+    return `{"${text}"}`;
   }
   if (lower.includes('education') && layerLower.includes('sectiontitle')) {
-    return '{"Education"}';
+    return `{"${text}"}`;
   }
   if (lower.includes('contact') && layerLower.includes('sectiontitle')) {
-    return '{"Contact"}';
+    return `{"${text}"}`;
   }
   if (lower.includes('certification') && layerLower.includes('sectiontitle')) {
-    return '{"Certifications"}';
+    return `{"${text}"}`;
   }
   if (lower.includes('skills') && layerLower.includes('sectiontitle')) {
-    return '{"Skills"}';
+    return `{"${text}"}`;
   }
   
-  // Generic content mapping based on text content
-  if (lower.includes('curriculum vitae') || lower.includes('resume')) {
-    return '{resume.name}';
+  // Generic section titles
+  if (layerLower.includes('sectiontitle')) {
+    return `{"${text}"}`;
+  }
+  
+  // Preserve actual Figma text content as fallback
+  if (text.length > 0 && text.trim() !== '') {
+    const escapedText = text.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+    return `{\`${escapedText}\`}`;
   }
   
   // Default fallback
@@ -936,6 +1019,10 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
     }
 
     const componentName = `FigmaResume${firstNode.name.replace(/[^a-zA-Z0-9]/g, '')}`;
+    
+    // Reset the content store for this generation
+    Object.keys(figmaContentStore).forEach(key => delete (figmaContentStore as any)[key]);
+    
     const jsxBody = nodeToJsx(firstNode, undefined);
     
     // Extract colors from the Figma node
@@ -948,7 +1035,57 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
     const secondaryColor = colorsArray[1] || '#64748b';
     const accentColor = colorsArray[2] || '#06b6d4';
 
-    const jsxCode = `import React from 'react';\nimport type { ParsedResume } from '@/lib/resume-parser/schema';\nimport styles from './${componentName}.module.css';\n\nexport const ${componentName}: React.FC<{ resume: ParsedResume }> = ({ resume }) => {\n  return (\n    ${jsxBody}\n  );\n};\n`;
+    // Generate default resume object with extracted Figma content
+    const defaultResumeObject = {
+      name: figmaContentStore.name || 'John Doe',
+      summary: figmaContentStore.summary || 'Professional summary from your Figma design',
+      contact: {
+        email: figmaContentStore.contact?.email || 'email@example.com',
+        phone: figmaContentStore.contact?.phone || '+1 (555) 123-4567',
+        location: figmaContentStore.contact?.location || 'Your Location'
+      },
+      experience: [
+        {
+          position: 'Your Position',
+          company: 'Your Company',
+          startDate: '2020',
+          endDate: '2024',
+          description: 'Your job description and achievements'
+        }
+      ],
+      education: [
+        {
+          degree: 'Your Degree',
+          institution: 'Your School',
+          year: '2020'
+        }
+      ],
+      certifications: [
+        {
+          name: 'Your Certification',
+          issuer: 'Issuing Organization',
+          year: '2023'
+        }
+      ],
+      skills: ['Skill 1', 'Skill 2', 'Skill 3']
+    };
+
+    const jsxCode = `import React from 'react';
+import type { ParsedResume } from '@/lib/resume-parser/schema';
+import styles from './${componentName}.module.css';
+
+// Default resume data extracted from Figma design
+const defaultResume: ParsedResume = ${JSON.stringify(defaultResumeObject, null, 2)};
+
+export const ${componentName}: React.FC<{ resume?: ParsedResume }> = ({ resume = defaultResume }) => {
+  return (
+    ${jsxBody}
+  );
+};
+
+// Export the extracted Figma content for reference
+export const figmaExtractedContent = ${JSON.stringify(figmaContentStore, null, 2)};
+`;
 
     // Generate CSS based on actual Figma structure
     const cssModule = generateCSSFromFigmaStructure(firstNode, primaryColor, secondaryColor, accentColor);
