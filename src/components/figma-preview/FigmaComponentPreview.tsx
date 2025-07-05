@@ -232,44 +232,109 @@ export const FigmaComponentPreview: React.FC<FigmaComponentPreviewProps> = ({
           </div>
           
           <div className={styles.mockupContent}>
-            <div className={styles.resumeSection}>
-              <h1 className={`${styles.mockName} ${styles.figmaStyled}`}>{actualContent.name}</h1>
-              <h2 className={`${styles.mockTitle} ${styles.figmaStyled}`}>{actualContent.title}</h2>
-              <div className={styles.mockContact}>
-                <span>{actualContent.contact.email}</span>
-                <span>{actualContent.contact.phone}</span>
-                <span>{actualContent.contact.location || "Location from Figma"}</span>
+            {/* Match the generated component structure */}
+            <div className={styles.resume}>
+              <div className={styles.header}>
+                <div className={styles.summary}>
+                  <div className={styles['summary-name']}>
+                    <p>{actualContent.name}</p>
+                  </div>
+                  <div className={styles['summary-content']}>
+                    <p>{actualContent.summary || "Summary content extracted from your Figma design"}</p>
+                  </div>
+                </div>
+                <div className={styles.profile}>
+                  <div className={styles['profile-image']} />
+                </div>
               </div>
-            </div>
-            
-            <div className={styles.resumeSection}>
-              <h3 className={`${styles.sectionTitle} ${styles.figmaStyled}`}>Summary</h3>
-              <p className={styles.mockSummary}>{actualContent.summary || "Summary content extracted from your Figma design"}</p>
-            </div>
-            
-            <div className={styles.resumeSection}>
-              <h3 className={`${styles.sectionTitle} ${styles.figmaStyled}`}>Experience</h3>
-              {actualContent.experience.length > 0 ? actualContent.experience.map((exp, index) => (
-                <div key={`exp-${index}-${exp.position}`} className={styles.experienceItem}>
-                  <h4 className={`${styles.jobTitle} ${styles.figmaStyled}`}>{exp.position}</h4>
-                  <span className={styles.company}>{exp.company} • {exp.duration}</span>
-                  <p className={styles.jobDescription}>{exp.description}</p>
+              
+              <div className={styles.resumetwocolbody}>
+                <div className={styles.experiencesection}>
+                  <div className={styles.sectiontitle}>
+                    <p>Experience</p>
+                  </div>
+                  <div className={styles['experience-list']}>
+                    {actualContent.experience.length > 0 ? actualContent.experience.map((exp, index) => (
+                      <div key={`exp-${index}-${exp.position}`} className={styles['experience-item']}>
+                        <div className={styles['exp-title']}>
+                          <p>{exp.position}</p>
+                        </div>
+                        <div className={styles['exp-company']}>
+                          <p>{exp.company}</p>
+                        </div>
+                        <div className={styles['exp-period']}>
+                          <p>{exp.duration}</p>
+                        </div>
+                        <div className={styles['exp-desc']}>
+                          <p>{exp.description}</p>
+                        </div>
+                      </div>
+                    )) : (
+                      <div className={styles['experience-item']}>
+                        <div className={styles['exp-title']}>
+                          <p>Position from Figma</p>
+                        </div>
+                        <div className={styles['exp-company']}>
+                          <p>Company from Figma</p>
+                        </div>
+                        <div className={styles['exp-period']}>
+                          <p>Period from Figma</p>
+                        </div>
+                        <div className={styles['exp-desc']}>
+                          <p>Job description from your Figma design</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )) : (
-                <div className={styles.experienceItem}>
-                  <h4 className={`${styles.jobTitle} ${styles.figmaStyled}`}>Experience from Figma</h4>
-                  <span className={styles.company}>Content extracted from your design</span>
-                  <p className={styles.jobDescription}>Your experience details will be populated from the Figma design structure.</p>
+                
+                <div className={styles.resumesidebar}>
+                  <div className={styles.sectiontitle}>
+                    <p>Contact</p>
+                  </div>
+                  <div className={styles.contact}>
+                    <div className={styles['contact-list']}>
+                      <p>{actualContent.contact.email || "email@example.com"}</p>
+                      <p>{actualContent.contact.phone || "+1 (555) 123-4567"}</p>
+                      <p>{actualContent.contact.location || "Location from Figma"}</p>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.sectiontitle}>
+                    <p>Education</p>
+                  </div>
+                  <div className={styles.education}>
+                    <div className={styles['education-list']}>
+                      <p>Degree from Figma</p>
+                      <p>School from Figma</p>
+                      <p>Year from Figma</p>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.sectiontitle}>
+                    <p>Certification</p>
+                  </div>
+                  <div className={styles.certification}>
+                    <div className={styles['certification-list']}>
+                      <p>Certification from Figma</p>
+                      <p>Issuer from Figma</p>
+                      <p>Year from Figma</p>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.sectiontitle}>
+                    <p>Skills</p>
+                  </div>
+                  <div className={styles.skills}>
+                    <div className={styles['skills-list']}>
+                      {actualContent.skills.map((skill) => (
+                        <div key={skill} className={styles.skill}>
+                          <p>{skill}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              )}
-            </div>
-            
-            <div className={styles.resumeSection}>
-              <h3 className={`${styles.sectionTitle} ${styles.figmaStyled}`}>Skills</h3>
-              <div className={styles.skillsList}>
-                {actualContent.skills.map((skill) => (
-                  <span key={skill} className={`${styles.skillTag} ${styles.figmaStyled}`}>{skill}</span>
-                ))}
               </div>
             </div>
           </div>
