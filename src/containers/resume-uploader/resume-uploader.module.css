@@ -736,16 +736,26 @@
 
   /* Better mobile padding for grouped inputs */
   .groupedInputs {
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding-left: 0;
+    padding-right: 0; /* Remove side padding */
+    border-radius: 10px;
   }
 
   .uploaderStepSections {
-    padding: var(--spacing-sm);
+    padding-left: 0;
+    padding-right: 0;
     gap: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
+    border-radius: 10px;
   }
 
   .jobTailoringToggle {
-    padding: var(--spacing-md);
+    padding-left: 0;
+    padding-right: 0;
+    border-radius: 10px;
+  }
+
+  .userSubmitResumeBtn {
+    border-radius: 10px;
   }
 }

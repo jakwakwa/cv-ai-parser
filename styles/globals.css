@@ -644,12 +644,14 @@ body {
   }
 
   .mainUserContainer {
-    padding: 1rem 1rem 40px 1rem; /* Reduce mobile padding significantly */
-    margin: 1rem auto;
+    padding: 0.5rem 0.5rem 40px 0.5rem; /* Further reduce side padding */
+    margin: 0.5rem auto;
+    border-radius: 10px;
   }
 
   .uploaderContainer {
-    padding: 1rem;
+    padding: 0.5rem;
+    border-radius: 10px;
   }
 
   .title {
@@ -657,12 +659,14 @@ body {
   }
 
   .dropZone {
-    padding: 2rem 1rem;
+    padding: 1.5rem 0.5rem;
+    border-radius: 10px; /* Limit border radius */
   }
 
   .features {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
+    border-radius: 10px;
   }
 }
 
