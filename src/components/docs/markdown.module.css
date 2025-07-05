@@ -1,0 +1,32 @@
+.md h1 {
+  composes: h1 from "./theme.module.css";
+}
+
+.md h2 {
+  composes: h2 from "./theme.module.css";
+}
+
+.md h3 {
+  composes: h3 from "./theme.module.css";
+}
+
+.md p {
+  composes: body from "./theme.module.css";
+}
+
+.md code {
+  composes: code from "./theme.module.css";
+}
+
+.md pre {
+  composes: pre from "./theme.module.css";
+}
+
+.md a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.md a:hover {
+  text-decoration: underline;
+}

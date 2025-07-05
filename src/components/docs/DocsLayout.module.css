@@ -1,8 +1,8 @@
 .layout {
   display: grid;
-  grid-template-columns: 240px 1fr 200px;
-  gap: 2rem;
-  max-width: 1200px;
+  grid-template-columns: 16rem minmax(0, 1fr) 13rem;
+  gap: 2.5rem;
+  max-width: 85rem;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
@@ -41,7 +41,9 @@
   position: sticky;
   top: 2rem;
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--color-text-muted);
+  border-left: 1px dotted var(--color-border);
+  padding-left: 1rem;
 }
 
 .toc ul {
@@ -60,4 +62,9 @@
 
 .tocLink:hover {
   text-decoration: underline;
+}
+
+.tocLink[aria-current='true'] {
+  color: var(--color-accent);
+  font-weight: 600;
 }

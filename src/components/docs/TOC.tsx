@@ -12,6 +12,26 @@ export default function TOC() {
     const nodes = Array.from(document.querySelectorAll(selector));
     const items: Entry[] = nodes.map((n) => ({ id: n.id, text: n.textContent || '' }));
     setEntries(items);
+
+    const io = new IntersectionObserver(
+      (obs) => {
+        obs.forEach((entry) => {
+          const link = document.querySelector<HTMLAnchorElement>(`a[href="#${entry.target.id}"]`);
+          if (!link) return;
+          if (entry.isIntersecting) {
+            link.setAttribute('aria-current', 'true');
+          } else {
+            link.removeAttribute('aria-current');
+          }
+        });
+      },
+      { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
+    );
+    nodes.forEach((n) => io.observe(n));
+
+    return () => {
+      nodes.forEach((n) => io.unobserve(n));
+    };
   }, []);
 
   if (entries.length === 0) return null;

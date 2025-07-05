@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import clsx from 'clsx';
 import styles from './DocsLayout.module.css';
+import './theme.module.css';
 import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
