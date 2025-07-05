@@ -10,7 +10,16 @@ export default function TOC() {
   useEffect(() => {
     const selector = 'main h2, main h3';
     const nodes = Array.from(document.querySelectorAll(selector));
-    const items: Entry[] = nodes.map((n) => ({ id: n.id, text: n.textContent || '' }));
+    const items: Entry[] = nodes.map((n, index) => {
+      // If the heading doesn't have an ID, generate one and assign it
+      if (!n.id) {
+        n.id = `heading-${index}`;
+      }
+      return { 
+        id: n.id, 
+        text: n.textContent || '' 
+      };
+    });
     setEntries(items);
 
     const io = new IntersectionObserver(
