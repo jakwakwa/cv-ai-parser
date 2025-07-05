@@ -219,6 +219,12 @@ body {
   color: #ffffff !important;
 }
 
+/* Hero section icons - light teal color */
+.hero .headerIcon svg,
+.hero .featureIcon svg {
+  color: #5eead4 !important; /* Light teal for good contrast */
+}
+
 @media (max-width: 768px) {
   .hero {
     padding: 10px;
@@ -635,6 +641,11 @@ body {
 @media (max-width: 768px) {
   .mainContainer {
     flex-direction: column;
+  }
+
+  .mainUserContainer {
+    padding: 1rem 1rem 40px 1rem; /* Reduce mobile padding significantly */
+    margin: 1rem auto;
   }
 
   .uploaderContainer {
