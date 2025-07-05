@@ -98,22 +98,32 @@ export async function POST(request: NextRequest) {
         );
       }
 
+      const trimmedJobSpecText = finalJobSpecText.trim();
       const contextData = {
         jobSpecSource: jobSpecFile ? 'upload' : ('pasted' as const),
-        jobSpecText: finalJobSpecText.trim(),
+        jobSpecText: trimmedJobSpecText, // Always use the trimmed text (we already validated it's not empty)
         jobSpecFileUrl: undefined, // TODO: Handle file upload to storage in future
         tone: tone as 'Formal' | 'Neutral' | 'Creative',
         extraPrompt: extraPrompt?.trim() || undefined,
       };
 
+      // Debug: Log what we're trying to validate
+      console.log('About to validate contextData:', {
+        ...contextData,
+        jobSpecTextLength: contextData.jobSpecText?.length,
+        jobSpecTextPreview: contextData.jobSpecText?.substring(0, 50) + '...'
+      });
+
       // Validate context structure
       const validation = userAdditionalContextSchema.safeParse(contextData);
       if (!validation.success) {
-        console.error('Validation failed:', validation.error.issues);
+        console.error('Validation failed for contextData:', contextData);
+        console.error('Validation errors:', validation.error.issues);
         return Response.json(
           {
             error: 'Invalid job specification data',
             details: validation.error.issues.map(issue => `${issue.path.join('.')}: ${issue.message}`).join(', '),
+            received: contextData,
           },
           { status: 400 }
         );
