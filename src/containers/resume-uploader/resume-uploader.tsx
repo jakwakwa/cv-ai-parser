@@ -181,9 +181,21 @@ const ResumeUploader = ({
         );
         return;
       }
+      if (jobSpecMethod === 'paste' && jobSpecText.length > 2000) {
+        setError(
+          `Job description is too long (${jobSpecText.length}/2000 characters). Please shorten it.`
+        );
+        return;
+      }
       if (jobSpecMethod === 'upload' && !jobSpecFile) {
         setError(
           'Please upload a job specification file when job tailoring is enabled.'
+        );
+        return;
+      }
+      if (extraPrompt && extraPrompt.length > 500) {
+        setError(
+          `Extra instructions are too long (${extraPrompt.length}/500 characters). Please shorten them.`
         );
         return;
       }
