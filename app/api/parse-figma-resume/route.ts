@@ -26,7 +26,12 @@ function nodeToJsx(node: FigmaNode): string {
     case 'FRAME':
     case 'GROUP': {
       const childrenJsx = node.children?.map(nodeToJsx).join('\n') || '';
-      return `<div className={styles.${node.name.replace(/\s+/g, '').toLowerCase()}}>${childrenJsx}</div>`;
+      const className = node.name.replace(/\s+/g, '').toLowerCase();
+      // Use bracket notation for CSS class names to handle hyphens and special characters
+      const classNameAccess = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(className) 
+        ? `styles.${className}` 
+        : `styles['${className}']`;
+      return `<div className={${classNameAccess}}>${childrenJsx}</div>`;
     }
     default:
       return '';
