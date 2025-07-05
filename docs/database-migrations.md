@@ -7,9 +7,11 @@ This document outlines the database migrations required for the CV AI Parser app
 All migration scripts are located in the `scripts/` directory and should be executed in order.
 
 ### 001-create-tables.sql
+
 Initial database setup with core tables structure.
 
 ### 002-add-additional-context.sql
+
 Adds support for JobFit Tailor feature by adding the `additional_context` column to store job specification and tone settings.
 
 ## How to Run Migrations
@@ -40,16 +42,18 @@ psql "your-connection-string" -f scripts/002-add-additional-context.sql
 
 ## Migration Details
 
-### 002-add-additional-context.sql
+### 002-add-additional-context.sql Details
 
 **Purpose**: Adds JobFit Tailor feature support to the database.
 
 **Changes**:
+
 - Adds `additional_context` column to `resumes` table
 - Column type: `JSONB`
 - Stores job specification text, tone settings, and extra prompts for tailored resumes
 
 **SQL**:
+
 ```sql
 -- Add additional_context column to resumes table for JobFit Tailor feature
 ALTER TABLE resumes
@@ -63,7 +67,8 @@ COMMENT ON COLUMN resumes.additional_context IS 'Stores job specification and to
 
 After running a migration, verify it was successful:
 
-### Check if additional_context column exists:
+### Check if additional_context column exists
+
 ```sql
 SELECT column_name, data_type 
 FROM information_schema.columns 
@@ -71,13 +76,10 @@ WHERE table_name = 'resumes'
 AND column_name = 'additional_context';
 ```
 
-Expected result:
-```
-column_name       | data_type
-additional_context| jsonb
-```
+### Check table structure
 
-### Check table structure:
+Expected result:
+
 ```sql
 \d resumes
 ```
@@ -93,6 +95,7 @@ additional_context| jsonb
 ### Getting Help
 
 If you encounter issues:
+
 1. Check the Supabase project logs
 2. Verify your database permissions
 3. Ensure you're connected to the correct database environment
