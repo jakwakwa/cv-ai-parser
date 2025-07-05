@@ -1,7 +1,7 @@
 import { google } from '@ai-sdk/google';
 import { generateObject, streamObject } from 'ai';
 import { AI_MODEL } from '@/lib/config';
-import { type ParsedResume, resumeSchema } from '@/lib/resume-parser/schema';
+import { aiResumeSchema, type ParsedResume } from '@/lib/resume-parser/schema';
 import { buildTailorPrompt } from './dynamicPromptGenerator';
 import type { ParsedJobSpec, UserAdditionalContext } from './schemas';
 
@@ -50,23 +50,31 @@ export async function tailorResume(
 async function tailorResumeStandard(prompt: string): Promise<ParsedResume> {
   const { object } = await generateObject({
     model: google(AI_MODEL),
-    schema: resumeSchema,
+    schema: aiResumeSchema,
     prompt,
     temperature: 0.3, // Slightly creative but controlled
   });
 
-  return object;
+  // Add back customColors as empty object (will be merged with original later)
+  return {
+    ...object,
+    customColors: {},
+  };
 }
 
 async function tailorResumeStreaming(prompt: string): Promise<ParsedResume> {
   const { object } = await streamObject({
     model: google(AI_MODEL),
-    schema: resumeSchema,
+    schema: aiResumeSchema,
     prompt,
     temperature: 0.3,
   });
 
   // For streaming, we need to collect the full object
   // Implementation depends on how you want to handle partial updates
-  return object;
+  // Add back customColors as empty object
+  return {
+    ...object,
+    customColors: {},
+  };
 }
