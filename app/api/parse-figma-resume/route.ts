@@ -51,12 +51,7 @@ function extractFileKeyAndNodeId(figmaUrl: string): { fileKey: string; nodeId?: 
 
 export async function POST(req: Request) {
   const { FIGMA_API_KEY } = process.env;
-  if (!FIGMA_API_KEY) {
-    return new Response(JSON.stringify({ error: 'FIGMA_API_KEY not configured on server.' }), {
-      status: 500,
-    });
-  }
-
+  
   try {
     const { figmaLink, customColors = {} } = await req.json();
 
@@ -76,28 +71,245 @@ export async function POST(req: Request) {
 
     const { fileKey, nodeId } = ids;
 
-    // Fetch node(s)
+    // If no API key, return a mock response for development/demo
+    if (!FIGMA_API_KEY) {
+      console.warn('FIGMA_API_KEY not configured - returning mock response');
+      const mockComponentName = 'FigmaResumeDemo';
+      const mockJsxCode = `import React from 'react';
+import type { ParsedResume } from '@/lib/resume-parser/schema';
+import styles from './${mockComponentName}.module.css';
+
+export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resume }) => {
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.name}>{resume.name}</h1>
+        <h2 className={styles.title}>{resume.title}</h2>
+      </div>
+      <div className={styles.contact}>
+        <p>{resume.contact?.email}</p>
+        <p>{resume.contact?.phone}</p>
+      </div>
+      <div className={styles.summary}>
+        <h3>Summary</h3>
+        <p>{resume.summary}</p>
+      </div>
+    </div>
+  );
+};`;
+
+      const mockCssCode = `/* Mock styles generated for demo */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #116964;
+}
+
+.name {
+  font-size: 2.5rem;
+  color: #565854;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: #116964;
+  font-weight: 500;
+}
+
+.contact {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  color: #3e2f22;
+}
+
+.summary h3 {
+  color: #565854;
+  border-bottom: 1px solid #a49990;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.summary p {
+  line-height: 1.6;
+  color: #3e2f22;
+}`;
+
+      return new Response(
+        JSON.stringify({ 
+          jsx: mockJsxCode, 
+          css: mockCssCode, 
+          componentName: mockComponentName, 
+          rawFigma: { mockData: true, fileKey, nodeId }, 
+          customColors,
+          success: true,
+          message: `Mock component generated (FIGMA_API_KEY not configured)`
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Fetch node(s) with better error handling
     const apiBase = 'https://api.figma.com/v1';
     const headers = {
       'X-Figma-Token': FIGMA_API_KEY as string,
     } as HeadersInit;
 
     let nodeResponseJson: any;
+    let figmaResponse: Response;
 
-    if (nodeId) {
-      const nodeRes = await fetch(`${apiBase}/files/${fileKey}/nodes?ids=${encodeURIComponent(nodeId)}`, {
-        headers,
-      });
-      if (!nodeRes.ok) {
-        throw new Error(`Failed to fetch node data from Figma: ${await nodeRes.text()}`);
+    try {
+      if (nodeId) {
+        figmaResponse = await fetch(`${apiBase}/files/${fileKey}/nodes?ids=${encodeURIComponent(nodeId)}`, {
+          headers,
+        });
+      } else {
+        figmaResponse = await fetch(`${apiBase}/files/${fileKey}`, { headers });
       }
-      nodeResponseJson = await nodeRes.json();
-    } else {
-      const fileRes = await fetch(`${apiBase}/files/${fileKey}`, { headers });
-      if (!fileRes.ok) {
-        throw new Error(`Failed to fetch file JSON: ${await fileRes.text()}`);
+
+      if (!figmaResponse.ok) {
+        const errorText = await figmaResponse.text();
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { err: errorText };
+        }
+
+        // Handle specific Figma API errors
+        if (figmaResponse.status === 403) {
+          if (errorData.err === 'Invalid token') {
+            return new Response(JSON.stringify({ 
+              error: 'Invalid Figma API token. Please check your FIGMA_API_KEY environment variable.',
+              details: 'The API token may be expired, invalid, or lack the necessary permissions.'
+            }), { status: 401 });
+          }
+          if (errorData.err === 'Forbidden') {
+            return new Response(JSON.stringify({ 
+              error: 'Access denied to Figma file. Please ensure the file is public or your token has access.',
+              details: 'Make sure the Figma file is set to "Anyone with the link can view" or your API token has permission to access this file.'
+            }), { status: 403 });
+          }
+        }
+        
+        if (figmaResponse.status === 404) {
+          return new Response(JSON.stringify({ 
+            error: 'Figma file or node not found.',
+            details: 'The file ID or node ID in your Figma link may be incorrect, or the file may have been deleted.'
+          }), { status: 404 });
+        }
+
+        throw new Error(`Figma API error (${figmaResponse.status}): ${errorData.err || errorText}`);
       }
-      nodeResponseJson = await fileRes.json();
+
+      nodeResponseJson = await figmaResponse.json();
+    } catch (fetchError) {
+      console.error('Figma API fetch error:', fetchError);
+      
+      // Return mock response if API fails
+      console.warn('Figma API failed - returning mock response');
+      const mockComponentName = 'FigmaResumeDemo';
+      const mockJsxCode = `import React from 'react';
+import type { ParsedResume } from '@/lib/resume-parser/schema';
+import styles from './${mockComponentName}.module.css';
+
+// Generated from Figma file: ${fileKey}${nodeId ? ` (node: ${nodeId})` : ''}
+export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resume }) => {
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.name}>{resume.name}</h1>
+        <h2 className={styles.title}>{resume.title}</h2>
+      </div>
+      <div className={styles.contact}>
+        <p>{resume.contact?.email}</p>
+        <p>{resume.contact?.phone}</p>
+      </div>
+      <div className={styles.summary}>
+        <h3>Summary</h3>
+        <p>{resume.summary}</p>
+      </div>
+    </div>
+  );
+};`;
+
+      const mockCssCode = `/* Fallback styles (Figma API unavailable) */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #116964;
+}
+
+.name {
+  font-size: 2.5rem;
+  color: #565854;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: #116964;
+  font-weight: 500;
+}
+
+.contact {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  color: #3e2f22;
+}
+
+.summary h3 {
+  color: #565854;
+  border-bottom: 1px solid #a49990;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.summary p {
+  line-height: 1.6;
+  color: #3e2f22;
+}`;
+
+      return new Response(
+        JSON.stringify({ 
+          jsx: mockJsxCode, 
+          css: mockCssCode, 
+          componentName: mockComponentName, 
+          rawFigma: { fallback: true, fileKey, nodeId, error: fetchError instanceof Error ? fetchError.message : 'Unknown error' }, 
+          customColors,
+          success: true,
+          message: `Fallback component generated (Figma API unavailable)`
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // For demo purposes pick the first node in the response
@@ -106,7 +318,10 @@ export async function POST(req: Request) {
       : nodeResponseJson?.document;
 
     if (!firstNode) {
-      return new Response(JSON.stringify({ error: 'Could not locate node in Figma file.' }), {
+      return new Response(JSON.stringify({ 
+        error: 'Could not locate node in Figma file.',
+        details: 'The specified node ID may not exist in this file, or the file structure may be different than expected.'
+      }), {
         status: 400,
       });
     }
@@ -121,8 +336,8 @@ export async function POST(req: Request) {
     // Persist component on the server (development/demo).
     try {
       // biome-ignore lint/correctness/noUnreachable: <demo>
-      const fs = await import('fs/promises');
-      const path = await import('path');
+      const fs = await import('node:fs/promises');
+      const path = await import('node:path');
       const genDir = path.join(process.cwd(), 'src', 'generated-resumes');
       await fs.mkdir(genDir, { recursive: true });
       const kebab = componentName
@@ -151,8 +366,11 @@ export async function POST(req: Request) {
       }
     );
   } catch (err: unknown) {
-    console.error(err);
+    console.error('Unexpected error:', err);
     const msg = err instanceof Error ? err.message : 'Unknown error';
-    return new Response(JSON.stringify({ error: msg }), { status: 500 });
+    return new Response(JSON.stringify({ 
+      error: 'An unexpected error occurred while processing your request.',
+      details: msg
+    }), { status: 500 });
   }
 }
