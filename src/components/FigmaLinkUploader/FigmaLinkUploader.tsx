@@ -77,24 +77,28 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
     try {
       const url = new URL(link.trim());
       
-      if (url.hostname !== 'www.figma.com') {
-        return { 
-          isValid: false, 
-          error: 'Please provide a valid Figma link. The URL should start with https://www.figma.com/' 
+      if (!['www.figma.com', 'figma.com'].includes(url.hostname)) {
+        return {
+          isValid: false,
+          error:
+            'Please provide a valid Figma link. The URL should start with https://www.figma.com/ or https://figma.com/'
         };
       }
 
       const pathParts = url.pathname.split('/');
-      const fileIndex = pathParts.indexOf('file');
-      
-      if (fileIndex === -1 || pathParts.length <= fileIndex + 1) {
-        return { 
-          isValid: false, 
-          error: 'Invalid Figma link format. Expected format: https://www.figma.com/file/FILE_ID/...' 
+
+      // Figma currently supports both /file/ and /design/ in the URL. Accept either.
+      const fileSegmentIndex = pathParts.findIndex((segment) => segment === 'file' || segment === 'design');
+
+      if (fileSegmentIndex === -1 || pathParts.length <= fileSegmentIndex + 1) {
+        return {
+          isValid: false,
+          error:
+            'Invalid Figma link format. Expected format: https://www.figma.com/file/FILE_ID/... or https://www.figma.com/design/FILE_ID/...'
         };
       }
 
-      const fileKey = pathParts[fileIndex + 1];
+      const fileKey = pathParts[fileSegmentIndex + 1];
       if (!fileKey || fileKey.length < 10) {
         return { 
           isValid: false, 
