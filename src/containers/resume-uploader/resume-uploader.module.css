@@ -330,6 +330,18 @@
   font-family: var(--font-family-primary);
   background: var(--color-background-secondary);
   box-shadow: var(--color-shadow-textarea);
+  color: var(--color-text-primary);
+}
+
+.jobSpecTextarea::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.7;
+}
+
+.jobSpecTextarea:focus {
+  outline: 2px solid var(--color-accent-teal);
+  outline-offset: 2px;
+  border-color: var(--color-accent-teal);
 }
 
 .extraPromptTextarea {
@@ -344,6 +356,18 @@
   margin-top: var(--spacing-md);
   background: var(--color-background-neutral);
   box-shadow: var(--color-shadow-input);
+  color: var(--color-text-primary);
+}
+
+.extraPromptTextarea::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.7;
+}
+
+.extraPromptTextarea:focus {
+  outline: 2px solid var(--color-accent-teal);
+  outline-offset: 2px;
+  border-color: var(--color-accent-teal);
 }
 
 .extraPromptLabel {
@@ -388,6 +412,7 @@
   cursor: pointer;
   overflow: hidden;
   border-radius: 30px;
+  color: var(--color-text-white);
 }
 
 /* =================================================================
