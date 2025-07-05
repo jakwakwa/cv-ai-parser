@@ -59,7 +59,7 @@ const FigmaLinkUploader: React.FC<Props> = ({ onResumeGenerated, isLoading, setI
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>
-        <span className="mr-2">🔗</span> Generate from Figma Design
+        <span style={{ marginRight: '0.5rem' }}>🔗</span> Generate from Figma Design
       </h2>
       <input
         type="url"
@@ -70,19 +70,15 @@ const FigmaLinkUploader: React.FC<Props> = ({ onResumeGenerated, isLoading, setI
       />
       {error && (
         <div className={styles.error}>
-          <AlertTriangle className="w-4 h-4 mr-1" /> {error}
+          <AlertTriangle style={{ width: '1rem', height: '1rem', marginRight: '0.25rem' }} /> {error}
         </div>
       )}
-      <div className="flex items-center gap-2 mt-4">
+      <div className={styles.actionsRow}>
         <button type="button" onClick={handleGenerate} className={styles.generateBtn} disabled={isLoading}>
           {isLoading ? 'Generating…' : 'Generate Resume'}
         </button>
-        <button
-          type="button"
-          className="text-teal-600 text-xs hover:text-teal-700 font-medium md:text-sm flex items-center gap-1"
-          onClick={() => setShowColorDialog(!showColorDialog)}
-        >
-          <Palette className="w-4 h-4" /> Colors
+        <button type="button" className={styles.colorsBtn} onClick={() => setShowColorDialog(!showColorDialog)}>
+          <Palette className={styles.colorsIcon} /> Colors
         </button>
       </div>
 

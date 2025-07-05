@@ -8,10 +8,20 @@ interface FigmaNode {
 
 // Quick-and-dirty HTML generator. This is **not** production-grade but
 // demonstrates the round-trip of taking Figma JSON → code.
+function mapTextContent(text: string): string {
+  const lower = text.toLowerCase();
+  if (lower.includes('name')) return '{resume.name}';
+  if (lower.includes('title') || lower.includes('profession')) return '{resume.title}';
+  if (lower.includes('summary') || lower.includes('about')) return '{resume.summary}';
+  if (lower.includes('email')) return '{resume.contact?.email}';
+  if (lower.includes('phone')) return '{resume.contact?.phone}';
+  return `{\`${text}\`}`;
+}
+
 function nodeToJsx(node: FigmaNode): string {
   switch (node.type) {
     case 'TEXT':
-      return `<p>{\`${node.characters || ''}\`}</p>`;
+      return `<p>${mapTextContent(node.characters || '')}</p>`;
     case 'RECTANGLE':
     case 'FRAME':
     case 'GROUP': {
@@ -103,9 +113,25 @@ export async function POST(req: Request) {
     const componentName = `FigmaResume${firstNode.name.replace(/[^a-zA-Z0-9]/g, '')}`;
     const jsxBody = nodeToJsx(firstNode);
 
-    const jsxCode = `import React from 'react';\nimport styles from './${componentName}.module.css';\n\nexport const ${componentName}: React.FC = () => {\n  return (\n    ${jsxBody}\n  );\n};\n`;
+    const jsxCode = `import React from 'react';\nimport type { ParsedResume } from '@/lib/resume-parser/schema';\nimport styles from './${componentName}.module.css';\n\nexport const ${componentName}: React.FC<{ resume: ParsedResume }> = ({ resume }) => {\n  return (\n    ${jsxBody}\n  );\n};\n`;
 
     const cssModule = `/* Placeholder styles generated from Figma */\n.${firstNode.name.replace(/\s+/g, '').toLowerCase()} {\n  /* TODO: add real styles */\n}\n`;
+
+    // Persist component on the server (development/demo).
+    try {
+      // biome-ignore lint/correctness/noUnreachable: <demo>
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const genDir = path.join(process.cwd(), 'src', 'generated-resumes');
+      await fs.mkdir(genDir, { recursive: true });
+      const kebab = componentName
+        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+        .toLowerCase();
+      await fs.writeFile(path.join(genDir, `${kebab}.tsx`), jsxCode, 'utf8');
+      await fs.writeFile(path.join(genDir, `${kebab}.module.css`), cssModule, 'utf8');
+    } catch (writeErr) {
+      console.warn('Failed to persist generated files', writeErr);
+    }
 
     // Return generated code so the client can write it locally (or further refine).
     return new Response(

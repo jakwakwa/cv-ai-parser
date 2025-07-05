@@ -53,3 +53,31 @@
   font-size: 0.875rem;
   margin-top: 0.5rem;
 }
+
+.actionsRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.colorsBtn {
+  background: none;
+  border: none;
+  color: #0891b2; /* teal-600 */
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: pointer;
+}
+
+.colorsBtn:hover {
+  color: #0e7490; /* teal-700 */
+}
+
+.colorsIcon {
+  width: 1rem;
+  height: 1rem;
+}

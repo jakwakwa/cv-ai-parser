@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import ResumeUploader from '@/src/components/ResumeUploader/ResumeUploader';
+import FigmaLinkUploader from '@/src/components/FigmaLinkUploader/FigmaLinkUploader';
 import ResumeDisplay from '@/src/components/resume-display/ResumeDisplay';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/ResumeDisplayButtons';
 import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
@@ -39,6 +40,11 @@ export default function PageContent() {
   const [localCustomColors, setLocalCustomColors] = useState<
     Record<string, string>
   >({});
+  const [figmaInfo, setFigmaInfo] = useState<{
+    componentName: string;
+    jsxCode: string;
+    cssCode: string;
+  } | null>(null);
 
   // New state to explicitly manage isAuthenticated status for prop passing
   const [isAuthenticatedState, setIsAuthenticatedState] = useState(false);
@@ -104,6 +110,14 @@ export default function PageContent() {
         setLocalCustomColors(parsedData.customColors);
       }
     }
+  };
+
+  const handleFigmaGenerated = (info: { componentName: string; jsxCode: string; cssCode: string }) => {
+    setFigmaInfo(info);
+    toast({
+      title: 'Design Generated',
+      description: `Component ${info.componentName} was created in src/generated-resumes/`,
+    });
   };
 
   const handleReset = () => {
@@ -286,6 +300,13 @@ export default function PageContent() {
               isLoading={isLoading}
               setIsLoading={setIsLoading}
               isAuthenticated={isAuthenticatedState}
+            />
+
+            {/* Optional Figma design uploader */}
+            <FigmaLinkUploader
+              onResumeGenerated={handleFigmaGenerated}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
             />
           </div>
         </>
