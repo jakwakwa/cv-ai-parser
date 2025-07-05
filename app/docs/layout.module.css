@@ -1,0 +1,5 @@
+.docsRoot {
+  background: #ffffff;
+  min-height: 100vh;
+  color: var(--color-text-body);
+}
