@@ -1,7 +1,7 @@
 import { google } from '@ai-sdk/google';
 import { generateObject, streamObject } from 'ai';
 import { AI_MODEL } from '@/lib/config';
-import { type ParsedResume, aiResumeSchema } from '@/lib/resume-parser/schema';
+import { aiResumeSchema, type ParsedResume } from '@/lib/resume-parser/schema';
 import { buildTailorPrompt } from './dynamicPromptGenerator';
 import type { ParsedJobSpec, UserAdditionalContext } from './schemas';
 

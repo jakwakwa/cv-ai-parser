@@ -6,7 +6,6 @@ import { IS_JOB_TAILORING_ENABLED } from '@/lib/config';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import ColorPicker from '@/src/components/color-picker/color-picker';
-import { Card } from '@/src/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -59,7 +58,7 @@ const ResumeUploader = ({
   isAuthenticated = false,
 }: ResumeUploaderProps) => {
   const { supabase } = useAuth();
-  const [dragActive, setDragActive] = React.useState(false);
+  const [_dragActive, setDragActive] = React.useState(false);
   const [error, setError] = React.useState('');
   const [uploadedFile, setUploadedFile] = React.useState<File | null>(null);
   const [profileImage, setProfileImage] = React.useState('');
@@ -229,7 +228,7 @@ const ResumeUploader = ({
         // Always send tone when job tailoring is enabled
         formData.append('tone', tone);
         if (extraPrompt) formData.append('extraPrompt', extraPrompt);
-        
+
         if (jobSpecMethod === 'paste' && jobSpecText) {
           formData.append('jobSpecText', jobSpecText);
         } else if (jobSpecMethod === 'upload' && jobSpecFile) {
@@ -387,17 +386,17 @@ const ResumeUploader = ({
   // Validation function to check if form can be submitted
   const isFormValid = () => {
     if (!uploadedFile) return false;
-    
+
     if (isJobTailoringEnabled && isJobTailoringToggled) {
       // Check job spec is provided
       if (jobSpecMethod === 'paste' && !jobSpecText.trim()) return false;
       if (jobSpecMethod === 'upload' && !jobSpecFile) return false;
-      
+
       // Check character limits
       if (jobSpecMethod === 'paste' && jobSpecText.length > 4000) return false;
       if (extraPrompt && extraPrompt.length > 500) return false;
     }
-    
+
     return true;
   };
 
@@ -433,8 +432,9 @@ const ResumeUploader = ({
         </DialogContent>
       </Dialog>
 
-      <div
+      <section
         className={styles.dropZone}
+        aria-label="File upload drop zone"
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
@@ -490,7 +490,7 @@ const ResumeUploader = ({
             x
           </Button>
         )}
-      </div>
+      </section>
 
       {/* JobFit Tailor Toggle */}
       {isJobTailoringEnabled && (
@@ -569,13 +569,15 @@ const ResumeUploader = ({
                     required
                   />
                   <div className={styles.characterCount}>
-                    <span className={
-                      jobSpecText.length > 4000 
-                        ? styles.characterCountError
-                        : jobSpecText.length > 3600 
-                        ? styles.characterCountWarning
-                        : ''
-                    }>
+                    <span
+                      className={
+                        jobSpecText.length > 4000
+                          ? styles.characterCountError
+                          : jobSpecText.length > 3600
+                            ? styles.characterCountWarning
+                            : ''
+                      }
+                    >
                       {jobSpecText.length}/4000 characters
                     </span>
                   </div>
@@ -645,13 +647,15 @@ const ResumeUploader = ({
                 onChange={handleExtraPromptChange}
               />
               <div className={styles.characterCount}>
-                <span className={
-                  extraPrompt.length > 500 
-                    ? styles.characterCountError
-                    : extraPrompt.length > 450 
-                    ? styles.characterCountWarning
-                    : ''
-                }>
+                <span
+                  className={
+                    extraPrompt.length > 500
+                      ? styles.characterCountError
+                      : extraPrompt.length > 450
+                        ? styles.characterCountWarning
+                        : ''
+                  }
+                >
                   {extraPrompt.length}/500 characters
                 </span>
               </div>
