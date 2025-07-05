@@ -83,17 +83,17 @@ export async function POST(request: NextRequest) {
       }
 
       // Validate job spec text length and content
-      if (finalJobSpecText && finalJobSpecText.length > 2000) {
+      if (finalJobSpecText && finalJobSpecText.length > 4000) {
         return Response.json(
-          { error: 'Job specification text is too long. Maximum 2000 characters allowed.' },
+          { error: 'Job specification text is too long. Maximum 4000 characters allowed.' },
           { status: 400 }
         );
       }
 
       // Ensure we have meaningful job spec text
-      if (!finalJobSpecText || finalJobSpecText.trim().length < 10) {
+      if (!finalJobSpecText || finalJobSpecText.trim().length < 50) {
         return Response.json(
-          { error: 'Job specification text is too short. Please provide at least 10 characters of meaningful job description.' },
+          { error: 'Job specification text is too short. Please provide at least 50 characters of meaningful job description.' },
           { status: 400 }
         );
       }
