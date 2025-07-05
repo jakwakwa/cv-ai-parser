@@ -181,9 +181,9 @@ const ResumeUploader = ({
         );
         return;
       }
-      if (jobSpecMethod === 'paste' && jobSpecText.length > 2000) {
+      if (jobSpecMethod === 'paste' && jobSpecText.length > 4000) {
         setError(
-          `Job description is too long (${jobSpecText.length}/2000 characters). Please shorten it.`
+          `Job description is too long (${jobSpecText.length}/4000 characters). Please shorten it.`
         );
         return;
       }
@@ -394,7 +394,7 @@ const ResumeUploader = ({
       if (jobSpecMethod === 'upload' && !jobSpecFile) return false;
       
       // Check character limits
-      if (jobSpecMethod === 'paste' && jobSpecText.length > 2000) return false;
+      if (jobSpecMethod === 'paste' && jobSpecText.length > 4000) return false;
       if (extraPrompt && extraPrompt.length > 500) return false;
     }
     
@@ -562,21 +562,21 @@ const ResumeUploader = ({
                 <div>
                   <textarea
                     className={styles.jobSpecTextarea}
-                    placeholder="Paste job description here (max 2000 chars)..."
-                    maxLength={2000}
+                    placeholder="Paste job description here (max 4000 chars)..."
+                    maxLength={4000}
                     value={jobSpecText}
                     onChange={(e) => setJobSpecText(e.target.value)}
                     required
                   />
                   <div className={styles.characterCount}>
                     <span className={
-                      jobSpecText.length > 2000 
+                      jobSpecText.length > 4000 
                         ? styles.characterCountError
-                        : jobSpecText.length > 1800 
+                        : jobSpecText.length > 3600 
                         ? styles.characterCountWarning
                         : ''
                     }>
-                      {jobSpecText.length}/2000 characters
+                      {jobSpecText.length}/4000 characters
                     </span>
                   </div>
                 </div>
