@@ -83,9 +83,9 @@ export async function POST(request: NextRequest) {
       }
 
       // Validate job spec text length and content
-      if (finalJobSpecText && finalJobSpecText.length > 1000) {
+      if (finalJobSpecText && finalJobSpecText.length > 2000) {
         return Response.json(
-          { error: 'Job specification text is too long. Maximum 1000 characters allowed.' },
+          { error: 'Job specification text is too long. Maximum 2000 characters allowed.' },
           { status: 400 }
         );
       }

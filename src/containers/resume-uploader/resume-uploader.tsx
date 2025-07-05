@@ -532,8 +532,8 @@ const ResumeUploader = ({
               {jobSpecMethod === 'paste' && (
                 <textarea
                   className={styles.jobSpecTextarea}
-                  placeholder="Paste job description here (max 1000 chars)..."
-                  maxLength={1000}
+                  placeholder="Paste job description here (max 2000 chars)..."
+                  maxLength={2000}
                   value={jobSpecText}
                   onChange={(e) => setJobSpecText(e.target.value)}
                   required
@@ -596,8 +596,8 @@ const ResumeUploader = ({
             </h4>
             <textarea
               className={styles.extraPromptTextarea}
-              placeholder="Add any extra instructions for the AI (e.g., 'Focus on leadership skills', 'Exclude projects before 2020'). Max 300 characters."
-              maxLength={300}
+              placeholder="Add any extra instructions for the AI (e.g., 'Focus on leadership skills', 'Exclude projects before 2020'). Max 500 characters."
+              maxLength={500}
               value={extraPrompt}
               onChange={handleExtraPromptChange}
             />
