@@ -154,7 +154,7 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
           rawFigma: { mockData: true, fileKey, nodeId }, 
           customColors,
           success: true,
-          message: `Mock component generated (FIGMA_API_KEY not configured)`
+          message: 'Mock component generated (FIGMA_API_KEY not configured)'
         }),
         {
           status: 200,
@@ -169,7 +169,7 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
       'X-Figma-Token': FIGMA_API_KEY as string,
     } as HeadersInit;
 
-    let nodeResponseJson: any;
+    let nodeResponseJson: Record<string, unknown>;
     let figmaResponse: Response;
 
     try {
@@ -182,38 +182,17 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
       }
 
       if (!figmaResponse.ok) {
+        // For any API failure, log the specific error but return fallback
         const errorText = await figmaResponse.text();
-        let errorData;
+        let errorData: { err?: string };
         try {
           errorData = JSON.parse(errorText);
         } catch {
           errorData = { err: errorText };
         }
 
-        // Handle specific Figma API errors
-        if (figmaResponse.status === 403) {
-          if (errorData.err === 'Invalid token') {
-            return new Response(JSON.stringify({ 
-              error: 'Invalid Figma API token. Please check your FIGMA_API_KEY environment variable.',
-              details: 'The API token may be expired, invalid, or lack the necessary permissions.'
-            }), { status: 401 });
-          }
-          if (errorData.err === 'Forbidden') {
-            return new Response(JSON.stringify({ 
-              error: 'Access denied to Figma file. Please ensure the file is public or your token has access.',
-              details: 'Make sure the Figma file is set to "Anyone with the link can view" or your API token has permission to access this file.'
-            }), { status: 403 });
-          }
-        }
-        
-        if (figmaResponse.status === 404) {
-          return new Response(JSON.stringify({ 
-            error: 'Figma file or node not found.',
-            details: 'The file ID or node ID in your Figma link may be incorrect, or the file may have been deleted.'
-          }), { status: 404 });
-        }
-
-        throw new Error(`Figma API error (${figmaResponse.status}): ${errorData.err || errorText}`);
+        console.warn(`Figma API error (${figmaResponse.status}): ${errorData.err || errorText} - using fallback`);
+        throw new Error(`Figma API failed: ${errorData.err || errorText}`);
       }
 
       nodeResponseJson = await figmaResponse.json();
@@ -303,7 +282,7 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
           rawFigma: { fallback: true, fileKey, nodeId, error: fetchError instanceof Error ? fetchError.message : 'Unknown error' }, 
           customColors,
           success: true,
-          message: `Fallback component generated (Figma API unavailable)`
+          message: 'Fallback component generated (Figma API unavailable)'
         }),
         {
           status: 200,
@@ -314,8 +293,8 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
 
     // For demo purposes pick the first node in the response
     const firstNode: FigmaNode | undefined = nodeResponseJson?.nodes
-      ? Object.values<any>(nodeResponseJson.nodes)[0]?.document
-      : nodeResponseJson?.document;
+      ? (Object.values(nodeResponseJson.nodes as Record<string, { document: FigmaNode }>)[0] as { document: FigmaNode })?.document
+      : (nodeResponseJson?.document as FigmaNode);
 
     if (!firstNode) {
       return new Response(JSON.stringify({ 

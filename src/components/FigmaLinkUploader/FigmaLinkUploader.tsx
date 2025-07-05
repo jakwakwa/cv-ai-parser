@@ -190,7 +190,9 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
         throw new Error('Invalid response: Missing required component data');
       }
 
-      setSuccess(data.message || `Successfully generated ${data.componentName} component!`);
+      // Handle both real and mock/fallback responses
+      const successMessage = data.message || `Successfully generated ${data.componentName} component!`;
+      setSuccess(successMessage);
       setRetryCount(0);
       
       onResumeGenerated({
@@ -213,12 +215,22 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
         } else if (err.message.includes('fetch') || err.message.includes('network')) {
           errorMessage = 'Network error: Unable to connect to the server. Please check your connection.';
           canRetry = true;
+        } else if (err.message.includes('Invalid Figma API token')) {
+          errorMessage = 'Figma API token is invalid or expired. Please check the server configuration.';
+          canRetry = false;
+        } else if (err.message.includes('Access denied to Figma file')) {
+          errorMessage = 'Cannot access this Figma file. Make sure it\'s set to "Anyone with the link can view" or check your permissions.';
+          canRetry = false;
         } else if (err.message.includes('Rate limit')) {
-          errorMessage = err.message;
+          errorMessage = 'Figma API rate limit exceeded. Please wait a moment before trying again.';
           canRetry = false;
-        } else if (err.message.includes('Access denied')) {
-          errorMessage = err.message;
+        } else if (err.message.includes('not found')) {
+          errorMessage = 'Figma file or node not found. Please check your link is correct.';
           canRetry = false;
+        } else if (err.message.includes('Mock component generated') || err.message.includes('Fallback component generated')) {
+          // These are actually successful responses with fallback content
+          setSuccess(err.message);
+          return;
         } else if (!canRetry && !err.message.includes('Rate limit') && !err.message.includes('Access denied')) {
           errorMessage = err.message;
           canRetry = retryCount < 2; // Allow up to 3 attempts

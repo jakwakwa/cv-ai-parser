@@ -42,6 +42,127 @@ pnpm run mcp:figma
 # Or let Cursor auto-connect on demand
 ```
 
+## Setup Instructions
+
+The Figma integration supports two modes of operation:
+
+### Development/Demo Mode (No API Key Required)
+
+For testing and development purposes, the system provides mock responses when no Figma API key is configured:
+
+1. **No Setup Required**: Simply use any valid Figma link format
+2. **Mock Components**: The system generates realistic resume components with placeholder styling
+3. **Full Functionality**: All features work including preview, download, and color customization
+4. **Clear Indicators**: Success messages indicate when mock/fallback content is being used
+
+**Example Usage:**
+```typescript
+// Works without API key - returns mock component
+const response = await fetch('/api/parse-figma-resume', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ 
+    figmaLink: 'https://www.figma.com/design/YOUR_FILE_ID/Your-Design'
+  })
+});
+```
+
+### Production Mode (API Key Required)
+
+For accessing real Figma files and generating components from actual designs:
+
+#### 1. Generate Figma Personal Access Token
+
+According to [Figma's documentation](https://help.figma.com/hc/en-us/articles/8085703771159-Manage-personal-access-tokens):
+
+1. Sign in to your Figma account
+2. Click your account menu (top-left) → **Settings**
+3. Select the **Security** tab
+4. Scroll to **Personal access tokens** → **Generate new token**
+5. Enter a descriptive name (e.g., "AI Resume Generator")
+6. Select appropriate scopes:
+   - **File content** - Required for reading design data
+   - **File read** - Required for accessing files
+7. Copy the generated token immediately (it won't be shown again)
+
+#### 2. Configure Environment Variables
+
+**For Local Development:**
+```bash
+# Add to .env.local
+FIGMA_API_KEY=your_personal_access_token_here
+
+# Restart your development server
+npm run dev
+```
+
+**For Production Deployment:**
+```bash
+# Vercel
+vercel env add FIGMA_API_KEY
+
+# Railway
+railway variables set FIGMA_API_KEY=your_token
+
+# Netlify
+netlify env:set FIGMA_API_KEY your_token
+
+# Or add via your hosting provider's dashboard
+```
+
+#### 3. Token Permissions and File Access
+
+**Personal Access Token Limitations:**
+- Grants access to all files in your Figma account
+- Cannot be restricted to specific files or teams
+- Should only be shared with trusted applications
+
+**File Access Requirements:**
+- **Public Files**: Set to "Anyone with the link can view"
+- **Private Files**: Must be accessible to the token owner
+- **Team Files**: Token owner must have appropriate permissions
+
+#### 4. Verify Setup
+
+Test your configuration:
+```bash
+# Test API directly
+curl -H "X-Figma-Token: YOUR_TOKEN" \
+     "https://api.figma.com/v1/files/YOUR_FILE_ID"
+
+# Should return file data, not 403 error
+```
+
+### Troubleshooting Setup Issues
+
+**403 "Invalid token" Error:**
+- Token may be expired or invalid
+- Regenerate token in Figma settings
+- Ensure token has correct scopes
+
+**403 "Forbidden" Error:**
+- File may be private or restricted
+- Set file to "Anyone with the link can view"
+- Check if you have access to the file
+
+**404 "Not found" Error:**
+- File ID in URL may be incorrect
+- File may have been deleted or moved
+- Check the Figma link format
+
+**Rate Limiting:**
+- Figma API has rate limits per token
+- Implement exponential backoff for retries
+- Consider caching responses for frequently accessed files
+
+### Security Best Practices
+
+1. **Token Storage**: Never commit tokens to version control
+2. **Environment Variables**: Use secure environment variable systems
+3. **Token Rotation**: Regularly rotate tokens for security
+4. **Monitoring**: Monitor API usage and error rates
+5. **Fallback**: Always provide graceful fallbacks for API failures
+
 ## API Integration
 
 ### Parse Figma Resume Endpoint
