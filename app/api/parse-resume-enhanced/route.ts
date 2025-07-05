@@ -190,7 +190,7 @@ export async function POST(request: NextRequest) {
       };
     }
 
-    // Merge custom colors
+    // Merge custom colors (preserve original colors even after tailoring)
     const finalParsedData = {
       ...finalResume,
       customColors: customColors || {},
