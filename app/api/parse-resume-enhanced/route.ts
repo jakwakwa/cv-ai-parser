@@ -44,10 +44,23 @@ export async function POST(request: NextRequest) {
     const hasJobSpec = jobSpecFile || jobSpecText;
 
     if (hasJobSpec && tone) {
+      // Extract text from job spec file if uploaded
+      let finalJobSpecText = jobSpecText;
+      if (jobSpecFile && !jobSpecText) {
+        try {
+          finalJobSpecText = await jobSpecFile.text();
+        } catch (error) {
+          return Response.json(
+            { error: 'Failed to read job specification file' },
+            { status: 400 }
+          );
+        }
+      }
+
       const contextData = {
         jobSpecSource: jobSpecFile ? 'upload' : ('pasted' as const),
-        jobSpecText: jobSpecText || undefined,
-        jobSpecFileUrl: undefined, // TODO: Handle file upload to storage
+        jobSpecText: finalJobSpecText || undefined,
+        jobSpecFileUrl: undefined, // TODO: Handle file upload to storage in future
         tone: tone as 'Formal' | 'Neutral' | 'Creative',
         extraPrompt: extraPrompt || undefined,
       };
@@ -89,8 +102,8 @@ export async function POST(request: NextRequest) {
         ? parseWithAIPDF(file)
         : parseWithAI(await file.text());
 
-    const jobSpecPromise = hasJobSpec
-      ? extractJobSpecification(jobSpecText || (await jobSpecFile!.text()))
+    const jobSpecPromise = hasJobSpec && additionalContext?.jobSpecText
+      ? extractJobSpecification(additionalContext.jobSpecText)
       : Promise.resolve(null);
 
     const [parsedResume, jobSpecResult] = await Promise.all([
