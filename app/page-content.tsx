@@ -9,6 +9,7 @@ import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import ResumeUploader from '@/src/components/ResumeUploader/ResumeUploader';
 import FigmaLinkUploader from '@/src/components/FigmaLinkUploader/FigmaLinkUploader';
+import FigmaPreview from '@/src/components/figma-preview/FigmaPreview';
 import ResumeDisplay from '@/src/components/resume-display/ResumeDisplay';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/ResumeDisplayButtons';
 import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
@@ -310,6 +311,15 @@ export default function PageContent() {
               isLoading={figmaLoading}
               setIsLoading={setFigmaLoading}
             />
+
+            {/* Show Figma preview if component was generated */}
+            {figmaInfo && (
+              <FigmaPreview
+                componentName={figmaInfo.componentName}
+                jsxCode={figmaInfo.jsxCode}
+                cssCode={figmaInfo.cssCode}
+              />
+            )}
           </div>
         </>
       )}

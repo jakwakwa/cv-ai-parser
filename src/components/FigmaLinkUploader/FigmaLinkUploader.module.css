@@ -54,6 +54,14 @@
   margin-top: 0.5rem;
 }
 
+.success {
+  display: flex;
+  align-items: center;
+  color: #16a34a; /* green-600 */
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
 .actionsRow {
   display: flex;
   align-items: center;

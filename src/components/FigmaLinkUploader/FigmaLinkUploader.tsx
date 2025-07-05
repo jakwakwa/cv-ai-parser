@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AlertTriangle, Palette } from 'lucide-react';
+import { AlertTriangle, Palette, CheckCircle } from 'lucide-react';
 import { resumeColors } from '@/src/utils/colors';
 import ColorPickerDialog from '../color-picker/ColorPickerDialog';
 import styles from './FigmaLinkUploader.module.css';
@@ -18,8 +18,18 @@ interface Props {
 const FigmaLinkUploader: React.FC<Props> = ({ onResumeGenerated, isLoading, setIsLoading }) => {
   const [figmaLink, setFigmaLink] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [customColors, setCustomColors] = useState<Record<string, string>>(resumeColors);
   const [showColorDialog, setShowColorDialog] = useState(false);
+  
+  const isValidFigmaLink = (link: string) => {
+    try {
+      const url = new URL(link);
+      return url.hostname === 'www.figma.com' && url.pathname.includes('/file/');
+    } catch {
+      return false;
+    }
+  };
 
   const handleGenerate = async () => {
     if (!figmaLink) {
@@ -27,8 +37,14 @@ const FigmaLinkUploader: React.FC<Props> = ({ onResumeGenerated, isLoading, setI
       return;
     }
 
+    if (!isValidFigmaLink(figmaLink)) {
+      setError('Please provide a valid Figma link (e.g., https://www.figma.com/file/...)');
+      return;
+    }
+
     setIsLoading(true);
     setError('');
+    setSuccess('');
 
     try {
       const res = await fetch('/api/parse-figma-resume', {
@@ -43,6 +59,7 @@ const FigmaLinkUploader: React.FC<Props> = ({ onResumeGenerated, isLoading, setI
       }
 
       const data = await res.json();
+      setSuccess(`Successfully generated ${data.componentName} component!`);
       onResumeGenerated({
         componentName: data.componentName,
         jsxCode: data.jsx,
@@ -71,6 +88,11 @@ const FigmaLinkUploader: React.FC<Props> = ({ onResumeGenerated, isLoading, setI
       {error && (
         <div className={styles.error}>
           <AlertTriangle style={{ width: '1rem', height: '1rem', marginRight: '0.25rem' }} /> {error}
+        </div>
+      )}
+      {success && (
+        <div className={styles.success}>
+          <CheckCircle style={{ width: '1rem', height: '1rem', marginRight: '0.25rem' }} /> {success}
         </div>
       )}
       <div className={styles.actionsRow}>

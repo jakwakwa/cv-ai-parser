@@ -1,0 +1,216 @@
+.container {
+  margin-top: 2rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.tabActive {
+  background: #ffffff;
+  color: #0891b2;
+  border-bottom: 2px solid #0891b2;
+}
+
+.tabIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.content {
+  padding: 1.5rem;
+}
+
+.previewContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 20rem;
+}
+
+.previewFrame {
+  width: 100%;
+  max-width: 600px;
+  border: 2px dashed #d1d5db;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  background: #f9fafb;
+}
+
+.previewPlaceholder {
+  text-align: center;
+  color: #6b7280;
+}
+
+.previewIcon {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1rem auto;
+  color: #9ca3af;
+}
+
+.previewPlaceholder h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 0.5rem 0;
+}
+
+.previewPlaceholder p {
+  font-size: 0.875rem;
+  margin: 0.5rem 0;
+}
+
+.previewPlaceholder code {
+  background: #e5e7eb;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+}
+
+.previewNote {
+  font-style: italic;
+  color: #9ca3af;
+  margin-top: 1rem;
+}
+
+.codeContainer {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.codeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #e2e8f0;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.codeTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+  font-family: 'Courier New', monospace;
+}
+
+.codeActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionButton {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  height: auto;
+}
+
+.actionIcon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.codeBlock {
+  padding: 1rem;
+  margin: 0;
+  background: #ffffff;
+  color: #1f2937;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.codeBlock code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+.rawData {
+  margin-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
+}
+
+.rawDataSummary {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+
+.rawDataSummary:hover {
+  color: #374151;
+}
+
+.rawDataContent {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  overflow-x: auto;
+  max-height: 20rem;
+  overflow-y: auto;
+}
+
+.rawDataContent code {
+  background: transparent;
+  color: #475569;
+}
