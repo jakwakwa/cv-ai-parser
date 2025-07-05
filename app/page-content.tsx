@@ -35,7 +35,9 @@ export default function PageContent() {
   const [currentView, setCurrentView] = useState('upload'); // "upload" | "view" | "edit"
   const [resumeData, setResumeData] = useState<ParsedResume | null>(null);
   const [parseInfo, setParseInfo] = useState<ParseInfo | null>(null); // Stores ID and Slug from server
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // global operations (saving edits, etc.)
+  const [fileLoading, setFileLoading] = useState(false); // ResumeUploader specific
+  const [figmaLoading, setFigmaLoading] = useState(false); // FigmaLinkUploader specific
   const [error, setError] = useState<string | null>(null);
   const [localCustomColors, setLocalCustomColors] = useState<
     Record<string, string>
@@ -297,16 +299,16 @@ export default function PageContent() {
           <div ref={uploaderRef} style={{ width: '100%' }}>
             <ResumeUploader
               onResumeUploaded={handleResumeUploaded}
-              isLoading={isLoading}
-              setIsLoading={setIsLoading}
+              isLoading={fileLoading}
+              setIsLoading={setFileLoading}
               isAuthenticated={isAuthenticatedState}
             />
 
             {/* Optional Figma design uploader */}
             <FigmaLinkUploader
               onResumeGenerated={handleFigmaGenerated}
-              isLoading={isLoading}
-              setIsLoading={setIsLoading}
+              isLoading={figmaLoading}
+              setIsLoading={setFigmaLoading}
             />
           </div>
         </>
