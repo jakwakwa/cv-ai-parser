@@ -3,6 +3,9 @@ import type { ReactNode } from 'react';
 import clsx from 'clsx';
 import styles from './DocsLayout.module.css';
 import { usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const TOC = dynamic(() => import('./TOC'), { ssr: false });
 
 interface DocsLayoutProps {
   children: ReactNode;
@@ -43,17 +46,7 @@ export default function DocsLayout({ children, headings = [] }: DocsLayoutProps)
 
       {/* Right sidebar – Table of contents */}
       <aside className={styles.toc}>
-        {headings.length > 0 && (
-          <ul>
-            {headings.map((h) => (
-              <li key={h.id}>
-                <a href={`#${h.id}`} className={styles.tocLink}>
-                  {h.text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
+        <TOC />
       </aside>
     </div>
   );

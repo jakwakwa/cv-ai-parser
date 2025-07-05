@@ -70,7 +70,9 @@
     "tesseract.js": "^5.1.0",
     "uuid": "^11.1.0",
     "vaul": "latest",
-    "zod": "latest"
+    "zod": "latest",
+    "react-markdown": "^9.0.0",
+    "remark-gfm": "^3.0.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.6",

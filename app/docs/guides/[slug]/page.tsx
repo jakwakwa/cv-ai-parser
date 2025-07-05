@@ -1,4 +1,6 @@
 import { notFound } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface GuideContent {
   title: string;
@@ -23,7 +25,7 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
   return (
     <article>
       <h1>{guide.title}</h1>
-      <div dangerouslySetInnerHTML={{ __html: guide.body.replace(/\n/g, '<br/>') }} />
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>{guide.body}</ReactMarkdown>
     </article>
   );
 }
