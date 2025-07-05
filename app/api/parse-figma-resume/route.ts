@@ -135,7 +135,15 @@ export async function POST(req: Request) {
 
     // Return generated code so the client can write it locally (or further refine).
     return new Response(
-      JSON.stringify({ jsx: jsxCode, css: cssModule, componentName, rawFigma: nodeResponseJson, customColors }),
+      JSON.stringify({ 
+        jsx: jsxCode, 
+        css: cssModule, 
+        componentName, 
+        rawFigma: nodeResponseJson, 
+        customColors,
+        success: true,
+        message: `Component ${componentName} generated successfully`
+      }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },

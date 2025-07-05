@@ -3,21 +3,23 @@
 import type React from 'react';
 import { SiteHeader } from '@/src/components/site-header/SiteHeader';
 import BackButton from '@/src/components/ui/BackButton';
+import styles from '../page.module.css';
 
 const PrivacyPolicyPage: React.FC = () => {
   return (
-    <div className="container bg-black mx-auto p-4">
+    <div className={styles.pageWrapper}>
       <SiteHeader />
-      <div className="text-white">
+      <div className="container mx-auto p-4 max-w-4xl flex-1">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
         <BackButton />
-        <h1 className="text-3xl font-bold mb-4">Privacy Policy</h1>
+        <h1 className="text-3xl font-bold mb-4 text-gray-800">Privacy Policy</h1>
         <p className="mb-2">
           This Privacy Policy describes how your personal information is
           collected, used, and shared when you visit or make a purchase from
           airesumegen.com (the "Site").
         </p>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-3">
+        <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
           Personal Information We Collect
         </h2>
         <p className="mb-2">
@@ -51,7 +53,7 @@ const PrivacyPolicyPage: React.FC = () => {
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-3">
+        <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
           How We Use Your Personal Information
         </h2>
         <p className="mb-2">
@@ -66,19 +68,20 @@ const PrivacyPolicyPage: React.FC = () => {
           provide you with personalized advertisements.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-3">Changes</h2>
+        <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">Changes</h2>
         <p className="mb-2">
           We may update this privacy policy from time to time in order to
           reflect, for example, changes to our practices or for other
           operational, legal or regulatory reasons.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-3">Contact Us</h2>
+        <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">Contact Us</h2>
         <p className="mb-2">
           For more information about our privacy practices, if you have
           questions, or if you would like to make a complaint, please contact us
           by e-mail at jakwakwa@gmail.com.
         </p>
+        </div>
       </div>
     </div>
   );

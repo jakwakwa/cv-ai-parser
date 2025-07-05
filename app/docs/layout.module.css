@@ -1,5 +1,7 @@
 .docsRoot {
   background: #ffffff;
-  min-height: 100vh;
+  flex: 1;
   color: var(--color-text-body);
+  display: flex;
+  flex-direction: column;
 }
