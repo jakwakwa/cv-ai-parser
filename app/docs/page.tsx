@@ -18,12 +18,12 @@ export default function DocsHome() {
       <nav className={styles.navSection}>
         <ul className={styles.list}>
           <li>
-            <Link href="/docs/resume-from-file" className={styles.link}>
+            <Link href="/docs/guides/resume-from-file" className={styles.link}>
               Uploading a Resume File
             </Link>
           </li>
           <li>
-            <Link href="/docs/resume-from-figma" className={styles.link}>
+            <Link href="/docs/guides/resume-from-figma" className={styles.link}>
               Building a Resume from a Figma Design <span className={styles.badge}>new</span>
             </Link>
           </li>
