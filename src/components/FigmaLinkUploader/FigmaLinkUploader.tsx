@@ -167,9 +167,13 @@ const FigmaLinkUploader: React.FC<FigmaLinkUploaderProps> = ({ onResumeGenerated
         // Handle specific error cases
         if (response.status === 429) {
           throw new Error('Rate limit exceeded. Please wait a moment before trying again.');
-        } else if (response.status === 401 || response.status === 403) {
+        }
+
+        if (response.status === 401 || response.status === 403) {
           throw new Error('Access denied. Please check if the Figma file is public or if you have permission to access it.');
-        } else if (response.status >= 500) {
+        }
+
+        if (response.status >= 500) {
           throw new Error('Server error. Please try again in a few moments.');
         }
         

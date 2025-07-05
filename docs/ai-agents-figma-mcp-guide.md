@@ -527,3 +527,91 @@ const trackComponentVersion = (componentName: string, hash: string) => {
    - Design pattern recognition
 
 This comprehensive integration provides AI agents with powerful tools for converting Figma designs into production-ready React components, complete with error handling, performance optimization, and extensibility for future enhancements.
+
+<!--- Added comprehensive advanced examples (Batch Commands, Streaming Updates, Multi-agent coordination) --->
+
+## Advanced Orchestration Examples
+
+Below are a few end-to-end snippets you can copy-paste into your autonomous agent prompts or eval suites.
+
+### 1. Parallel Processing with Rate-Limit Awareness
+```typescript
+// Process an arbitrary list of Figma links while observing a 60 requests / minute policy.
+import pLimit from 'p-limit';
+
+const limiter = pLimit(10); // Up to 10 concurrent requests (adjust as needed)
+const links: string[] = [/* ... */];
+
+const results = await Promise.all(
+  links.map(link => limiter(async () => {
+    try {
+      const res = await robustFigmaProcessing(link, 4);
+      console.log('✓', link);
+      return { status: 'fulfilled', res };
+    } catch (error) {
+      console.warn('𐄂', link, error);
+      return { status: 'rejected', error };
+    }
+  }))
+);
+```
+
+### 2. Streaming Partial Update Events
+```typescript
+// Example event source handler to stream generation progress
+const evtSource = new EventSource('/api/parse-figma-resume/stream?link=' + encodeURIComponent(figmaLink));
+
+evtSource.onmessage = (evt) => {
+  const data = JSON.parse(evt.data);
+  // data.type === 'log' | 'partial' | 'complete'
+  if (data.type === 'partial') {
+    updateUiPreview(data.partialComponent);
+  }
+  if (data.type === 'complete') {
+    renderFullPreview(data.component);
+    evtSource.close();
+  }
+};
+```
+
+### 3. Multi-Agent Collaboration Blueprint
+```plaintext
+SYSTEM: You are an orchestrator overseeing two sub-agents.
+
+AGENT-DESIGN: Converts Figma links to intermediate AST JSON using MCP.
+AGENT-CODEGEN: Takes AST JSON & renders React + CSS modules.
+
+Flow:
+1. DESIGN receives figmaLink → outputs ast.json (persist to /tmp)
+2. CODEGEN waits for ast.json, fetches, runs /api/parse-figma-resume, commits files.
+3. Orchestrator merges PR and notifies human reviewer.
+```
+
+### 4. Environment Variable Injection Template
+```bash
+# ~/.bashrc or .env.local
+export FIGMA_API_KEY="YOUR_SUPER_SECRET_KEY"
+export OPENAI_API_KEY="YOUR_OPENAI_KEY"
+# Ensure they are available to both MCP & Next.js processes
+```
+
+### 5. Headless CI Integration Example (GitHub Actions)
+```yaml
+jobs:
+  figma-smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+      - name: Run generation smoke-test
+        env:
+          FIGMA_API_KEY: ${{ secrets.FIGMA_API_KEY }}
+        run: |
+          node scripts/ci-generate.js "https://www.figma.com/file/ABC123/Test?node-id=1%3A2"
+      - name: Lint & Type-check
+        run: pnpm lint && pnpm tsc --noEmit
+```

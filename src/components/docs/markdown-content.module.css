@@ -1,0 +1,255 @@
+/* Global Markdown Content Styles (CSS Modules) */
+
+.markdownContent {
+    /* Basic Text Styling for the entire content area */
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 1em;
+}
+
+.markdownContent p {
+    margin-bottom: 1.5em;
+}
+
+.markdownContent h1,
+.markdownContent h2,
+.markdownContent h3,
+.markdownContent h4,
+.markdownContent h5,
+.markdownContent h6 {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    color: #222;
+    margin-top: 2em;
+    margin-bottom: 0.8em;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.markdownContent h1 {
+    font-size: 2.8rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5em;
+}
+
+.markdownContent h2 {
+    font-size: 2.2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.4em;
+}
+
+.markdownContent h3 {
+    font-size: 1.8rem;
+    position: relative;
+    padding-left: 15px;
+}
+
+.markdownContent h3::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background-color: #007bff;
+    border-radius: 50%;
+}
+
+.markdownContent h4 {
+    font-size: 1.4rem;
+}
+
+.markdownContent h5 {
+    font-size: 1.2rem;
+}
+
+.markdownContent h6 {
+    font-size: 1rem;
+    color: #555;
+}
+
+.markdownContent a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.markdownContent a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.markdownContent ul,
+.markdownContent ol {
+    margin-left: 1.5em;
+    margin-bottom: 1.5em;
+    line-height: 1.6;
+}
+
+.markdownContent ul li {
+    list-style-type: disc;
+    margin-bottom: 0.5em;
+}
+
+.markdownContent ol li {
+    list-style-type: decimal;
+    margin-bottom: 0.5em;
+}
+
+.markdownContent ul ul,
+.markdownContent ol ol,
+.markdownContent ul ol,
+.markdownContent ol ul {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.markdownContent blockquote {
+    border-left: 4px solid #007bff;
+    padding: 1em 1.5em;
+    margin: 1.5em 0;
+    background-color: #f8faff;
+    color: #555;
+    font-style: italic;
+    border-radius: 4px;
+}
+
+.markdownContent blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+.markdownContent hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 3em 0;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.markdownContent img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1.5em 0;
+    border-radius: 8px;
+}
+
+.markdownContent table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5em;
+    font-size: 0.95em;
+}
+
+.markdownContent table th,
+.markdownContent table td {
+    border: 1px solid #eee;
+    padding: 0.8em 1em;
+    text-align: left;
+}
+
+.markdownContent table th {
+    background-color: #f6f8fa;
+    font-weight: 600;
+    color: #444;
+}
+
+.markdownContent pre {
+    background-color: #f6f8fa;
+    border-radius: 8px;
+    padding: 1em 1.5em;
+    margin-bottom: 1.5em;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-size: 0.9em;
+    line-height: 1.5;
+    color: #333;
+    position: relative;
+}
+
+.markdownContent pre code {
+    display: block;
+    padding: 0;
+    background-color: transparent;
+    border-radius: 0;
+    white-space: pre;
+    word-break: normal;
+}
+
+.markdownContent code {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-size: 0.85em;
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.markdownContent .token.comment,
+.markdownContent .token.prolog,
+.markdownContent .token.doctype,
+.markdownContent .token.cdata {
+    color: #888;
+}
+
+.markdownContent .token.punctuation {
+    color: #999;
+}
+
+.markdownContent .token.property,
+.markdownContent .token.tag,
+.markdownContent .token.boolean,
+.markdownContent .token.number,
+.markdownContent .token.constant,
+.markdownContent .token.symbol,
+.markdownContent .token.deleted {
+    color: #c92c2c;
+}
+
+.markdownContent .token.selector,
+.markdownContent .token.attr-name,
+.markdownContent .token.string,
+.markdownContent .token.char,
+.markdownContent .token.builtin,
+.markdownContent .token.inserted {
+    color: #2c992c;
+}
+
+.markdownContent .token.operator,
+.markdownContent .token.entity,
+.markdownContent .token.url,
+.markdownContent .language-css .token.string,
+.markdownContent .style .token.string {
+    color: #c97c2c;
+}
+
+.markdownContent .atrule,
+.markdownContent .token.keyword {
+    color: #2c2cc9;
+}
+
+.markdownContent .token.function,
+.markdownContent .token.class-name {
+    color: #c92cc9;
+}
+
+.markdownContent .token.regex,
+.markdownContent .token.important,
+.markdownContent .token.variable {
+    color: #2c99c9;
+}
+
+.markdownContent .line-highlight {
+    background-color: rgba(0, 0, 0, 0.05);
+    display: block;
+}
