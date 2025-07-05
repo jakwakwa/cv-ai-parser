@@ -30,7 +30,11 @@ function mapTextContent(text: string, layerName: string): string {
   const layerLower = layerName.toLowerCase();
   
   // Map based on layer names from Figma structure
-  if (layerLower.includes('summary-name') || layerLower.includes('name')) {
+  if (layerLower.includes('summary-name')) {
+    // Check if the text contains name-like content
+    if (lower.includes('curriculum vitae') || lower.includes('john doe') || lower.includes('name')) {
+      return '{resume.name}';
+    }
     return '{resume.name}';
   }
   if (layerLower.includes('summary-text') || layerLower.includes('summary-content')) {
@@ -141,6 +145,426 @@ function rgbaToHex(r: number, g: number, b: number, a: number): string {
   return `#${toHex(r)}${toHex(g)}${toHex(b)}${a < 1 ? toHex(a) : ''}`;
 }
 
+function generateCSSFromFigmaStructure(node: FigmaNode, primaryColor: string, secondaryColor: string, accentColor: string): string {
+  // Extract all unique class names from the node structure
+  const classNames = new Set<string>();
+  
+  function extractClassNames(n: FigmaNode) {
+    const className = n.name.replace(/\s+/g, '').toLowerCase();
+    classNames.add(className);
+    if (n.children) {
+      n.children.forEach(extractClassNames);
+    }
+  }
+  
+  extractClassNames(node);
+  
+  // Generate CSS based on the actual layer structure
+  let css = `/* Styles generated from Figma with extracted colors */
+/* Primary: ${primaryColor}, Secondary: ${secondaryColor}, Accent: ${accentColor} */
+
+/* Main container */
+.${node.name.replace(/\s+/g, '').toLowerCase()} {
+  max-width: 890px;
+  margin: 0 auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: ${primaryColor};
+}
+
+/* Header section */
+.header {
+  width: 100%;
+  height: 273px;
+  background: #FFFFFF;
+  display: flex;
+}
+
+/* Summary section */
+.summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px 29px;
+  width: 590px;
+  background: ${accentColor};
+}
+
+.summary-name {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 0;
+  width: 100%;
+}
+
+.summary-name p {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 24px;
+  color: #E0CACA;
+  margin: 0;
+}
+
+.summary-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 0;
+  width: 100%;
+}
+
+.summary-content p {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #FFE4E4;
+  margin: 0;
+}
+
+/* Profile section */
+.profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  width: 300px;
+  background: linear-gradient(331.15deg, #914A4A -18.9%, #383333 95.26%);
+}
+
+.profile-image {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  width: 220px;
+  height: 220px;
+  background: url(.png);
+  border: 5px solid rgba(0, 0, 0, 0.26);
+  filter: drop-shadow(0px 4px 4px rgba(158, 158, 158, 0.25));
+  border-radius: 1000px;
+}
+
+/* Two column body */
+.resumetwocolbody {
+  width: 100%;
+  background: #FFFFFF;
+  display: flex;
+}
+
+/* Experience section */
+.experiencesection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 25px 39px;
+  gap: 10px;
+  width: 590px;
+  background: #FFFFFF;
+}
+
+.sectiontitle {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 7px 11px;
+}
+
+.sectiontitle p {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 24px;
+  color: #1C0404;
+  margin: 0;
+}
+
+.experience-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  gap: 25px;
+  width: 100%;
+}
+
+.experience-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 19px 36px;
+  gap: 9px;
+  width: 100%;
+  background: ${accentColor};
+  border-radius: 22px;
+}
+
+.exp-title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  width: 100%;
+}
+
+.exp-title p {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  color: #FFEFEF;
+  margin: 0;
+}
+
+.exp-company {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  width: 100%;
+}
+
+.exp-company p {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 22px;
+  color: #FFEFEF;
+  margin: 0;
+}
+
+.exp-period {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  width: 100%;
+}
+
+.exp-period p {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #FFEFEF;
+  margin: 0;
+}
+
+.exp-desc {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px 0;
+  width: 100%;
+}
+
+.exp-desc p {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+  color: #FFE7D1;
+  margin: 0;
+}
+
+/* Sidebar */
+.resumesidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 25px 22px;
+  gap: 10px;
+  width: 300px;
+  background: #7D4545;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.resumesidebar .sectiontitle p {
+  color: #E0CACA;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Contact section */
+.contact {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 22px 18px;
+  gap: 10px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+}
+
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  gap: 12px;
+}
+
+.contact-list p {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+/* Education section */
+.education {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 22px 18px;
+  gap: 30px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+}
+
+.education-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  gap: 12px;
+}
+
+.education-list p {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+/* Certification section */
+.certification {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 22px 18px;
+  gap: 10px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+}
+
+.certification-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  gap: 12px;
+}
+
+.certification-list p {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+/* Skills section */
+.skills {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 8px 9px;
+  gap: 10px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 25px;
+}
+
+.skills-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  padding: 6px 2px;
+  gap: 20px 16px;
+  width: 100%;
+}
+
+.skill {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: flex-start;
+  padding: 5px 12px;
+  gap: 2px;
+  background: rgba(255, 232, 216, 0.96);
+  border: 1px solid #90450B;
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+}
+
+.skill p {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 18px;
+  color: #62321C;
+  margin: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .${node.name.replace(/\s+/g, '').toLowerCase()} {
+    max-width: 100%;
+  }
+  
+  .header {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .summary {
+    width: 100%;
+  }
+  
+  .resumetwocolbody {
+    flex-direction: column;
+  }
+  
+  .experiencesection,
+  .resumesidebar {
+    width: 100%;
+  }
+}
+`;
+
+  return css;
+}
+
 function nodeToJsx(node: FigmaNode): string {
   switch (node.type) {
     case 'TEXT':
@@ -208,6 +632,14 @@ function nodeToJsx(node: FigmaNode): string {
           (nodeName.includes('education-list') && (nodeName.includes('degree') || nodeName.includes('school') || nodeName.includes('year'))) ||
           (nodeName.includes('certification-list') && (nodeName.includes('certificate') || nodeName.includes('issuer')))) {
         return ''; // Skip these as they're handled by the parent list
+      }
+      
+      // Skip duplicate education/certification lists that are just containers for individual items
+      if ((nodeName === 'education' || nodeName === 'certification') && node.children?.some(child => 
+          child.name.toLowerCase().includes('education-list') || 
+          child.name.toLowerCase().includes('certification-list'))) {
+        const childrenJsx = node.children?.map(nodeToJsx).filter(jsx => jsx !== '').join('\n') || '';
+        return `<div className={${classNameAccess}}>${childrenJsx}</div>`;
       }
       
       const childrenJsx = node.children?.map(nodeToJsx).join('\n') || '';
@@ -517,106 +949,8 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
 
     const jsxCode = `import React from 'react';\nimport type { ParsedResume } from '@/lib/resume-parser/schema';\nimport styles from './${componentName}.module.css';\n\nexport const ${componentName}: React.FC<{ resume: ParsedResume }> = ({ resume }) => {\n  return (\n    ${jsxBody}\n  );\n};\n`;
 
-    const cssModule = `/* Styles generated from Figma with extracted colors */
-/* Primary: ${primaryColor}, Secondary: ${secondaryColor}, Accent: ${accentColor} */
-
-.${firstNode.name.replace(/\s+/g, '').toLowerCase()} {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  color: ${secondaryColor};
-}
-
-.header {
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid ${primaryColor};
-}
-
-.name {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: ${primaryColor};
-  margin-bottom: 0.5rem;
-}
-
-.title {
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: ${secondaryColor};
-  margin-bottom: 1rem;
-}
-
-.contact {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  font-size: 0.9rem;
-}
-
-.section {
-  margin-bottom: 2rem;
-}
-
-.section-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: ${primaryColor};
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid ${primaryColor}33;
-}
-
-.experience-item {
-  margin-bottom: 1.5rem;
-}
-
-.job-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: ${primaryColor};
-  margin-bottom: 0.25rem;
-}
-
-.company {
-  font-size: 0.9rem;
-  color: ${secondaryColor};
-  margin-bottom: 0.5rem;
-}
-
-.skills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.skill {
-  background-color: ${primaryColor}15;
-  color: ${primaryColor};
-  padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .${firstNode.name.replace(/\s+/g, '').toLowerCase()} {
-    padding: 1rem;
-  }
-  
-  .name {
-    font-size: 2rem;
-  }
-  
-  .contact {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-}
-`;
+    // Generate CSS based on actual Figma structure
+    const cssModule = generateCSSFromFigmaStructure(firstNode, primaryColor, secondaryColor, accentColor);
 
     // Persist component on the server (development/demo).
     try {
