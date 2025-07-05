@@ -77,6 +77,7 @@ function extractContentFromJSX(jsxCode: string) {
   if (figmaContentMatch) {
     try {
       const figmaContent = JSON.parse(figmaContentMatch[1]);
+      console.log('Extracted Figma content:', figmaContent);
       if (figmaContent.name) extractedContent.name = figmaContent.name;
       if (figmaContent.summary) extractedContent.summary = figmaContent.summary;
       if (figmaContent.contact) {
@@ -84,6 +85,17 @@ function extractContentFromJSX(jsxCode: string) {
       }
     } catch (e) {
       console.warn('Could not parse figma extracted content:', e);
+    }
+  }
+
+  // Extract debug info
+  const debugInfoMatch = jsxCode.match(/export const figmaDebugInfo = ({[\s\S]*?});/);
+  if (debugInfoMatch) {
+    try {
+      const debugInfo = JSON.parse(debugInfoMatch[1]);
+      console.log('Figma debug info:', debugInfo);
+    } catch (e) {
+      console.warn('Could not parse figma debug info:', e);
     }
   }
 

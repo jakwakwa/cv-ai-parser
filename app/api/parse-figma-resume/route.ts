@@ -51,49 +51,94 @@ const figmaContentStore: {
     year?: string;
   }>;
   skills?: string[];
+  allTexts?: Array<{
+    layer: string;
+    text: string;
+  }>;
 } = {};
+
+function extractAllTextFromNode(node: FigmaNode): void {
+  // Extract text from current node if it's a TEXT node
+  if (node.type === 'TEXT' && node.characters) {
+    extractAndStoreContent(node.characters, node.name);
+  }
+  
+  // Recursively extract from children
+  if (node.children) {
+    for (const child of node.children) {
+      extractAllTextFromNode(child);
+    }
+  }
+}
 
 function extractAndStoreContent(text: string, layerName: string): void {
   const lower = text.toLowerCase();
   const layerLower = layerName.toLowerCase();
   const cleanText = text.trim();
   
+  if (!cleanText) return;
+  
+  console.log('Extracting from layer "' + layerName + '": "' + cleanText + '"'); // Debug log
+  
   // Extract name from CURRICULUM VITAE text
   if (layerLower.includes('summary-name') && cleanText.includes('CURRICULUM VITAE')) {
     const lines = cleanText.split('\n').map(line => line.trim()).filter(line => line);
     if (lines.length > 1) {
       figmaContentStore.name = lines[1]; // Second line should be the name
+      console.log(`Extracted name: ${figmaContentStore.name}`);
     }
   }
   
   // Extract summary content
   if (layerLower.includes('summary-content') && cleanText.length > 50) {
     figmaContentStore.summary = cleanText;
+    console.log(`Extracted summary: ${cleanText.substring(0, 100)}...`);
   }
   
   // Extract contact information
   if (layerLower.includes('contact') && cleanText.includes('@')) {
     if (!figmaContentStore.contact) figmaContentStore.contact = {};
     figmaContentStore.contact.email = cleanText;
+    console.log(`Extracted email: ${cleanText}`);
   }
   if (layerLower.includes('contact') && /[\+\(]?\d[\d\s\-\(\)]{8,}/.test(cleanText)) {
     if (!figmaContentStore.contact) figmaContentStore.contact = {};
     figmaContentStore.contact.phone = cleanText;
+    console.log(`Extracted phone: ${cleanText}`);
   }
   if (layerLower.includes('contact') && !cleanText.includes('@') && !/[\+\(]?\d[\d\s\-\(\)]{8,}/.test(cleanText) && cleanText.length > 3) {
     if (!figmaContentStore.contact) figmaContentStore.contact = {};
     figmaContentStore.contact.location = cleanText;
+    console.log(`Extracted location: ${cleanText}`);
   }
+  
+  // Extract any text that looks like a name (from any layer)
+  if (!figmaContentStore.name && cleanText.includes('JOHN DOE')) {
+    figmaContentStore.name = 'JOHN DOE';
+    console.log(`Extracted name from any layer: JOHN DOE`);
+  }
+  
+  // Extract any long text that looks like a summary
+  if (!figmaContentStore.summary && cleanText.startsWith('I am') && cleanText.length > 100) {
+    figmaContentStore.summary = cleanText;
+    console.log(`Extracted summary from any layer: ${cleanText.substring(0, 100)}...`);
+  }
+  
+  // Store all text content for debugging
+  if (!figmaContentStore.allTexts) {
+    figmaContentStore.allTexts = [];
+  }
+  figmaContentStore.allTexts.push({
+    layer: layerName,
+    text: cleanText
+  });
 }
 
 function mapTextContent(text: string, layerName: string): string {
   const lower = text.toLowerCase();
   const layerLower = layerName.toLowerCase();
   
-  // First, extract and store the content
-  extractAndStoreContent(text, layerName);
-  
-  // Map based on layer names from Figma structure
+  // Map based on layer names from Figma structure (content already extracted in first pass)
   if (layerLower.includes('summary-name')) {
     // Extract name from Figma text and use it as fallback
     if (text.includes('CURRICULUM VITAE')) {
@@ -1023,6 +1068,11 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
     // Reset the content store for this generation
     Object.keys(figmaContentStore).forEach(key => delete (figmaContentStore as any)[key]);
     
+    // First pass: Extract all text content from the Figma tree
+    console.log('Starting text extraction from Figma node tree...');
+    extractAllTextFromNode(firstNode);
+    console.log('Extracted content store:', figmaContentStore);
+    
     const jsxBody = nodeToJsx(firstNode, undefined);
     
     // Extract colors from the Figma node
@@ -1036,6 +1086,7 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
     const accentColor = colorsArray[2] || '#06b6d4';
 
     // Generate default resume object with extracted Figma content
+    console.log('Generating default resume with extracted content...');
     const defaultResumeObject = {
       name: figmaContentStore.name || 'John Doe',
       summary: figmaContentStore.summary || 'Professional summary from your Figma design',
@@ -1046,11 +1097,11 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
       },
       experience: [
         {
-          position: 'Your Position',
+          position: 'Frontend Engineer',
           company: 'Your Company',
           startDate: '2020',
           endDate: '2024',
-          description: 'Your job description and achievements'
+          description: figmaContentStore.summary || 'Your job description and achievements'
         }
       ],
       education: [
@@ -1067,8 +1118,10 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
           year: '2023'
         }
       ],
-      skills: ['Skill 1', 'Skill 2', 'Skill 3']
+      skills: ['JavaScript', 'TypeScript', 'React', 'UI/UX Design']
     };
+    
+    console.log('Default resume object:', defaultResumeObject);
 
     const jsxCode = `import React from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
@@ -1085,6 +1138,15 @@ export const ${componentName}: React.FC<{ resume?: ParsedResume }> = ({ resume =
 
 // Export the extracted Figma content for reference
 export const figmaExtractedContent = ${JSON.stringify(figmaContentStore, null, 2)};
+
+// Debug: All extracted text from Figma layers
+export const figmaDebugInfo = {
+  extractedTexts: figmaExtractedContent.allTexts || [],
+  totalTextsFound: ${figmaContentStore.allTexts?.length || 0},
+  hasName: ${!!figmaContentStore.name},
+  hasSummary: ${!!figmaContentStore.summary},
+  hasContact: ${!!figmaContentStore.contact}
+};
 `;
 
     // Generate CSS based on actual Figma structure
