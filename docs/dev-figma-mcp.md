@@ -63,3 +63,18 @@ The server currently exposes `get_figma_data` + `download_figma_images`.  If you
 - Keep `figma-developer-mcp` version up-to-date (`pnpm update figma-developer-mcp`).
 - Rotate personal tokens every 90 days.
 - Ensure no Tailwind utilities slip into generated code (review code-review bot warnings).
+
+---
+
+## Figma Token Scopes
+Only read-access is required for our current workflows.
+
+| Scope | Why it’s needed |
+|-------|-----------------|
+| `file_read` | Download the JSON node tree for frames/components |
+| `file_images` | Fetch rendered PNG/SVG previews when MCP needs screenshots |
+| _(optional)_ `library_read` | Resolve shared design-system tokens/components |
+| _(optional)_ `comment_read` | Future: surface annotations in code reviews |
+
+No `*_write` scopes are necessary because we never modify Figma files.
+Generate the Personal Access Token in **Figma → Settings → Personal access tokens** with the two required scopes and paste it into `.env` as `FIGMA_API_KEY=`.
