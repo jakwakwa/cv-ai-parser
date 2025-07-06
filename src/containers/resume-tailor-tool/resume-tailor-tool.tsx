@@ -24,6 +24,8 @@ import {
 import ProfileImageUploader from '@/src/containers/profile-image-uploader/profile-image-uploader';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import styles from './resume-tailor-tool.module.css';
+import ResumeDisplay from '@/src/containers/resume-display/resume-display';
+import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
 
 interface ParseInfo {
   resumeId?: string;
@@ -76,6 +78,8 @@ const ResumeTailorTool = ({
   const [tailorEnabled, setTailorEnabled] = useState(false);
   // Track created resume slug for redirect
   const [createdResumeSlug, setCreatedResumeSlug] = useState<string | null>(null);
+  const [localResumeData, setLocalResumeData] = useState<ParsedResume | null>(null);
+  const [viewLocalResume, setViewLocalResume] = useState(false);
 
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -198,6 +202,7 @@ const ResumeTailorTool = ({
       };
 
       onResumeCreated(parsedData, uploadInfo);
+      setLocalResumeData(parsedData);
       if (uploadInfo.resumeSlug) {
         setCreatedResumeSlug(uploadInfo.resumeSlug);
       }
@@ -243,6 +248,22 @@ const ResumeTailorTool = ({
     );
   }
 
+  if (viewLocalResume && localResumeData) {
+    return (
+      <div className={styles.container}>
+        <ResumeDisplayButtons
+          onDownloadPdf={() => {
+            // trigger browser print as simple download (placeholder)
+            window.print();
+          }}
+          onEditResume={() => setViewLocalResume(false)}
+          onUploadNew={() => setViewLocalResume(false)}
+        />
+        <ResumeDisplay resumeData={localResumeData} isAuth={false} />
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       <Dialog open={showErrorModal} onOpenChange={setShowErrorModal}>
@@ -273,6 +294,7 @@ const ResumeTailorTool = ({
                 router.push(`/resume/${createdResumeSlug}`);
               } else {
                 setShowProfileUploader(false);
+                setViewLocalResume(true);
               }
             }}
             className={styles.viewResumeButton}
