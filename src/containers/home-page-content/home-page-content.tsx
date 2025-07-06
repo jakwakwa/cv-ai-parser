@@ -77,7 +77,7 @@ export default function HomePageContent() {
             </div>
             
             <Button
-              variant="outline"
+              variant="primary"
               className={styles.featureButton}
               onClick={() => router.push('/tools/tailor')}
             >
@@ -117,7 +117,7 @@ export default function HomePageContent() {
             </div>
             
             <Button
-              variant="outline"
+              variant="primary"
               className={styles.featureButton}
               onClick={() => router.push('/tools/figma-to-resume')}
             >

@@ -232,6 +232,27 @@
     }
 }
 
+@media (max-width: 767px) {
+  .cardHeader,
+  .cardContent,
+  .cardFooter {
+    text-align: center !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .uploadArea,
+  .uploadPromptContainer,
+  .previewContainer {
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  .cardDescription,
+  .instructionText,
+  .uploadText {
+    text-align: center !important;
+  }
+}
+
 .skipButton {
     flex: 1;
 }

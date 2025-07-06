@@ -19,9 +19,17 @@
     outline-offset: 2px;
 }
 
-.button:disabled {
+/* Disabled appearance overrides (place near end to ensure precedence) */
+.button:disabled,
+.button.primary:disabled,
+.button.secondary:disabled,
+.button.default:disabled,
+.button.outline:disabled {
     pointer-events: none;
-    opacity: 0.5;
+    background-color: #d1d5db !important; /* light grey */
+    color: #6b7280 !important; /* darker grey */
+    border-color: #d1d5db !important;
+    opacity: 1;
 }
 
 .button svg {
@@ -123,4 +131,17 @@
 .button.primary:hover {
     background-color: #1f3736;
     color: #faf4ec;
+}
+
+/* Final disabled override to ensure highest precedence */
+.button:disabled,
+.button.primary:disabled,
+.button.secondary:disabled,
+.button.default:disabled,
+.button.outline:disabled,
+.button.ghost:disabled {
+    pointer-events: none;
+    background: #d1d5db !important;
+    color: #6b7280 !important;
+    border-color: #d1d5db !important;
 }

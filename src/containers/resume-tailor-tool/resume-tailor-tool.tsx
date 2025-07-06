@@ -11,6 +11,7 @@ import {
   Upload as FileUpIcon
 } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import ColorPicker from '@/src/components/color-picker/color-picker';
 import { Button } from '@/src/components/ui/ui-button/button';
@@ -23,6 +24,8 @@ import {
 import ProfileImageUploader from '@/src/containers/profile-image-uploader/profile-image-uploader';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import styles from './resume-tailor-tool.module.css';
+import ResumeDisplay from '@/src/containers/resume-display/resume-display';
+import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
 
 interface ParseInfo {
   resumeId?: string;
@@ -47,6 +50,7 @@ const ResumeTailorTool = ({
   setIsLoading,
   isAuthenticated = false,
 }: ResumeTailorToolProps) => {
+  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const jobSpecFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -70,6 +74,12 @@ const ResumeTailorTool = ({
   // Customization states
   const [profileImage, setProfileImage] = useState('');
   const [customColors, setCustomColors] = useState<Record<string, string>>({});
+  // Toggle to enable/disable the job tailoring panel
+  const [tailorEnabled, setTailorEnabled] = useState(false);
+  // Track created resume slug for redirect
+  const [createdResumeSlug, setCreatedResumeSlug] = useState<string | null>(null);
+  const [localResumeData, setLocalResumeData] = useState<ParsedResume | null>(null);
+  const [viewLocalResume, setViewLocalResume] = useState(false);
 
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -118,20 +128,22 @@ const ResumeTailorTool = ({
       return;
     }
 
-    // Validation for job specification
-    if (jobSpecMethod === 'paste' && !jobSpecText.trim()) {
-      setError('Please provide a job description');
-      return;
-    }
-    
-    if (jobSpecMethod === 'upload' && !jobSpecFile) {
-      setError('Please upload a job description file');
-      return;
-    }
+    // Conditional validation when tailoring is enabled
+    if (tailorEnabled) {
+      if (jobSpecMethod === 'paste' && !jobSpecText.trim()) {
+        setError('Please provide a job description');
+        return;
+      }
 
-    if (jobSpecText.length > 4000) {
-      setError(`Job description is too long (${jobSpecText.length}/4000 characters)`);
-      return;
+      if (jobSpecMethod === 'upload' && !jobSpecFile) {
+        setError('Please upload a job description file');
+        return;
+      }
+
+      if (jobSpecText.length > 4000) {
+        setError(`Job description is too long (${jobSpecText.length}/4000 characters)`);
+        return;
+      }
     }
 
     setIsLoading(true);
@@ -140,27 +152,28 @@ const ResumeTailorTool = ({
     const formData = new FormData();
     formData.append('file', uploadedFile);
     formData.append('isAuthenticated', String(isAuthenticated));
-    
+
     if (profileImage) {
       formData.append('profileImage', profileImage);
     }
-    
+
     if (customColors && Object.keys(customColors).length > 0) {
       formData.append('customColors', JSON.stringify(customColors));
     }
 
-    // Add job tailoring fields
-    formData.append('enableJobTailoring', 'true');
-    formData.append('jobSpecMethod', jobSpecMethod);
-    
-    if (jobSpecMethod === 'paste') {
-      formData.append('jobSpecText', jobSpecText);
-    } else if (jobSpecFile) {
-      formData.append('jobSpecFile', jobSpecFile);
+    // Add job tailoring fields only if enabled
+    if (tailorEnabled) {
+      formData.append('jobSpecMethod', jobSpecMethod);
+
+      if (jobSpecMethod === 'paste') {
+        formData.append('jobSpecText', jobSpecText);
+      } else if (jobSpecFile) {
+        formData.append('jobSpecFile', jobSpecFile);
+      }
+
+      formData.append('tone', tone);
+      formData.append('extraPrompt', extraPrompt);
     }
-    
-    formData.append('tone', tone);
-    formData.append('extraPrompt', extraPrompt);
 
     try {
       const response = await fetch('/api/parse-resume-enhanced', {
@@ -189,6 +202,10 @@ const ResumeTailorTool = ({
       };
 
       onResumeCreated(parsedData, uploadInfo);
+      setLocalResumeData(parsedData);
+      if (uploadInfo.resumeSlug) {
+        setCreatedResumeSlug(uploadInfo.resumeSlug);
+      }
       setShowProfileUploader(true);
       setError('');
     } catch (err: unknown) {
@@ -231,6 +248,22 @@ const ResumeTailorTool = ({
     );
   }
 
+  if (viewLocalResume && localResumeData) {
+    return (
+      <div className={styles.container}>
+        <ResumeDisplayButtons
+          onDownloadPdf={() => {
+            // trigger browser print as simple download (placeholder)
+            window.print();
+          }}
+          onEditResume={() => setViewLocalResume(false)}
+          onUploadNew={() => setViewLocalResume(false)}
+        />
+        <ResumeDisplay resumeData={localResumeData} isAuth={false} />
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       <Dialog open={showErrorModal} onOpenChange={setShowErrorModal}>
@@ -246,7 +279,7 @@ const ResumeTailorTool = ({
       </Dialog>
 
       <Dialog open={showProfileUploader} onOpenChange={setShowProfileUploader}>
-        <DialogContent>
+        <DialogContent className={styles.profileDialogContent}>
           <DialogTitle className={styles.dialogTitle}>
             <CheckCircle size={24} /> Resume Tailored Successfully!
           </DialogTitle>
@@ -254,13 +287,28 @@ const ResumeTailorTool = ({
             Your resume has been tailored to the job description. Optionally upload 
             a profile image or proceed to view your resume.
           </DialogDescription>
-          <ProfileImageUploader onImageChange={handleProfileImageChange} />
-          <Button
-            onClick={() => setShowProfileUploader(false)}
-            className={styles.viewResumeButton}
-          >
-            View Tailored Resume
-          </Button>
+          <ProfileImageUploader
+            onImageChange={handleProfileImageChange}
+            showPrompt={true}
+            onSkip={() => {
+              // skip behaves like previous view resume
+              if (createdResumeSlug) {
+                router.push(`/resume/${createdResumeSlug}`);
+              } else {
+                setShowProfileUploader(false);
+                setViewLocalResume(true);
+              }
+            }}
+            onComplete={() => {
+              // after selecting image or continue, go to view resume
+              setShowProfileUploader(false);
+              if (createdResumeSlug) {
+                router.push(`/resume/${createdResumeSlug}`);
+              } else {
+                setViewLocalResume(true);
+              }
+            }}
+          />
         </DialogContent>
       </Dialog>
 
@@ -321,7 +369,7 @@ const ResumeTailorTool = ({
             )}
           </div>
 
-          {/* Color Customization */}
+          {/* Color Customization & Tailor Toggle */}
           <div className={styles.customizationSection}>
             <Dialog open={showColorDialog} onOpenChange={setShowColorDialog}>
               <button
@@ -332,7 +380,7 @@ const ResumeTailorTool = ({
                 <Palette size={20} />
                 Customize Colors
               </button>
-              <DialogContent>
+              <DialogContent className={styles.colorDialogContent}>
                 <VisuallyHidden.Root>
                   <DialogTitle>Choose Colors</DialogTitle>
                 </VisuallyHidden.Root>
@@ -342,11 +390,22 @@ const ResumeTailorTool = ({
                 />
               </DialogContent>
             </Dialog>
+
+            {/* Tailor to job spec toggle */}
+            <label className={styles.tailorToggle} htmlFor="tailor-toggle">
+              <input
+                id="tailor-toggle"
+                type="checkbox"
+                checked={tailorEnabled}
+                onChange={() => setTailorEnabled((prev) => !prev)}
+              />
+              <span>Tailor to job spec.</span>
+            </label>
           </div>
         </div>
 
         {/* Right Panel - Job Description */}
-        <div className={styles.panel}>
+        <div className={`${styles.panel} ${!tailorEnabled ? styles.disabledPanel : ''}`}>        
           <div className={styles.panelHeader}>
             <BriefcaseIcon className={styles.panelIcon} />
             <h2 className={styles.panelTitle}>Job Description</h2>
@@ -355,7 +414,8 @@ const ResumeTailorTool = ({
           <div className={styles.inputMethodToggle}>
             <button
               type="button"
-              className={`${styles.methodButton} ${jobSpecMethod === 'paste' ? styles.methodButtonActive : ''}`}
+              disabled={!tailorEnabled}
+              className={`${styles.methodButton} ${tailorEnabled && jobSpecMethod === 'paste' ? styles.methodButtonActive : ''} ${!tailorEnabled ? styles.methodButtonDisabled : ''}`}
               onClick={() => setJobSpecMethod('paste')}
             >
               <FileText size={16} />
@@ -363,7 +423,8 @@ const ResumeTailorTool = ({
             </button>
             <button
               type="button"
-              className={`${styles.methodButton} ${jobSpecMethod === 'upload' ? styles.methodButtonActive : ''}`}
+              disabled={!tailorEnabled}
+              className={`${styles.methodButton} ${tailorEnabled && jobSpecMethod === 'upload' ? styles.methodButtonActive : ''} ${!tailorEnabled ? styles.methodButtonDisabled : ''}`}
               onClick={() => setJobSpecMethod('upload')}
             >
               <Upload size={16} />
@@ -467,8 +528,9 @@ const ResumeTailorTool = ({
         
         <Button
           onClick={handleCreateResume}
-          disabled={isLoading || !uploadedFile || (jobSpecMethod === 'paste' ? !jobSpecText.trim() : !jobSpecFile)}
+          disabled={isLoading || !uploadedFile || (tailorEnabled && (jobSpecMethod === 'paste' ? !jobSpecText.trim() : !jobSpecFile))}
           className={styles.createButton}
+          variant="primary"
           size="lg"
         >
           <Wand2Icon size={20} />
