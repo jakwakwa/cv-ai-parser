@@ -371,6 +371,7 @@ const ResumeTailorTool = ({
           <div className={styles.inputMethodToggle}>
             <button
               type="button"
+              disabled={!tailorEnabled}
               className={`${styles.methodButton} ${tailorEnabled && jobSpecMethod === 'paste' ? styles.methodButtonActive : ''}`}
               onClick={() => setJobSpecMethod('paste')}
             >
@@ -379,6 +380,7 @@ const ResumeTailorTool = ({
             </button>
             <button
               type="button"
+              disabled={!tailorEnabled}
               className={`${styles.methodButton} ${tailorEnabled && jobSpecMethod === 'upload' ? styles.methodButtonActive : ''}`}
               onClick={() => setJobSpecMethod('upload')}
             >

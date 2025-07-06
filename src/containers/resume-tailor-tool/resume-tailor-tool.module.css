@@ -252,6 +252,13 @@
   border-color: #1d4ed8;
 }
 
+.methodButton:disabled,
+.methodButtonActive:disabled {
+  background: #d1d5db !important;
+  color: #6b7280 !important;
+  border-color: #d1d5db !important;
+}
+
 /* Textarea Container */
 .textareaContainer {
   padding: 1.5rem;
