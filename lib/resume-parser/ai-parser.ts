@@ -5,11 +5,7 @@ import {
   getResumeParsingPrompt,
   getResumeParsingPromptForPDF,
 } from './prompts';
-import {
-  type AIParsedResume,
-  aiResumeSchema,
-  type ParsedResume,
-} from './schema';
+import { type AIParsedResume, aiResumeSchema } from './schema';
 
 export async function parseWithAI(content: string): Promise<AIParsedResume> {
   const { object } = await generateObject({

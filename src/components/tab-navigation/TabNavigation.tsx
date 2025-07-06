@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Button } from '../ui/ui-button/button';
 import styles from './TabNavigation.module.css';
 
 interface TabNavigationProps {
@@ -19,22 +20,22 @@ export default function TabNavigation({ initialView }: TabNavigationProps) {
 
   return (
     <div className={styles.tabNavigationContainer}>
-      <button
+      <Button
         type="button"
+        variant="default"
         onClick={() => handleTabClick('upload')}
         className={`${styles.tabButton} ${currentView === 'upload' ? styles.activeTab : styles.inactiveTab}`}
-        style={{ height: '50px' }}
       >
-        Upload New Resume
-      </button>
-      <button
+        Upload
+      </Button>
+      <Button
         type="button"
+        variant="primary"
         onClick={() => handleTabClick('library')}
         className={`${styles.tabButton} ${currentView === 'library' ? styles.activeTab : styles.inactiveTab}`}
-        style={{ height: '50px' }}
       >
-        My Resume Library
-      </button>
+        My Library
+      </Button>
     </div>
   );
 }
