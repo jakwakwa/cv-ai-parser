@@ -233,12 +233,18 @@
 }
 
 @media (max-width: 767px) {
-  .card {
-    width: 100% !important;
-    max-width: none !important;
-  }
+  .cardHeader,
+  .cardContent,
   .cardFooter {
-    flex-direction: column !important;
+    text-align: center !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .uploadArea,
+  .uploadPromptContainer,
+  .previewContainer {
+    justify-content: center !important;
+    align-items: center !important;
   }
 }
 
