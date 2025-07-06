@@ -372,7 +372,7 @@ const ResumeTailorTool = ({
             <button
               type="button"
               disabled={!tailorEnabled}
-              className={`${styles.methodButton} ${tailorEnabled && jobSpecMethod === 'paste' ? styles.methodButtonActive : ''}`}
+              className={`${styles.methodButton} ${tailorEnabled && jobSpecMethod === 'paste' ? styles.methodButtonActive : ''} ${!tailorEnabled ? styles.methodButtonDisabled : ''}`}
               onClick={() => setJobSpecMethod('paste')}
             >
               <FileText size={16} />
@@ -381,7 +381,7 @@ const ResumeTailorTool = ({
             <button
               type="button"
               disabled={!tailorEnabled}
-              className={`${styles.methodButton} ${tailorEnabled && jobSpecMethod === 'upload' ? styles.methodButtonActive : ''}`}
+              className={`${styles.methodButton} ${tailorEnabled && jobSpecMethod === 'upload' ? styles.methodButtonActive : ''} ${!tailorEnabled ? styles.methodButtonDisabled : ''}`}
               onClick={() => setJobSpecMethod('upload')}
             >
               <Upload size={16} />

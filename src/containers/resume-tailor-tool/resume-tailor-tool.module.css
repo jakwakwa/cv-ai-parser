@@ -507,3 +507,9 @@
   color: #6b7280 !important;
   border-color: #d1d5db !important;
 }
+
+.methodButtonDisabled {
+  background: #d1d5db !important;
+  color: #6b7280 !important;
+  border-color: #d1d5db !important;
+}
