@@ -528,3 +528,16 @@
   border-color: #d1d5db !important;
   color: #6b7280 !important;
 }
+
+/* Override active tone button text color when panel disabled */
+.disabledPanel .toneButtonActive,
+.disabledPanel .toneButton {
+  background: #d1d5db !important;
+  border-color: #d1d5db !important;
+  color: #6b7280 !important;
+}
+
+.disabledPanel .toneButtonActive .toneName,
+.disabledPanel .toneButton .toneName {
+  color: #6b7280 !important;
+}
