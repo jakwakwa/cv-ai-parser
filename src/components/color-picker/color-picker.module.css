@@ -273,3 +273,14 @@
     display: none !important;
   }
 }
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  .colorLabel {
+    font-size: 0.75rem !important;
+  }
+  .colorInput {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+}
