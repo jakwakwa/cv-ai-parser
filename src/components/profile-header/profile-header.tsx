@@ -20,11 +20,19 @@ const ProfileHeader = ({
 
   // Check if we have a real profile image (not the default placeholder)
   const lowerImg = (profileImage || '').toLowerCase();
+  console.log('Debug profileImage:', { 
+    original: profileImage, 
+    lowerImg, 
+    trimmed: lowerImg.trim(),
+    includesPlaceholder: lowerImg.includes('placeholder'),
+    includesPlaceholdCo: lowerImg.includes('placehold.co')
+  });
   const hasProfileImage =
     lowerImg &&
     lowerImg.trim() !== '' &&
     !lowerImg.includes('placeholder') &&
     !lowerImg.includes('placehold.co');
+  console.log('hasProfileImage result:', hasProfileImage);
 
   return (
     <div
