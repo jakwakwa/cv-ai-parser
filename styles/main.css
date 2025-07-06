@@ -1,0 +1,172 @@
+/**
+ * Main CSS Entry Point
+ * ITCSS Architecture - Imports in order of specificity
+ */
+
+/* ==========================================================================
+   SETTINGS
+   Global variables and config switches
+   ========================================================================== */
+@import './01-settings/_colors.css';
+@import './01-settings/_typography.css';
+@import './01-settings/_spacing.css';
+@import './01-settings/_breakpoints.css';
+@import './01-settings/_transitions.css';
+
+/* ==========================================================================
+   TOOLS
+   Mixins and functions (would go here if using a preprocessor)
+   ========================================================================== */
+
+/* ==========================================================================
+   GENERIC
+   Ground-zero styles (normalize, reset, box-sizing)
+   ========================================================================== */
+@import './03-generic/_normalize.css';
+
+/* ==========================================================================
+   ELEMENTS
+   Unclassed HTML elements (type selectors)
+   ========================================================================== */
+@import './04-elements/_body.css';
+
+/* ==========================================================================
+   OBJECTS
+   Cosmetic-free design patterns
+   ========================================================================== */
+@import './05-objects/_layout.css';
+
+/* ==========================================================================
+   COMPONENTS
+   Designed pieces of UI (will be imported as needed)
+   ========================================================================== */
+/* Component styles are in individual CSS modules */
+
+/* ==========================================================================
+   UTILITIES
+   Helpers and overrides
+   ========================================================================== */
+@import './07-utilities/_utilities.css';
+
+/* ==========================================================================
+   LEGACY STYLES
+   Temporary - styles that need to be refactored
+   ========================================================================== */
+
+/* Loading states */
+.loadingContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9fafb;
+  z-index: 9999;
+}
+
+.loadingSpinner {
+  animation: spin 1s linear infinite;
+  border-radius: 9999px;
+  height: 2rem;
+  width: 2rem;
+  border-bottom: 2px solid #0d9488;
+}
+
+.loadingText {
+  margin-left: 0.75rem;
+  color: #374151;
+}
+
+/* Auth container */
+.authContainer {
+  text-align: center;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  border: 1px solid #e5e7eb;
+  padding: 2rem;
+  max-width: 50rem;
+  margin: 0;
+}
+
+.authTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.authDescription {
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+}
+
+/* Resume display legacy styles */
+.resumeContainer {
+  width: 100%;
+}
+
+.resumeContent {
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  width: 100%;
+  max-width: 64rem;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.resumeGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+@media (min-width: 768px) {
+  .resumeGrid {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+.resumeSidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .resumeSidebar {
+    grid-column: span 1;
+    padding: 2rem;
+  }
+}
+
+.resumeMainContent {
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .resumeMainContent {
+    grid-column: span 1;
+    padding: 2rem;
+  }
+}
+
+@media print {
+  .resumeGrid {
+    grid-template-columns: 1fr 2fr !important;
+  }
+  .resumeSidebar {
+    grid-column: span 1 !important;
+    padding: 2rem !important;
+  }
+  .resumeMainContent {
+    grid-column: span 1 !important;
+    padding: 2rem !important;
+  }
+} 

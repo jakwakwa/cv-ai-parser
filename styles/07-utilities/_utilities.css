@@ -1,0 +1,80 @@
+/**
+ * Utilities: Helper Classes
+ * Single-purpose utility classes
+ */
+
+/* Text utilities */
+.u-text-center {
+  text-align: center !important;
+}
+
+.u-text-left {
+  text-align: left !important;
+}
+
+.u-text-right {
+  text-align: right !important;
+}
+
+.u-text-balance {
+  text-wrap: balance;
+}
+
+/* Visibility utilities */
+.u-hidden {
+  display: none !important;
+}
+
+.u-sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Spacing utilities */
+.u-mb-0 { margin-bottom: 0 !important; }
+.u-mb-1 { margin-bottom: var(--spacing-xs) !important; }
+.u-mb-2 { margin-bottom: var(--spacing-sm) !important; }
+.u-mb-3 { margin-bottom: var(--spacing-md) !important; }
+.u-mb-4 { margin-bottom: var(--spacing-lg) !important; }
+.u-mb-5 { margin-bottom: var(--spacing-xl) !important; }
+
+.u-mt-0 { margin-top: 0 !important; }
+.u-mt-1 { margin-top: var(--spacing-xs) !important; }
+.u-mt-2 { margin-top: var(--spacing-sm) !important; }
+.u-mt-3 { margin-top: var(--spacing-md) !important; }
+.u-mt-4 { margin-top: var(--spacing-lg) !important; }
+.u-mt-5 { margin-top: var(--spacing-xl) !important; }
+
+/* Animation utilities */
+.u-spin {
+  animation: spin var(--animation-spin);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .u-hidden-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .u-hidden-desktop {
+    display: none !important;
+  }
+} 
