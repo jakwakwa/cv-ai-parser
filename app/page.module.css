@@ -1,8 +1,13 @@
+/**
+ * Page: Main
+ * Refactored to use design tokens following ITCSS architecture
+ */
+
 .pageWrapper {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #fafafa;
+  background-color: var(--color-background-secondary);
 }
 
 .mainContent {
@@ -10,7 +15,7 @@
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: var(--spacing-xl) var(--spacing-md);
 }
 
 .loading {
@@ -18,25 +23,26 @@
   align-items: center;
   justify-content: center;
   min-height: 400px;
-  font-size: 1.125rem;
-  color: #6b7280;
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-base);
 }
 
 /* Responsive adjustments */
 @media (min-width: 640px) {
   .mainContent {
-    padding: 2rem 2rem;
+    padding: var(--spacing-xl) var(--spacing-xl);
   }
 }
 
 @media (min-width: 768px) {
   .mainContent {
-    padding: 3rem 2.5rem;
+    padding: var(--spacing-xxl) 2.5rem;
   }
 }
 
 @media (min-width: 1024px) {
   .mainContent {
-    padding: 3rem 3rem;
+    padding: var(--spacing-xxl) var(--spacing-xxl);
   }
 }

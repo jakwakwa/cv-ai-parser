@@ -1,15 +1,19 @@
+/**
+ * Component: SiteHeader
+ * Refactored to use design tokens following ITCSS architecture
+ */
+
 .header {
   position: sticky;
   display: flex;
   top: 0;
   z-index: 40;
   height: 60px;
-  padding: 0px 10px;
+  padding: 0 var(--spacing-sm);
   width: 100%;
   border-bottom: 1px solid hsl(var(--border));
   background-color: hsl(var(--background));
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-
 }
 
 .container {
@@ -18,5 +22,4 @@
   width: 100%;
   justify-content: center;
   align-items: center;
-
 } 
