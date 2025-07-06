@@ -1,0 +1,39 @@
+.filters {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filterBtn {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  background: #fff;
+  cursor: pointer;
+}
+
+.filterBtnActive {
+  background: #0891b2;
+  color: #fff;
+  border-color: #0891b2;
+}
+
+.guideList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.guideItemTitle {
+  font-weight: 600;
+}
+
+.guideItemDesc {
+  font-size: 0.875rem;
+  color: #4b5563;
+}

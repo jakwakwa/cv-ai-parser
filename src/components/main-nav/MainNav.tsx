@@ -20,8 +20,13 @@ export function MainNav({ onLogoClick }: MainNavProps) {
           onLogoClick?.();
         }}
       >
-        {/* <Icons.logo className="h-6 w-6" /> */}
+        {/* Logo placeholder */}
         <span className={styles.brand}>AI Resume Generator</span>
+      </Link>
+
+      {/* Public docs */}
+      <Link href="/docs" className={styles.docsLink} onClick={() => setAuthModalOpen(false)}>
+        Docs
       </Link>
     </div>
   );

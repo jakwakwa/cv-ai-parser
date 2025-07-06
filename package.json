@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev -p 3005",
+    "dev": "next dev -p 3008",
     "lint": "biome lint .",
     "format": "biome format --write .",
-    "start": "next start"
+    "start": "next start",
+    "mcp:figma": "npx -y figma-developer-mcp --stdio"
   },
   "dependencies": {
     "@ai-sdk/google": "latest",
@@ -69,7 +70,10 @@
     "tesseract.js": "^5.1.0",
     "uuid": "^11.1.0",
     "vaul": "latest",
-    "zod": "latest"
+    "zod": "latest",
+    "react-markdown": "^9.0.0",
+    "remark-gfm": "^3.0.1",
+    "nextjs-components": "latest"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.6",
