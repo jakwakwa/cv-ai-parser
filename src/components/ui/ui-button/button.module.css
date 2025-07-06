@@ -21,7 +21,9 @@
 
 .button:disabled {
     pointer-events: none;
-    opacity: 0.5;
+    background-color: #d1d5db; /* light grey */
+    color: #6b7280; /* darker grey text for contrast */
+    opacity: 1;
 }
 
 .button svg {

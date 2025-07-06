@@ -120,20 +120,22 @@ const ResumeTailorTool = ({
       return;
     }
 
-    // Validation for job specification
-    if (jobSpecMethod === 'paste' && !jobSpecText.trim()) {
-      setError('Please provide a job description');
-      return;
-    }
-    
-    if (jobSpecMethod === 'upload' && !jobSpecFile) {
-      setError('Please upload a job description file');
-      return;
-    }
+    // Conditional validation when tailoring is enabled
+    if (tailorEnabled) {
+      if (jobSpecMethod === 'paste' && !jobSpecText.trim()) {
+        setError('Please provide a job description');
+        return;
+      }
 
-    if (jobSpecText.length > 4000) {
-      setError(`Job description is too long (${jobSpecText.length}/4000 characters)`);
-      return;
+      if (jobSpecMethod === 'upload' && !jobSpecFile) {
+        setError('Please upload a job description file');
+        return;
+      }
+
+      if (jobSpecText.length > 4000) {
+        setError(`Job description is too long (${jobSpecText.length}/4000 characters)`);
+        return;
+      }
     }
 
     setIsLoading(true);
@@ -142,27 +144,30 @@ const ResumeTailorTool = ({
     const formData = new FormData();
     formData.append('file', uploadedFile);
     formData.append('isAuthenticated', String(isAuthenticated));
-    
+
     if (profileImage) {
       formData.append('profileImage', profileImage);
     }
-    
+
     if (customColors && Object.keys(customColors).length > 0) {
       formData.append('customColors', JSON.stringify(customColors));
     }
 
-    // Add job tailoring fields
-    formData.append('enableJobTailoring', 'true');
-    formData.append('jobSpecMethod', jobSpecMethod);
-    
-    if (jobSpecMethod === 'paste') {
-      formData.append('jobSpecText', jobSpecText);
-    } else if (jobSpecFile) {
-      formData.append('jobSpecFile', jobSpecFile);
+    // Add job tailoring fields only if enabled
+    formData.append('enableJobTailoring', String(tailorEnabled));
+
+    if (tailorEnabled) {
+      formData.append('jobSpecMethod', jobSpecMethod);
+
+      if (jobSpecMethod === 'paste') {
+        formData.append('jobSpecText', jobSpecText);
+      } else if (jobSpecFile) {
+        formData.append('jobSpecFile', jobSpecFile);
+      }
+
+      formData.append('tone', tone);
+      formData.append('extraPrompt', extraPrompt);
     }
-    
-    formData.append('tone', tone);
-    formData.append('extraPrompt', extraPrompt);
 
     try {
       const response = await fetch('/api/parse-resume-enhanced', {
@@ -480,7 +485,7 @@ const ResumeTailorTool = ({
         
         <Button
           onClick={handleCreateResume}
-          disabled={isLoading || !uploadedFile || (jobSpecMethod === 'paste' ? !jobSpecText.trim() : !jobSpecFile)}
+          disabled={isLoading || !uploadedFile || (tailorEnabled && (jobSpecMethod === 'paste' ? !jobSpecText.trim() : !jobSpecFile))}
           className={styles.createButton}
           variant="primary"
           size="lg"
