@@ -154,8 +154,6 @@ const ResumeTailorTool = ({
     }
 
     // Add job tailoring fields only if enabled
-    formData.append('enableJobTailoring', String(tailorEnabled));
-
     if (tailorEnabled) {
       formData.append('jobSpecMethod', jobSpecMethod);
 

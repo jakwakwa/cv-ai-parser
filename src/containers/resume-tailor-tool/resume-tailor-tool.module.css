@@ -454,6 +454,12 @@
   pointer-events: none;
 }
 
+.disabledPanel button {
+  background-color: #d1d5db !important;
+  border-color: #d1d5db !important;
+  color: #6b7280 !important;
+}
+
 /* Tailor toggle styling */
 .tailorToggle {
   display: flex;
