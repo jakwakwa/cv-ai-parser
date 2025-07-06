@@ -479,14 +479,17 @@
 /* Disabled state styles for method buttons inside a disabled panel */
 .disabledPanel .methodButton,
 .disabledPanel .methodButtonActive {
-  background-color: #d1d5db !important;
+  background: #d1d5db !important;
   border-color: #d1d5db !important;
   color: #6b7280 !important;
 }
 
 .disabledPanel .methodButton:hover,
-.disabledPanel .methodButtonActive:hover {
-  background-color: #d1d5db !important;
+.disabledPanel .methodButtonActive:hover,
+.disabledPanel .methodButton:focus,
+.disabledPanel .methodButtonActive:focus {
+  background: #d1d5db !important;
   border-color: #d1d5db !important;
   color: #6b7280 !important;
+  outline: none !important;
 }

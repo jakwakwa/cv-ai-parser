@@ -132,3 +132,16 @@
     background-color: #1f3736;
     color: #faf4ec;
 }
+
+/* Final disabled override to ensure highest precedence */
+.button:disabled,
+.button.primary:disabled,
+.button.secondary:disabled,
+.button.default:disabled,
+.button.outline:disabled,
+.button.ghost:disabled {
+    pointer-events: none;
+    background: #d1d5db !important;
+    color: #6b7280 !important;
+    border-color: #d1d5db !important;
+}
