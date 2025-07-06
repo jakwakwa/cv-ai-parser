@@ -154,66 +154,113 @@ function extractAndStoreContent(text: string, layerName: string): void {
     console.log(`Extracted location: ${cleanText}`);
   }
   
-  // Extract experience information
-  if (layerLower.includes('exp-title') || layerLower.includes('job-title') || 
-      layerLower.includes('position')) {
-    if (!figmaContentStore.experience) figmaContentStore.experience = [];
-    if (figmaContentStore.experience.length === 0) {
-      figmaContentStore.experience.push({ position: cleanText });
-    } else {
-      figmaContentStore.experience[0].position = cleanText;
-    }
-    console.log(`Extracted job title: ${cleanText}`);
-  } else if (layerLower.includes('exp-company') || layerLower.includes('company')) {
-    if (!figmaContentStore.experience) figmaContentStore.experience = [];
-    if (figmaContentStore.experience.length === 0) {
-      figmaContentStore.experience.push({ company: cleanText });
-    } else {
-      figmaContentStore.experience[0].company = cleanText;
-    }
-    console.log(`Extracted company: ${cleanText}`);
-  } else if (layerLower.includes('exp-period') || layerLower.includes('period') || 
-             layerLower.includes('date')) {
-    if (!figmaContentStore.experience) figmaContentStore.experience = [];
-    if (figmaContentStore.experience.length === 0) {
-      figmaContentStore.experience.push({ period: cleanText });
-    } else {
-      figmaContentStore.experience[0].period = cleanText;
-    }
-    console.log(`Extracted period: ${cleanText}`);
-  } else if (layerLower.includes('exp-desc') || layerLower.includes('description')) {
-    if (!figmaContentStore.experience) figmaContentStore.experience = [];
-    if (figmaContentStore.experience.length === 0) {
-      figmaContentStore.experience.push({ description: cleanText });
-    } else {
-      figmaContentStore.experience[0].description = cleanText;
-    }
-    console.log(`Extracted job description: ${cleanText.substring(0, 100)}...`);
-  }
+     // Extract experience information - matching actual Figma layer names
+   if (layerLower.includes('experience-title') || layerLower.includes('exp-title') || 
+       layerLower.includes('job-title') || layerLower.includes('position')) {
+     if (!figmaContentStore.experience) figmaContentStore.experience = [];
+     if (figmaContentStore.experience.length === 0) {
+       figmaContentStore.experience.push({ position: cleanText });
+     } else {
+       figmaContentStore.experience[0].position = cleanText;
+     }
+     console.log(`Extracted job title: ${cleanText}`);
+   } else if (layerLower.includes('exp-company') || layerLower.includes('company')) {
+     if (!figmaContentStore.experience) figmaContentStore.experience = [];
+     if (figmaContentStore.experience.length === 0) {
+       figmaContentStore.experience.push({ company: cleanText });
+     } else {
+       figmaContentStore.experience[0].company = cleanText;
+     }
+     console.log(`Extracted company: ${cleanText}`);
+   } else if (layerLower.includes('exp-year') || layerLower.includes('exp-period') || 
+              layerLower.includes('period') || layerLower.includes('date')) {
+     if (!figmaContentStore.experience) figmaContentStore.experience = [];
+     if (figmaContentStore.experience.length === 0) {
+       figmaContentStore.experience.push({ period: cleanText });
+     } else {
+       figmaContentStore.experience[0].period = cleanText;
+     }
+     console.log(`Extracted period: ${cleanText}`);
+   } else if (layerLower.includes('exp-detail') || layerLower.includes('exp-desc') || 
+              layerLower.includes('description')) {
+     if (!figmaContentStore.experience) figmaContentStore.experience = [];
+     if (figmaContentStore.experience.length === 0) {
+       figmaContentStore.experience.push({ description: cleanText });
+     } else {
+       figmaContentStore.experience[0].description = cleanText;
+     }
+     console.log(`Extracted job description: ${cleanText.substring(0, 100)}...`);
+   }
   
-     // Extract education information
-   if (layerLower.includes('education') || layerLower.includes('degree') || 
-       layerLower.includes('school') || layerLower.includes('university')) {
-     if (!figmaContentStore.education) figmaContentStore.education = [];
-     figmaContentStore.education.push({ degree: cleanText });
-     console.log(`Extracted education: ${cleanText}`);
-   }
+           // Extract education information - matching actual Figma layer names
+    if (layerLower.includes('education-degree') || layerLower.includes('degree')) {
+      if (!figmaContentStore.education) figmaContentStore.education = [];
+      if (figmaContentStore.education.length === 0) {
+        figmaContentStore.education.push({ degree: cleanText });
+      } else {
+        figmaContentStore.education[0].degree = cleanText;
+      }
+      console.log(`Extracted education degree: ${cleanText}`);
+    } else if (layerLower.includes('education-school') || layerLower.includes('school') || 
+               layerLower.includes('university')) {
+      if (!figmaContentStore.education) figmaContentStore.education = [];
+      if (figmaContentStore.education.length === 0) {
+        figmaContentStore.education.push({ school: cleanText });
+      } else {
+        figmaContentStore.education[0].school = cleanText;
+      }
+      console.log(`Extracted education school: ${cleanText}`);
+    } else if (layerLower.includes('education-year') || layerLower.includes('year')) {
+      if (!figmaContentStore.education) figmaContentStore.education = [];
+      if (figmaContentStore.education.length === 0) {
+        figmaContentStore.education.push({ year: cleanText });
+      } else {
+        figmaContentStore.education[0].year = cleanText;
+      }
+      console.log(`Extracted education year: ${cleanText}`);
+    }
    
-   // Extract skills
-   if (layerLower.includes('skill') && !layerLower.includes('skills-list')) {
-     if (!figmaContentStore.skills) figmaContentStore.skills = [];
-     // Split by common separators
-     const skills = cleanText.split(/[,•\n\r]+/).map(s => s.trim()).filter(s => s);
-     figmaContentStore.skills.push(...skills);
-     console.log(`Extracted skills: ${skills.join(', ')}`);
-   }
+        // Extract skills - matching actual Figma layer names
+     if (layerLower === 'skill' || (layerLower.includes('skill') && !layerLower.includes('skills-list'))) {
+       if (!figmaContentStore.skills) figmaContentStore.skills = [];
+       // For individual skill items, add directly
+       if (layerLower === 'skill') {
+         figmaContentStore.skills.push(cleanText);
+         console.log(`Extracted individual skill: ${cleanText}`);
+       } else {
+         // For skill lists, split by common separators
+         const skills = cleanText.split(/[,•\n\r]+/).map(s => s.trim()).filter(s => s);
+         figmaContentStore.skills.push(...skills);
+         console.log(`Extracted skills: ${skills.join(', ')}`);
+       }
+     }
    
-   // Extract certifications
-   if (layerLower.includes('certificate') || layerLower.includes('certification')) {
-     if (!figmaContentStore.certifications) figmaContentStore.certifications = [];
-     figmaContentStore.certifications.push({ name: cleanText });
-     console.log(`Extracted certification: ${cleanText}`);
-   }
+        // Extract certifications - matching actual Figma layer names
+     if (layerLower.includes('certification-degree') || layerLower.includes('certificate-degree')) {
+       if (!figmaContentStore.certifications) figmaContentStore.certifications = [];
+       if (figmaContentStore.certifications.length === 0) {
+         figmaContentStore.certifications.push({ name: cleanText });
+       } else {
+         figmaContentStore.certifications[0].name = cleanText;
+       }
+       console.log(`Extracted certification degree: ${cleanText}`);
+     } else if (layerLower.includes('certification-school') || layerLower.includes('certificate-school')) {
+       if (!figmaContentStore.certifications) figmaContentStore.certifications = [];
+       if (figmaContentStore.certifications.length === 0) {
+         figmaContentStore.certifications.push({ issuer: cleanText });
+       } else {
+         figmaContentStore.certifications[0].issuer = cleanText;
+       }
+       console.log(`Extracted certification school: ${cleanText}`);
+     } else if (layerLower.includes('certification-year') || layerLower.includes('certificate-year')) {
+       if (!figmaContentStore.certifications) figmaContentStore.certifications = [];
+       if (figmaContentStore.certifications.length === 0) {
+         figmaContentStore.certifications.push({ year: cleanText });
+       } else {
+         figmaContentStore.certifications[0].year = cleanText;
+       }
+       console.log(`Extracted certification year: ${cleanText}`);
+     }
 }
 
 function mapTextContent(text: string, layerName: string): string {
@@ -248,7 +295,7 @@ function mapTextContent(text: string, layerName: string): string {
     return '{resume.summary || "Your professional summary"}';
   }
   
-  if (layerLower.includes('exp-title') || layerLower.includes('job-title')) {
+  if (layerLower.includes('experience-title') || layerLower.includes('exp-title') || layerLower.includes('job-title')) {
     const extractedPosition = figmaContentStore.experience?.[0]?.position || text;
     return `{resume.experience?.[0]?.position || "${extractedPosition}"}`;
   }
@@ -256,11 +303,11 @@ function mapTextContent(text: string, layerName: string): string {
     const extractedCompany = figmaContentStore.experience?.[0]?.company || text;
     return `{resume.experience?.[0]?.company || "${extractedCompany}"}`;
   }
-  if (layerLower.includes('exp-period') || layerLower.includes('period')) {
+  if (layerLower.includes('exp-year') || layerLower.includes('exp-period') || layerLower.includes('period')) {
     const extractedPeriod = figmaContentStore.experience?.[0]?.period || text;
     return `{resume.experience?.[0]?.startDate && resume.experience?.[0]?.endDate ? \`\${resume.experience[0].startDate} - \${resume.experience[0].endDate}\` : "${extractedPeriod}"}`;
   }
-  if (layerLower.includes('exp-desc') || layerLower.includes('description')) {
+  if (layerLower.includes('exp-detail') || layerLower.includes('exp-desc') || layerLower.includes('description')) {
     const extractedDescription = figmaContentStore.experience?.[0]?.description || text;
     const escapedDesc = extractedDescription.replace(/`/g, '\\`').replace(/\$/g, '\\$');
     return `{resume.experience?.[0]?.description || \`${escapedDesc}\`}`;
@@ -281,25 +328,32 @@ function mapTextContent(text: string, layerName: string): string {
   }
   
   if (layerLower.includes('education-degree') || layerLower.includes('degree')) {
-    return '{resume.education?.[0]?.degree || "Degree"}';
+    const extractedDegree = figmaContentStore.education?.[0]?.degree || text;
+    return `{resume.education?.[0]?.degree || "${extractedDegree}"}`;
   }
   if (layerLower.includes('education-school') || layerLower.includes('school')) {
-    return '{resume.education?.[0]?.institution || "School"}';
+    const extractedSchool = figmaContentStore.education?.[0]?.school || text;
+    return `{resume.education?.[0]?.institution || "${extractedSchool}"}`;
   }
   if (layerLower.includes('education-year') || layerLower.includes('year')) {
-    return '{resume.education?.[0]?.year || "Year"}';
+    const extractedYear = figmaContentStore.education?.[0]?.year || text;
+    return `{resume.education?.[0]?.year || "${extractedYear}"}`;
   }
-  if (layerLower.includes('certificate-degree') || layerLower.includes('certification')) {
-    return '{resume.certifications?.[0]?.name || "Certification"}';
+  if (layerLower.includes('certification-degree') || layerLower.includes('certificate-degree') || layerLower.includes('certification')) {
+    const extractedCert = figmaContentStore.certifications?.[0]?.name || text;
+    return `{resume.certifications?.[0]?.name || "${extractedCert}"}`;
   }
-  if (layerLower.includes('certificate-school') || layerLower.includes('issuer')) {
-    return '{resume.certifications?.[0]?.issuer || "Issuer"}';
+  if (layerLower.includes('certification-school') || layerLower.includes('certificate-school') || layerLower.includes('issuer')) {
+    const extractedIssuer = figmaContentStore.certifications?.[0]?.issuer || text;
+    return `{resume.certifications?.[0]?.issuer || "${extractedIssuer}"}`;
   }
-  if (layerLower.includes('certificate-year') || layerLower.includes('cert-year')) {
-    return '{resume.certifications?.[0]?.year || "Year"}';
+  if (layerLower.includes('certification-year') || layerLower.includes('certificate-year') || layerLower.includes('cert-year')) {
+    const extractedCertYear = figmaContentStore.certifications?.[0]?.year || text;
+    return `{resume.certifications?.[0]?.year || "${extractedCertYear}"}`;
   }
-  if (layerLower.includes('skill') && !layerLower.includes('skills-list')) {
-    return '{resume.skills?.[0] || "Skill"}';
+  if (layerLower === 'skill' || (layerLower.includes('skill') && !layerLower.includes('skills-list'))) {
+    const extractedSkill = figmaContentStore.skills?.[0] || text;
+    return `{resume.skills?.[0] || "${extractedSkill}"}`;
   }
   
   // Section titles - use actual text from Figma
@@ -1204,30 +1258,48 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
         phone: figmaContentStore.contact?.phone || '+1 (555) 123-4567',
         location: figmaContentStore.contact?.location || 'Your Location'
       },
-      experience: [
+      experience: figmaContentStore.experience && figmaContentStore.experience.length > 0 ? 
+        figmaContentStore.experience.map(exp => ({
+          position: exp.position || 'Frontend Engineer',
+          company: exp.company || 'Your Company',
+          startDate: exp.period ? exp.period.split(' - ')[0] || '2020' : '2020',
+          endDate: exp.period ? exp.period.split(' - ')[1] || '2024' : '2024',
+          description: exp.description || 'Your job description and achievements'
+        })) : [
         {
           position: 'Frontend Engineer',
           company: 'Your Company',
           startDate: '2020',
           endDate: '2024',
-          description: figmaContentStore.summary || 'Your job description and achievements'
+          description: 'Your job description and achievements'
         }
       ],
-      education: [
+      education: figmaContentStore.education && figmaContentStore.education.length > 0 ?
+        figmaContentStore.education.map(edu => ({
+          degree: edu.degree || 'Your Degree',
+          institution: edu.school || 'Your School',
+          year: edu.year || '2020'
+        })) : [
         {
           degree: 'Your Degree',
           institution: 'Your School',
           year: '2020'
         }
       ],
-      certifications: [
+      certifications: figmaContentStore.certifications && figmaContentStore.certifications.length > 0 ?
+        figmaContentStore.certifications.map(cert => ({
+          name: cert.name || 'Your Certification',
+          issuer: cert.issuer || 'Issuing Organization',
+          year: cert.year || '2023'
+        })) : [
         {
           name: 'Your Certification',
           issuer: 'Issuing Organization',
           year: '2023'
         }
       ],
-      skills: ['JavaScript', 'TypeScript', 'React', 'UI/UX Design']
+      skills: figmaContentStore.skills && figmaContentStore.skills.length > 0 ?
+        figmaContentStore.skills : ['JavaScript', 'TypeScript', 'React', 'UI/UX Design']
     };
     
     console.log('Default resume object:', defaultResumeObject);
