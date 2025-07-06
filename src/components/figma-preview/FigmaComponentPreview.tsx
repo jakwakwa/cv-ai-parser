@@ -69,6 +69,11 @@ function extractContentFromJSX(jsxCode: string) {
       duration: string;
       description: string;
     }>,
+    certifications: [] as Array<{
+      name: string;
+      issuer: string;
+      year: string;
+    }>,
     skills: [] as string[]
   };
 
@@ -120,6 +125,13 @@ function extractContentFromJSX(jsxCode: string) {
       if (defaultResume.skills && defaultResume.skills.length > 0) {
         extractedContent.skills = defaultResume.skills;
       }
+      if (defaultResume.certifications && defaultResume.certifications.length > 0) {
+        extractedContent.certifications = defaultResume.certifications.map((c: any) => ({
+          name: c.name || 'Certification',
+          issuer: c.issuer || 'Issuer',
+          year: c.year || 'Year'
+        }));
+      }
     } catch (e) {
       console.warn('Could not parse default resume:', e);
     }
@@ -164,6 +176,9 @@ function extractContentFromJSX(jsxCode: string) {
   }
   if (extractedContent.skills.length === 0) {
     extractedContent.skills = ["Skills from Figma"];
+  }
+  if (extractedContent.certifications.length === 0) {
+    extractedContent.certifications.push({ name: 'Certification from Figma', issuer: 'Issuer from Figma', year: 'Year from Figma' });
   }
 
   extractedContent.title = "Frontend Engineer";
@@ -314,9 +329,15 @@ export const FigmaComponentPreview: React.FC<FigmaComponentPreviewProps> = ({
                   </div>
                   <div className={styles.certification}>
                     <div className={styles['certification-list']}>
-                      <p>Certification from Figma</p>
-                      <p>Issuer from Figma</p>
-                      <p>Year from Figma</p>
+                      {actualContent.certifications.length > 0 ? actualContent.certifications.map((cert, index) => (
+                        <div key={`cert-${index}-${cert.name}`} className={styles['certification-item']}>
+                          <p>{cert.name}</p>
+                          <p>{cert.issuer}</p>
+                          <p>{cert.year}</p>
+                        </div>
+                      )) : (
+                        <p>Certification from Figma</p>
+                      )}
                     </div>
                   </div>
                   
