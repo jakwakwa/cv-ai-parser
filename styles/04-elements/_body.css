@@ -1,0 +1,16 @@
+/**
+ * Elements: Body
+ * Base body element styling
+ */
+
+body {
+  background: #374151;
+  background-color: #374151;
+  background-image: radial-gradient(
+    ellipse farthest-corner, 
+    rgba(20, 252, 252, 0.9) 20%, 
+    rgba(44, 40, 44, 0.9) 90%
+  ), url('/main-bg.jpg');
+  background-size: cover;
+  background-position: center;
+} 

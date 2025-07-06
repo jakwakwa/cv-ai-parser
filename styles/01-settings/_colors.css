@@ -1,0 +1,148 @@
+/**
+ * Settings: Colors
+ * Global color palette and design tokens
+ */
+
+:root {
+  /* Base Color System */
+  --background: 0 0% 100%;
+  --foreground: 0 0% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 3.9%;
+  --primary: 0 0% 9%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 0 0% 96.1%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 0 0% 96.1%;
+  --muted-foreground: 0 0% 45.1%;
+  --accent: 0 0% 96.1%;
+  --accent-foreground: 0 0% 9%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 89.8%;
+  --input: 0 0% 89.8%;
+  --ring: 0 0% 3.9%;
+  
+  /* Chart Colors */
+  --chart-1: 12 76% 61%;
+  --chart-2: 173 58% 39%;
+  --chart-3: 197 37% 24%;
+  --chart-4: 43 74% 66%;
+  --chart-5: 27 87% 67%;
+
+  /* Sidebar Colors */
+  --sidebar-background: 0 0% 98%;
+  --sidebar-foreground: 240 5.3% 26.1%;
+  --sidebar-primary: 240 5.9% 10%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 240 4.8% 95.9%;
+  --sidebar-accent-foreground: 240 5.9% 10%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
+
+  /* Application Color Palette */
+  --color-primary-dark: #2c3844;
+  --color-primary-darker: #25303a;
+  --color-primary-lighter: #33404e;
+  --color-primary-overlay: #5a676e20;
+  
+  --color-secondary-blue: #425fb5;
+  --color-secondary-blue-dark: #334680;
+  --color-secondary-blue-light: #455ead;
+  
+  --color-accent-teal: #0d9488;
+  --color-accent-teal-dark: #0f766e;
+  --color-accent-teal-light: #f0fdfa;
+  --color-accent-teal-bright: #1ddbcb;
+  
+  /* Text Colors */
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-text-light: #374151;
+  --color-text-muted: #a9c7f1;
+  --color-text-accent: #21dcd0;
+  --color-text-description: #b8d0c6;
+  --color-text-bright: #dbfbfa;
+  --color-text-info: #0369a1;
+  --color-text-success: #059669;
+  --color-text-special: rgb(200, 222, 246);
+  --color-text-white: white;
+  --color-text-highlight: hsl(232, 88%, 90%);
+  
+  /* Background Colors */
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f9f5f5;
+  --color-background-neutral: #e0e0e0;
+  --color-background-info: #f0f9ff;
+  --color-background-hover: #263564;
+  
+  /* Border Colors */
+  --color-border-light: #d1d5db;
+  --color-border-info: #0ea5e9;
+  --color-border-neutral: #e5ebe9;
+  --color-border-input: #cacef0;
+  --color-border-special: #2884cbc2;
+  --color-border-accent: #256ad2;
+  
+  /* Status Colors */
+  --color-success-light: #d1f4d1;
+  --color-error-bg: #fef2f2;
+  --color-error-border: #fecaca;
+  --color-error-text: #dc2626;
+  --color-error-button: #ef4444;
+  
+  /* Utility Colors */
+  --color-disabled: #9ca3af;
+  --color-spinner-track: #e5e7eb;
+  
+  /* Gradients */
+  --color-gradient-primary: linear-gradient(145deg, #28323d, #2f3c49);
+  --color-gradient-secondary: linear-gradient(145deg, #2c6097, #24346a);
+  --color-gradient-button: linear-gradient(145deg, #4058a1, #364a87);
+  
+  /* Shadows */
+  --color-shadow-primary: -20px 20px 60px var(--color-primary-darker), 20px -20px 60px var(--color-primary-lighter);
+  --color-shadow-secondary: 20px 20px 60px var(--color-secondary-blue-dark), -20px -20px 60px var(--color-secondary-blue-light);
+  --color-shadow-button: 2px 4px 40px #0316296b;
+  --color-shadow-input: inset 4px 4px 13px #4f4b4b8b, inset -4px -4px 2px #ebebeb;
+  --color-shadow-textarea: inset 7px 7px 14px #cecece, inset -7px -7px 14px #f2f2f2;
+  --color-shadow-neutral: inset 5px 5px 8px #acacac, inset -5px -5px 8px #ffffff;
+  --color-shadow-tone: 5px 5px 11px #10283e68, -5px -3px 7px #28344226;
+}
+
+.dark {
+  --background: 0 0% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 9%;
+  --secondary: 0 0% 14.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 14.9%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 0 0% 14.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 14.9%;
+  --input: 0 0% 14.9%;
+  --ring: 0 0% 83.1%;
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+  --sidebar-background: 240 5.9% 10%;
+  --sidebar-foreground: 240 4.8% 95.9%;
+  --sidebar-primary: 224.3 76.3% 48%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 240 3.7% 15.9%;
+  --sidebar-accent-foreground: 240 4.8% 95.9%;
+  --sidebar-border: 240 3.7% 15.9%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
+} 
