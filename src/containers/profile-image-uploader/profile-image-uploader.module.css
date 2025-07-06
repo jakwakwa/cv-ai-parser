@@ -232,6 +232,16 @@
     }
 }
 
+@media (max-width: 767px) {
+  .card {
+    width: 100% !important;
+    max-width: none !important;
+  }
+  .cardFooter {
+    flex-direction: column !important;
+  }
+}
+
 .skipButton {
     flex: 1;
 }

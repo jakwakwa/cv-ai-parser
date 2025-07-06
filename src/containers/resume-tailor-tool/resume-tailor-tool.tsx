@@ -279,7 +279,7 @@ const ResumeTailorTool = ({
       </Dialog>
 
       <Dialog open={showProfileUploader} onOpenChange={setShowProfileUploader}>
-        <DialogContent>
+        <DialogContent className={styles.profileDialogContent}>
           <DialogTitle className={styles.dialogTitle}>
             <CheckCircle size={24} /> Resume Tailored Successfully!
           </DialogTitle>
