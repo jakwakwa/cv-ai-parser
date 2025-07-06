@@ -372,7 +372,7 @@ const ResumeTailorTool = ({
                 <Palette size={20} />
                 Customize Colors
               </button>
-              <DialogContent>
+              <DialogContent className={styles.colorDialogContent}>
                 <VisuallyHidden.Root>
                   <DialogTitle>Choose Colors</DialogTitle>
                 </VisuallyHidden.Root>
