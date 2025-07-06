@@ -236,31 +236,32 @@ function extractAndStoreContent(text: string, layerName: string): void {
      }
    
         // Extract certifications - matching actual Figma layer names
-     if (layerLower.includes('certification-degree') || layerLower.includes('certificate-degree')) {
-       if (!figmaContentStore.certifications) figmaContentStore.certifications = [];
-       if (figmaContentStore.certifications.length === 0) {
-         figmaContentStore.certifications.push({ name: cleanText });
-       } else {
-         figmaContentStore.certifications[0].name = cleanText;
-       }
-       console.log(`Extracted certification degree: ${cleanText}`);
-     } else if (layerLower.includes('certification-school') || layerLower.includes('certificate-school')) {
-       if (!figmaContentStore.certifications) figmaContentStore.certifications = [];
-       if (figmaContentStore.certifications.length === 0) {
-         figmaContentStore.certifications.push({ issuer: cleanText });
-       } else {
-         figmaContentStore.certifications[0].issuer = cleanText;
-       }
-       console.log(`Extracted certification school: ${cleanText}`);
-     } else if (layerLower.includes('certification-year') || layerLower.includes('certificate-year')) {
-       if (!figmaContentStore.certifications) figmaContentStore.certifications = [];
-       if (figmaContentStore.certifications.length === 0) {
-         figmaContentStore.certifications.push({ year: cleanText });
-       } else {
-         figmaContentStore.certifications[0].year = cleanText;
-       }
-       console.log(`Extracted certification year: ${cleanText}`);
-     }
+      if (layerLower.includes('certification-degree') || layerLower.includes('certificate-degree')) {
+        if (!figmaContentStore.certifications) figmaContentStore.certifications = [];
+        // Start a new certification item
+        figmaContentStore.certifications.push({ name: cleanText });
+        console.log(`Extracted certification degree (new item): ${cleanText}`);
+      } else if (layerLower.includes('certification-school') || layerLower.includes('certificate-school')) {
+        if (!figmaContentStore.certifications) figmaContentStore.certifications = [];
+        if (figmaContentStore.certifications.length === 0) {
+          // No degree found first – create item then set issuer
+          figmaContentStore.certifications.push({ issuer: cleanText });
+        } else {
+          // Update the latest certification item
+          const last = figmaContentStore.certifications[figmaContentStore.certifications.length - 1];
+          last.issuer = cleanText;
+        }
+        console.log(`Extracted certification school: ${cleanText}`);
+      } else if (layerLower.includes('certification-year') || layerLower.includes('certificate-year')) {
+        if (!figmaContentStore.certifications) figmaContentStore.certifications = [];
+        if (figmaContentStore.certifications.length === 0) {
+          figmaContentStore.certifications.push({ year: cleanText });
+        } else {
+          const last = figmaContentStore.certifications[figmaContentStore.certifications.length - 1];
+          last.year = cleanText;
+        }
+        console.log(`Extracted certification year: ${cleanText}`);
+      }
 }
 
 function mapTextContent(text: string, layerName: string): string {
