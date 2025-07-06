@@ -469,3 +469,18 @@
   height: 1rem;
   accent-color: #2563eb;
 }
+
+/* Disabled state styles for method buttons inside a disabled panel */
+.disabledPanel .methodButton,
+.disabledPanel .methodButtonActive {
+  background-color: #d1d5db !important;
+  border-color: #d1d5db !important;
+  color: #6b7280 !important;
+}
+
+.disabledPanel .methodButton:hover,
+.disabledPanel .methodButtonActive:hover {
+  background-color: #d1d5db !important;
+  border-color: #d1d5db !important;
+  color: #6b7280 !important;
+}
