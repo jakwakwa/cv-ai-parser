@@ -246,6 +246,11 @@
     justify-content: center !important;
     align-items: center !important;
   }
+  .cardDescription,
+  .instructionText,
+  .uploadText {
+    text-align: center !important;
+  }
 }
 
 .skipButton {
