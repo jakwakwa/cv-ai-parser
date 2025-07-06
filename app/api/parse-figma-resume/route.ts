@@ -198,7 +198,7 @@ function extractAndStoreContent(text: string, layerName: string): void {
       if (figmaContentStore.education.length === 0) {
         figmaContentStore.education.push({ degree: cleanText });
       } else {
-        figmaContentStore.education[0].degree = cleanText;
+        figmaContentStore.education[figmaContentStore.education.length - 1].degree = cleanText;
       }
       console.log(`Extracted education degree: ${cleanText}`);
     } else if (layerLower.includes('education-school') || layerLower.includes('school') || 
@@ -207,7 +207,7 @@ function extractAndStoreContent(text: string, layerName: string): void {
       if (figmaContentStore.education.length === 0) {
         figmaContentStore.education.push({ school: cleanText });
       } else {
-        figmaContentStore.education[0].school = cleanText;
+        figmaContentStore.education[figmaContentStore.education.length - 1].school = cleanText;
       }
       console.log(`Extracted education school: ${cleanText}`);
     } else if (layerLower.includes('education-year') || layerLower.includes('year')) {
@@ -215,7 +215,7 @@ function extractAndStoreContent(text: string, layerName: string): void {
       if (figmaContentStore.education.length === 0) {
         figmaContentStore.education.push({ year: cleanText });
       } else {
-        figmaContentStore.education[0].year = cleanText;
+        figmaContentStore.education[figmaContentStore.education.length - 1].year = cleanText;
       }
       console.log(`Extracted education year: ${cleanText}`);
     }
