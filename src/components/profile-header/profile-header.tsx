@@ -19,11 +19,12 @@ const ProfileHeader = ({
     title && title.toLowerCase() !== 'professional' && title !== summary;
 
   // Check if we have a real profile image (not the default placeholder)
+  const lowerImg = (profileImage || '').toLowerCase();
   const hasProfileImage =
-    profileImage &&
-    profileImage !== '/placeholder.svg?height=200&width=200' &&
-    !profileImage.includes('placeholder') &&
-    profileImage.trim() !== '';
+    lowerImg &&
+    lowerImg.trim() !== '' &&
+    !lowerImg.includes('placeholder') &&
+    !lowerImg.includes('placehold.co');
 
   return (
     <div
