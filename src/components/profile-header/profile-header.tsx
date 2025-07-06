@@ -35,7 +35,7 @@ const ProfileHeader = ({
         <div className={styles.left}>
           {/** biome-ignore lint/performance/noImgElement: <> */}
           <img
-            src={profileImage || '/placeholder.svg'}
+            src={profileImage}
             alt="Profile"
             className={styles['profile-image']}
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
