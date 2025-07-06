@@ -447,3 +447,25 @@
   width: 100%;
   margin-top: 1rem;
 }
+
+/* Disabled state for job tailoring panel */
+.disabledPanel {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Tailor toggle styling */
+.tailorToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.tailorToggle input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #2563eb;
+}

@@ -70,6 +70,8 @@ const ResumeTailorTool = ({
   // Customization states
   const [profileImage, setProfileImage] = useState('');
   const [customColors, setCustomColors] = useState<Record<string, string>>({});
+  // Toggle to enable/disable the job tailoring panel
+  const [tailorEnabled, setTailorEnabled] = useState(false);
 
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -321,7 +323,7 @@ const ResumeTailorTool = ({
             )}
           </div>
 
-          {/* Color Customization */}
+          {/* Color Customization & Tailor Toggle */}
           <div className={styles.customizationSection}>
             <Dialog open={showColorDialog} onOpenChange={setShowColorDialog}>
               <button
@@ -342,11 +344,22 @@ const ResumeTailorTool = ({
                 />
               </DialogContent>
             </Dialog>
+
+            {/* Tailor to job spec toggle */}
+            <label className={styles.tailorToggle} htmlFor="tailor-toggle">
+              <input
+                id="tailor-toggle"
+                type="checkbox"
+                checked={tailorEnabled}
+                onChange={() => setTailorEnabled((prev) => !prev)}
+              />
+              <span>Tailor to job spec.</span>
+            </label>
           </div>
         </div>
 
         {/* Right Panel - Job Description */}
-        <div className={styles.panel}>
+        <div className={`${styles.panel} ${!tailorEnabled ? styles.disabledPanel : ''}`}>        
           <div className={styles.panelHeader}>
             <BriefcaseIcon className={styles.panelIcon} />
             <h2 className={styles.panelTitle}>Job Description</h2>
@@ -469,6 +482,7 @@ const ResumeTailorTool = ({
           onClick={handleCreateResume}
           disabled={isLoading || !uploadedFile || (jobSpecMethod === 'paste' ? !jobSpecText.trim() : !jobSpecFile)}
           className={styles.createButton}
+          variant="primary"
           size="lg"
         >
           <Wand2Icon size={20} />
