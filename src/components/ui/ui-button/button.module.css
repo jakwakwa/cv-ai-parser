@@ -19,10 +19,16 @@
     outline-offset: 2px;
 }
 
-.button:disabled {
+/* Disabled appearance overrides (place near end to ensure precedence) */
+.button:disabled,
+.button.primary:disabled,
+.button.secondary:disabled,
+.button.default:disabled,
+.button.outline:disabled {
     pointer-events: none;
-    background-color: #d1d5db; /* light grey */
-    color: #6b7280; /* darker grey text for contrast */
+    background-color: #d1d5db !important; /* light grey */
+    color: #6b7280 !important; /* darker grey */
+    border-color: #d1d5db !important;
     opacity: 1;
 }
 
