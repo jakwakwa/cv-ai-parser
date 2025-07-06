@@ -22,6 +22,18 @@ export function MainNav({ onLogoClick }: MainNavProps) {
         {/* <Icons.logo className="h-6 w-6" /> */}
         <span className={styles.brand}>AI Resume Generator</span>
       </Link>
+      
+      <nav className={styles.nav}>
+        <Link href="/upload-file" className={styles.navLink}>
+          Upload File
+        </Link>
+        <Link href="/upload-figma" className={styles.navLink}>
+          Figma Import
+        </Link>
+        <Link href="/library" className={styles.navLink}>
+          Library
+        </Link>
+      </nav>
     </div>
   );
 }

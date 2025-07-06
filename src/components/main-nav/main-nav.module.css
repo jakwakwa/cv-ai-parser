@@ -3,6 +3,8 @@
   width: 100%;
   padding-left: 1rem;
   padding-right: 1rem;
+  align-items: center;
+  gap: 2rem;
 }
 
 .link {
@@ -13,4 +15,23 @@
 .brand {
   display: inline-block;
   font-weight: 700;
+}
+
+.nav {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin-left: auto;
+}
+
+.navLink {
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: #111827;
 } 
