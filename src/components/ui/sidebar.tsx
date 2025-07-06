@@ -6,7 +6,6 @@ import { PanelLeft } from 'lucide-react';
 import * as React from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import { Separator } from '@/src/components/ui/separator';
 import { Sheet, SheetContent } from '@/src/components/ui/sheet';
@@ -17,6 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/src/components/ui/tooltip';
+import { Button } from '@/src/components/ui/ui-button/button';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;

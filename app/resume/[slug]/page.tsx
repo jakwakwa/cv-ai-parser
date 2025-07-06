@@ -6,13 +6,12 @@ import { useEffect, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import type { Resume } from '@/lib/types'; // Import the Resume type
-import { useAuth } from '@/src/components/auth-provider/AuthProvider';
-import ResumeDisplay from '@/src/components/resume-display/ResumeDisplay';
-import ResumeDisplayButtons from '@/src/components/resume-display-buttons/ResumeDisplayButtons';
-import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
-import { SiteHeader } from '@/src/components/site-header/SiteHeader';
-import { Button } from '@/src/components/ui/button';
-import styles from '../../page.module.css';
+import { useAuth } from '@/src/components/auth-provider/auth-provider';
+import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
+import { SiteHeader } from '@/src/components/site-header/site-header';
+import { Button } from '@/src/components/ui/ui-button/button';
+import ResumeDisplay from '@/src/containers/resume-display/resume-display';
+import ResumeEditor from '@/src/containers/resume-editor/resume-editor';
 
 export default function ViewResumePage() {
   const router = useRouter();
@@ -150,18 +149,18 @@ export default function ViewResumePage() {
 
   if (authLoading || loading) {
     return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loadingSpinner} />
-        <p className={styles.loadingText}>Loading Resume...</p>
+      <div className="loadingContainer">
+        <div className="loadingSpinner" />
+        <p className="loadingText">Loading Resume...</p>
       </div>
     );
   }
 
   if (isDownloading) {
     return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loadingSpinner} />
-        <p className={styles.loadingText}>Downloading PDF...</p>
+      <div className="loadingContainer">
+        <div className="loadingSpinner" />
+        <p className="loadingText">Downloading PDF...</p>
       </div>
     );
   }
@@ -218,11 +217,11 @@ export default function ViewResumePage() {
   }
 
   return (
-    <div className={styles.pageWrapper}>
+    <div className="pageWrapper">
       <SiteHeader />
 
-      <main className={styles.mainUserContainer}>
-        <div className={styles.resumeContainer}>
+      <main className="mainUserContainer">
+        <div className="resumeContainer">
           <ResumeDisplayButtons
             onDownloadPdf={handleDownloadPdf}
             onEditResume={handleEdit}
