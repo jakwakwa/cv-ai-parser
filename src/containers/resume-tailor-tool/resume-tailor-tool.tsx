@@ -11,6 +11,7 @@ import {
   Upload as FileUpIcon
 } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import ColorPicker from '@/src/components/color-picker/color-picker';
 import { Button } from '@/src/components/ui/ui-button/button';
@@ -47,6 +48,7 @@ const ResumeTailorTool = ({
   setIsLoading,
   isAuthenticated = false,
 }: ResumeTailorToolProps) => {
+  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const jobSpecFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -72,6 +74,8 @@ const ResumeTailorTool = ({
   const [customColors, setCustomColors] = useState<Record<string, string>>({});
   // Toggle to enable/disable the job tailoring panel
   const [tailorEnabled, setTailorEnabled] = useState(false);
+  // Track created resume slug for redirect
+  const [createdResumeSlug, setCreatedResumeSlug] = useState<string | null>(null);
 
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -194,6 +198,9 @@ const ResumeTailorTool = ({
       };
 
       onResumeCreated(parsedData, uploadInfo);
+      if (uploadInfo.resumeSlug) {
+        setCreatedResumeSlug(uploadInfo.resumeSlug);
+      }
       setShowProfileUploader(true);
       setError('');
     } catch (err: unknown) {
@@ -261,7 +268,13 @@ const ResumeTailorTool = ({
           </DialogDescription>
           <ProfileImageUploader onImageChange={handleProfileImageChange} />
           <Button
-            onClick={() => setShowProfileUploader(false)}
+            onClick={() => {
+              if (createdResumeSlug) {
+                router.push(`/resume/${createdResumeSlug}`);
+              } else {
+                setShowProfileUploader(false);
+              }
+            }}
             className={styles.viewResumeButton}
           >
             View Tailored Resume
