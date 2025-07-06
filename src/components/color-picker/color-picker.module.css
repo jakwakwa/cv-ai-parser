@@ -264,3 +264,12 @@
   font-size: 0.5rem;
   margin-top: 0.25rem;
 }
+
+/* Hide preview area on small mobile screens to save space */
+@media (max-width: 767px) {
+  .previewTitle,
+  .previewSimulation,
+  .previewTwoColumnLayout {
+    display: none !important;
+  }
+}
