@@ -500,3 +500,10 @@
   color: #6b7280 !important;
   outline: none !important;
 }
+
+.methodButton[disabled],
+.methodButtonActive[disabled] {
+  background: #d1d5db !important;
+  color: #6b7280 !important;
+  border-color: #d1d5db !important;
+}
