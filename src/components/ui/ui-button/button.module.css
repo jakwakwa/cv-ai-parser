@@ -1,17 +1,23 @@
-/* Base button styles */
+/**
+ * Component: Button
+ * Refactored to use design tokens following ITCSS architecture
+ */
+
+/* Base button styles using design tokens */
 .button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
     white-space: nowrap;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    border-radius: var(--border-radius-small);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    transition: var(--transition-fast);
     outline: none;
     cursor: pointer;
     border: none;
+    font-family: var(--font-family-base);
 }
 
 .button:focus-visible {
@@ -19,36 +25,69 @@
     outline-offset: 2px;
 }
 
-/* Disabled appearance overrides (place near end to ensure precedence) */
-.button:disabled,
-.button.primary:disabled,
-.button.secondary:disabled,
-.button.default:disabled,
-.button.outline:disabled {
-    pointer-events: none;
-    background-color: #d1d5db !important; /* light grey */
-    color: #6b7280 !important; /* darker grey */
-    border-color: #d1d5db !important;
-    opacity: 1;
-}
-
+/* Icon styles */
 .button svg {
     pointer-events: none;
-    width: 1rem;
-    height: 1rem;
+    width: var(--spacing-md);
+    height: var(--spacing-md);
     flex-shrink: 0;
 }
 
-
-/* Variant styles */
+/* Size variants using design tokens */
 .button.default {
-    background-color: #a77046;
-    color: white;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    height: 2.5rem;
+    padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.button.sm {
+    height: 2.25rem;
+    border-radius: var(--border-radius-small);
+    padding: 0 var(--spacing-sm);
+    font-size: var(--font-size-xs);
+}
+
+.button.lg {
+    height: 2.75rem;
+    border-radius: var(--border-radius-small);
+    padding: 0 var(--spacing-xl);
+    font-size: var(--font-size-lg);
+}
+
+.button.icon {
+    height: 2.5rem;
+    width: 2.5rem;
+    padding: 0;
+}
+
+/* Color variants using design tokens */
+.button.primary {
+    background-color: var(--color-accent-teal);
+    color: var(--color-background-primary);
+}
+
+.button.primary:hover {
+    background-color: var(--color-accent-teal-dark);
+    color: var(--color-background-primary);
+}
+
+.button.secondary {
+    background-color: var(--color-secondary-blue);
+    color: var(--color-background-primary);
+    border: 1px solid var(--color-border-light);
+}
+
+.button.secondary:hover {
+    background-color: var(--color-secondary-blue-dark);
+}
+
+.button.default {
+    background-color: var(--color-primary-dark);
+    color: var(--color-background-primary);
+    border: 1px solid var(--color-border-light);
 }
 
 .button.default:hover {
-    background-color: #8e5d39;
+    background-color: var(--color-primary-darker);
 }
 
 .button.destructive {
@@ -63,6 +102,7 @@
 .button.outline {
     border: 1px solid hsl(var(--input));
     background-color: hsl(var(--background));
+    color: var(--color-text-primary);
 }
 
 .button.outline:hover {
@@ -70,78 +110,39 @@
     color: hsl(var(--accent-foreground));
 }
 
-.button.secondary {
-    background-color: #5450f1;
-    color: white;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.button.secondary:hover {
-    background-color: #3f3bc2;
-}
-
 .button.ghost {
-    background-color: hsl(var(--off-white));
-    color: hsl(var(--primary));
+    background-color: transparent;
+    color: var(--color-text-primary);
 }
 
 .button.ghost:hover {
-    background: hsl(var(--teal-main));
-    color: hsl(var(--primary));
+    background-color: var(--color-accent-teal-light);
+    color: var(--color-accent-teal);
 }
 
 .button.link {
-    color: hsl(var(--primary));
+    color: var(--color-accent-teal);
     text-decoration: underline;
     text-underline-offset: 4px;
+    background: transparent;
 }
 
 .button.link:hover {
     text-decoration: underline;
+    color: var(--color-accent-teal-dark);
 }
 
-/* Size styles */
-.button.default {
-    height: 2.5rem;
-    padding: 0.5rem 1rem;
-}
-
-.button.sm {
-    height: 2.25rem;
-    border-radius: 0.375rem;
-    padding: 0 0.75rem;
-}
-
-.button.lg {
-    height: 2.75rem;
-    border-radius: 0.375rem;
-    padding: 0 2rem;
-}
-
-.button.icon {
-    height: 2.5rem;
-    width: 2.5rem;
-}
-
-.button.primary {
-    background-color: #116964;
-    color: #faf4ec;
-}
-
-.button.primary:hover {
-    background-color: #1f3736;
-    color: #faf4ec;
-}
-
-/* Final disabled override to ensure highest precedence */
+/* Disabled state using design tokens */
 .button:disabled,
 .button.primary:disabled,
 .button.secondary:disabled,
 .button.default:disabled,
 .button.outline:disabled,
-.button.ghost:disabled {
+.button.ghost:disabled,
+.button.link:disabled {
     pointer-events: none;
-    background: #d1d5db !important;
-    color: #6b7280 !important;
-    border-color: #d1d5db !important;
+    background-color: var(--color-disabled) !important;
+    color: var(--color-text-secondary) !important;
+    border-color: var(--color-disabled) !important;
+    opacity: 0.6;
 }
