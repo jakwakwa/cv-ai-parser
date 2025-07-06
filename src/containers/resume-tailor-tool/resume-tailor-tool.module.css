@@ -541,3 +541,10 @@
 .disabledPanel .toneButton .toneName {
   color: #6b7280 !important;
 }
+
+/* Mobile: hide disabled job-spec panel entirely */
+@media (max-width: 767px) {
+  .disabledPanel {
+    display: none !important;
+  }
+}
