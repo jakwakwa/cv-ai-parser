@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
+import { Check, Download, Eye, FileText } from 'lucide-react';
 import type React from 'react';
-import { useState, useCallback } from 'react';
-import { Eye, FileText, Download, Check } from 'lucide-react';
-import { Button } from '@/src/components/ui/button';
+import { useCallback, useState } from 'react';
+import { Button } from '@/src/components/ui/ui-button/button';
 import { FigmaComponentPreview } from './FigmaComponentPreview';
 import styles from './FigmaPreview.module.css';
 
@@ -20,7 +20,7 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
   componentName,
   jsxCode,
   cssCode,
-  rawFigma
+  rawFigma,
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('preview');
   const [copied, setCopied] = useState<string | null>(null);
@@ -49,38 +49,41 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
     }
   }, []);
 
-  const handleDownload = useCallback(async (content: string, filename: string) => {
-    if (!content.trim()) {
-      setCopyError('No content to download');
-      setTimeout(() => setCopyError(null), 3000);
-      return;
-    }
+  const handleDownload = useCallback(
+    async (content: string, filename: string) => {
+      if (!content.trim()) {
+        setCopyError('No content to download');
+        setTimeout(() => setCopyError(null), 3000);
+        return;
+      }
 
-    setIsDownloading(filename);
-    setCopyError(null);
+      setIsDownloading(filename);
+      setCopyError(null);
 
-    try {
-      // Add a small delay to show loading state
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      const blob = new Blob([content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      a.style.display = 'none';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error('Failed to download:', err);
-      setCopyError('Failed to download file');
-      setTimeout(() => setCopyError(null), 3000);
-    } finally {
-      setIsDownloading(null);
-    }
-  }, []);
+      try {
+        // Add a small delay to show loading state
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        console.error('Failed to download:', err);
+        setCopyError('Failed to download file');
+        setTimeout(() => setCopyError(null), 3000);
+      } finally {
+        setIsDownloading(null);
+      }
+    },
+    []
+  );
 
   const handleTabChange = useCallback((tab: TabType) => {
     setActiveTab(tab);
@@ -93,7 +96,8 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
         <div className={styles.header}>
           <h3 className={styles.title}>Error: Invalid Component Data</h3>
           <p className={styles.subtitle}>
-            Missing required component information. Please try generating the component again.
+            Missing required component information. Please try generating the
+            component again.
           </p>
         </div>
       </div>
@@ -139,11 +143,7 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
         </button>
       </div>
 
-      {copyError && (
-        <div className={styles.errorMessage}>
-          {copyError}
-        </div>
-      )}
+      {copyError && <div className={styles.errorMessage}>{copyError}</div>}
 
       <div className={styles.content}>
         {activeTab === 'preview' && (
@@ -165,18 +165,26 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
                   onClick={() => handleCopy(jsxCode, 'jsx')}
                   className={styles.actionButton}
                 >
-                  {copied === 'jsx' ? <Check className={styles.actionIcon} /> : <FileText className={styles.actionIcon} />}
+                  {copied === 'jsx' ? (
+                    <Check className={styles.actionIcon} />
+                  ) : (
+                    <FileText className={styles.actionIcon} />
+                  )}
                   {copied === 'jsx' ? 'Copied!' : 'Copy'}
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleDownload(jsxCode, `${componentName}.tsx`)}
+                  onClick={() =>
+                    handleDownload(jsxCode, `${componentName}.tsx`)
+                  }
                   className={styles.actionButton}
                   disabled={isDownloading === `${componentName}.tsx`}
                 >
                   <Download className={styles.actionIcon} />
-                  {isDownloading === `${componentName}.tsx` ? 'Downloading...' : 'Download'}
+                  {isDownloading === `${componentName}.tsx`
+                    ? 'Downloading...'
+                    : 'Download'}
                 </Button>
               </div>
             </div>
@@ -189,7 +197,9 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
         {activeTab === 'css' && (
           <div className={styles.codeContainer}>
             <div className={styles.codeHeader}>
-              <span className={styles.codeTitle}>{componentName}.module.css</span>
+              <span className={styles.codeTitle}>
+                {componentName}.module.css
+              </span>
               <div className={styles.codeActions}>
                 <Button
                   variant="outline"
@@ -197,18 +207,26 @@ const FigmaPreview: React.FC<FigmaPreviewProps> = ({
                   onClick={() => handleCopy(cssCode, 'css')}
                   className={styles.actionButton}
                 >
-                  {copied === 'css' ? <Check className={styles.actionIcon} /> : <FileText className={styles.actionIcon} />}
+                  {copied === 'css' ? (
+                    <Check className={styles.actionIcon} />
+                  ) : (
+                    <FileText className={styles.actionIcon} />
+                  )}
                   {copied === 'css' ? 'Copied!' : 'Copy'}
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleDownload(cssCode, `${componentName}.module.css`)}
+                  onClick={() =>
+                    handleDownload(cssCode, `${componentName}.module.css`)
+                  }
                   className={styles.actionButton}
                   disabled={isDownloading === `${componentName}.module.css`}
                 >
                   <Download className={styles.actionIcon} />
-                  {isDownloading === `${componentName}.module.css` ? 'Downloading...' : 'Download'}
+                  {isDownloading === `${componentName}.module.css`
+                    ? 'Downloading...'
+                    : 'Download'}
                 </Button>
               </div>
             </div>
