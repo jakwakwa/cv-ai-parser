@@ -707,18 +707,3 @@ body {
     padding: 2rem;
   }
 }
-
-/* Ensure desktop resume layout when printing or downloading to PDF */
-@media print {
-  .resumeGrid {
-    grid-template-columns: 1fr 2fr !important;
-  }
-  .resumeSidebar {
-    grid-column: span 1 !important;
-    padding: 2rem !important;
-  }
-  .resumeMainContent {
-    grid-column: span 1 !important;
-    padding: 2rem !important;
-  }
-}
