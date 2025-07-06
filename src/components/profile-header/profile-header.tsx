@@ -38,11 +38,6 @@ const ProfileHeader = ({
             src={profileImage}
             alt="Profile"
             className={styles['profile-image']}
-            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-              (e.target as HTMLImageElement).onerror = null;
-              (e.target as HTMLImageElement).src =
-                'https://placehold.co/96x96/6b7280/FFFFFF?text=Profile';
-            }}
           />
         </div>
       )}
