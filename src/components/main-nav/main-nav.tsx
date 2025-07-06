@@ -23,10 +23,18 @@ export function MainNav({ onLogoClick }: MainNavProps) {
         <span className={styles.brand}>AI Resume Generator</span>
       </Link>
 
-      {/* Public docs */}
-      <Link href="/docs" className={styles.docsLink} onClick={() => setAuthModalOpen(false)}>
-        Docs
-      </Link>
+      <nav className={styles.navigation}>
+        {/* Tools dropdown or links */}
+        <Link href="/tools/tailor" className={styles.navLink} onClick={() => setAuthModalOpen(false)}>
+          Resume Tailor
+        </Link>
+        <Link href="/tools/figma-to-resume" className={styles.navLink} onClick={() => setAuthModalOpen(false)}>
+          Figma to Resume
+        </Link>
+        <Link href="/docs" className={styles.navLink} onClick={() => setAuthModalOpen(false)}>
+          Docs
+        </Link>
+      </nav>
     </div>
   );
 }

@@ -1,0 +1,46 @@
+.toolsLayout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #fafafa;
+}
+
+.toolsMain {
+  flex: 1;
+  width: 100%;
+  max-width: 100%;
+  padding: 2rem 1rem;
+  margin: 0 auto;
+}
+
+/* Responsive breakpoints for maximum width utilization */
+@media (min-width: 640px) {
+  .toolsMain {
+    padding: 2rem 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .toolsMain {
+    padding: 2.5rem 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .toolsMain {
+    padding: 3rem 3rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .toolsMain {
+    padding: 3rem 4rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .toolsMain {
+    max-width: 1536px;
+    padding: 3rem 4rem;
+  }
+}
