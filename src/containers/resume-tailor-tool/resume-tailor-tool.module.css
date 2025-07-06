@@ -513,3 +513,11 @@
   color: #6b7280 !important;
   border-color: #d1d5db !important;
 }
+
+.disabledPanel .inputMethodToggle .methodButton,
+.disabledPanel .inputMethodToggle .methodButtonActive,
+.disabledPanel .inputMethodToggle button:disabled {
+  background: #d1d5db !important;
+  border-color: #d1d5db !important;
+  color: #6b7280 !important;
+}
