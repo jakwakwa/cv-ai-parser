@@ -521,3 +521,10 @@
   border-color: #d1d5db !important;
   color: #6b7280 !important;
 }
+
+/* FINAL override for disabled method buttons */
+.disabledPanel > .inputMethodToggle > button[disabled] {
+  background: #d1d5db !important;
+  border-color: #d1d5db !important;
+  color: #6b7280 !important;
+}
