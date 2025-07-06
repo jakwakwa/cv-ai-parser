@@ -57,17 +57,28 @@ const figmaContentStore: {
   }>;
 } = {};
 
-function extractAllTextFromNode(node: FigmaNode): void {
+function extractAllTextFromNode(node: FigmaNode, depth = 0): void {
+  const indent = '  '.repeat(depth);
+  console.log(`${indent}Processing node: "${node.name}" (type: ${node.type})`);
+  
   // Extract text from current node if it's a TEXT node
-  if (node.type === 'TEXT' && node.characters) {
-    extractAndStoreContent(node.characters, node.name);
+  if (node.type === 'TEXT') {
+    console.log(`${indent}Found TEXT node with characters:`, node.characters);
+    if (node.characters && node.characters.trim()) {
+      extractAndStoreContent(node.characters, node.name);
+    } else {
+      console.log(`${indent}TEXT node has no characters or empty text`);
+    }
   }
   
   // Recursively extract from children
-  if (node.children) {
+  if (node.children && node.children.length > 0) {
+    console.log(`${indent}Node has ${node.children.length} children`);
     for (const child of node.children) {
-      extractAllTextFromNode(child);
+      extractAllTextFromNode(child, depth + 1);
     }
+  } else {
+    console.log(`${indent}Node has no children`);
   }
 }
 
@@ -80,51 +91,7 @@ function extractAndStoreContent(text: string, layerName: string): void {
   
   console.log('Extracting from layer "' + layerName + '": "' + cleanText + '"'); // Debug log
   
-  // Extract name from CURRICULUM VITAE text
-  if (layerLower.includes('summary-name') && cleanText.includes('CURRICULUM VITAE')) {
-    const lines = cleanText.split('\n').map(line => line.trim()).filter(line => line);
-    if (lines.length > 1) {
-      figmaContentStore.name = lines[1]; // Second line should be the name
-      console.log(`Extracted name: ${figmaContentStore.name}`);
-    }
-  }
-  
-  // Extract summary content
-  if (layerLower.includes('summary-content') && cleanText.length > 50) {
-    figmaContentStore.summary = cleanText;
-    console.log(`Extracted summary: ${cleanText.substring(0, 100)}...`);
-  }
-  
-  // Extract contact information
-  if (layerLower.includes('contact') && cleanText.includes('@')) {
-    if (!figmaContentStore.contact) figmaContentStore.contact = {};
-    figmaContentStore.contact.email = cleanText;
-    console.log(`Extracted email: ${cleanText}`);
-  }
-  if (layerLower.includes('contact') && /[\+\(]?\d[\d\s\-\(\)]{8,}/.test(cleanText)) {
-    if (!figmaContentStore.contact) figmaContentStore.contact = {};
-    figmaContentStore.contact.phone = cleanText;
-    console.log(`Extracted phone: ${cleanText}`);
-  }
-  if (layerLower.includes('contact') && !cleanText.includes('@') && !/[\+\(]?\d[\d\s\-\(\)]{8,}/.test(cleanText) && cleanText.length > 3) {
-    if (!figmaContentStore.contact) figmaContentStore.contact = {};
-    figmaContentStore.contact.location = cleanText;
-    console.log(`Extracted location: ${cleanText}`);
-  }
-  
-  // Extract any text that looks like a name (from any layer)
-  if (!figmaContentStore.name && cleanText.includes('JOHN DOE')) {
-    figmaContentStore.name = 'JOHN DOE';
-    console.log(`Extracted name from any layer: JOHN DOE`);
-  }
-  
-  // Extract any long text that looks like a summary
-  if (!figmaContentStore.summary && cleanText.startsWith('I am') && cleanText.length > 100) {
-    figmaContentStore.summary = cleanText;
-    console.log(`Extracted summary from any layer: ${cleanText.substring(0, 100)}...`);
-  }
-  
-  // Store all text content for debugging
+  // Store all text content for debugging and fallback
   if (!figmaContentStore.allTexts) {
     figmaContentStore.allTexts = [];
   }
@@ -132,6 +99,121 @@ function extractAndStoreContent(text: string, layerName: string): void {
     layer: layerName,
     text: cleanText
   });
+  
+  // Enhanced name extraction patterns
+  const namePatterns = [
+    /^[A-Z][a-z]+ [A-Z][a-z]+$/,  // First Last
+    /^[A-Z][a-z]+ [A-Z]\. [A-Z][a-z]+$/,  // First M. Last
+    /^[A-Z][a-z]+ [A-Z][a-z]+ [A-Z][a-z]+$/,  // First Middle Last
+    /^[A-Z\s]+$/  // ALL CAPS names like "JOHN DOE"
+  ];
+  
+  // Extract name from CURRICULUM VITAE text or any layer with name patterns
+  if (layerLower.includes('summary-name') && cleanText.includes('CURRICULUM VITAE')) {
+    const lines = cleanText.split('\n').map(line => line.trim()).filter(line => line);
+    if (lines.length > 1) {
+      figmaContentStore.name = lines[1]; // Second line should be the name
+      console.log(`Extracted name from CV: ${figmaContentStore.name}`);
+    }
+  } else if (!figmaContentStore.name && namePatterns.some(pattern => pattern.test(cleanText))) {
+    figmaContentStore.name = cleanText;
+    console.log(`Extracted name from pattern: ${cleanText}`);
+  } else if (!figmaContentStore.name && (layerLower.includes('name') || layerLower.includes('title'))) {
+    figmaContentStore.name = cleanText;
+    console.log(`Extracted name from layer name: ${cleanText}`);
+  }
+  
+  // Extract summary content - be more flexible
+  if (layerLower.includes('summary-content') && cleanText.length > 50) {
+    figmaContentStore.summary = cleanText;
+    console.log(`Extracted summary from specific layer: ${cleanText.substring(0, 100)}...`);
+  } else if (!figmaContentStore.summary && cleanText.length > 100 && 
+             (cleanText.includes('I am') || cleanText.includes('experienced') || 
+              cleanText.includes('professional') || cleanText.includes('specialize') ||
+              cleanText.includes('passionate') || cleanText.includes('dedicated'))) {
+    figmaContentStore.summary = cleanText;
+    console.log(`Extracted summary from content pattern: ${cleanText.substring(0, 100)}...`);
+  }
+  
+  // Extract contact information with better patterns
+  const emailPattern = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/;
+  const phonePattern = /[\+\(]?\d[\d\s\-\(\)]{8,}/;
+  
+  if (cleanText.match(emailPattern)) {
+    if (!figmaContentStore.contact) figmaContentStore.contact = {};
+    figmaContentStore.contact.email = cleanText.match(emailPattern)?.[0] || cleanText;
+    console.log(`Extracted email: ${figmaContentStore.contact.email}`);
+  } else if (cleanText.match(phonePattern)) {
+    if (!figmaContentStore.contact) figmaContentStore.contact = {};
+    figmaContentStore.contact.phone = cleanText.match(phonePattern)?.[0] || cleanText;
+    console.log(`Extracted phone: ${figmaContentStore.contact.phone}`);
+  } else if (layerLower.includes('contact') && !cleanText.includes('@') && 
+             !phonePattern.test(cleanText) && cleanText.length > 3) {
+    if (!figmaContentStore.contact) figmaContentStore.contact = {};
+    figmaContentStore.contact.location = cleanText;
+    console.log(`Extracted location: ${cleanText}`);
+  }
+  
+  // Extract experience information
+  if (layerLower.includes('exp-title') || layerLower.includes('job-title') || 
+      layerLower.includes('position')) {
+    if (!figmaContentStore.experience) figmaContentStore.experience = [];
+    if (figmaContentStore.experience.length === 0) {
+      figmaContentStore.experience.push({ position: cleanText });
+    } else {
+      figmaContentStore.experience[0].position = cleanText;
+    }
+    console.log(`Extracted job title: ${cleanText}`);
+  } else if (layerLower.includes('exp-company') || layerLower.includes('company')) {
+    if (!figmaContentStore.experience) figmaContentStore.experience = [];
+    if (figmaContentStore.experience.length === 0) {
+      figmaContentStore.experience.push({ company: cleanText });
+    } else {
+      figmaContentStore.experience[0].company = cleanText;
+    }
+    console.log(`Extracted company: ${cleanText}`);
+  } else if (layerLower.includes('exp-period') || layerLower.includes('period') || 
+             layerLower.includes('date')) {
+    if (!figmaContentStore.experience) figmaContentStore.experience = [];
+    if (figmaContentStore.experience.length === 0) {
+      figmaContentStore.experience.push({ period: cleanText });
+    } else {
+      figmaContentStore.experience[0].period = cleanText;
+    }
+    console.log(`Extracted period: ${cleanText}`);
+  } else if (layerLower.includes('exp-desc') || layerLower.includes('description')) {
+    if (!figmaContentStore.experience) figmaContentStore.experience = [];
+    if (figmaContentStore.experience.length === 0) {
+      figmaContentStore.experience.push({ description: cleanText });
+    } else {
+      figmaContentStore.experience[0].description = cleanText;
+    }
+    console.log(`Extracted job description: ${cleanText.substring(0, 100)}...`);
+  }
+  
+     // Extract education information
+   if (layerLower.includes('education') || layerLower.includes('degree') || 
+       layerLower.includes('school') || layerLower.includes('university')) {
+     if (!figmaContentStore.education) figmaContentStore.education = [];
+     figmaContentStore.education.push({ degree: cleanText });
+     console.log(`Extracted education: ${cleanText}`);
+   }
+   
+   // Extract skills
+   if (layerLower.includes('skill') && !layerLower.includes('skills-list')) {
+     if (!figmaContentStore.skills) figmaContentStore.skills = [];
+     // Split by common separators
+     const skills = cleanText.split(/[,•\n\r]+/).map(s => s.trim()).filter(s => s);
+     figmaContentStore.skills.push(...skills);
+     console.log(`Extracted skills: ${skills.join(', ')}`);
+   }
+   
+   // Extract certifications
+   if (layerLower.includes('certificate') || layerLower.includes('certification')) {
+     if (!figmaContentStore.certifications) figmaContentStore.certifications = [];
+     figmaContentStore.certifications.push({ name: cleanText });
+     console.log(`Extracted certification: ${cleanText}`);
+   }
 }
 
 function mapTextContent(text: string, layerName: string): string {
@@ -140,7 +222,10 @@ function mapTextContent(text: string, layerName: string): string {
   
   // Map based on layer names from Figma structure (content already extracted in first pass)
   if (layerLower.includes('summary-name')) {
-    // Extract name from Figma text and use it as fallback
+    // Use extracted name or fallback to Figma text
+    if (figmaContentStore.name) {
+      return `{resume.name || "${figmaContentStore.name}"}`;
+    }
     if (text.includes('CURRICULUM VITAE')) {
       const lines = text.split('\n').map(line => line.trim()).filter(line => line);
       if (lines.length > 1) {
@@ -151,7 +236,11 @@ function mapTextContent(text: string, layerName: string): string {
   }
   
   if (layerLower.includes('summary-text') || layerLower.includes('summary-content')) {
-    // Use actual Figma text as fallback
+    // Use extracted summary or fallback to Figma text
+    if (figmaContentStore.summary) {
+      const escapedText = figmaContentStore.summary.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+      return `{resume.summary || \`${escapedText}\`}`;
+    }
     if (text.length > 20) {
       const escapedText = text.replace(/`/g, '\\`').replace(/\$/g, '\\$');
       return `{resume.summary || \`${escapedText}\`}`;
@@ -160,27 +249,35 @@ function mapTextContent(text: string, layerName: string): string {
   }
   
   if (layerLower.includes('exp-title') || layerLower.includes('job-title')) {
-    return '{resume.experience?.[0]?.position || "Position"}';
+    const extractedPosition = figmaContentStore.experience?.[0]?.position || text;
+    return `{resume.experience?.[0]?.position || "${extractedPosition}"}`;
   }
   if (layerLower.includes('exp-company') || layerLower.includes('company')) {
-    return '{resume.experience?.[0]?.company || "Company"}';
+    const extractedCompany = figmaContentStore.experience?.[0]?.company || text;
+    return `{resume.experience?.[0]?.company || "${extractedCompany}"}`;
   }
   if (layerLower.includes('exp-period') || layerLower.includes('period')) {
-    return '{resume.experience?.[0]?.startDate && resume.experience?.[0]?.endDate ? `${resume.experience[0].startDate} - ${resume.experience[0].endDate}` : "Period"}';
+    const extractedPeriod = figmaContentStore.experience?.[0]?.period || text;
+    return `{resume.experience?.[0]?.startDate && resume.experience?.[0]?.endDate ? \`\${resume.experience[0].startDate} - \${resume.experience[0].endDate}\` : "${extractedPeriod}"}`;
   }
   if (layerLower.includes('exp-desc') || layerLower.includes('description')) {
-    return '{resume.experience?.[0]?.description || "Job description"}';
+    const extractedDescription = figmaContentStore.experience?.[0]?.description || text;
+    const escapedDesc = extractedDescription.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+    return `{resume.experience?.[0]?.description || \`${escapedDesc}\`}`;
   }
   
-  // Contact fields with Figma content as fallback
+  // Contact fields with extracted data as fallback
   if (layerLower.includes('contact-email') || (layerLower.includes('contact') && text.includes('@'))) {
-    return `{resume.contact?.email || "${text}"}`;
+    const extractedEmail = figmaContentStore.contact?.email || text;
+    return `{resume.contact?.email || "${extractedEmail}"}`;
   }
   if (layerLower.includes('contact-phone') || (layerLower.includes('contact') && /[\+\(]?\d[\d\s\-\(\)]{8,}/.test(text))) {
-    return `{resume.contact?.phone || "${text}"}`;
+    const extractedPhone = figmaContentStore.contact?.phone || text;
+    return `{resume.contact?.phone || "${extractedPhone}"}`;
   }
   if (layerLower.includes('contact-location') || (layerLower.includes('contact') && !text.includes('@') && !/[\+\(]?\d[\d\s\-\(\)]{8,}/.test(text))) {
-    return `{resume.contact?.location || "${text}"}`;
+    const extractedLocation = figmaContentStore.contact?.location || text;
+    return `{resume.contact?.location || "${extractedLocation}"}`;
   }
   
   if (layerLower.includes('education-degree') || layerLower.includes('degree')) {
@@ -1071,7 +1168,19 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
     // First pass: Extract all text content from the Figma tree
     console.log('Starting text extraction from Figma node tree...');
     extractAllTextFromNode(firstNode);
-    console.log('Extracted content store:', figmaContentStore);
+    
+    console.log('=== FIGMA CONTENT EXTRACTION SUMMARY ===');
+    console.log('Extracted Name:', figmaContentStore.name || 'NOT FOUND');
+    console.log('Extracted Summary:', figmaContentStore.summary ? figmaContentStore.summary.substring(0, 100) + '...' : 'NOT FOUND');
+    console.log('Extracted Contact:', figmaContentStore.contact || 'NOT FOUND');
+    console.log('Extracted Experience:', figmaContentStore.experience || 'NOT FOUND');
+    console.log('Extracted Education:', figmaContentStore.education || 'NOT FOUND');
+    console.log('Extracted Skills:', figmaContentStore.skills || 'NOT FOUND');
+    console.log('Extracted Certifications:', figmaContentStore.certifications || 'NOT FOUND');
+    console.log('Total text nodes found:', figmaContentStore.allTexts?.length || 0);
+    console.log('=== END EXTRACTION SUMMARY ===');
+    
+    console.log('Full extracted content store:', JSON.stringify(figmaContentStore, null, 2));
     
     const jsxBody = nodeToJsx(firstNode, undefined);
     
