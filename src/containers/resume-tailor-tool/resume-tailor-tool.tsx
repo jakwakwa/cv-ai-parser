@@ -287,9 +287,11 @@ const ResumeTailorTool = ({
             Your resume has been tailored to the job description. Optionally upload 
             a profile image or proceed to view your resume.
           </DialogDescription>
-          <ProfileImageUploader onImageChange={handleProfileImageChange} />
-          <Button
-            onClick={() => {
+          <ProfileImageUploader
+            onImageChange={handleProfileImageChange}
+            showPrompt={true}
+            onSkip={() => {
+              // skip behaves like previous view resume
               if (createdResumeSlug) {
                 router.push(`/resume/${createdResumeSlug}`);
               } else {
@@ -297,10 +299,16 @@ const ResumeTailorTool = ({
                 setViewLocalResume(true);
               }
             }}
-            className={styles.viewResumeButton}
-          >
-            View Tailored Resume
-          </Button>
+            onComplete={() => {
+              // after selecting image or continue, go to view resume
+              setShowProfileUploader(false);
+              if (createdResumeSlug) {
+                router.push(`/resume/${createdResumeSlug}`);
+              } else {
+                setViewLocalResume(true);
+              }
+            }}
+          />
         </DialogContent>
       </Dialog>
 
