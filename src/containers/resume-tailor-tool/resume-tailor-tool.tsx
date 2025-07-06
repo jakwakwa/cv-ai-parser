@@ -1,0 +1,482 @@
+'use client';
+
+import {
+  AlertTriangle,
+  CheckCircle,
+  FileText,
+  Upload,
+  Palette,
+  Briefcase,
+  Wand2,
+  FileUp
+} from 'lucide-react';
+import { useRef, useState } from 'react';
+import type { ParsedResume } from '@/lib/resume-parser/schema';
+import ColorPicker from '@/src/components/color-picker/color-picker';
+import { Button } from '@/src/components/ui/ui-button/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '@/src/components/ui/dialog';
+import ProfileImageUploader from '@/src/containers/profile-image-uploader/profile-image-uploader';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import styles from './resume-tailor-tool.module.css';
+
+interface ParseInfo {
+  resumeId?: string;
+  resumeSlug?: string;
+  method: string;
+  confidence: number;
+  filename: string;
+  fileType: string;
+  fileSize: number;
+}
+
+interface ResumeTailorToolProps {
+  onResumeCreated: (data: ParsedResume, info: ParseInfo) => void;
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+  isAuthenticated?: boolean;
+}
+
+const ResumeTailorTool = ({
+  onResumeCreated,
+  isLoading,
+  setIsLoading,
+  isAuthenticated = false,
+}: ResumeTailorToolProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const jobSpecFileInputRef = useRef<HTMLInputElement>(null);
+
+  // File upload states
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [error, setError] = useState('');
+  
+  // Job tailoring states
+  const [jobSpecMethod, setJobSpecMethod] = useState<'paste' | 'upload'>('paste');
+  const [jobSpecText, setJobSpecText] = useState('');
+  const [jobSpecFile, setJobSpecFile] = useState<File | null>(null);
+  const [tone, setTone] = useState<'Formal' | 'Neutral' | 'Creative'>('Neutral');
+  const [extraPrompt, setExtraPrompt] = useState('');
+  
+  // UI states
+  const [showProfileUploader, setShowProfileUploader] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [modalErrorMessage, setModalErrorMessage] = useState('');
+  const [showColorDialog, setShowColorDialog] = useState(false);
+  
+  // Customization states
+  const [profileImage, setProfileImage] = useState('');
+  const [customColors, setCustomColors] = useState<Record<string, string>>({});
+
+  const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileSelection(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleFileSelection = (file: File) => {
+    if (file.size > 10 * 1024 * 1024) {
+      setError('File size must be less than 10MB');
+      return;
+    }
+    
+    const fileType = file.type;
+    if (!['application/pdf', 'text/plain'].includes(fileType)) {
+      setError('Please upload a .txt or .pdf file');
+      return;
+    }
+    
+    setUploadedFile(file);
+    setError('');
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      handleFileSelection(e.target.files[0]);
+    }
+  };
+
+  const handleJobSpecFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setJobSpecFile(e.target.files[0]);
+    }
+  };
+
+  const handleCreateResume = async () => {
+    if (!uploadedFile) {
+      setError('Please upload a resume file');
+      return;
+    }
+
+    // Validation for job specification
+    if (jobSpecMethod === 'paste' && !jobSpecText.trim()) {
+      setError('Please provide a job description');
+      return;
+    }
+    
+    if (jobSpecMethod === 'upload' && !jobSpecFile) {
+      setError('Please upload a job description file');
+      return;
+    }
+
+    if (jobSpecText.length > 4000) {
+      setError(`Job description is too long (${jobSpecText.length}/4000 characters)`);
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+
+    const formData = new FormData();
+    formData.append('file', uploadedFile);
+    formData.append('isAuthenticated', String(isAuthenticated));
+    
+    if (profileImage) {
+      formData.append('profileImage', profileImage);
+    }
+    
+    if (customColors && Object.keys(customColors).length > 0) {
+      formData.append('customColors', JSON.stringify(customColors));
+    }
+
+    // Add job tailoring fields
+    formData.append('enableJobTailoring', 'true');
+    formData.append('jobSpecMethod', jobSpecMethod);
+    
+    if (jobSpecMethod === 'paste') {
+      formData.append('jobSpecText', jobSpecText);
+    } else if (jobSpecFile) {
+      formData.append('jobSpecFile', jobSpecFile);
+    }
+    
+    formData.append('tone', tone);
+    formData.append('extraPrompt', extraPrompt);
+
+    try {
+      const response = await fetch('/api/parse-resume-enhanced', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        if (response.status === 401) {
+          throw new Error('Authentication required. Please sign in to continue.');
+        }
+        throw new Error(errorData.error || 'Failed to parse resume');
+      }
+
+      const result = await response.json();
+      if (result.error) {
+        throw new Error(result.error || 'Parsing failed.');
+      }
+
+      const parsedData: ParsedResume = result.data;
+      const uploadInfo: ParseInfo = {
+        ...result.meta,
+        fileType: uploadedFile.type,
+        fileSize: uploadedFile.size,
+      };
+
+      onResumeCreated(parsedData, uploadInfo);
+      setShowProfileUploader(true);
+      setError('');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
+      setModalErrorMessage(errorMessage);
+      setShowErrorModal(true);
+      setError('');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleProfileImageChange = (imageUrl: string) => {
+    setProfileImage(imageUrl);
+  };
+
+  const handleColorsChange = (colors: Record<string, string>) => {
+    setCustomColors(colors);
+  };
+
+  const handleRemoveFile = () => {
+    setUploadedFile(null);
+    setError('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className={styles.loadingState}>
+        <div className={styles.loadingCard}>
+          <div className={styles.loadingSpinner} />
+          <p className={styles.loadingTitle}>Creating your tailored resume...</p>
+          <p className={styles.loadingSubtitle}>
+            AI is analyzing the job description and optimizing your resume
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.container}>
+      <Dialog open={showErrorModal} onOpenChange={setShowErrorModal}>
+        <DialogContent>
+          <DialogTitle className={styles.errorTitle}>
+            <AlertTriangle size={24} /> Error
+          </DialogTitle>
+          <DialogDescription className={styles.errorDescription}>
+            {modalErrorMessage}
+          </DialogDescription>
+          <Button onClick={() => setShowErrorModal(false)}>Close</Button>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showProfileUploader} onOpenChange={setShowProfileUploader}>
+        <DialogContent>
+          <DialogTitle className={styles.dialogTitle}>
+            <CheckCircle size={24} /> Resume Tailored Successfully!
+          </DialogTitle>
+          <DialogDescription className={styles.dialogDescription}>
+            Your resume has been tailored to the job description. Optionally upload 
+            a profile image or proceed to view your resume.
+          </DialogDescription>
+          <ProfileImageUploader onImageChange={handleProfileImageChange} />
+          <Button
+            onClick={() => setShowProfileUploader(false)}
+            className={styles.viewResumeButton}
+          >
+            View Tailored Resume
+          </Button>
+        </DialogContent>
+      </Dialog>
+
+      <div className={styles.toolGrid}>
+        {/* Left Panel - Resume Upload */}
+        <div className={styles.panel}>
+          <div className={styles.panelHeader}>
+            <FileText className={styles.panelIcon} />
+            <h2 className={styles.panelTitle}>Your Resume</h2>
+          </div>
+          
+          <div
+            className={styles.dropZone}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+          >
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              className={styles.fileInput}
+              accept=".pdf,.txt"
+            />
+            
+            {uploadedFile ? (
+              <div className={styles.fileSelected}>
+                <FileUp size={32} className={styles.uploadIcon} />
+                <p className={styles.fileName}>{uploadedFile.name}</p>
+                <p className={styles.fileSize}>
+                  {(uploadedFile.size / 1024).toFixed(1)} KB
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleRemoveFile}
+                  className={styles.changeFileButton}
+                >
+                  Change File
+                </Button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className={styles.dropZoneButton}
+              >
+                <Upload size={40} className={styles.uploadIcon} />
+                <p className={styles.dropText}>
+                  Drag & drop your resume here
+                </p>
+                <p className={styles.dropSubtext}>or click to browse</p>
+                <span className={styles.fileTypes}>
+                  Supports PDF and TXT files (Max 10MB)
+                </span>
+              </button>
+            )}
+          </div>
+
+          {/* Color Customization */}
+          <div className={styles.customizationSection}>
+            <Dialog open={showColorDialog} onOpenChange={setShowColorDialog}>
+              <button
+                type="button"
+                onClick={() => setShowColorDialog(true)}
+                className={styles.colorButton}
+              >
+                <Palette size={20} />
+                Customize Colors
+              </button>
+              <DialogContent>
+                <VisuallyHidden.Root>
+                  <DialogTitle>Choose Colors</DialogTitle>
+                </VisuallyHidden.Root>
+                <ColorPicker
+                  currentColors={customColors}
+                  onColorsChange={handleColorsChange}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+
+        {/* Right Panel - Job Description */}
+        <div className={styles.panel}>
+          <div className={styles.panelHeader}>
+            <Briefcase className={styles.panelIcon} />
+            <h2 className={styles.panelTitle}>Job Description</h2>
+          </div>
+
+          <div className={styles.inputMethodToggle}>
+            <button
+              type="button"
+              className={`${styles.methodButton} ${jobSpecMethod === 'paste' ? styles.methodButtonActive : ''}`}
+              onClick={() => setJobSpecMethod('paste')}
+            >
+              <FileText size={16} />
+              Paste Text
+            </button>
+            <button
+              type="button"
+              className={`${styles.methodButton} ${jobSpecMethod === 'upload' ? styles.methodButtonActive : ''}`}
+              onClick={() => setJobSpecMethod('upload')}
+            >
+              <Upload size={16} />
+              Upload File
+            </button>
+          </div>
+
+          {jobSpecMethod === 'paste' ? (
+            <div className={styles.textareaContainer}>
+              <textarea
+                className={styles.jobSpecTextarea}
+                placeholder="Paste the job description here..."
+                maxLength={4000}
+                value={jobSpecText}
+                onChange={(e) => setJobSpecText(e.target.value)}
+              />
+              <div className={styles.characterCount}>
+                <span className={jobSpecText.length > 3800 ? styles.characterWarning : ''}>
+                  {jobSpecText.length}/4000 characters
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className={styles.fileUploadContainer}>
+              <input
+                type="file"
+                ref={jobSpecFileInputRef}
+                accept=".pdf,.txt"
+                onChange={handleJobSpecFileChange}
+                className={styles.fileInput}
+              />
+              <button
+                type="button"
+                onClick={() => jobSpecFileInputRef.current?.click()}
+                className={styles.fileUploadButton}
+              >
+                {jobSpecFile ? (
+                  <>
+                    <FileUp size={20} />
+                    {jobSpecFile.name}
+                  </>
+                ) : (
+                  <>
+                    <Upload size={20} />
+                    Choose job description file
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+
+          {/* Tone Selection */}
+          <div className={styles.toneSection}>
+            <h3 className={styles.sectionTitle}>Resume Tone</h3>
+            <div className={styles.toneOptions}>
+              {(['Formal', 'Neutral', 'Creative'] as const).map((toneOption) => (
+                <button
+                  key={toneOption}
+                  type="button"
+                  className={`${styles.toneButton} ${tone === toneOption ? styles.toneButtonActive : ''}`}
+                  onClick={() => setTone(toneOption)}
+                >
+                  <span className={styles.toneName}>{toneOption}</span>
+                  <span className={styles.toneDescription}>
+                    {toneOption === 'Formal' && 'Conservative, traditional'}
+                    {toneOption === 'Neutral' && 'Balanced, professional'}
+                    {toneOption === 'Creative' && 'Dynamic, engaging'}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Additional Instructions */}
+          <div className={styles.instructionsSection}>
+            <h3 className={styles.sectionTitle}>Additional Instructions</h3>
+            <textarea
+              className={styles.instructionsTextarea}
+              placeholder="Add any specific instructions for tailoring (optional)..."
+              maxLength={500}
+              value={extraPrompt}
+              onChange={(e) => setExtraPrompt(e.target.value)}
+            />
+            <div className={styles.characterCount}>
+              <span className={extraPrompt.length > 450 ? styles.characterWarning : ''}>
+                {extraPrompt.length}/500 characters
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Action Button */}
+      <div className={styles.actionSection}>
+        {error && (
+          <div className={styles.errorMessage}>
+            <AlertTriangle size={16} />
+            {error}
+          </div>
+        )}
+        
+        <Button
+          onClick={handleCreateResume}
+          disabled={isLoading || !uploadedFile || (jobSpecMethod === 'paste' ? !jobSpecText.trim() : !jobSpecFile)}
+          className={styles.createButton}
+          size="lg"
+        >
+          <Wand2 size={20} />
+          Create Tailored Resume
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default ResumeTailorTool;

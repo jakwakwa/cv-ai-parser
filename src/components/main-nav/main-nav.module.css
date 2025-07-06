@@ -1,5 +1,7 @@
 .container {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -8,21 +10,41 @@
 .link {
   display: flex;
   align-items: center;
+  text-decoration: none;
+  color: inherit;
 }
 
 .brand {
   display: inline-block;
   font-weight: 700;
+  font-size: 1.125rem;
 }
 
-.docsLink {
-  margin-left: 1rem;
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-left: auto;
+  margin-right: 2rem;
+}
+
+.navLink {
   font-weight: 500;
+  font-size: 0.875rem;
   color: #374151; /* gray-700 */
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-.docsLink:hover {
+.navLink:hover {
+  color: #2563eb;
   text-decoration: underline;
   text-underline-offset: 4px;
+}
+
+/* Mobile navigation */
+@media (max-width: 768px) {
+  .navigation {
+    display: none;
+  }
 } 
