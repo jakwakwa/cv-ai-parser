@@ -1,0 +1,70 @@
+.layout {
+  display: grid;
+  grid-template-columns: 16rem minmax(0, 1fr) 13rem;
+  gap: 2.5rem;
+  max-width: 85rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.sidebar {
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+}
+
+.sidebarNav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.navLink {
+  text-decoration: none;
+  color: #6b7280; /* gray-500 */
+}
+
+.navLinkActive {
+  color: #0891b2; /* teal-600 */
+  font-weight: 600;
+}
+
+.content {
+  min-width: 0; /* allow shrink */
+}
+
+.toc {
+  position: sticky;
+  top: 2rem;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  border-left: 1px dotted var(--color-border);
+  padding-left: 1rem;
+}
+
+.toc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tocLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.tocLink:hover {
+  text-decoration: underline;
+}
+
+.tocLink[aria-current='true'] {
+  color: var(--color-accent);
+  font-weight: 600;
+}

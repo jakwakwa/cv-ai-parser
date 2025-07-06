@@ -8,6 +8,8 @@ import { useToast } from '@/hooks/use-toast';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/AuthProvider';
 import ResumeUploader from '@/src/components/ResumeUploader/ResumeUploader';
+import FigmaLinkUploader from '@/src/components/FigmaLinkUploader/FigmaLinkUploader';
+import FigmaPreview from '@/src/components/figma-preview/FigmaPreview';
 import ResumeDisplay from '@/src/components/resume-display/ResumeDisplay';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/ResumeDisplayButtons';
 import ResumeEditor from '@/src/components/resume-editor/ResumeEditor';
@@ -34,11 +36,18 @@ export default function PageContent() {
   const [currentView, setCurrentView] = useState('upload'); // "upload" | "view" | "edit"
   const [resumeData, setResumeData] = useState<ParsedResume | null>(null);
   const [parseInfo, setParseInfo] = useState<ParseInfo | null>(null); // Stores ID and Slug from server
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // global operations (saving edits, etc.)
+  const [fileLoading, setFileLoading] = useState(false); // ResumeUploader specific
+  const [figmaLoading, setFigmaLoading] = useState(false); // FigmaLinkUploader specific
   const [error, setError] = useState<string | null>(null);
   const [localCustomColors, setLocalCustomColors] = useState<
     Record<string, string>
   >({});
+  const [figmaInfo, setFigmaInfo] = useState<{
+    componentName: string;
+    jsxCode: string;
+    cssCode: string;
+  } | null>(null);
 
   // New state to explicitly manage isAuthenticated status for prop passing
   const [isAuthenticatedState, setIsAuthenticatedState] = useState(false);
@@ -104,6 +113,14 @@ export default function PageContent() {
         setLocalCustomColors(parsedData.customColors);
       }
     }
+  };
+
+  const handleFigmaGenerated = (info: { componentName: string; jsxCode: string; cssCode: string }) => {
+    setFigmaInfo(info);
+    toast({
+      title: 'Design Generated',
+      description: `Component ${info.componentName} was created in src/generated-resumes/`,
+    });
   };
 
   const handleReset = () => {
@@ -283,10 +300,26 @@ export default function PageContent() {
           <div ref={uploaderRef} style={{ width: '100%' }}>
             <ResumeUploader
               onResumeUploaded={handleResumeUploaded}
-              isLoading={isLoading}
-              setIsLoading={setIsLoading}
+              isLoading={fileLoading}
+              setIsLoading={setFileLoading}
               isAuthenticated={isAuthenticatedState}
             />
+
+            {/* Optional Figma design uploader */}
+            <FigmaLinkUploader
+              onResumeGenerated={handleFigmaGenerated}
+              isLoading={figmaLoading}
+              setIsLoading={setFigmaLoading}
+            />
+
+            {/* Show Figma preview if component was generated */}
+            {figmaInfo && (
+              <FigmaPreview
+                componentName={figmaInfo.componentName}
+                jsxCode={figmaInfo.jsxCode}
+                cssCode={figmaInfo.cssCode}
+              />
+            )}
           </div>
         </>
       )}

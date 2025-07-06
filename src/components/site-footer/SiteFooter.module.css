@@ -1,0 +1,37 @@
+.footer {
+  padding: 2rem 1rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  background-color: #1f2937;
+  margin-top: auto;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.875rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .nav {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+}
+
+.link {
+  color: #ffffff;
+  text-decoration: none;
+  transition: text-decoration 0.2s ease;
+}
+
+.link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

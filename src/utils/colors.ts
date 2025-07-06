@@ -10,7 +10,7 @@ const _colors = {
   '--teal-main': '#116964',
   '--light-grey-background': '#f5f5f5',
   '--off-white': '#faf4ec',
-  '--light-brown-border': '#a49990c7',
+  '--light-brown-border': '#a49990',
   '--light-grey-border': '#cecac6',
 };
 
@@ -21,7 +21,7 @@ const appColors = {
   '--app-coffee': '#3e2f22',
   '--app-charcoal': '#565854',
   '--app-off-white': '#faf4ec',
-  '--app-light-brown-border': '#a49990c7',
+  '--app-light-brown-border': '#a49990',
   '--app-peach': '#f9b87f',
   '--app-mint-background': '#c4f0dc',
   '--app-mint-light': '#d8b08c',
@@ -41,7 +41,7 @@ const resumeColors = {
   '--resume-dates': '#565854',
   '--resume-body-text': '#3e2f22', // bodyText
   '--resume-profile-header-background': '#faf4ec', // ProfileHeaderBg
-  '--resume-skill-border': '#a49990c7',
+  '--resume-skill-border': '#a49990',
 };
 
 const oldToNewResumeColorMap: Record<string, string> = {
