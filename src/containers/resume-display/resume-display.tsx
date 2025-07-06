@@ -30,7 +30,7 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
   return (
     <div id="resume-content" className="resumeContent" ref={resumeContainerRef}>
       <ProfileHeader
-        profileImage={resumeData.profileImage || ''}
+        profileImage={resumeData.profileImage || undefined}
         name={resumeData.name || ''}
         title={resumeData.title || ''}
         summary={resumeData.summary || ''}
