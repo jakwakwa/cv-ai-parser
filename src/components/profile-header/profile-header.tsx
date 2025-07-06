@@ -1,7 +1,7 @@
 import styles from './profile-header.module.css';
 
 interface ProfileHeaderProps {
-  profileImage: string;
+  profileImage: string | undefined;
   name: string;
   title: string;
   summary: string;
@@ -19,20 +19,12 @@ const ProfileHeader = ({
     title && title.toLowerCase() !== 'professional' && title !== summary;
 
   // Check if we have a real profile image (not the default placeholder)
-  const lowerImg = (profileImage || '').toLowerCase();
-  console.log('Debug profileImage:', { 
-    original: profileImage, 
-    lowerImg, 
-    trimmed: lowerImg.trim(),
-    includesPlaceholder: lowerImg.includes('placeholder'),
-    includesPlaceholdCo: lowerImg.includes('placehold.co')
-  });
+  const lowerImg = profileImage ? profileImage.toLowerCase() : '';
   const hasProfileImage =
-    lowerImg &&
+    profileImage &&
     lowerImg.trim() !== '' &&
     !lowerImg.includes('placeholder') &&
     !lowerImg.includes('placehold.co');
-  console.log('hasProfileImage result:', hasProfileImage);
 
   return (
     <div
