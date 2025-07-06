@@ -283,4 +283,7 @@
     width: 2rem !important;
     height: 2rem !important;
   }
+  .colorDescription {
+    display: none !important;
+  }
 }
