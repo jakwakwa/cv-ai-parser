@@ -6,9 +6,9 @@ import {
   FileText,
   Upload,
   Palette,
-  Briefcase,
-  Wand2,
-  FileUp
+  FileText as BriefcaseIcon,
+  Plus as Wand2Icon,
+  Upload as FileUpIcon
 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
@@ -289,7 +289,7 @@ const ResumeTailorTool = ({
             
             {uploadedFile ? (
               <div className={styles.fileSelected}>
-                <FileUp size={32} className={styles.uploadIcon} />
+                <FileUpIcon size={32} className={styles.uploadIcon} />
                 <p className={styles.fileName}>{uploadedFile.name}</p>
                 <p className={styles.fileSize}>
                   {(uploadedFile.size / 1024).toFixed(1)} KB
@@ -348,7 +348,7 @@ const ResumeTailorTool = ({
         {/* Right Panel - Job Description */}
         <div className={styles.panel}>
           <div className={styles.panelHeader}>
-            <Briefcase className={styles.panelIcon} />
+            <BriefcaseIcon className={styles.panelIcon} />
             <h2 className={styles.panelTitle}>Job Description</h2>
           </div>
 
@@ -402,7 +402,7 @@ const ResumeTailorTool = ({
               >
                 {jobSpecFile ? (
                   <>
-                    <FileUp size={20} />
+                    <FileUpIcon size={20} />
                     {jobSpecFile.name}
                   </>
                 ) : (
@@ -471,7 +471,7 @@ const ResumeTailorTool = ({
           className={styles.createButton}
           size="lg"
         >
-          <Wand2 size={20} />
+          <Wand2Icon size={20} />
           Create Tailored Resume
         </Button>
       </div>

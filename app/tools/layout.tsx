@@ -1,3 +1,5 @@
+'use client';
+
 import type React from 'react';
 import { SiteHeader } from '@/src/components/site-header/site-header';
 import styles from './layout.module.css';
