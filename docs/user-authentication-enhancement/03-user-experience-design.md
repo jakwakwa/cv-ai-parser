@@ -201,7 +201,7 @@ interface DefaultResumeSettingsProps {
 
 /* Status Colors */
 --success-50: #f0fdf4;
---success-500: #22c55e;
+--success-500: #8dd0ca;
 --error-50: #fef2f2;
 --error-500: #ef4444;
 --warning-50: #fffbeb;
