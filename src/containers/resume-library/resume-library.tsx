@@ -113,19 +113,15 @@ export default function ResumeLibrary({
 
   if (!user) {
     return (
-      <div className={styles.container}>
-        <div className={styles.wrapper}>
-          <div className={styles.stateContainer}>
-            <div className={styles.stateContent}>
-              <div className={styles.iconContainer}>
-                <FileText className={styles.icon} />
-              </div>
-              <h2 className={styles.stateTitle}>Sign In Required</h2>
-              <p className={styles.stateText}>
-                Please sign in to view your resume library.
-              </p>
-            </div>
+      <div className={styles.stateContainer}>
+        <div className={styles.stateContent}>
+          <div className={styles.iconContainer}>
+            <FileText className={styles.icon} />
           </div>
+          <h2 className={styles.stateTitle}>Sign In Required</h2>
+          <p className={styles.stateText}>
+            Please sign in to view your resume library.
+          </p>
         </div>
       </div>
     );
@@ -136,147 +132,145 @@ export default function ResumeLibrary({
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.wrapper}>
-        <div className={styles.header}>
-          <h2 className={styles.title}>Your Resume Library</h2>
-          <p className={styles.subtitle}>
-            {resumes.length} resume{resumes.length !== 1 ? 's' : ''}
-          </p>
+    <>
+      <div className={styles.header}>
+        <h2 className={styles.title}>Your Resume Library</h2>
+        <p className={styles.subtitle}>
+          {resumes.length} resume{resumes.length !== 1 ? 's' : ''}
+        </p>
+      </div>
+
+      {error && (
+        <div className={styles.errorContainer}>
+          <p className={styles.errorText}>{error}</p>
         </div>
+      )}
 
-        {error && (
-          <div className={styles.errorContainer}>
-            <p className={styles.errorText}>{error}</p>
-          </div>
-        )}
-
-        {resumes.length === 0 ? (
-          <div className={styles.stateContainer}>
-            <div className={styles.stateContent}>
-              <div className={styles.iconContainer}>
-                <FileText className={styles.iconGray} />
-              </div>
-              <h3 className={styles.stateTitle}>No resumes yet</h3>
-              <p className={styles.stateText}>
-                Upload your first resume to get started!
-              </p>
+      {resumes.length === 0 ? (
+        <div className={styles.stateContainer}>
+          <div className={styles.stateContent}>
+            <div className={styles.iconContainer}>
+              <FileText className={styles.iconGray} />
             </div>
+            <h3 className={styles.stateTitle}>No resumes yet</h3>
+            <p className={styles.stateText}>
+              Upload your first resume to get started!
+            </p>
           </div>
-        ) : (
-          <div className={styles.grid}>
-            {resumes.map((resume) => (
-              <Card key={resume.id} className={styles.card}>
-                <CardHeader className={styles.cardHeader}>
-                  <div className={styles.cardHeaderContent}>
-                    <h3 className={styles.cardTitle}>{resume.title}</h3>
-                    <div className={styles.publicToggleContainer}>
-                      <button
-                        type="button"
-                        onClick={() => handleTogglePublic(resume)}
-                        className={`${styles.publicToggle} ${
-                          resume.is_public
-                            ? styles.publicTogglePublic
-                            : styles.publicTogglePrivate
-                        }`}
-                      >
-                        {resume.is_public ? (
-                          <>
-                            <Globe className={styles.publicToggleIcon} />
-                            Public
-                          </>
-                        ) : (
-                          <>
-                            <Lock className={styles.publicToggleIcon} />
-                            Private
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </CardHeader>
-
-                <CardContent className={styles.cardContent}>
-                  <div className={styles.contentText}>
-                    <div className={styles.contentRow}>
-                      <span>Method:</span>
-                      <Badge
-                        className={`${styles.badge} ${getMethodBadgeColor(resume.parse_method || 'unknown')}`}
-                      >
-                        {getMethodLabel(resume.parse_method || 'unknown')}
-                      </Badge>
-                    </div>
-                    {resume.confidence_score && (
-                      <div className={styles.contentRow}>
-                        <span>Confidence:</span>
-                        <span className={styles.contentValue}>
-                          {resume.confidence_score}%
-                        </span>
-                      </div>
-                    )}
-                    <div className={styles.contentRow}>
-                      <span>Views:</span>
-                      <span className={styles.contentIconContainer}>
-                        <Eye className={styles.contentIcon} />
-                        {resume.view_count}
-                      </span>
-                    </div>
-                    <div className={styles.contentRow}>
-                      <span>Downloads:</span>
-                      <span className={styles.contentIconContainer}>
-                        <Download className={styles.contentIcon} />
-                        {resume.download_count}
-                      </span>
-                    </div>
-                    <div className={styles.contentRow}>
-                      <span>Created:</span>
-                      <span className={styles.contentIconContainer}>
-                        <Calendar className={styles.contentIcon} />
-                        {formatDate(resume.created_at)}
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-
-                <CardFooter className={styles.cardFooter}>
-                  <button
-                    type="button"
-                    onClick={() => onSelectResume(resume)}
-                    className={styles.viewButton}
-                  >
-                    View
-                  </button>
-                  {resume.is_public && resume.slug && (
+        </div>
+      ) : (
+        <div className={styles.grid}>
+          {resumes.map((resume) => (
+            <Card key={resume.id} className={styles.card}>
+              <CardHeader className={styles.cardHeader}>
+                <div className={styles.cardHeaderContent}>
+                  <h3 className={styles.cardTitle}>{resume.title}</h3>
+                  <div className={styles.publicToggleContainer}>
                     <button
                       type="button"
-                      onClick={() =>
-                        navigator.clipboard.writeText(
-                          `${window.location.origin}/resume/${resume.slug}`
-                        )
-                      }
-                      className={styles.shareButton}
+                      onClick={() => handleTogglePublic(resume)}
+                      className={`${styles.publicToggle} ${
+                        resume.is_public
+                          ? styles.publicTogglePublic
+                          : styles.publicTogglePrivate
+                      }`}
                     >
-                      Share
+                      {resume.is_public ? (
+                        <>
+                          <Globe className={styles.publicToggleIcon} />
+                          Public
+                        </>
+                      ) : (
+                        <>
+                          <Lock className={styles.publicToggleIcon} />
+                          Private
+                        </>
+                      )}
                     </button>
+                  </div>
+                </div>
+              </CardHeader>
+
+              <CardContent className={styles.cardContent}>
+                <div className={styles.contentText}>
+                  <div className={styles.contentRow}>
+                    <span>Method:</span>
+                    <Badge
+                      className={`${styles.badge} ${getMethodBadgeColor(resume.parse_method || 'unknown')}`}
+                    >
+                      {getMethodLabel(resume.parse_method || 'unknown')}
+                    </Badge>
+                  </div>
+                  {resume.confidence_score && (
+                    <div className={styles.contentRow}>
+                      <span>Confidence:</span>
+                      <span className={styles.contentValue}>
+                        {resume.confidence_score}%
+                      </span>
+                    </div>
                   )}
+                  <div className={styles.contentRow}>
+                    <span>Views:</span>
+                    <span className={styles.contentIconContainer}>
+                      <Eye className={styles.contentIcon} />
+                      {resume.view_count}
+                    </span>
+                  </div>
+                  <div className={styles.contentRow}>
+                    <span>Downloads:</span>
+                    <span className={styles.contentIconContainer}>
+                      <Download className={styles.contentIcon} />
+                      {resume.download_count}
+                    </span>
+                  </div>
+                  <div className={styles.contentRow}>
+                    <span>Created:</span>
+                    <span className={styles.contentIconContainer}>
+                      <Calendar className={styles.contentIcon} />
+                      {formatDate(resume.created_at)}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+
+              <CardFooter className={styles.cardFooter}>
+                <button
+                  type="button"
+                  onClick={() => onSelectResume(resume)}
+                  className={styles.viewButton}
+                >
+                  View
+                </button>
+                {resume.is_public && resume.slug && (
                   <button
                     type="button"
-                    onClick={() => handleDeleteResume(resume.id, resume.title)}
-                    disabled={deleting === resume.id}
-                    className={styles.deleteButton}
+                    onClick={() =>
+                      navigator.clipboard.writeText(
+                        `${window.location.origin}/resume/${resume.slug}`
+                      )
+                    }
+                    className={styles.shareButton}
                   >
-                    {deleting === resume.id ? (
-                      <div className={styles.deleteSpinner} />
-                    ) : (
-                      <Trash2 className={styles.deleteIcon} />
-                    )}
+                    Share
                   </button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+                )}
+                <button
+                  type="button"
+                  onClick={() => handleDeleteResume(resume.id, resume.title)}
+                  disabled={deleting === resume.id}
+                  className={styles.deleteButton}
+                >
+                  {deleting === resume.id ? (
+                    <div className={styles.deleteSpinner} />
+                  ) : (
+                    <Trash2 className={styles.deleteIcon} />
+                  )}
+                </button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      )}
+    </>
   );
 }
