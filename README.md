@@ -1,7 +1,5 @@
 # AI CV GEN
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
-
 This project is an AI-powered CV/Resume parser that allows users to upload their resumes, parse them using AI, and then generate or edit professional CVs.
 
 ## Features
@@ -12,6 +10,29 @@ This project is an AI-powered CV/Resume parser that allows users to upload their
 * **User Authentication**: Secure user management with Supabase.
 * **Responsive Design**: Optimized for both desktop and mobile devices.
 
+## Architecture
+
+### High-Level Design
+
+```mermaid
+flowchart TD
+    A["Client Form<br/>resume + jobSpec + tone + context"] --> B["API: parse-resume-enhanced"]
+    B --> C{Job Spec provided?}
+    C -- "No" --> D["Legacy Parser"]
+    C -- "Yes" --> E["Job Spec Extraction"]
+    E --> F["Prompt Factory"]
+    D --> G["AI Rewrite Service"]
+    F --> G
+    G --> H["Persistence Layer"]
+    H --> I["Response to Client"]
+```
+
+*Green = new components*
+
+> **Diagram validation**  
+> All Mermaid diagrams are linted in CI using `@mermaid-js/mermaid-cli` (`mmdc -e`) to prevent parse errors from reaching `main`. See implementation guide Phase 5 for the script.
+
+
 ## Technologies Used
 
 * **Next.js**: React framework for building full-stack web applications.
@@ -21,28 +42,3 @@ This project is an AI-powered CV/Resume parser that allows users to upload their
 * **Vercel**: Platform for frontend frameworks and static sites.
 
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/jaco-ks-projects/v0-cv)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/8VoAVUOhFDA)
-
-## Overview
-
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
-
-## Deployment
-
-Your project is live at:
-
-**[https://vercel.com/jaco-ks-projects/v0-cv](https://vercel.com/jaco-ks-projects/v0-cv)**
-
-## Build your app
-
-Continue building your app on:
-
-**[https://v0.dev/chat/projects/8VoAVUOhFDA](https://v0.dev/chat/projects/8VoAVUOhFDA)**
-
-## How It Works
-
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
