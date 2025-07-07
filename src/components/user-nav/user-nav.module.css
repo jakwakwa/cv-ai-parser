@@ -1,21 +1,26 @@
+/**
+ * Component: UserNav
+ * Refactored to use design tokens following ITCSS architecture
+ */
+
 .userNavButton {
   position: relative;
   border-radius: var(--border-radius-full);
   padding: 0;
-
 }
 
 .avatar {
   padding: 0;
-  height: var(--spacing-sm);
-  width: var(--spacing-sm);
+  height: var(--spacing-xl);
+  width: var(--spacing-xl);
 }
 
 .dropdownContent {
-  box-shadow: var(--color-shadow-dropdown);
-  background-color: var(--color-background-dark);
-  color: var(--color-text-inverse);
-  border: none;
+  box-shadow: 0 4px 6px -1px var(--color-button-shadow), 0 2px 4px -2px var(--color-button-shadow);
+  background-color: var(--color-card-background);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-medium);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -27,40 +32,40 @@
   width: 14rem;
 }
 
+.dropdownMenuItem {
+  color: var(--color-text-primary);
+  transition: var(--transition-fast);
+}
+
 .dropdownMenuItem:hover {
-  color: var(--color-text-hover);
+  color: var(--color-accent-teal);
   cursor: pointer;
-  transition: var(--transition-fast-cubic);
+  transition: var(--transition-fast);
 }
 
 .dropdownLabel {
   font-weight: var(--font-weight-regular);
-
   margin: 0px;
+  color: var(--color-text-primary);
 }
 
 .labelContainer {
-
   display: flex;
   flex-direction: column;
-}
-
-.labelContainer>*:not([hidden])~*:not([hidden]) {
-  margin-top: var(--spacing-sm);
+  gap: var(--spacing-xs);
 }
 
 .userName {
   font-size: var(--font-size-md);
-  /* 14px */
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-tight);
-
   text-align: left;
+  color: var(--color-text-primary);
 }
 
 .userEmail {
-  font-size: var(--font-size-xxs);
-  font-weight: var(--font-weight-bold);
-  /* 12px */
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
   line-height: var(--line-height-tight);
+  color: var(--color-text-secondary);
 }

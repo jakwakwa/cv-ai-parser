@@ -14,11 +14,12 @@
   font-weight: var(--font-weight-bold);
   margin-bottom: var(--spacing-md);
   font-family: var(--font-family-primary);
+  color: var(--color-text-primary);
 }
 
 .lead {
   font-size: var(--font-size-base);
-  color: var(--color-text-light);
+  color: var(--color-text-secondary);
   margin-bottom: var(--spacing-xl);
   font-family: var(--font-family-base);
 }
@@ -49,11 +50,12 @@
 .link:hover {
   text-decoration: underline;
   text-underline-offset: 4px;
+  color: var(--color-accent-teal-dark);
 }
 
 .badge {
   background-color: var(--color-background-secondary);
-  color: var(--color-text-light);
+  color: var(--color-text-secondary);
   font-size: var(--font-size-xs);
   padding: 0.1rem 0.4rem;
   border-radius: var(--border-radius-small);

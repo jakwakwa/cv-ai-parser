@@ -14,7 +14,7 @@
 }
 
 .loadingCard {
-  background: var(--color-background-primary);
+  background: var(--color-background-secondary);
   border-radius: var(--border-radius-medium);
   padding: var(--spacing-xl);
   text-align: center;
@@ -65,7 +65,7 @@
 
 /* Panels */
 .panel {
-  background: var(--color-background-primary);
+  background: var(--color-background-secondary);
   border-radius: var(--border-radius-medium);
   border: 1px solid var(--color-border-light);
   overflow: hidden;
@@ -79,7 +79,7 @@
   gap: var(--spacing-sm);
   padding: var(--spacing-lg);
   border-bottom: 1px solid var(--color-border-light);
-  background-color: var(--color-background-secondary);
+  background-color: var(--color-border-medium);
 }
 
 .panelIcon {
@@ -457,7 +457,7 @@
 
 /* Disabled state for job tailoring panel */
 .disabledPanel {
-  opacity: 0.7;
+  opacity: 0.3;
   pointer-events: none;
 }
 

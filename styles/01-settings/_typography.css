@@ -7,6 +7,7 @@
   /* Font Families */
   --font-family-primary: var(--font-dm-sans);
   --font-family-base: "Inter", Helvetica, sans-serif;
+  --font-family-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
   
   /* Font Sizes */
   --font-size-xxs: 0.7rem;
@@ -26,6 +27,7 @@
   --font-weight-bold: 700;
   
   /* Line Heights */
+  --line-height-xs: 1.2;
   --line-height-tight: 1;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.6;
