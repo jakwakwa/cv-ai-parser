@@ -1,0 +1,272 @@
+/**
+ * Settings: Themes
+ * Theme-specific design token variants for light and dark modes
+ * Based on SkillBars theme implementation approach
+ */
+
+:root {
+  /* Default theme (light mode) */
+  &[data-theme="light"] {
+    color-scheme: light;
+    
+    /* Background Colors */
+    --color-background-primary: #ffffff;
+    --color-background-secondary: #f9fafb;
+    --color-background-tertiary: #f3f4f6;
+    --color-background-overlay: rgba(255, 255, 255, 0.95);
+    
+    /* Text Colors */
+    --color-text-primary: #1f2937;
+    --color-text-secondary: #6b7280;
+    --color-text-light: #374151;
+    --color-text-muted: #9ca3af;
+    --color-text-inverse: #ffffff;
+    
+    /* Border Colors */
+    --color-border-light: #e5e7eb;
+    --color-border-medium: #d1d5db;
+    --color-border-dark: #9ca3af;
+    --color-border-neutral: #e5e7eb;
+    
+    /* Interactive Colors - Keep consistent across themes */
+    --color-accent-teal: #0d9488;
+    --color-accent-teal-light: #f0fdfa;
+    --color-accent-teal-dark: #0f766e;
+    --color-accent-teal-bright: #14b8a6;
+    
+    --color-secondary-blue: #5450f1;
+    --color-secondary-blue-light: #e0e7ff;
+    --color-secondary-blue-dark: #3730a3;
+    
+    /* State Colors */
+    --color-success: #16a34a;
+    --color-success-light: #dcfce7;
+    --color-success-dark: #15803d;
+    
+    --color-warning: #f59e0b;
+    --color-warning-light: #fef3c7;
+    --color-warning-dark: #d97706;
+    
+    --color-error: #dc2626;
+    --color-error-light: #fef2f2;
+    --color-error-dark: #b91c1c;
+    
+    --color-info: #2563eb;
+    --color-info-light: #eff6ff;
+    --color-info-dark: #1d4ed8;
+    
+    /* Semantic Colors */
+    --color-disabled: #d1d5db;
+    --color-focus: var(--color-accent-teal);
+    --color-hover: var(--color-background-tertiary);
+    
+    /* Component-specific Colors */
+    --color-card-background: var(--color-background-primary);
+    --color-card-border: var(--color-border-light);
+    --color-input-background: var(--color-background-primary);
+    --color-input-border: var(--color-border-medium);
+    --color-button-shadow: rgba(0, 0, 0, 0.1);
+    
+    /* Special Colors */
+    --color-primary-dark: #2c3844;
+    --color-primary-darker: #25303a;
+    --color-primary-overlay: rgba(44, 56, 68, 0.9);
+  }
+  
+  /* Dark theme */
+  &[data-theme="dark"] {
+    color-scheme: dark;
+    
+    /* Background Colors - Dark grays instead of pure black */
+    --color-background-primary: #1f2937;
+    --color-background-secondary: #111827;
+    --color-background-tertiary: #374151;
+    --color-background-overlay: rgba(31, 41, 55, 0.95);
+    
+    /* Text Colors - Light grays for better readability */
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-text-light: #e5e7eb;
+    --color-text-muted: #9ca3af;
+    --color-text-inverse: #1f2937;
+    
+    /* Border Colors - Subtle borders in dark mode */
+    --color-border-light: #374151;
+    --color-border-medium: #4b5563;
+    --color-border-dark: #6b7280;
+    --color-border-neutral: #374151;
+    
+    /* Interactive Colors - Brighter in dark mode for contrast */
+    --color-accent-teal: #14b8a6;
+    --color-accent-teal-light: rgba(20, 184, 166, 0.1);
+    --color-accent-teal-dark: #0d9488;
+    --color-accent-teal-bright: #2dd4bf;
+    
+    --color-secondary-blue: #6366f1;
+    --color-secondary-blue-light: rgba(99, 102, 241, 0.1);
+    --color-secondary-blue-dark: #4f46e5;
+    
+    /* State Colors - Adjusted for dark backgrounds */
+    --color-success: #22c55e;
+    --color-success-light: rgba(34, 197, 94, 0.1);
+    --color-success-dark: #16a34a;
+    
+    --color-warning: #fbbf24;
+    --color-warning-light: rgba(251, 191, 36, 0.1);
+    --color-warning-dark: #f59e0b;
+    
+    --color-error: #ef4444;
+    --color-error-light: rgba(239, 68, 68, 0.1);
+    --color-error-dark: #dc2626;
+    
+    --color-info: #3b82f6;
+    --color-info-light: rgba(59, 130, 246, 0.1);
+    --color-info-dark: #2563eb;
+    
+    /* Semantic Colors */
+    --color-disabled: #4b5563;
+    --color-focus: var(--color-accent-teal);
+    --color-hover: var(--color-background-tertiary);
+    
+    /* Component-specific Colors */
+    --color-card-background: var(--color-background-secondary);
+    --color-card-border: var(--color-border-light);
+    --color-input-background: var(--color-background-tertiary);
+    --color-input-border: var(--color-border-medium);
+    --color-button-shadow: rgba(0, 0, 0, 0.3);
+    
+    /* Special Colors */
+    --color-primary-dark: #0f172a;
+    --color-primary-darker: #020617;
+    --color-primary-overlay: rgba(15, 23, 42, 0.9);
+  }
+  
+  /* System preference theme (defaults to light, overridden by media query) */
+  &[data-theme="system"] {
+    color-scheme: light;
+    
+    /* Default to light theme values */
+    --color-background-primary: #ffffff;
+    --color-background-secondary: #f9fafb;
+    --color-background-tertiary: #f3f4f6;
+    --color-background-overlay: rgba(255, 255, 255, 0.95);
+    
+    --color-text-primary: #1f2937;
+    --color-text-secondary: #6b7280;
+    --color-text-light: #374151;
+    --color-text-muted: #9ca3af;
+    --color-text-inverse: #ffffff;
+    
+    --color-border-light: #e5e7eb;
+    --color-border-medium: #d1d5db;
+    --color-border-dark: #9ca3af;
+    --color-border-neutral: #e5e7eb;
+    
+    /* Interactive colors remain consistent */
+    --color-accent-teal: #0d9488;
+    --color-accent-teal-light: #f0fdfa;
+    --color-accent-teal-dark: #0f766e;
+    --color-accent-teal-bright: #14b8a6;
+    
+    --color-secondary-blue: #5450f1;
+    --color-secondary-blue-light: #e0e7ff;
+    --color-secondary-blue-dark: #3730a3;
+    
+    /* State colors */
+    --color-success: #16a34a;
+    --color-success-light: #dcfce7;
+    --color-success-dark: #15803d;
+    
+    --color-warning: #f59e0b;
+    --color-warning-light: #fef3c7;
+    --color-warning-dark: #d97706;
+    
+    --color-error: #dc2626;
+    --color-error-light: #fef2f2;
+    --color-error-dark: #b91c1c;
+    
+    --color-info: #2563eb;
+    --color-info-light: #eff6ff;
+    --color-info-dark: #1d4ed8;
+    
+    /* Semantic colors */
+    --color-disabled: #d1d5db;
+    --color-focus: var(--color-accent-teal);
+    --color-hover: var(--color-background-tertiary);
+    
+    /* Component-specific colors */
+    --color-card-background: var(--color-background-primary);
+    --color-card-border: var(--color-border-light);
+    --color-input-background: var(--color-background-primary);
+    --color-input-border: var(--color-border-medium);
+    --color-button-shadow: rgba(0, 0, 0, 0.1);
+    
+    /* Special colors */
+    --color-primary-dark: #2c3844;
+    --color-primary-darker: #25303a;
+    --color-primary-overlay: rgba(44, 56, 68, 0.9);
+  }
+}
+
+/* System preference detection for theme="system" */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] {
+    color-scheme: dark;
+    
+    /* Override with dark theme values when system prefers dark */
+    --color-background-primary: #1f2937;
+    --color-background-secondary: #111827;
+    --color-background-tertiary: #374151;
+    --color-background-overlay: rgba(31, 41, 55, 0.95);
+    
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-text-light: #e5e7eb;
+    --color-text-muted: #9ca3af;
+    --color-text-inverse: #1f2937;
+    
+    --color-border-light: #374151;
+    --color-border-medium: #4b5563;
+    --color-border-dark: #6b7280;
+    --color-border-neutral: #374151;
+    
+    --color-accent-teal: #14b8a6;
+    --color-accent-teal-light: rgba(20, 184, 166, 0.1);
+    --color-accent-teal-dark: #0d9488;
+    --color-accent-teal-bright: #2dd4bf;
+    
+    --color-secondary-blue: #6366f1;
+    --color-secondary-blue-light: rgba(99, 102, 241, 0.1);
+    --color-secondary-blue-dark: #4f46e5;
+    
+    --color-success: #22c55e;
+    --color-success-light: rgba(34, 197, 94, 0.1);
+    --color-success-dark: #16a34a;
+    
+    --color-warning: #fbbf24;
+    --color-warning-light: rgba(251, 191, 36, 0.1);
+    --color-warning-dark: #f59e0b;
+    
+    --color-error: #ef4444;
+    --color-error-light: rgba(239, 68, 68, 0.1);
+    --color-error-dark: #dc2626;
+    
+    --color-info: #3b82f6;
+    --color-info-light: rgba(59, 130, 246, 0.1);
+    --color-info-dark: #2563eb;
+    
+    --color-disabled: #4b5563;
+    --color-focus: var(--color-accent-teal);
+    --color-hover: var(--color-background-tertiary);
+    
+    --color-card-background: var(--color-background-secondary);
+    --color-card-border: var(--color-border-light);
+    --color-input-background: var(--color-background-tertiary);
+    --color-input-border: var(--color-border-medium);
+    --color-button-shadow: rgba(0, 0, 0, 0.3);
+    
+    --color-primary-dark: #0f172a;
+    --color-primary-darker: #020617;
+    --color-primary-overlay: rgba(15, 23, 42, 0.9);
+  }
+} 

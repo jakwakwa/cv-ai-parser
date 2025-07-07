@@ -8,6 +8,7 @@
    Global variables and config switches
    ========================================================================== */
 @import './01-settings/_colors.css';
+@import './01-settings/_themes.css';
 @import './01-settings/_typography.css';
 @import './01-settings/_spacing.css';
 @import './01-settings/_breakpoints.css';
