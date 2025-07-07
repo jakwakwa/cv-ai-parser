@@ -1,31 +1,32 @@
 'use client';
 
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import {
   AlertTriangle,
+  FileText as BriefcaseIcon,
   CheckCircle,
   FileText,
-  Upload,
+  Upload as FileUpIcon,
   Palette,
-  FileText as BriefcaseIcon,
+  Upload,
   Plus as Wand2Icon,
-  Upload as FileUpIcon
 } from 'lucide-react';
-import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useRef, useState } from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import ColorPicker from '@/src/components/color-picker/color-picker';
-import { Button } from '@/src/components/ui/ui-button/button';
+import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
 } from '@/src/components/ui/dialog';
+import { Textarea } from '@/src/components/ui/textarea';
+import { Button } from '@/src/components/ui/ui-button/button';
 import ProfileImageUploader from '@/src/containers/profile-image-uploader/profile-image-uploader';
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import styles from './resume-tailor-tool.module.css';
 import ResumeDisplay from '@/src/containers/resume-display/resume-display';
-import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
+import styles from './resume-tailor-tool.module.css';
 
 interface ParseInfo {
   resumeId?: string;
@@ -57,40 +58,55 @@ const ResumeTailorTool = ({
   // File upload states
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [error, setError] = useState('');
-  
+
   // Job tailoring states
-  const [jobSpecMethod, setJobSpecMethod] = useState<'paste' | 'upload'>('paste');
+  const [jobSpecMethod, setJobSpecMethod] = useState<'paste' | 'upload'>(
+    'paste'
+  );
   const [jobSpecText, setJobSpecText] = useState('');
   const [jobSpecFile, setJobSpecFile] = useState<File | null>(null);
-  const [tone, setTone] = useState<'Formal' | 'Neutral' | 'Creative'>('Neutral');
+  const [tone, setTone] = useState<'Formal' | 'Neutral' | 'Creative'>(
+    'Neutral'
+  );
   const [extraPrompt, setExtraPrompt] = useState('');
-  
+
   // UI states
   const [showProfileUploader, setShowProfileUploader] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [modalErrorMessage, setModalErrorMessage] = useState('');
   const [showColorDialog, setShowColorDialog] = useState(false);
-  
+
   // Customization states
   const [profileImage, setProfileImage] = useState('');
   const [customColors, setCustomColors] = useState<Record<string, string>>({});
   // Toggle to enable/disable the job tailoring panel
   const [tailorEnabled, setTailorEnabled] = useState(false);
   // Track created resume slug for redirect
-  const [createdResumeSlug, setCreatedResumeSlug] = useState<string | null>(null);
-  const [localResumeData, setLocalResumeData] = useState<ParsedResume | null>(null);
+  const [createdResumeSlug, setCreatedResumeSlug] = useState<string | null>(
+    null
+  );
+  const [localResumeData, setLocalResumeData] = useState<ParsedResume | null>(
+    null
+  );
   const [viewLocalResume, setViewLocalResume] = useState(false);
 
-  const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrag = (e: React.DragEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = (e: React.DragEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFileSelection(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      fileInputRef.current?.click();
     }
   };
 
@@ -99,13 +115,13 @@ const ResumeTailorTool = ({
       setError('File size must be less than 10MB');
       return;
     }
-    
+
     const fileType = file.type;
     if (!['application/pdf', 'text/plain'].includes(fileType)) {
       setError('Please upload a .txt or .pdf file');
       return;
     }
-    
+
     setUploadedFile(file);
     setError('');
   };
@@ -141,7 +157,9 @@ const ResumeTailorTool = ({
       }
 
       if (jobSpecText.length > 4000) {
-        setError(`Job description is too long (${jobSpecText.length}/4000 characters)`);
+        setError(
+          `Job description is too long (${jobSpecText.length}/4000 characters)`
+        );
         return;
       }
     }
@@ -184,7 +202,9 @@ const ResumeTailorTool = ({
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         if (response.status === 401) {
-          throw new Error('Authentication required. Please sign in to continue.');
+          throw new Error(
+            'Authentication required. Please sign in to continue.'
+          );
         }
         throw new Error(errorData.error || 'Failed to parse resume');
       }
@@ -209,7 +229,8 @@ const ResumeTailorTool = ({
       setShowProfileUploader(true);
       setError('');
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
+      const errorMessage =
+        err instanceof Error ? err.message : 'An unknown error occurred.';
       setModalErrorMessage(errorMessage);
       setShowErrorModal(true);
       setError('');
@@ -239,7 +260,9 @@ const ResumeTailorTool = ({
       <div className={styles.loadingState}>
         <div className={styles.loadingCard}>
           <div className={styles.loadingSpinner} />
-          <p className={styles.loadingTitle}>Creating your tailored resume...</p>
+          <p className={styles.loadingTitle}>
+            Creating your tailored resume...
+          </p>
           <p className={styles.loadingSubtitle}>
             AI is analyzing the job description and optimizing your resume
           </p>
@@ -284,8 +307,8 @@ const ResumeTailorTool = ({
             <CheckCircle size={24} /> Resume Tailored Successfully!
           </DialogTitle>
           <DialogDescription className={styles.dialogDescription}>
-            Your resume has been tailored to the job description. Optionally upload 
-            a profile image or proceed to view your resume.
+            Your resume has been tailored to the job description. Optionally
+            upload a profile image or proceed to view your resume.
           </DialogDescription>
           <ProfileImageUploader
             onImageChange={handleProfileImageChange}
@@ -319,22 +342,28 @@ const ResumeTailorTool = ({
             <FileText className={styles.panelIcon} />
             <h2 className={styles.panelTitle}>Your Resume</h2>
           </div>
-          
-          <div
+
+          <button
+            type="button"
             className={styles.dropZone}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
           >
+            <VisuallyHidden.Root>
+              <label htmlFor="resume-upload">Upload your resume</label>
+            </VisuallyHidden.Root>
             <input
+              id="resume-upload"
               type="file"
               ref={fileInputRef}
               onChange={handleFileChange}
               className={styles.fileInput}
               accept=".pdf,.txt"
             />
-            
+
             {uploadedFile ? (
               <div className={styles.fileSelected}>
                 <FileUpIcon size={32} className={styles.uploadIcon} />
@@ -352,22 +381,16 @@ const ResumeTailorTool = ({
                 </Button>
               </div>
             ) : (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className={styles.dropZoneButton}
-              >
+              <div className={styles.dropZoneContent}>
                 <Upload size={40} className={styles.uploadIcon} />
-                <p className={styles.dropText}>
-                  Drag & drop your resume here
-                </p>
+                <p className={styles.dropText}>Drag & drop your resume here</p>
                 <p className={styles.dropSubtext}>or click to browse</p>
                 <span className={styles.fileTypes}>
                   Supports PDF and TXT files (Max 10MB)
                 </span>
-              </button>
+              </div>
             )}
-          </div>
+          </button>
 
           {/* Color Customization & Tailor Toggle */}
           <div className={styles.customizationSection}>
@@ -405,7 +428,9 @@ const ResumeTailorTool = ({
         </div>
 
         {/* Right Panel - Job Description */}
-        <div className={`${styles.panel} ${!tailorEnabled ? styles.disabledPanel : ''}`}>        
+        <div
+          className={`${styles.panel} ${!tailorEnabled ? styles.disabledPanel : ''}`}
+        >
           <div className={styles.panelHeader}>
             <BriefcaseIcon className={styles.panelIcon} />
             <h2 className={styles.panelTitle}>Job Description</h2>
@@ -434,15 +459,20 @@ const ResumeTailorTool = ({
 
           {jobSpecMethod === 'paste' ? (
             <div className={styles.textareaContainer}>
-              <textarea
+              <Textarea
                 className={styles.jobSpecTextarea}
                 placeholder="Paste the job description here..."
                 maxLength={4000}
                 value={jobSpecText}
                 onChange={(e) => setJobSpecText(e.target.value)}
+                disabled={!tailorEnabled}
               />
               <div className={styles.characterCount}>
-                <span className={jobSpecText.length > 3800 ? styles.characterWarning : ''}>
+                <span
+                  className={
+                    jobSpecText.length > 3800 ? styles.characterWarning : ''
+                  }
+                >
                   {jobSpecText.length}/4000 characters
                 </span>
               </div>
@@ -480,36 +510,43 @@ const ResumeTailorTool = ({
           <div className={styles.toneSection}>
             <h3 className={styles.sectionTitle}>Resume Tone</h3>
             <div className={styles.toneOptions}>
-              {(['Formal', 'Neutral', 'Creative'] as const).map((toneOption) => (
-                <button
-                  key={toneOption}
-                  type="button"
-                  className={`${styles.toneButton} ${tone === toneOption ? styles.toneButtonActive : ''}`}
-                  onClick={() => setTone(toneOption)}
-                >
-                  <span className={styles.toneName}>{toneOption}</span>
-                  <span className={styles.toneDescription}>
-                    {toneOption === 'Formal' && 'Conservative, traditional'}
-                    {toneOption === 'Neutral' && 'Balanced, professional'}
-                    {toneOption === 'Creative' && 'Dynamic, engaging'}
-                  </span>
-                </button>
-              ))}
+              {(['Formal', 'Neutral', 'Creative'] as const).map(
+                (toneOption) => (
+                  <button
+                    key={toneOption}
+                    type="button"
+                    className={`${styles.toneButton} ${tone === toneOption ? styles.toneButtonActive : ''}`}
+                    onClick={() => setTone(toneOption)}
+                  >
+                    <span className={styles.toneName}>{toneOption}</span>
+                    <span className={styles.toneDescription}>
+                      {toneOption === 'Formal' && 'Conservative, traditional'}
+                      {toneOption === 'Neutral' && 'Balanced, professional'}
+                      {toneOption === 'Creative' && 'Dynamic, engaging'}
+                    </span>
+                  </button>
+                )
+              )}
             </div>
           </div>
 
           {/* Additional Instructions */}
           <div className={styles.instructionsSection}>
             <h3 className={styles.sectionTitle}>Additional Instructions</h3>
-            <textarea
+            <Textarea
               className={styles.instructionsTextarea}
               placeholder="Add any specific instructions for tailoring (optional)..."
               maxLength={500}
               value={extraPrompt}
               onChange={(e) => setExtraPrompt(e.target.value)}
+              disabled={!tailorEnabled}
             />
             <div className={styles.characterCount}>
-              <span className={extraPrompt.length > 450 ? styles.characterWarning : ''}>
+              <span
+                className={
+                  extraPrompt.length > 450 ? styles.characterWarning : ''
+                }
+              >
                 {extraPrompt.length}/500 characters
               </span>
             </div>
@@ -525,10 +562,15 @@ const ResumeTailorTool = ({
             {error}
           </div>
         )}
-        
+
         <Button
           onClick={handleCreateResume}
-          disabled={isLoading || !uploadedFile || (tailorEnabled && (jobSpecMethod === 'paste' ? !jobSpecText.trim() : !jobSpecFile))}
+          disabled={
+            isLoading ||
+            !uploadedFile ||
+            (tailorEnabled &&
+              (jobSpecMethod === 'paste' ? !jobSpecText.trim() : !jobSpecFile))
+          }
           className={styles.createButton}
           variant="primary"
           size="lg"

@@ -78,6 +78,12 @@
   margin-bottom: var(--spacing-xl);
   position: relative;
   box-shadow: var(--color-shadow-medium);
+  display: flex;
+    justify-content: space-around;
+    align-content: space-around;
+    align-items: stretch;
+    padding: 1rem;
+    flex-direction: row;
 }
 
 .dropZone:hover {
