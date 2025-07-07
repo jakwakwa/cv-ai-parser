@@ -4,19 +4,19 @@ const themeScript = `
 (function() {
   try {
     const savedTheme = localStorage.getItem('theme');
-    const theme = savedTheme || 'system';
     
     function applyTheme(themeValue) {
       document.documentElement.setAttribute('data-theme', themeValue);
     }
     
-    if (theme === 'system') {
-      applyTheme('system');
+    if (savedTheme) {
+      applyTheme(savedTheme);
     } else {
-      applyTheme(theme);
+      // If no theme is saved, do not set data-theme here. 
+      // Allow useTheme hook to determine initial theme client-side.
     }
     
-    if (theme === 'system') {
+    if (savedTheme === 'system' || !savedTheme) {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       mediaQuery.addEventListener('change', function(e) {
         const currentTheme = localStorage.getItem('theme');
