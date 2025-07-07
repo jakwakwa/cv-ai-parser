@@ -25,7 +25,7 @@
     
     /* Border Colors */
     --color-border-light: #e5e7eb;
-    --color-border-medium: #bacae2;
+    --color-border-medium: #bdd7de;
     --color-border-dark: #9ca3af;
     --color-border-neutral: #e5e7eb;
     
@@ -52,7 +52,7 @@
     --color-error-light: #fef2f2;
     --color-error-dark: #b91c1c;
     
-    --color-info: #0ac5b2;
+    --color-info: #14b8a6;
     --color-info-light: #eff6ff;
     --color-info-dark: #1d4ed8;
     
@@ -201,7 +201,7 @@
     /* State Colors - Adjusted for dark backgrounds */
     --color-success: #8dd0ca;
     --color-success-light: rgba(34, 197, 94, 0.1);
-    --color-success-dark: #16a34a;
+    --color-success-dark: #a6d9d4;
     
     --color-warning: #fbbf24;
     --color-warning-light: rgba(251, 191, 36, 0.1);
@@ -211,7 +211,7 @@
     --color-error-light: rgba(239, 68, 68, 0.1);
     --color-error-dark: #dc2626;
     
-    --color-info: #3b82f6;
+    --color-info: #0d9488;
     --color-info-light: rgba(59, 130, 246, 0.1);
     --color-info-dark: #2563eb;
     
@@ -340,7 +340,7 @@
     --color-text-inverse: #ffffff;
     
     --color-border-light: #e5e7eb;
-    --color-border-medium: #bacae2;
+    --color-border-medium: #bdd7de;
     --color-border-dark: #9ca3af;
     --color-border-neutral: #e5e7eb;
     
@@ -355,7 +355,7 @@
     --color-secondary-blue-dark: #3730a3;
     
     /* State colors */
-    --color-success: #16a34a;
+    --color-success: #a6d9d4;
     --color-success-light: #dcfce7;
     --color-success-dark: #15803d;
     
@@ -367,7 +367,7 @@
     --color-error-light: #fef2f2;
     --color-error-dark: #b91c1c;
     
-    --color-info: #2563eb;
+    --color-info: #14b8a6;
     --color-info-light: #eff6ff;
     --color-info-dark: #1d4ed8;
     
@@ -511,7 +511,7 @@
     
     --color-success: #8dd0ca;
     --color-success-light: rgba(34, 197, 94, 0.1);
-    --color-success-dark: #16a34a;
+    --color-success-dark: #a6d9d4;
     
     --color-warning: #fbbf24;
     --color-warning-light: rgba(251, 191, 36, 0.1);
@@ -521,7 +521,7 @@
     --color-error-light: rgba(239, 68, 68, 0.1);
     --color-error-dark: #dc2626;
     
-    --color-info: #3b82f6;
+    --color-info: #0d9488;
     --color-info-light: rgba(59, 130, 246, 0.1);
     --color-info-dark: #2563eb;
     

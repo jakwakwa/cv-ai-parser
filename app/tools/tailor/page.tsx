@@ -25,13 +25,13 @@ export default function ResumeTailorPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleResumeCreated = async (
-    _parsedData: ParsedResume,
+    parsedData: ParsedResume,
     info: ParseInfo
   ) => {
-    if (user && info.resumeSlug) {
-      router.push(`/resume/${info.resumeSlug}?toast=resume_uploaded`);
-    } else {
-      // For non-auth users, show a toast and potentially redirect to a preview
+    // Pass the parsed data to the ResumeTailorTool. The ResumeTailorTool will handle
+    // showing the profile image uploader and subsequent navigation.
+    // For non-authenticated users, we might still want to show a toast.
+    if (!user) {
       toast({
         title: 'Resume Created',
         description:

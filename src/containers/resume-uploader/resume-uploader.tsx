@@ -209,9 +209,11 @@ const ResumeUploader = ({
       // Only check authentication for authenticated users
       if (isAuthenticated) {
         if (!supabase) {
-          throw new Error('Authentication system not available. Please try again.');
+          throw new Error(
+            'Authentication system not available. Please try again.'
+          );
         }
-        
+
         const {
           data: { session },
         } = await supabase.auth.getSession();
