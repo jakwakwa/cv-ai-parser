@@ -4,13 +4,14 @@
  */
 
 body {
+  color: var(--color-text-primary);
   background: #374151;
   background-color: #374151;
   background-image: radial-gradient(
     ellipse farthest-corner, 
-    rgba(20, 252, 252, 0.9) 20%, 
-    rgba(44, 40, 44, 0.9) 90%
-  ), url('/main-bg.jpg');
+    var(--color-radial-gradient-start) 20%, 
+    var(--color-radial-gradient-end) 90%
+  );
   background-size: cover;
   background-position: center;
 } 

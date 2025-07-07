@@ -1,15 +1,15 @@
 .layout {
   display: grid;
   grid-template-columns: 16rem minmax(0, 1fr) 13rem;
-  gap: 2.5rem;
-  max-width: 85rem;
+  gap: var(--spacing-xl);
+  max-width: var(--max-width-3xl);
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: var(--spacing-lg) var(--spacing-md);
 }
 
 .sidebar {
   position: sticky;
-  top: 2rem;
+  top: var(--spacing-lg);
   align-self: start;
 }
 
@@ -17,20 +17,20 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-xs);
 }
 
 .navLink {
   text-decoration: none;
-  color: #6b7280; /* gray-500 */
+  color: var(--color-text-secondary); /* gray-500 */
 }
 
 .navLinkActive {
-  color: #0891b2; /* teal-600 */
-  font-weight: 600;
+  color: var(--color-accent-blue); /* teal-600 */
+  font-weight: var(--font-weight-semibold);
 }
 
 .content {
@@ -39,11 +39,11 @@
 
 .toc {
   position: sticky;
-  top: 2rem;
-  font-size: 0.75rem;
+  top: var(--spacing-lg);
+  font-size: var(--font-size-xs);
   color: var(--color-text-muted);
-  border-left: 1px dotted var(--color-border);
-  padding-left: 1rem;
+  border-left: 1px dotted var(--color-border-light);
+  padding-left: var(--spacing-md);
 }
 
 .toc ul {
@@ -52,7 +52,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--spacing-xs);
 }
 
 .tocLink {
@@ -66,5 +66,5 @@
 
 .tocLink[aria-current='true'] {
   color: var(--color-accent);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }

@@ -37,19 +37,22 @@ interface ColorPickerProps {
 
 const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
   const defaultColors = {
-    '--resume-job-title': '#116964',
-    '--resume-sub-icons': '#116964',
-    '--resume-profile-header-subtitle': '#116964',
-    '--resume-sidebar-background': '#f5f5f5',
-    '--resume-main-icons': '#a67244',
-    '--resume-sub-titles-issuer': '#a67244',
-    '--resume-sub-titles-companies': '#a67244',
-    '--resume-profile-name': '#565854',
-    '--resume-section-titles': '#565854',
-    '--resume-dates': '#565854',
-    '--resume-body-text': '#3e2f22',
-    '--resume-profile-header-background': '#faf4ec',
-    '--resume-skill-border': '#a49990',
+    '--resume-job-title': 'var(--resume-job-title-system)',
+    '--resume-sub-icons': 'var(--resume-sub-icons-system)',
+    '--resume-profile-header-subtitle':
+      'var(--resume-profile-header-subtitle-system)',
+    '--resume-sidebar-background': 'var(--resume-sidebar-background-system)',
+    '--resume-main-icons': 'var(--resume-main-icons-system)',
+    '--resume-sub-titles-issuer': 'var(--resume-sub-titles-issuer-system)',
+    '--resume-sub-titles-companies':
+      'var(--resume-sub-titles-companies-system)',
+    '--resume-profile-name': 'var(--resume-profile-name-system)',
+    '--resume-section-titles': 'var(--resume-section-titles-system)',
+    '--resume-dates': 'var(--resume-dates-system)',
+    '--resume-body-text': 'var(--resume-body-text-system)',
+    '--resume-profile-header-background':
+      'var(--resume-profile-header-background-system)',
+    '--resume-skill-border': 'var(--resume-skill-border-system)',
   };
 
   const colorSchemes: ColorScheme[] = [
@@ -60,55 +63,71 @@ const ColorPicker = ({ currentColors, onColorsChange }: ColorPickerProps) => {
     {
       name: 'Elegant Gold & Slate',
       colors: {
-        '--resume-job-title': '#7a6b3f', // gold
-        '--resume-sub-icons': '#7a6b3f',
-        '--resume-profile-header-subtitle': '#404143', // slate
-        '--resume-sidebar-background': '#F0EEF1', // light background
-        '--resume-main-icons': '#3d637f',
-        '--resume-sub-titles-issuer': '#7a6b3f',
-        '--resume-sub-titles-companies': '#7a6b3f',
-        '--resume-profile-name': '#404143', // slate
-        '--resume-section-titles': '#404143',
-        '--resume-dates': '#404143',
-        '--resume-body-text': '#27272F', // dark
-        '--resume-profile-header-background': '#F0EEF1',
-        '--resume-skill-border': '#A6A6A8', // muted grey
+        '--resume-job-title': 'var(--resume-job-title-gold-system)', // gold
+        '--resume-sub-icons': 'var(--resume-sub-icons-gold-system)',
+        '--resume-profile-header-subtitle':
+          'var(--resume-profile-header-subtitle-slate-system)', // slate
+        '--resume-sidebar-background':
+          'var(--resume-sidebar-background-gold-system)', // light background
+        '--resume-main-icons': 'var(--resume-main-icons-gold-system)',
+        '--resume-sub-titles-issuer':
+          'var(--resume-sub-titles-issuer-gold-system)',
+        '--resume-sub-titles-companies':
+          'var(--resume-sub-titles-companies-gold-system)',
+        '--resume-profile-name': 'var(--resume-profile-name-slate-system)', // slate
+        '--resume-section-titles': 'var(--resume-section-titles-slate-system)',
+        '--resume-dates': 'var(--resume-dates-slate-system)',
+        '--resume-body-text': 'var(--resume-body-text-gold-system)', // dark
+        '--resume-profile-header-background':
+          'var(--resume-profile-header-background-gold-system)',
+        '--resume-skill-border': 'var(--resume-skill-border-gold-system)', // muted grey
       },
     },
     {
       name: 'Minimalist Sand & Ink',
       colors: {
-        '--resume-job-title': '#22211D', // ink
-        '--resume-sub-icons': '#22211D',
-        '--resume-profile-header-subtitle': '#E6DFD9', // sand
-        '--resume-sidebar-background': '#FFFCF9', // lightest
-        '--resume-main-icons': '#5d5a4b',
-        '--resume-sub-titles-issuer': '#22211D',
-        '--resume-sub-titles-companies': '#22211D',
-        '--resume-profile-name': '#0D0D0B', // darkest
-        '--resume-section-titles': '#0D0D0B',
-        '--resume-dates': '#0D0D0D',
-        '--resume-body-text': '#22211D',
-        '--resume-profile-header-background': '#E6DFD9',
-        '--resume-skill-border': '#E6DFD9', // sand
+        '--resume-job-title': 'var(--resume-job-title-ink-system)', // ink
+        '--resume-sub-icons': 'var(--resume-sub-icons-ink-system)',
+        '--resume-profile-header-subtitle':
+          'var(--resume-profile-header-subtitle-sand-system)', // sand
+        '--resume-sidebar-background':
+          'var(--resume-sidebar-background-ink-system)', // lightest
+        '--resume-main-icons': 'var(--resume-main-icons-ink-system)',
+        '--resume-sub-titles-issuer':
+          'var(--resume-sub-titles-issuer-ink-system)',
+        '--resume-sub-titles-companies':
+          'var(--resume-sub-titles-companies-ink-system)',
+        '--resume-profile-name': 'var(--resume-profile-name-darkest-system)', // darkest
+        '--resume-section-titles':
+          'var(--resume-section-titles-darkest-system)',
+        '--resume-dates': 'var(--resume-dates-darkest-system)',
+        '--resume-body-text': 'var(--resume-body-text-ink-system)',
+        '--resume-profile-header-background':
+          'var(--resume-profile-header-background-sand-system)',
+        '--resume-skill-border': 'var(--resume-skill-border-sand-system)', // sand
       },
     },
     {
       name: 'Modern Blue & Mint',
       colors: {
-        '--resume-job-title': '#2D3340', // blue
-        '--resume-sub-icons': '#BAD9D3', // mint
-        '--resume-profile-header-subtitle': '#2E3442', // blue
-        '--resume-sidebar-background': '#EDEBF0', // light
-        '--resume-main-icons': '#9225a7',
-        '--resume-sub-titles-issuer': '#9225a7',
-        '--resume-sub-titles-companies': '#9225a7',
-        '--resume-profile-name': '#2E3442',
-        '--resume-section-titles': '#2E3442',
-        '--resume-dates': '#2E3442',
-        '--resume-body-text': '#2D3340',
-        '--resume-profile-header-background': '#EDEBF0',
-        '--resume-skill-border': '#9CC4C3', // mint
+        '--resume-job-title': 'var(--resume-job-title-blue-system)', // blue
+        '--resume-sub-icons': 'var(--resume-sub-icons-mint-system)', // mint
+        '--resume-profile-header-subtitle':
+          'var(--resume-profile-header-subtitle-blue-system)', // blue
+        '--resume-sidebar-background':
+          'var(--resume-sidebar-background-modern-system)', // light
+        '--resume-main-icons': 'var(--resume-main-icons-modern-system)',
+        '--resume-sub-titles-issuer':
+          'var(--resume-sub-titles-issuer-modern-system)',
+        '--resume-sub-titles-companies':
+          'var(--resume-sub-titles-companies-modern-system)',
+        '--resume-profile-name': 'var(--resume-profile-name-modern-system)',
+        '--resume-section-titles': 'var(--resume-section-titles-modern-system)',
+        '--resume-dates': 'var(--resume-dates-modern-system)',
+        '--resume-body-text': 'var(--resume-body-text-blue-system)',
+        '--resume-profile-header-background':
+          'var(--resume-profile-header-background-modern-system)',
+        '--resume-skill-border': 'var(--resume-skill-border-mint-system)', // mint
       },
     },
   ];

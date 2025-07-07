@@ -7,10 +7,10 @@
 .container {
   display: flex;
   width: 100%;
-  max-width: 900px;
+  max-width: var(--max-width-lg);
   border-radius: var(--border-radius-medium);
   overflow: hidden;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--color-shadow-medium);
   min-height: 500px;
   flex-direction: column;
 }
@@ -48,7 +48,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to top, rgba(25, 57, 71, 0.94), rgba(35, 184, 159, 0.2));
+  background: var(--color-gradient-primary-overlay);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -71,7 +71,7 @@
 .overlayText {
   text-align: center;
   font-size: var(--font-size-lg);
-  color: #d1d5db;
+  color: var(--color-text-off-white);
 }
 
 /* Form column using design tokens */
@@ -141,6 +141,8 @@
   outline: none;
   transition: var(--transition-fast);
   font-family: var(--font-family-base);
+  background-color: var(--color-background-input);
+  color: var(--color-text-primary);
 }
 
 .input::placeholder {
@@ -149,7 +151,7 @@
 
 .input:focus {
   border-color: var(--color-accent-teal);
-  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2);
+  box-shadow: var(--color-shadow-focus);
 }
 
 /* Submit button styles using design tokens */

@@ -82,12 +82,13 @@
 
 .button.default {
     background-color: var(--color-primary-dark);
-    color: var(--color-background-primary);
+    color: var(--color-text-light);
     border: 1px solid var(--color-border-light);
 }
 
 .button.default:hover {
-    background-color: var(--color-primary-darker);
+    background-color: var(--color-background-dark);
+    color: var(--color-text-hover);
 }
 
 .button.destructive {
@@ -115,9 +116,26 @@
     color: var(--color-text-primary);
 }
 
+.button.ghost.nav {
+    align-items: center;
+    justify-content: center;
+    width: var(--spacing-xxl);
+    height: var(--spacing-xxl);
+    /* padding: var(--spacing-sm); */
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--border-radius-medium);
+    background-color: var(--color-card-background);
+    color:#0ac5b2;
+    font-weight: 900;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    font-family: var(--font-family-base);
+}
+
 .button.ghost:hover {
     background-color: var(--color-accent-teal-light);
     color: var(--color-accent-teal);
+    transform: translateY(-1px);
 }
 
 .button.link {

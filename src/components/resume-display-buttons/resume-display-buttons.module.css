@@ -1,7 +1,7 @@
 .buttonContainer {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
   justify-content: center;
   flex-wrap: wrap;
 }

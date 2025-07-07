@@ -9,6 +9,7 @@
   --font-family-base: "Inter", Helvetica, sans-serif;
   
   /* Font Sizes */
+  --font-size-xxs: 0.7rem;
   --font-size-xs: 0.75rem;    /* 12px */
   --font-size-sm: 0.875rem;   /* 14px */
   --font-size-base: 0.9rem;   /* 14.4px */

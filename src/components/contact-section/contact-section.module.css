@@ -1,5 +1,4 @@
-/**
- * Component: ContactSection
+/* Component: ContactSection
  * Refactored to use design tokens following ITCSS architecture
  */
 
@@ -16,8 +15,8 @@
     justify-content: flex-start;
     gap: 5px;
     align-items: center;
-    border-bottom: 1px solid var(--light-brown-border, #a49990);
-    color: var(--charcoal, #565854);
+    border-bottom: 1px solid var(--color-border-light);
+    color: var(--color-text-primary);
     font-family: var(--font-family-primary);
 }
 
@@ -32,12 +31,12 @@
 .text,
 .link {
     font-size: 0.675rem;
-    color: var(--coffee, #3e2f22);
+    color: var(--color-text-primary);
     font-family: var(--font-family-base);
 }
 
 .link {
-    color: var(--coffee, #3e2f22);
+    color: var(--color-accent-teal);
     text-decoration: none;
     transition: var(--transition-fast);
 }

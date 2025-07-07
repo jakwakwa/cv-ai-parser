@@ -57,8 +57,8 @@
 }
 
 .selectedScheme {
-  border-color: var(--color-text-success);
-  background-color: #ecfdf5;
+  border-color: var(--color-success);
+  background-color: var(--color-success-light);
 }
 
 .unselectedScheme {
@@ -67,7 +67,7 @@
 }
 
 .unselectedScheme:hover {
-  border-color: var(--color-disabled);
+  border-color: var(--color-border-medium);
 }
 
 .schemeColorPreview {
@@ -80,8 +80,8 @@
 .colorCircle {
   width: var(--spacing-md);
   height: var(--spacing-md);
-  border-radius: 50%;
-  border: 1.5px solid #bbb;
+  border-radius: var(--border-radius-full);
+  border: 1.5px solid var(--color-border-medium);
 }
 
 .schemeName {
@@ -91,9 +91,9 @@
 }
 
 .iconSize {
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-right: var(--spacing-sm);
+  width: var(--font-size-lg);
+  height: var(--font-size-lg);
+  margin-right: var(--spacing-xs);
 }
 
 .customColorHeader {
@@ -186,7 +186,7 @@
   display: inline-block;
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--border-radius-small);
-  color: var(--color-background-primary);
+  color: var(--color-text-inverse);
   font-size: var(--font-size-xs);
 }
 
