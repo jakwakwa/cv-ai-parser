@@ -4,6 +4,7 @@ import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import { AuthModal } from '../auth-component/AuthModal';
 import { useAuthModal } from '../auth-component/AuthModalContext';
 import { MainNav } from '../main-nav/main-nav';
+import { ThemeToggle } from '../theme-toggle/theme-toggle';
 import { Button } from '../ui/ui-button/button';
 import { UserNav } from '../user-nav/user-nav';
 import styles from './site-header.module.css';
@@ -21,18 +22,21 @@ export function SiteHeader({ onLogoClick }: SiteHeaderProps) {
       <div className={styles.container}>
         <MainNav onLogoClick={onLogoClick} />
 
-        {user ? (
-          <UserNav />
-        ) : (
-          <Button
-            variant="ghost"
-            className="rounded-full p-0"
-            aria-label="Sign in"
-            onClick={() => setAuthModalOpen(true)}
-          >
-            Sign in
-          </Button>
-        )}
+        <div className={styles.headerActions}>
+          <ThemeToggle />
+          {user ? (
+            <UserNav />
+          ) : (
+            <Button
+              variant="ghost"
+              className="rounded-full p-0"
+              aria-label="Sign in"
+              onClick={() => setAuthModalOpen(true)}
+            >
+              Sign in
+            </Button>
+          )}
+        </div>
 
         <AuthModal />
       </div>

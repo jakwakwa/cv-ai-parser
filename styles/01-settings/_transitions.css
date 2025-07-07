@@ -1,0 +1,20 @@
+/**
+ * Settings: Transitions
+ * Global animation and transition tokens
+ */
+
+:root {
+  /* Transition Durations */
+  --transition-fast: 0.2s ease-in-out;
+  --transition-medium: all 0.2s ease-in-out;
+  --transition-slow: 0.3s ease-in-out;
+  
+  /* Easing Functions */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Animation Durations */
+  --animation-spin: 1s linear infinite;
+  --animation-pulse: 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+} 

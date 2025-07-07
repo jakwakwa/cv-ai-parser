@@ -1,6 +1,6 @@
 /* ProfileHeader styles */
 .header {
-  border-bottom: 1px solid rgba(164, 153, 144, 0.5);
+  border-bottom: 1px solid var(--color-border-light-translucent);
   height: 290px;
   display: grid;
   grid-template-columns: 1fr;
@@ -18,33 +18,33 @@
 }
 
 .left {
-  padding: 1.5rem;
+  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(146.96deg, var(--resume-skill-border) 7.87%, var(--resume-main-icons) 110.99%);
+  background: var(--color-gradient-profile-left);
 }
 
 @media (min-width: 768px) {
   .left {
-    padding: 1.5rem;
+    padding: var(--spacing-lg);
   }
 }
 
 .right {
-  padding: 1.5rem;
-  background-color: var(--resume-profile-header-background, #f5f5f5);
-  color: var(--coffee, #3e2f22);
+  padding: var(--spacing-lg);
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-primary);
   display: flex;
   flex-direction: column;
-  font-family: var(--font-dm-sans);
+  font-family: var(--font-family-primary);
 }
 
 @media (min-width: 768px) {
   .right {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
     grid-column: span 2 / span 2;
     justify-content: center;
   }
@@ -64,38 +64,38 @@
   max-height: 230px;
   width: 100%;
   height: auto;
-  border-radius: 50%;
+  border-radius: var(--border-radius-full);
   object-fit: cover;
 }
 
 .contentBody {
-  font-size: 0.735rem;
-  line-height: 1.35;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-normal);
 }
 
 /* New typography styles converted from Tailwind */
 .cvHeader {
   /* font-dm-mono-header text-md */
-  letter-spacing: 0.3rem;
+  letter-spacing: var(--letter-spacing-wide);
   font-family: var(--font-dm-mono);
-  margin-bottom: 3px;
-  font-size: 0.75rem;
-  font-weight: 400;
+  margin-bottom: var(--spacing-xxs);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
 }
 
 .profileName {
   /* text-2xl font-bold mb-1 */
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-xs);
 }
 
 .jobTitle {
   /* text-md mb-4 font-dm-mono-subheading */
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  font-weight: 600;
-  line-height: 1;
+  font-size: var(--font-size-base);
+  margin-bottom: var(--spacing-md);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
   font-family: var(--font-dm-mono);
 }
 

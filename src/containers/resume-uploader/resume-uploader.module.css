@@ -10,14 +10,14 @@
 .uploaderContainer {
   position: relative;
   z-index: 0;
-  max-width: 800px;
+  max-width: var(--max-width-lg);
   width: 100%;
   margin: 0 auto;
   padding: var(--spacing-xl);
   text-align: center;
   background-color: var(--color-primary-overlay);
-  border-radius: var(--border-radius-rounded);
-  background: var(--color-primary-dark);
+  border-radius: var(--border-radius-large);
+  background: var(--color-background-dark);
   box-shadow: var(--color-shadow-primary);
 }
 
@@ -27,7 +27,7 @@
 
 .title {
   font-size: var(--font-size-3xl);
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-sm);
   font-family: var(--font-family-primary);
@@ -53,7 +53,7 @@
 }
 
 .parseMethod {
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-info);
   margin-bottom: var(--spacing-xs);
 }
@@ -77,7 +77,7 @@
   cursor: pointer;
   margin-bottom: var(--spacing-xl);
   position: relative;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  box-shadow: var(--color-shadow-medium);
 }
 
 .dropZone:hover {
@@ -102,7 +102,7 @@
 }
 
 .dropZoneButton:focus {
-  box-shadow: inset 0 -1px 10px 0 rgba(15, 69, 82, 0.05), inset 0 -1px 5px 0 rgba(15, 69, 82, 0.3);
+  box-shadow: var(--color-shadow-input-focus);
   border-radius: var(--border-radius-large);
   outline: 3px solid var(--color-accent-teal);
   background-color: var(--color-success-light);
@@ -143,11 +143,11 @@
 
 .uploadButton {
   background-color: var(--color-accent-teal);
-  color: var(--color-text-white);
+  color: var(--color-text-inverse);
   border: none;
   padding: var(--spacing-sm) var(--spacing-xl);
   border-radius: var(--border-radius-medium);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: var(--transition-fast);
 }
@@ -209,7 +209,7 @@
 
 .feature h3 {
   font-size: var(--font-size-xl);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-sm);
   font-family: var(--font-family-primary);
@@ -218,7 +218,7 @@
 .feature p {
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
-  line-height: 1.5;
+  line-height: var(--line-height-normal);
   font-family: var(--font-family-primary);
 }
 
@@ -240,8 +240,8 @@
   height: var(--spacing-xl);
   border: 2px solid var(--color-spinner-track);
   border-top: 2px solid var(--color-accent-teal);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+  border-radius: var(--border-radius-full);
+  animation: spin var(--animation-spin);
   margin-bottom: var(--spacing-md);
 }
 
@@ -252,7 +252,7 @@
 
 .loadingText {
   font-size: var(--font-size-lg);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-sm);
   font-family: var(--font-family-primary);
@@ -276,8 +276,8 @@
   gap: var(--spacing-xl);
   margin-bottom: var(--spacing-xl);
   padding: var(--spacing-lg);
-  border-radius: var(--border-radius-rounded);
-  background: var(--color-primary-dark);
+  border-radius: var(--border-radius-large);
+  background: var(--color-background-dark);
   box-shadow: var(--color-shadow-primary);
 }
 
@@ -287,7 +287,7 @@
 
 .jobSpecSection h3 {
   font-size: var(--font-size-xl);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-accent-teal);
   margin-bottom: var(--spacing-sm);
   font-family: var(--font-family-primary);
@@ -302,7 +302,7 @@
 
 .inputMethod {
   display: flex;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
   margin-bottom: var(--spacing-md);
 }
 
@@ -328,13 +328,13 @@
   font-size: var(--font-size-base);
   resize: vertical;
   font-family: var(--font-family-primary);
-  background: #ffffff; /* White background for better readability */
-  box-shadow: var(--color-shadow-textarea);
-  color: #1a1a1a; /* Dark text for good contrast */
+  background: var(--color-background-input);
+  box-shadow: var(--color-shadow-input);
+  color: var(--color-text-primary);
 }
 
 .jobSpecTextarea::placeholder {
-  color: #6b7280; /* Medium gray for placeholder */
+  color: var(--color-text-secondary);
   opacity: 0.8;
 }
 
@@ -342,26 +342,26 @@
   outline: 2px solid var(--color-accent-teal);
   outline-offset: 2px;
   border-color: var(--color-accent-teal);
-  background: #ffffff;
+  background: var(--color-background-input);
 }
 
 .extraPromptTextarea {
   width: 100%;
   min-height: 80px;
   padding: var(--spacing-sm);
-  border: 1px solid var(--color-border-input);
-  border-radius: var(--border-radius-rounded);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-large);
   font-size: var(--font-size-base);
   resize: vertical;
   font-family: var(--font-family-primary);
   margin-top: var(--spacing-md);
-  background: #ffffff; /* White background for better readability */
+  background: var(--color-background-input);
   box-shadow: var(--color-shadow-input);
-  color: #1a1a1a; /* Dark text for good contrast */
+  color: var(--color-text-primary);
 }
 
 .extraPromptTextarea::placeholder {
-  color: #6b7280; /* Medium gray for placeholder */
+  color: var(--color-text-secondary);
   opacity: 0.8;
 }
 
@@ -369,7 +369,7 @@
   outline: 2px solid var(--color-accent-teal);
   outline-offset: 2px;
   border-color: var(--color-accent-teal);
-  background: #ffffff;
+  background: var(--color-background-input);
 }
 
 .characterCount {
@@ -381,19 +381,19 @@
 
 .characterCountError {
   color: var(--color-error-text);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 
 .characterCountWarning {
-  color: #f59e0b;
-  font-weight: 500;
+  color: var(--color-warning-text);
+  font-weight: var(--font-weight-medium);
 }
 
 .extraPromptLabel {
   margin-top: var(--spacing-lg);
   margin-bottom: var(--spacing-sm);
   font-size: var(--font-size-lg);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-muted);
   font-family: var(--font-family-primary);
 }
@@ -406,32 +406,33 @@
   display: inline-block;
   text-align: left;
   width: 100%;
-  padding: var(--spacing-lg) var(--spacing-xl);
+  padding: var(--spacing-md) var(--spacing-lg);
   border: 1px solid var(--color-border-accent);
-  border-radius: var(--border-radius-rounded);
+  border-radius: var(--border-radius-large);
   font-size: var(--font-size-base);
-  background: var(--color-secondary-blue);
-  box-shadow: inset 20px 20px 60px var(--color-secondary-blue-dark), inset -20px -20px 60px var(--color-secondary-blue-light);
+  background: var(--color-background-secondary-gradient);
+  box-shadow: var(--color-shadow-secondary-inset-dark),
+              var(--color-shadow-secondary-inset-light);
+  overflow: hidden;
 }
 
 .groupedInputs > p {
   color: var(--color-text-bright) !important;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
 }
 
 .jobSpecFileInput {
-  gap: var(--spacing-xl);
+  gap: var(--spacing-md);
   width: 100%;
   padding: var(--spacing-md);
   border: 1px solid var(--color-border-special);
-  border-radius: 19px;
+  border-radius: var(--border-radius-large);
   background: var(--color-gradient-primary);
-  box-shadow: 7px 7px 14px var(--color-primary-darker);
+  box-shadow: var(--color-shadow-primary-dark);
   font-size: var(--font-size-base);
   cursor: pointer;
   overflow: hidden;
-  border-radius: 30px;
-  color: var(--color-text-white);
+  color: var(--color-text-inverse);
 }
 
 /* =================================================================
@@ -441,9 +442,8 @@
 .toneSelector {
   margin-top: var(--spacing-lg);
   margin-bottom: var(--spacing-md);
-  color: var(--color-text-white);
   font-size: var(--font-size-lg);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-muted);
   font-family: var(--font-family-primary);
 }
@@ -452,20 +452,19 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: var(--spacing-md);
-  color: var(--color-text-white);
+  color: var(--color-text-primary);
 }
 
 .toneOption {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  color: var(--color-text-white);
+  color: var(--color-text-primary);
   padding: var(--spacing-md);
   border: 1px solid var(--color-border-accent);
-  border-radius: var(--spacing-sm);
+  border-radius: var(--border-radius-medium);
   cursor: pointer;
   transition: var(--transition-medium);
-  border-radius: 20px;
   background: var(--color-gradient-secondary);
   box-shadow: var(--color-shadow-tone);
   overflow: hidden;
@@ -478,12 +477,12 @@
 
 .toneOption input[type="radio"] {
   margin-bottom: var(--spacing-sm);
-  color: var(--color-text-white);
+  color: var(--color-text-primary);
 }
 
 .toneOption span {
-  font-weight: 500;
-  color: var(--color-text-white);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
 }
 
 .toneOption small {
@@ -494,7 +493,7 @@
 
 .toneOption input[type="radio"]:checked + span {
   color: var(--color-accent-teal-bright);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 
 /* =================================================================
@@ -503,11 +502,12 @@
 
 .jobTailoringToggle {
   margin-bottom: var(--spacing-xl);
-  color: var(--color-text-white);
-  padding: var(--spacing-lg);
-  border-radius: var(--border-radius-rounded);
-  background: var(--color-secondary-blue);
-  box-shadow: inset -20px -20px 60px var(--color-secondary-blue-dark), inset 20px 20px 60px var(--color-secondary-blue-light);
+  color: var(--color-text-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-large);
+  background: var(--color-background-secondary-gradient);
+  box-shadow: var(--color-shadow-secondary-inset-dark),
+              var(--color-shadow-secondary-inset-light);
   overflow: hidden;
 }
 
@@ -523,7 +523,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   font-family: var(--font-family-primary);
   margin-bottom: var(--spacing-sm);
@@ -538,7 +538,7 @@
   width: 3rem;
   height: 1.5rem;
   background-color: var(--color-border-light);
-  border-radius: var(--spacing-md);
+  border-radius: var(--border-radius-medium);
   margin-right: var(--spacing-sm);
   transition: var(--transition-fast);
 }
@@ -550,8 +550,8 @@
   left: 2px;
   width: 1.25rem;
   height: 1.25rem;
-  background-color: var(--color-text-white);
-  border-radius: 50%;
+  background-color: var(--color-background-primary);
+  border-radius: var(--border-radius-full);
   transition: var(--transition-fast);
 }
 
@@ -564,7 +564,7 @@
 }
 
 .toggleText {
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-base);
   color: var(--color-text-accent);
 }
 
@@ -574,7 +574,7 @@
   margin: 0;
   text-align: left;
   margin-left: 3.75rem;
-  line-height: 1.4;
+  line-height: var(--line-height-normal);
   font-family: var(--font-family-primary);
 }
 
@@ -583,11 +583,11 @@
    ================================================================= */
 
 .userSubmitResumeBtn {
-  border-radius: var(--border-radius-rounded);
+  border-radius: var(--border-radius-large);
   width: 100%;
   margin-top: 1px;
   margin-bottom: var(--spacing-xl);
-  color: var(--color-text-white);
+  color: var(--color-text-inverse);
   background: var(--color-gradient-button);
   flex-direction: column;
   justify-content: center;
@@ -607,12 +607,12 @@
    ================================================================= */
 
 .colorButton {
-  background-color: #6366f1;
-  color: var(--color-text-white);
+  background-color: var(--color-accent-purple);
+  color: var(--color-text-inverse);
   border: none;
   padding: var(--spacing-sm) var(--spacing-lg);
   border-radius: var(--border-radius-medium);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: var(--transition-fast);
   display: flex;
@@ -622,7 +622,7 @@
 }
 
 .colorButton:hover {
-  background-color: #4f46e5;
+  background-color: var(--color-accent-purple-dark);
 }
 
 .removeFileButton {
@@ -631,16 +631,16 @@
   right: 0;
   height: 20px !important;
   width: 20px !important;
-  margin: 15px;
+  margin: var(--spacing-md);
   margin-bottom: var(--spacing-md);
   background-color: var(--color-error-button);
-  color: var(--color-text-white);
+  color: var(--color-text-inverse);
   border: none;
   padding: 0 !important;
   line-height: 0 !important;
   border-radius: var(--border-radius-small);
   font-size: var(--font-size-xs);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition: var(--transition-fast);
 }
@@ -655,7 +655,7 @@
   border: none;
   padding: var(--spacing-sm) var(--spacing-xl);
   border-radius: var(--border-radius-medium);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: var(--transition-fast);
 }
@@ -677,13 +677,13 @@
   align-items: center;
   gap: var(--spacing-sm);
   color: var(--color-error-text);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   margin-bottom: var(--spacing-md);
 }
 
 .errorDescription {
   color: var(--color-text-secondary);
-  line-height: 1.6;
+  line-height: var(--line-height-large);
   margin-bottom: var(--spacing-lg);
   white-space: pre-line;
 }
@@ -693,14 +693,14 @@
   align-items: center;
   gap: var(--spacing-sm);
   color: var(--color-text-success);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   margin-bottom: var(--spacing-md);
 }
 
 .dialogDescription {
   color: var(--color-text-secondary);
   margin-bottom: var(--spacing-lg);
-  line-height: 1.5;
+  line-height: var(--line-height-normal);
 }
 
 /* =================================================================
@@ -717,12 +717,12 @@
   }
 
   .dropZone {
-    padding: var(--spacing-lg) var(--spacing-md); /* Reduce padding */
+    padding: var(--spacing-md) var(--spacing-sm); /* Reduce padding */
   }
 
   .features {
     grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
   }
 
   .inputMethod {
@@ -736,32 +736,32 @@
 
   /* Better mobile padding for grouped inputs */
   .groupedInputs {
-    padding-left: 0.5rem; /* Restore minimal side padding */
-    padding-right: 0.5rem;
-    border-radius: 10px;
+    padding-left: var(--spacing-xs); /* Restore minimal side padding */
+    padding-right: var(--spacing-xs);
+    border-radius: var(--border-radius-small);
   }
 
   /* Ensure textareas respect 10px radius */
   .jobSpecTextarea,
   .extraPromptTextarea {
-    border-radius: 10px;
+    border-radius: var(--border-radius-small);
   }
 
   .uploaderStepSections {
     padding-left: 0;
     padding-right: 0;
     gap: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
-    border-radius: 10px;
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--border-radius-small);
   }
 
   .jobTailoringToggle {
     padding-left: 0;
     padding-right: 0;
-    border-radius: 10px;
+    border-radius: var(--border-radius-small);
   }
 
   .userSubmitResumeBtn {
-    border-radius: 10px;
+    border-radius: var(--border-radius-small);
   }
 }

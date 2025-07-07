@@ -1,22 +1,26 @@
-/* SkillsSection styles migrated from old location */
+/**
+ * Component: SkillsSection
+ * Refactored to use design tokens following ITCSS architecture
+ */
+
 .skillsSection {
     padding-top: 20px;
     break-inside: avoid;
     page-break-inside: avoid;
-
 }
 
 .sectionTitle {
-    font-size: 1.125rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.5rem;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
     display: flex;
     justify-content: flex-start;
     gap: 8px;
     align-items: center;
     border-bottom: 1px solid var(--light-brown-border);
     color: var(--charcoal);
+    font-family: var(--font-family-primary);
 }
 
 .sectionTitle svg {
@@ -25,16 +29,16 @@
 }
 
 .icon {
-    margin-right: 0.75rem;
+    margin-right: var(--spacing-sm);
     color: var(--teal-main, #116964);
 }
 
 .skill {
     font-size: 0.55rem;
-    padding: 0.25rem 0.6rem;
+    padding: var(--spacing-xs) 0.6rem;
     line-height: 1.2;
-    border-radius: 9999px;
-    font-weight: 600;
+    border-radius: 50px;
+    font-weight: var(--font-weight-semibold);
     background-color: transparent;
     color: var(--teal-main);
     border: 1px solid var(--light-brown-border);
@@ -44,8 +48,9 @@
 }
 
 .emptyStateMessage {
-    font-size: 0.875rem;
-    color: #6b7280;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    font-family: var(--font-family-base);
 }
 
 .avoid-break {
