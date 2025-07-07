@@ -199,7 +199,7 @@ GET /api/user/preferences
     "default_resume_colors": {
       "primary": "#0ea5e9",
       "secondary": "#64748b",
-      "accent": "#22c55e",
+      "accent": "#8dd0ca",
       "background": "#ffffff",
       "text": "#1f2937"
     },

@@ -27,16 +27,6 @@ export default function HomePageContent() {
             tailored resumes from scratch or convert your Figma designs into
             professional resume components.
           </p>
-          <div className={styles.heroCta}>
-            <Button
-              size="lg"
-              onClick={() => router.push('/tools/tailor')}
-              className={styles.primaryButton}
-            >
-              Get Started
-              <ArrowRight size={20} />
-            </Button>
-          </div>
         </div>
       </section>
 

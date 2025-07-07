@@ -2,7 +2,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--color-background-primary);
+  background: var(--color-page-background-fallback);
+  background-image: var(--color-page-background-gradient);
 }
 
 .toolsMain {

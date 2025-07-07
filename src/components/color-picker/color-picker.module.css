@@ -4,7 +4,7 @@
  */
 
 .colorPickerCard {
-  background-color: var(--color-background-primary);
+  background-color: var(--color-background-tertiary);
   border: 1px solid var(--color-border-light);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
@@ -58,12 +58,12 @@
 
 .selectedScheme {
   border-color: var(--color-success);
-  background-color: var(--color-success-light);
+  background-color: var(--color-success);
 }
 
 .unselectedScheme {
   border-color: var(--color-border-light);
-  background-color: var(--color-background-primary);
+  background-color: var(--color-background-secondary);
 }
 
 .unselectedScheme:hover {
@@ -141,16 +141,16 @@
 }
 
 .colorInput {
-  width: var(--spacing-xl);
-  height: var(--spacing-xl);
-  border-radius: var(--border-radius-small);
-  border: 1px solid var(--color-border-light);
+  background-color: var(--color-primary);
+  width: 25px;
+  height: 25px;
   cursor: pointer;
 }
 
 .colorDescription {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-xxs);
   color: var(--color-text-secondary);
+  opacity: 0.7;
 }
 
 .previewTitle {
@@ -213,6 +213,7 @@
 }
 
 .previewTwoColumnLayout {
+  background-color: #ffffff;
   display: flex;
   border: 1px solid var(--color-border-light);
   border-bottom-left-radius: var(--border-radius-medium);
