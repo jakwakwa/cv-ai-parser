@@ -1,0 +1,305 @@
+---
+description: "CSS Architecture using ITCSS + Design Tokens system for scalable, maintainable styling"
+patterns: ["*.module.css", "*.css", "*.tsx", "*.ts"]
+---
+
+# CSS Architecture Rules
+
+This project uses a comprehensive CSS architecture based on **ITCSS (Inverted Triangle CSS)** methodology combined with **Design Tokens** for scalable, maintainable styling.
+
+## Architecture Overview
+
+Our CSS follows a 7-layer ITCSS structure with 100% design token coverage:
+
+```
+styles/
+├── 01-settings/     # Design tokens (colors, spacing, typography)
+├── 02-tools/        # Mixins and functions (future)
+├── 03-generic/      # CSS resets and normalization
+├── 04-elements/     # Base HTML element styles
+├── 05-objects/      # Layout patterns and containers
+├── 06-components/   # Component styles (CSS Modules)
+├── 07-utilities/    # Helper classes and overrides
+└── main.css         # Main entry point
+```
+
+## Design Token System
+
+### Three-Tier Token Hierarchy
+
+1. **Global Tokens (Primitive)**: Raw values
+2. **Semantic Tokens (Alias)**: Purpose-driven tokens
+3. **Component Tokens (Specific)**: Component-specific usage
+
+### Core Token Categories
+
+- **Colors**: `--color-text-primary`, `--color-background-primary`, `--color-accent-teal`
+- **Spacing**: `--spacing-xs` (0.25rem) to `--spacing-xxl` (3rem)
+- **Typography**: `--font-size-xs` to `--font-size-hero`, `--font-weight-normal` to `--font-weight-bold`
+- **Layout**: `--border-radius-small`, `--transition-fast`, `--breakpoint-md`
+
+## CSS Module Development Rules
+
+### ✅ ALWAYS Use Design Tokens
+
+```css
+/* ✅ CORRECT - Using design tokens */
+.component {
+  padding: var(--spacing-md);
+  background-color: var(--color-background-primary);
+  border-radius: var(--border-radius-medium);
+  font-size: var(--font-size-base);
+  transition: var(--transition-fast);
+  font-family: var(--font-family-base);
+}
+
+/* ❌ INCORRECT - Hardcoded values */
+.component {
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+```
+
+### Component File Structure
+
+Always include a header comment following this pattern:
+
+```css
+/**
+ * Component: ComponentName
+ * Refactored to use design tokens following ITCSS architecture
+ */
+```
+
+### Naming Conventions
+
+- **CSS Modules**: Use kebab-case for file names (`component-name.module.css`)
+- **Class Names**: Use camelCase within CSS modules (`.componentName`, `.primaryButton`)
+- **Design Tokens**: Use kebab-case with semantic prefixes (`--color-text-primary`, `--spacing-md`)
+
+## Required Design Token Usage
+
+### Colors
+```css
+/* Text Colors */
+--color-text-primary      /* Main text */
+--color-text-secondary    /* Secondary text */
+--color-text-light        /* Light text */
+--color-text-success      /* Success messages */
+--color-text-error        /* Error messages */
+
+/* Background Colors */
+--color-background-primary    /* Main backgrounds */
+--color-background-secondary  /* Secondary backgrounds */
+
+/* Interactive Colors */
+--color-accent-teal          /* Primary actions */
+--color-accent-teal-dark     /* Hover states */
+--color-secondary-blue       /* Secondary actions */
+
+/* Border Colors */
+--color-border-light         /* Light borders */
+--color-border-neutral       /* Neutral borders */
+```
+
+### Spacing
+```css
+--spacing-xs    /* 0.25rem - 4px */
+--spacing-sm    /* 0.5rem - 8px */
+--spacing-md    /* 1rem - 16px */
+--spacing-lg    /* 1.5rem - 24px */
+--spacing-xl    /* 2rem - 32px */
+--spacing-xxl   /* 3rem - 48px */
+```
+
+### Typography
+```css
+--font-family-primary    /* DM Sans for headings */
+--font-family-base      /* Inter for body text */
+
+--font-size-xs          /* 0.75rem */
+--font-size-sm          /* 0.875rem */
+--font-size-base        /* 0.9rem */
+--font-size-lg          /* 1.125rem */
+--font-size-xl          /* 1.25rem */
+--font-size-2xl         /* 2rem */
+
+--font-weight-normal    /* 400 */
+--font-weight-medium    /* 500 */
+--font-weight-semibold  /* 600 */
+--font-weight-bold      /* 700 */
+```
+
+### Layout & Effects
+```css
+--border-radius-small    /* 0.375rem */
+--border-radius-medium   /* 0.5rem */
+--border-radius-large    /* 0.75rem */
+--border-radius-rounded  /* 50px */
+
+--transition-fast        /* 0.2s ease-in-out */
+--transition-medium      /* all 0.2s ease-in-out */
+--transition-slow        /* 0.3s ease-in-out */
+```
+
+## Component Development Patterns
+
+### Button Components
+```css
+.button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-accent-teal);
+  color: var(--color-background-primary);
+  border-radius: var(--border-radius-small);
+  font-weight: var(--font-weight-medium);
+  transition: var(--transition-fast);
+  font-family: var(--font-family-base);
+}
+
+.button:hover {
+  background-color: var(--color-accent-teal-dark);
+}
+```
+
+### Form Components
+```css
+.input {
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-small);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  transition: var(--transition-fast);
+}
+
+.input:focus {
+  border-color: var(--color-accent-teal);
+  outline: 2px solid rgba(13, 148, 136, 0.1);
+}
+```
+
+### Layout Components
+```css
+.container {
+  padding: var(--spacing-lg);
+  background-color: var(--color-background-primary);
+  border-radius: var(--border-radius-medium);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+```
+
+## Responsive Design
+
+Use consistent breakpoints and spacing:
+
+```css
+.responsiveComponent {
+  padding: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+}
+
+@media (min-width: 768px) {
+  .responsiveComponent {
+    padding: var(--spacing-lg);
+    font-size: var(--font-size-base);
+  }
+}
+```
+
+## Utility Classes
+
+When creating utility classes, follow this pattern:
+
+```css
+/* Text utilities */
+.u-text-center { text-align: center !important; }
+.u-font-size-lg { font-size: var(--font-size-lg) !important; }
+.u-font-weight-bold { font-weight: var(--font-weight-bold) !important; }
+
+/* Spacing utilities */
+.u-p-md { padding: var(--spacing-md) !important; }
+.u-mb-lg { margin-bottom: var(--spacing-lg) !important; }
+
+/* Color utilities */
+.u-text-primary { color: var(--color-text-primary) !important; }
+.u-bg-secondary { background-color: var(--color-background-secondary) !important; }
+```
+
+## Migration Guidelines
+
+When working with existing CSS:
+
+1. **Always convert hardcoded values to design tokens**
+2. **Add proper component header comments**
+3. **Use semantic token names, not primitive values**
+4. **Follow the three-tier token hierarchy**
+5. **Maintain responsive design patterns**
+
+## Forbidden Patterns
+
+### ❌ Never Use Hardcoded Values
+```css
+/* ❌ NEVER DO THIS */
+.component {
+  padding: 16px;
+  color: #1f2937;
+  font-size: 14px;
+  border-radius: 8px;
+}
+```
+
+### ❌ Never Use Tailwind Classes
+```tsx
+/* ❌ NEVER DO THIS - Tailwind is being phased out */
+<div className="p-4 bg-white rounded-lg">
+```
+
+### ❌ Never Skip Design Tokens
+```css
+/* ❌ NEVER DO THIS */
+.component {
+  margin: 20px; /* Use var(--spacing-lg) instead */
+}
+```
+
+## Integration with React/TypeScript
+
+When using CSS Modules in React components:
+
+```tsx
+import styles from './component-name.module.css';
+
+export function ComponentName() {
+  return (
+    <div className={styles.container}>
+      <button className={styles.primaryButton}>
+        Click me
+      </button>
+    </div>
+  );
+}
+```
+
+## Validation
+
+Before submitting code, ensure:
+
+- [ ] All CSS modules use design tokens exclusively
+- [ ] No hardcoded values (colors, spacing, fonts)
+- [ ] Proper component header comments
+- [ ] Consistent naming conventions
+- [ ] Responsive design using token-based breakpoints
+- [ ] Semantic token usage over primitive values
+
+## Resources
+
+- **Architecture Documentation**: `docs/css-architecture-implementation.md`
+- **Design Tokens**: `styles/01-settings/`
+- **Main Entry Point**: `styles/main.css`
+- **Component Examples**: `src/components/ui/ui-button/button.module.css`
+
+This architecture ensures maintainable, scalable, and consistent styling across the entire application while providing excellent developer experience and design system coherence.
+ 

@@ -14,6 +14,7 @@ export interface ButtonProps
     | 'ghost'
     | 'link';
   size?: 'default' | 'sm' | 'lg' | 'icon';
+  nav?: boolean; // Add this prop
   asChild?: boolean;
 }
 
@@ -23,6 +24,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       variant = 'teal',
       size = 'default',
+      nav = false, // Add this prop with default value
       asChild = false,
       ...props
     },
@@ -34,6 +36,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       styles.button,
       styles[variant],
       styles[size],
+      nav && styles.nav, // Add conditional nav class
       className
     );
 

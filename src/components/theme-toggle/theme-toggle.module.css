@@ -1,0 +1,77 @@
+/**
+ * Component: ThemeToggle
+ * Theme toggle button using design tokens following ITCSS architecture
+ */
+
+.toggleButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--spacing-xxl);
+  height: var(--spacing-xxl);
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--border-radius-medium);
+  background-color: var(--color-card-background);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  font-family: var(--font-family-base);
+}
+
+.toggleButton:hover {
+  background-color: var(--color-hover);
+  border-color: var(--color-border-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px var(--color-button-shadow);
+}
+
+.toggleButton:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.toggleButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.toggleButton:disabled:hover {
+  background-color: var(--color-card-background);
+  border-color: var(--color-border-medium);
+}
+
+.icon {
+  width: var(--spacing-md);
+  height: var(--spacing-md);
+  transition: var(--transition-fast);
+}
+
+/* Theme-specific icon colors */
+.toggleButton[title*="Light"] .icon {
+  color: var(--color-warning); /* Sun color */
+}
+
+.toggleButton[title*="Dark"] .icon {
+  color: var(--color-secondary-blue); /* Moon color */
+}
+
+.toggleButton[title*="System"] .icon {
+  color: var(--color-text-secondary); /* Monitor color */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .toggleButton {
+    width: var(--spacing-xl);
+    height: var(--spacing-xl);
+    padding: var(--spacing-xs);
+  }
+  
+  .icon {
+    width: var(--spacing-sm);
+    height: var(--spacing-sm);
+  }
+} 

@@ -55,5 +55,5 @@
   "editor.colorDecoratorsActivatedOn": "click",
   "editor.comments.ignoreEmptyLines": false,
   "editor.fontFamily": "Dank Mono, Monaco, 'Courier New', monospace",
-  "editor.fontSize": 13
+  "editor.fontSize": 11
 }

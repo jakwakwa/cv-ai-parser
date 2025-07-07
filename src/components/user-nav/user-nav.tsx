@@ -33,16 +33,8 @@ export function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className={styles.userNavButton}>
-          <Avatar className={styles.avatar}>
-            <AvatarImage
-              src={user.user_metadata?.avatar_url}
-              alt={user.user_metadata?.full_name || 'User'}
-            />
-            <AvatarFallback>
-              {getInitials(user.user_metadata?.full_name)}
-            </AvatarFallback>
-          </Avatar>
+        <Button variant="ghost" nav className={styles.userNavButton}>
+          {getInitials(user.user_metadata?.full_name)}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className={styles.dropdownContent} forceMount>

@@ -11,8 +11,8 @@ export default function DocsHome() {
     <div className={styles.wrapper}>
       <h1 className={styles.title}>Documentation</h1>
       <p className={styles.lead}>
-        Welcome to the knowledge base.  Here you'll find guides, best practices
-        and API references.  Select a topic below to get started.
+        Welcome to the knowledge base. Here you'll find guides, best practices
+        and API references. Select a topic below to get started.
       </p>
 
       <nav className={styles.navSection}>
@@ -25,13 +25,9 @@ export default function DocsHome() {
           </li>
           <li>
             <Link href="/docs/guides/resume-from-figma" className={styles.link}>
-              Building a Resume from a Figma Design <span className={styles.badge}>new</span>
+              Building a Resume from a Figma Design{' '}
+              <span className={styles.badge}>new</span>
             </Link>
-          </li>
-          <li>
-            <span className={styles.comingSoon}>
-              More topics coming soon…
-            </span>
           </li>
         </ul>
       </nav>
@@ -45,8 +41,12 @@ export default function DocsHome() {
             </Link>
           </li>
           <li>
-            <Link href="/docs/developer-notes/figma-integration-status" className={styles.link}>
-              Figma Integration Status <span className={styles.badge}>phase 1 complete</span>
+            <Link
+              href="/docs/developer-notes/figma-integration-status"
+              className={styles.link}
+            >
+              Figma Integration Status{' '}
+              <span className={styles.badge}>phase 1 complete</span>
             </Link>
           </li>
         </ul>

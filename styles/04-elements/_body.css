@@ -1,0 +1,17 @@
+/**
+ * Elements: Body
+ * Base body element styling
+ */
+
+body {
+  color: var(--color-text-primary);
+  background: #374151;
+  background-color: #374151;
+  background-image: radial-gradient(
+    ellipse farthest-corner, 
+    var(--color-radial-gradient-start) 20%, 
+    var(--color-radial-gradient-end) 90%
+  );
+  background-size: cover;
+  background-position: center;
+} 
