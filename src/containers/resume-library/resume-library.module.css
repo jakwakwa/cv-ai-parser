@@ -13,10 +13,7 @@
 .wrapper {
     width: 100%;
     margin: 0 auto;
-    padding: var(--spacing-xl);
-    background-color: var(--color-background-primary);
-    border-radius: var(--border-radius-large);
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    padding: 0;
 }
 
 .header {
@@ -76,21 +73,21 @@
 }
 
 .iconContainerGray {
-    background-color: rgb(243 244 246);
+    background-color: var(--color-background-secondary);
 }
 
 .iconContainerLoading {
-    background-color: rgb(243 244 246);
+    background-color: var(--color-background-secondary);
 }
 
 .icon {
     height: 1.5rem;
     width: 1.5rem;
-    color: rgb(75 85 99);
+    color: var(--color-text-light);
 }
 
 .iconGray {
-    color: rgb(156 163 175);
+    color: var(--color-text-secondary);
 }
 
 .loadingSpinner {
@@ -98,7 +95,7 @@
     border-radius: 9999px;
     height: 2rem;
     width: 2rem;
-    border-bottom: 2px solid rgb(13 148 136);
+    border-bottom: 2px solid var(--color-accent-teal);
     margin: 0 auto;
     margin-bottom: 1rem;
 }
@@ -112,12 +109,12 @@
 .stateTitle {
     font-size: 1.125rem;
     font-weight: 500;
-    color: rgb(17 24 39);
+    color: var(--color-text-primary);
     margin-bottom: 0.5rem;
 }
 
 .stateText {
-    color: rgb(75 85 99);
+    color: var(--color-text-secondary);
     margin-bottom: 1rem;
 }
 
@@ -141,8 +138,8 @@
 
 /* Card styles */
 .card {
-    background-color: white;
-    border: 1px solid rgb(229 231 235);
+    background-color: var(--color-background-primary);
+    border: 1px solid var(--color-border-light);
     transition: box-shadow 0.2s;
 }
 
@@ -163,7 +160,7 @@
 
 .cardTitle {
     font-weight: 600;
-    color: rgb(31 41 55);
+    color: var(--color-text-primary);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -185,13 +182,13 @@
 }
 
 .publicTogglePublic {
-    background-color: rgb(220 252 231);
-    color: rgb(22 101 52);
+    background-color: var(--color-accent-teal-light);
+    color: var(--color-accent-teal-dark);
 }
 
 .publicTogglePrivate {
-    background-color: rgb(243 244 246);
-    color: rgb(75 85 99);
+    background-color: var(--color-background-secondary);
+    color: var(--color-text-light);
 }
 
 .publicToggleIcon {
@@ -207,7 +204,7 @@
 
 .contentText {
     font-size: 0.875rem;
-    color: rgb(75 85 99);
+    color: var(--color-text-secondary);
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -221,7 +218,7 @@
 
 .contentValue {
     font-weight: 500;
-    color: rgb(22 163 74);
+    color: var(--color-text-success);
 }
 
 .contentIcon {
@@ -318,16 +315,16 @@
 }
 
 .badgeGreen {
-    background-color: rgb(220 252 231);
-    color: rgb(22 101 52);
+    background-color: var(--color-accent-teal-light);
+    color: var(--color-accent-teal-dark);
 }
 
 .badgeYellow {
-    background-color: rgb(254 249 195);
-    color: rgb(133 77 14);
+    background-color: #fef3c7;
+    color: #a16207;
 }
 
 .badgeGray {
-    background-color: rgb(243 244 246);
-    color: rgb(31 41 55);
+    background-color: var(--color-background-secondary);
+    color: var(--color-text-primary);
 }
