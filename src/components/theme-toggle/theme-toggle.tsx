@@ -1,6 +1,6 @@
 'use client';
 
-import { Monitor, Moon, Sun } from 'lucide-react';
+import { Moon, Settings, Sun } from 'lucide-react';
 import { useTheme } from '@/src/hooks/use-theme';
 import styles from './theme-toggle.module.css';
 
@@ -26,7 +26,7 @@ export function ThemeToggle() {
       case 'dark':
         return <Moon className={styles.icon} />;
       case 'system':
-        return <Monitor className={styles.icon} />;
+        return <Settings className={styles.icon} />;
       default:
         return <Sun className={styles.icon} />;
     }
