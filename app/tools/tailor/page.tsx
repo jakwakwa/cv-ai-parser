@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
@@ -19,14 +18,13 @@ interface ParseInfo {
 }
 
 export default function ResumeTailorPage() {
-  const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleResumeCreated = async (
-    parsedData: ParsedResume,
-    info: ParseInfo
+    _parsedData: ParsedResume,
+    _info: ParseInfo
   ) => {
     // Pass the parsed data to the ResumeTailorTool. The ResumeTailorTool will handle
     // showing the profile image uploader and subsequent navigation.

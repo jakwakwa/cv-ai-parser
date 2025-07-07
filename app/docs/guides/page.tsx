@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
+import { useState } from 'react';
 import styles from './page.module.css';
 
 interface GuideMeta {
@@ -30,20 +30,24 @@ const categories = Array.from(new Set(guides.map((g) => g.category)));
 
 export default function GuidesPage() {
   const [filter, setFilter] = useState<string | null>(null);
-  const filtered = filter ? guides.filter((g) => g.category === filter) : guides;
+  const filtered = filter
+    ? guides.filter((g) => g.category === filter)
+    : guides;
 
   return (
     <div>
       <h1>Guides</h1>
       <div className={styles.filters}>
-        <button type="button"
+        <button
+          type="button"
           className={`${styles.filterBtn} ${filter === null ? styles.filterBtnActive : ''}`}
           onClick={() => setFilter(null)}
         >
           All
         </button>
         {categories.map((cat) => (
-          <button type="button"
+          <button
+            type="button"
             key={cat}
             className={`${styles.filterBtn} ${filter === cat ? styles.filterBtnActive : ''}`}
             onClick={() => setFilter(cat)}
@@ -56,7 +60,10 @@ export default function GuidesPage() {
       <ul className={styles.guideList}>
         {filtered.map((g) => (
           <li key={g.slug}>
-            <Link href={`/docs/guides/${g.slug}`} className={styles.guideItemTitle}>
+            <Link
+              href={`/docs/guides/${g.slug}`}
+              className={styles.guideItemTitle}
+            >
               {g.title}
             </Link>
             <p className={styles.guideItemDesc}>{g.description}</p>
