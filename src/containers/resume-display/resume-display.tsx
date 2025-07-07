@@ -8,6 +8,7 @@ import ExperienceSection from '@/src/components/experience-section/experience-se
 import ProfileHeader from '@/src/components/profile-header/profile-header';
 import SkillsSection from '@/src/components/skills-section/skills-section';
 import { resumeColors } from '@/src/utils/colors';
+import styles from './resume-display.module.css';
 
 interface ResumeDisplayProps {
   resumeData: ParsedResume;
@@ -18,33 +19,32 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
   const resumeContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Apply custom colors directly to the container for non-authenticated users
-    // For authenticated users, colors are likely handled by database integration
-    if (resumeData?.customColors && resumeContainerRef.current) {
-      for (const [key, value] of Object.entries(resumeData.customColors)) {
+    if (resumeContainerRef.current) {
+      // Combine default and custom colors, with custom colors taking precedence
+      const finalColors = { ...resumeColors, ...resumeData.customColors };
+
+      // Apply the final set of colors as CSS variables to the container
+      for (const [key, value] of Object.entries(finalColors)) {
         resumeContainerRef.current.style.setProperty(key, value);
       }
     }
   }, [resumeData?.customColors]);
 
   return (
-    <div id="resume-content" className="resumeContent" ref={resumeContainerRef}>
+    <div
+      id="resume-content"
+      className={styles.resumeContent}
+      ref={resumeContainerRef}
+    >
       <ProfileHeader
-        profileImage={resumeData.profileImage || ''}
+        profileImage={resumeData.profileImage || undefined}
         name={resumeData.name || ''}
         title={resumeData.title || ''}
         summary={resumeData.summary || ''}
         customColors={resumeData.customColors || {}}
       />
-      <div className="resumeGrid">
-        <div
-          className="resumeSidebar"
-          style={{
-            backgroundColor:
-              resumeData.customColors?.['--resume-sidebar-background'] ||
-              resumeColors['--resume-sidebar-background'],
-          }}
-        >
+      <div className={styles.resumeGrid}>
+        <div className={styles.resumeSidebar}>
           <ContactSection
             contact={resumeData.contact || {}}
             customColors={resumeData.customColors || {}}
@@ -62,14 +62,7 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
             customColors={resumeData.customColors || {}}
           />
         </div>
-        <div
-          className="resumeMainContent"
-          style={{
-            color:
-              resumeData.customColors?.['--resume-body-text'] ||
-              resumeColors['--resume-body-text'],
-          }}
-        >
+        <div className={styles.resumeMainContent}>
           <ExperienceSection
             experience={resumeData.experience}
             customColors={resumeData.customColors || {}}

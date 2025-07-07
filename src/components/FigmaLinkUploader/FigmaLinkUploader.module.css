@@ -1,0 +1,218 @@
+/**
+ * Component: FigmaLinkUploader
+ * Refactored to use design tokens following ITCSS architecture
+ */
+
+/* Container using design tokens */
+.container {
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-md);
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--color-shadow-small);
+}
+
+.heading {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  align-items: center;
+}
+
+.inputContainer {
+  margin-bottom: var(--spacing-md);
+}
+
+/* Input field using design tokens */
+.input {
+  width: 100%;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-small);
+  padding: var(--spacing-sm) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  transition: var(--transition-fast);
+  font-family: var(--font-family-base);
+  background-color: var(--color-background-input);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-accent-teal);
+  box-shadow: var(--color-shadow-focus-alt);
+}
+
+.input:disabled {
+  background-color: var(--color-background-secondary);
+  color: var(--color-disabled);
+  cursor: not-allowed;
+}
+
+/* Input state variants */
+.inputError {
+  border-color: var(--color-error-text);
+}
+
+.inputError:focus {
+  border-color: var(--color-error-text);
+  box-shadow: var(--color-shadow-error-focus);
+}
+
+.inputSuccess {
+  border-color: var(--color-text-success);
+}
+
+.inputSuccess:focus {
+  border-color: var(--color-text-success);
+  box-shadow: var(--color-shadow-success-focus);
+}
+
+/* Button using design tokens */
+.generateBtn {
+  background-color: var(--color-accent-teal);
+  color: var(--color-background-primary);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  font-family: var(--font-family-base);
+}
+
+.generateBtn:hover {
+  background-color: var(--color-accent-teal-dark);
+}
+
+.generateBtn:disabled {
+  background-color: var(--color-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Loading spinner using design tokens */
+.loadingSpinner {
+  display: inline-block;
+  width: var(--spacing-md);
+  height: var(--spacing-md);
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: var(--border-radius-full);
+  animation: spin var(--animation-spin);
+  margin-right: var(--spacing-sm);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Status messages using design tokens */
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--color-error-text);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  border-radius: var(--border-radius-small);
+}
+
+.retryButton {
+  background-color: var(--color-error-button);
+  color: var(--color-background-primary);
+  border: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-small);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  margin-left: var(--spacing-md);
+  transition: var(--transition-fast);
+}
+
+.retryButton:hover {
+  background-color: var(--color-error-text);
+}
+
+.retryButton:disabled {
+  background-color: var(--color-disabled);
+  cursor: not-allowed;
+}
+
+.success {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-success);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.warning {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-info);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-sm);
+}
+
+/* Help text using design tokens */
+.helpText {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: var(--color-background-info);
+  border: 1px solid var(--color-border-info);
+  border-radius: var(--border-radius-small);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-info);
+}
+
+.helpText p {
+  margin: 0;
+  line-height: var(--line-height-normal);
+}
+
+.helpText strong {
+  color: var(--color-text-primary);
+}
+
+/* Actions row using design tokens */
+.actionsRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.colorsBtn {
+  background: none;
+  border: none;
+  color: var(--color-accent-teal);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.colorsBtn:hover {
+  color: var(--color-accent-teal-dark);
+}
+
+.colorsBtn:disabled {
+  color: var(--color-disabled);
+  cursor: not-allowed;
+}
+
+.colorsIcon {
+  width: var(--spacing-md);
+  height: var(--spacing-md);
+}

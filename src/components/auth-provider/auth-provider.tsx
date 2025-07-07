@@ -11,7 +11,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, fullName: string) => Promise<void>;
   signOut: () => Promise<void>;
-  supabase: SupabaseClient;
+  supabase: SupabaseClient | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,27 +20,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Ensure the AuthProvider is correctly rendering.
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient());
 
   useEffect(() => {
+    // Don't run during SSR/static generation
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+    // biome-ignore lint/suspicious/noExplicitAny: <ok now>
+    supabase.auth.getSession().then((response: any) => {
+      setUser(response.data.session?.user ?? null);
       setLoading(false);
     });
 
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      // biome-ignore lint/suspicious/noExplicitAny: <ok now>
+    } = supabase.auth.onAuthStateChange(async (_event: any, session: any) => {
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
-  }, [supabase.auth]);
+  }, [supabase]);
 
   const signIn = async (email: string, password: string) => {
+    if (!supabase) throw new Error('Supabase client not available');
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -49,6 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signUp = async (email: string, password: string, fullName: string) => {
+    if (!supabase) throw new Error('Supabase client not available');
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -62,6 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
+    if (!supabase) throw new Error('Supabase client not available');
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
   };

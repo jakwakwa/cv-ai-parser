@@ -196,23 +196,28 @@ export default function ViewResumePage() {
 
   if (viewMode === 'edit') {
     return (
-      <ResumeEditor
-        resumeData={resume.parsed_data}
-        onSave={handleSaveEdits}
-        onCancel={handleCancelEdit}
-        onCustomColorsChange={(colors) =>
-          setResume((prevResume) => {
-            if (!prevResume) return null;
-            return {
-              ...prevResume,
-              parsed_data: {
-                ...prevResume.parsed_data,
-                customColors: colors,
-              },
-            };
-          })
-        }
-      />
+      <div className="pageWrapper">
+        <SiteHeader />
+        <main>
+          <ResumeEditor
+            resumeData={resume.parsed_data}
+            onSave={handleSaveEdits}
+            onCancel={handleCancelEdit}
+            onCustomColorsChange={(colors) =>
+              setResume((prevResume) => {
+                if (!prevResume) return null;
+                return {
+                  ...prevResume,
+                  parsed_data: {
+                    ...prevResume.parsed_data,
+                    customColors: colors,
+                  },
+                };
+              })
+            }
+          />
+        </main>
+      </div>
     );
   }
 

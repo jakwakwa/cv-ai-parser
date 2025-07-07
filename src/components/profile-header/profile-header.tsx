@@ -1,7 +1,7 @@
 import styles from './profile-header.module.css';
 
 interface ProfileHeaderProps {
-  profileImage: string;
+  profileImage: string | undefined;
   name: string;
   title: string;
   summary: string;
@@ -19,11 +19,12 @@ const ProfileHeader = ({
     title && title.toLowerCase() !== 'professional' && title !== summary;
 
   // Check if we have a real profile image (not the default placeholder)
+  const lowerImg = profileImage ? profileImage.toLowerCase() : '';
   const hasProfileImage =
     profileImage &&
-    profileImage !== '/placeholder.svg?height=200&width=200' &&
-    !profileImage.includes('placeholder') &&
-    profileImage.trim() !== '';
+    lowerImg.trim() !== '' &&
+    !lowerImg.includes('placeholder') &&
+    !lowerImg.includes('placehold.co');
 
   return (
     <div
@@ -34,14 +35,9 @@ const ProfileHeader = ({
         <div className={styles.left}>
           {/** biome-ignore lint/performance/noImgElement: <> */}
           <img
-            src={profileImage || '/placeholder.svg'}
+            src={profileImage}
             alt="Profile"
             className={styles['profile-image']}
-            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-              (e.target as HTMLImageElement).onerror = null;
-              (e.target as HTMLImageElement).src =
-                'https://placehold.co/96x96/6b7280/FFFFFF?text=Profile';
-            }}
           />
         </div>
       )}

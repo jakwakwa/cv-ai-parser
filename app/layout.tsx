@@ -7,7 +7,9 @@ import Script from 'next/script';
 import { ToastProvider } from '@/hooks/use-toast';
 import { AuthModalProvider } from '@/src/components/auth-component/AuthModalContext';
 import { AuthProvider } from '@/src/components/auth-provider/auth-provider';
+import { SiteFooter } from '@/src/components/site-footer/SiteFooter';
 import { Toaster } from '@/src/components/ui/toaster';
+import { ThemeProvider } from '@/src/hooks/use-theme';
 
 export const metadata: Metadata = {
   title:
@@ -80,31 +82,27 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <ToastProvider>
-          <AuthProvider>
-            <AuthModalProvider>{children}</AuthModalProvider>
-          </AuthProvider>
+        <ThemeProvider>
           <ToastProvider>
+            <AuthProvider>
+              <AuthModalProvider>
+                <div
+                  style={{
+                    minHeight: '100vh',
+                    minWidth: '100vw',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  {children}
+                  <SiteFooter />
+                </div>
+              </AuthModalProvider>
+            </AuthProvider>
             <Toaster />
           </ToastProvider>
-        </ToastProvider>
+        </ThemeProvider>
         <Analytics />
-        <footer className="py-8 w-full shrink-0 items-center px-4 md:px-6 text-white bg-[#1f2937]">
-          <nav className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center text-center text-sm">
-            <a
-              className="hover:underline underline-offset-4"
-              href="/privacy-policy"
-            >
-              Privacy Policy
-            </a>
-            <a
-              className="hover:underline underline-offset-4"
-              href="/terms-and-conditions"
-            >
-              Terms and Conditions
-            </a>
-          </nav>
-        </footer>
       </body>
     </html>
   );

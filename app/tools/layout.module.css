@@ -1,0 +1,47 @@
+.toolsLayout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-page-background-fallback);
+  background-image: var(--color-page-background-gradient);
+}
+
+.toolsMain {
+  flex: 1;
+  width: 100%;
+  max-width: 100%;
+  padding: var(--spacing-lg) var(--spacing-md);
+  margin: 0 auto;
+}
+
+/* Responsive breakpoints for maximum width utilization */
+@media (min-width: 640px) {
+  .toolsMain {
+    padding: var(--spacing-lg) var(--spacing-lg);
+  }
+}
+
+@media (min-width: 768px) {
+  .toolsMain {
+    padding: var(--spacing-xl) var(--spacing-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .toolsMain {
+    padding: var(--spacing-xl) var(--spacing-xl);
+  }
+}
+
+@media (min-width: 1280px) {
+  .toolsMain {
+    padding: var(--spacing-xl) var(--spacing-xxl);
+  }
+}
+
+@media (min-width: 1536px) {
+  .toolsMain {
+    max-width: 1536px;
+    padding: var(--spacing-xl) var(--spacing-xxl);
+  }
+}

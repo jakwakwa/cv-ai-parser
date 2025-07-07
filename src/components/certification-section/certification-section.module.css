@@ -12,8 +12,8 @@
     justify-content: flex-start;
     gap: 8px;
     align-items: center;
-    border-bottom: 1px solid var(--light-brown-border);
-    color: var(--charcoal);
+    border-bottom: 1px solid var(--resume-skill-border);
+    color: var(--resume-section-titles);
 }
 
 .sectionTitle svg {
@@ -23,7 +23,7 @@
 
 .icon {
     margin-right: 0.75rem;
-    color: var(--teal-main, #116964);
+    color: var(--resume-job-title);
 }
 
 .certificationsList {
@@ -38,13 +38,14 @@
 .credentialId {
     font-size: 0.35rem;
     opacity: 0.65;
-    color: var(--charcoal, #565854);
+    color: var(--resume-body-text);
     /* font-style: italic; */
     margin-top: 0.1rem;
 }
 
 .noCerts {
-    color: #aaa;
+    color: var(--resume-body-text);
+    opacity: 0.7;
     font-size: 0.9rem;
     font-style: italic;
 }

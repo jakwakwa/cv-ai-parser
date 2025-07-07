@@ -14,5 +14,46 @@
   ],
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
-  }
+  },
+  "workbench.panel.showLabels": false,
+  "accessibility.verbosity.panelChat": false,
+  "workbench.view.showQuietly": {
+    "workbench.panel.output": true
+  },
+  "cursor.chat.terminalShowHoverHint": true,
+  "cursor.cmdk.autoSelect": false,
+  "cursor.composer.backspaceRemoveContext": false,
+  "cursor.composer.cmdPFilePicker2": true,
+  "cursor.composer.collapsePaneInputBoxPills": true,
+  "cursor.composer.shouldShowMarkdownHoverParticipantActions2": false,
+  "cursor.composer.showSuggestedFiles": false,
+  "cursor.composer.subAgentsMode": "off",
+  "cursor.composer.supportsReviewMode": false,
+  "cursor.composer.textSizeScale": 0.85,
+  "cursor.cpp.disabledLanguages": [
+    "plaintext"
+  ],
+  "cursor.general.gitGraphIndexing": "enabled",
+  "cursor.general.globalCursorIgnoreList": [
+    "**/credentials.json",
+    "**/credentials.*.json",
+    "**/secret.json",
+    "**/secrets.json",
+    "**/*.key",
+    "**/*.pem",
+    "**/*.pfx",
+    "**/*.p12",
+    "**/*.crt",
+    "**/*.cer",
+    "**/id_rsa",
+    "**/id_dsa",
+    "**/.ssh/id_*"
+  ],
+  "editor.codeActionWidget.includeNearbyQuickFixes": false,
+  "editor.codeLens": false,
+  "editor.colorDecorators": false,
+  "editor.colorDecoratorsActivatedOn": "click",
+  "editor.comments.ignoreEmptyLines": false,
+  "editor.fontFamily": "Dank Mono, Monaco, 'Courier New', monospace",
+  "editor.fontSize": 11
 }
