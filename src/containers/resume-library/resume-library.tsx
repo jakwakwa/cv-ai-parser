@@ -7,9 +7,10 @@ import {
   FileText,
   Globe,
   Lock,
+  Search,
   Trash2,
 } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { ResumeDatabase } from '@/lib/database';
 import type { Resume } from '@/lib/types';
 import { useAuth } from '@/src/components/auth-provider/auth-provider';
@@ -32,6 +33,7 @@ export default function ResumeLibrary({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const loadResumes = useCallback(async () => {
     if (!supabase) return;
@@ -111,6 +113,23 @@ export default function ResumeLibrary({
     }
   };
 
+  // Filter resumes based on search term (slug name)
+  const filteredResumes = useMemo(() => {
+    if (!searchTerm.trim()) {
+      return resumes;
+    }
+    
+    const normalizedSearchTerm = searchTerm.toLowerCase().trim();
+    return resumes.filter((resume) => {
+      // Search in slug name if it exists
+      if (resume.slug) {
+        return resume.slug.toLowerCase().includes(normalizedSearchTerm);
+      }
+      // Fallback to searching in title if no slug
+      return resume.title.toLowerCase().includes(normalizedSearchTerm);
+    });
+  }, [resumes, searchTerm]);
+
   if (!user) {
     return (
       <div className={styles.container}>
@@ -141,8 +160,22 @@ export default function ResumeLibrary({
         <div className={styles.header}>
           <h2 className={styles.title}>Your Resume Library</h2>
           <p className={styles.subtitle}>
-            {resumes.length} resume{resumes.length !== 1 ? 's' : ''}
+            {filteredResumes.length} of {resumes.length} resume{resumes.length !== 1 ? 's' : ''}
           </p>
+        </div>
+
+        {/* Search Filter */}
+        <div className={styles.searchContainer}>
+          <div className={styles.searchInputWrapper}>
+            <Search className={styles.searchIcon} />
+            <input
+              type="text"
+              placeholder="Filter by slug name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={styles.searchInput}
+            />
+          </div>
         </div>
 
         {error && (
@@ -151,21 +184,26 @@ export default function ResumeLibrary({
           </div>
         )}
 
-        {resumes.length === 0 ? (
+        {filteredResumes.length === 0 ? (
           <div className={styles.stateContainer}>
             <div className={styles.stateContent}>
               <div className={styles.iconContainer}>
                 <FileText className={styles.iconGray} />
               </div>
-              <h3 className={styles.stateTitle}>No resumes yet</h3>
+              <h3 className={styles.stateTitle}>
+                {searchTerm ? 'No matching resumes' : 'No resumes yet'}
+              </h3>
               <p className={styles.stateText}>
-                Upload your first resume to get started!
+                {searchTerm 
+                  ? `No resumes found matching "${searchTerm}". Try adjusting your search term.`
+                  : 'Upload your first resume to get started!'
+                }
               </p>
             </div>
           </div>
         ) : (
           <div className={styles.grid}>
-            {resumes.map((resume) => (
+            {filteredResumes.map((resume) => (
               <Card key={resume.id} className={styles.card}>
                 <CardHeader className={styles.cardHeader}>
                   <div className={styles.cardHeaderContent}>
