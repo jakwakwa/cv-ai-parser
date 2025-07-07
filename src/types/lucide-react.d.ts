@@ -41,6 +41,9 @@ declare module 'lucide-react' {
   export const Dot: LucideIcon;
   export const GripVertical: LucideIcon;
   export const PanelLeft: LucideIcon;
+  export const Moon: LucideIcon;
+  export const Sun: LucideIcon;
+  export const Settings: LucideIcon;
 
   // Allow importing any other icon by name.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
