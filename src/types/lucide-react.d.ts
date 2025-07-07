@@ -44,6 +44,10 @@ declare module 'lucide-react' {
   export const Moon: LucideIcon;
   export const Sun: LucideIcon;
   export const Settings: LucideIcon;
+  export const BrainCircuit: LucideIcon;
+  export const Code: LucideIcon;
+  export const Figma: LucideIcon;
+  export const UploadCloud: LucideIcon;
 
   // Allow importing any other icon by name.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
