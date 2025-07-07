@@ -12,6 +12,7 @@ import { Toaster } from '@/src/components/ui/toaster';
 import { ThemeProvider } from '@/src/hooks/use-theme';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://www.airesumegen.com'),
   title:
     'AI Resume Parser & Online CV Generator - Convert to PDF with Custom Colors',
   description:
@@ -34,17 +35,10 @@ export const metadata: Metadata = {
     description:
       'Effortlessly convert your text resumes into stunning online CVs using AI-powered parsing. Customize with beautiful colors, download as PDF, and manage your professional presence.',
     url: 'https://www.airesumegen.com',
-    siteName: 'Resume Parser & Generator',
-    images: [
-      {
-        url: 'https://www.airesumegen.com/logo.svg',
-        width: 1200,
-        height: 630,
-        alt: 'AI Resume Parser and Online CV Generator',
-      },
-    ],
+    siteName: 'CV AI Parser',
     locale: 'en_US',
     type: 'website',
+    // Dynamic Open Graph image will be generated via opengraph-image.tsx
   },
   twitter: {
     card: 'summary_large_image',
@@ -53,7 +47,7 @@ export const metadata: Metadata = {
     description:
       'Effortlessly convert your text resumes into stunning online CVs using AI-powered parsing. Customize with beautiful colors, download as PDF, and manage your professional presence.',
     creator: '@your_twitter_handle', // Replace with your actual Twitter handle
-    images: ['https://www.airesumegen.com/logo.svg'], // Replace with a relevant image
+    // Dynamic Twitter image will be generated via twitter-image.tsx
   },
   other: {
     'google-adsense-account': 'ca-pub-7169177467099391',
