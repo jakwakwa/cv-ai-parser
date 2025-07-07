@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
+import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import ResumeTailorTool from '@/src/containers/resume-tailor-tool/resume-tailor-tool';
 import styles from './page.module.css';
 
@@ -25,7 +25,7 @@ export default function ResumeTailorPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleResumeCreated = async (
-    parsedData: ParsedResume,
+    _parsedData: ParsedResume,
     info: ParseInfo
   ) => {
     if (user && info.resumeSlug) {
@@ -34,7 +34,8 @@ export default function ResumeTailorPage() {
       // For non-auth users, show a toast and potentially redirect to a preview
       toast({
         title: 'Resume Created',
-        description: 'Your tailored resume has been created. Sign in to save it to your library.',
+        description:
+          'Your tailored resume has been created. Sign in to save it to your library.',
       });
     }
   };
@@ -53,10 +54,11 @@ export default function ResumeTailorPage() {
       <div className={styles.headerSection}>
         <h1 className={styles.title}>AI Resume Tailor</h1>
         <p className={styles.subtitle}>
-          Upload your resume and a job description to create a perfectly tailored resume
+          Upload your resume and a job description to create a perfectly
+          tailored resume
         </p>
       </div>
-      
+
       <ResumeTailorTool
         onResumeCreated={handleResumeCreated}
         isLoading={isLoading}

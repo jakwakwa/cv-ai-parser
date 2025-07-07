@@ -7,7 +7,7 @@ import FigmaToResumeTool from '@/src/containers/figma-to-resume-tool/figma-to-re
 import styles from './page.module.css';
 
 export default function FigmaToResumePage() {
-  const { user, loading: authLoading } = useAuth();
+  const { loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -36,10 +36,11 @@ export default function FigmaToResumePage() {
       <div className={styles.headerSection}>
         <h1 className={styles.title}>Figma to Resume</h1>
         <p className={styles.subtitle}>
-          Transform your Figma design directly into a deployable resume component
+          Transform your Figma design directly into a deployable resume
+          component
         </p>
       </div>
-      
+
       <FigmaToResumeTool
         onResumeGenerated={handleResumeGenerated}
         isLoading={isLoading}

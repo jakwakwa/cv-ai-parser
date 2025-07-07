@@ -14,7 +14,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ResumeDatabase } from '@/lib/database';
 import type { Resume } from '@/lib/types';
 import { useAuth } from '@/src/components/auth-provider/auth-provider';
-import { Badge } from '@/src/components/ui/badge';
 import {
   Card,
   CardContent,
@@ -89,28 +88,6 @@ export default function ResumeLibrary({
       month: 'short',
       day: 'numeric',
     });
-  };
-
-  const getMethodBadgeColor = (method: string) => {
-    switch (method) {
-      case 'ai':
-        return styles.badgeGreen;
-      case 'regex_fallback':
-        return styles.badgeYellow;
-      default:
-        return styles.badgeGray;
-    }
-  };
-
-  const getMethodLabel = (method: string) => {
-    switch (method) {
-      case 'ai':
-        return 'AI Parsed';
-      case 'regex_fallback':
-        return 'Text Analysis';
-      default:
-        return 'Unknown';
-    }
   };
 
   // Filter resumes based on search term (slug name)

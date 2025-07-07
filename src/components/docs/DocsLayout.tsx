@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import Link from 'next/link';
-import type { ReactNode } from 'react';
 import clsx from 'clsx';
-import styles from './DocsLayout.module.css';
-import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import type { ReactNode } from 'react';
+import styles from './DocsLayout.module.css';
 
 const TOC = dynamic(() => import('./TOC'), { ssr: false });
 
@@ -14,7 +14,7 @@ interface DocsLayoutProps {
   headings?: { id: string; text: string }[];
 }
 
-export default function DocsLayout({ children, headings = [] }: DocsLayoutProps) {
+export default function DocsLayout({ children }: DocsLayoutProps) {
   const pathname = usePathname();
 
   return (
@@ -26,7 +26,10 @@ export default function DocsLayout({ children, headings = [] }: DocsLayoutProps)
             <li>
               <Link
                 href="/docs"
-                className={clsx(styles.navLink, pathname === '/docs' && styles.navLinkActive)}
+                className={clsx(
+                  styles.navLink,
+                  pathname === '/docs' && styles.navLinkActive
+                )}
               >
                 Getting Started
               </Link>
@@ -34,7 +37,10 @@ export default function DocsLayout({ children, headings = [] }: DocsLayoutProps)
             <li>
               <Link
                 href="/docs/guides"
-                className={clsx(styles.navLink, pathname.startsWith('/docs/guides') && styles.navLinkActive)}
+                className={clsx(
+                  styles.navLink,
+                  pathname.startsWith('/docs/guides') && styles.navLinkActive
+                )}
               >
                 Guides
               </Link>

@@ -63,7 +63,7 @@ export interface FigmaComponent {
   name: string;
   description?: string;
   remote: boolean;
-  documentationLinks?: Array<{ uri: string; }>;
+  documentationLinks?: Array<{ uri: string }>;
 }
 
 export interface FigmaFill {
@@ -176,7 +176,11 @@ export interface FigmaAdaptationRequest {
   sourceFileKey: string;
   sourceNodeId?: string;
   targetResumeData: ParsedResume;
-  adaptationStrategy: 'content-mapping' | 'layout-preservation' | 'style-extraction' | 'hybrid';
+  adaptationStrategy:
+    | 'content-mapping'
+    | 'layout-preservation'
+    | 'style-extraction'
+    | 'hybrid';
   customMappings?: Record<string, string>;
   preserveElements?: string[];
   colorScheme?: 'original' | 'resume-colors' | 'adaptive';
@@ -208,7 +212,7 @@ export class FigmaMCPAgent {
       // In a real implementation, this would connect to the MCP server
       // For now, we'll simulate the connection
       console.log('Initializing Figma MCP connection...');
-      
+
       // Mock MCP capabilities for development
       this.mcpCapabilities = {
         getFileInfo: async (fileKey: string) => {
@@ -218,51 +222,51 @@ export class FigmaMCPAgent {
             version: '1.0',
             role: 'owner',
             editorType: 'figma',
-            linkAccess: 'view'
+            linkAccess: 'view',
           };
         },
-        getNodes: async (fileKey: string, nodeIds: string[]) => {
+        getNodes: async (_fileKey: string, nodeIds: string[]) => {
           // Mock node data
-          return nodeIds.map(id => ({
+          return nodeIds.map((id) => ({
             id,
             name: `Node ${id}`,
             type: 'FRAME',
             visible: true,
-            children: []
+            children: [],
           }));
         },
-        searchNodes: async (fileKey: string, query: string) => {
+        searchNodes: async (_fileKey: string, query: string) => {
           // Mock search results
           return [
             {
               id: 'search-result-1',
               name: `Search result for "${query}"`,
               type: 'TEXT',
-              characters: `Found content matching "${query}"`
-            }
+              characters: `Found content matching "${query}"`,
+            },
           ];
         },
-        getStyles: async (fileKey: string) => {
+        getStyles: async (_fileKey: string) => {
           return [
             {
               key: 'style-1',
               name: 'Primary Text',
               styleType: 'TEXT',
-              remote: false
-            }
+              remote: false,
+            },
           ];
         },
-        getComponents: async (fileKey: string) => {
+        getComponents: async (_fileKey: string) => {
           return [
             {
               key: 'component-1',
               name: 'Resume Header',
-              remote: false
-            }
+              remote: false,
+            },
           ];
-        }
+        },
       };
-      
+
       this.initialized = true;
       console.log('Figma MCP connection initialized');
     } catch (error) {
@@ -275,8 +279,10 @@ export class FigmaMCPAgent {
     return this.initialized && this.mcpCapabilities !== null;
   }
 
-  async adaptDesignForResume(request: FigmaAdaptationRequest): Promise<FigmaAdaptationResult> {
-    if (!await this.isReady()) {
+  async adaptDesignForResume(
+    request: FigmaAdaptationRequest
+  ): Promise<FigmaAdaptationResult> {
+    if (!(await this.isReady())) {
       throw new Error('MCP agent not initialized');
     }
 
@@ -285,18 +291,33 @@ export class FigmaMCPAgent {
     const errors: string[] = [];
 
     try {
-      adaptationLog.push(`Starting adaptation for file: ${request.sourceFileKey}`);
-      
+      adaptationLog.push(
+        `Starting adaptation for file: ${request.sourceFileKey}`
+      );
+
       // Step 1: Get file info and validate access
-      const fileInfo = await this.mcpCapabilities!.getFileInfo(request.sourceFileKey);
+      const fileInfo = await this.mcpCapabilities?.getFileInfo(
+        request.sourceFileKey
+      );
+
+      if (!fileInfo) {
+        errors.push('Failed to retrieve file information');
+        throw new Error('File info is undefined');
+      }
+
       adaptationLog.push(`File info retrieved: ${fileInfo.name}`);
 
       // Step 2: Get target nodes
-      const targetNodes = request.sourceNodeId 
-        ? await this.mcpCapabilities!.getNodes(request.sourceFileKey, [request.sourceNodeId])
-        : await this.mcpCapabilities!.searchNodes(request.sourceFileKey, 'resume');
-      
-      if (targetNodes.length === 0) {
+      const targetNodes = request.sourceNodeId
+        ? await this.mcpCapabilities?.getNodes(request.sourceFileKey, [
+            request.sourceNodeId,
+          ])
+        : await this.mcpCapabilities?.searchNodes(
+            request.sourceFileKey,
+            'resume'
+          );
+
+      if (!targetNodes || targetNodes.length === 0) {
         errors.push('No suitable nodes found for adaptation');
         throw new Error('No nodes found');
       }
@@ -305,21 +326,36 @@ export class FigmaMCPAgent {
 
       // Step 3: Analyze content and create mappings
       const mappedFields = await this.createContentMappings(
-        targetNodes, 
-        request.targetResumeData, 
+        targetNodes,
+        request.targetResumeData,
         request.customMappings
       );
-      
-      adaptationLog.push(`Created ${Object.keys(mappedFields).length} content mappings`);
+
+      adaptationLog.push(
+        `Created ${Object.keys(mappedFields).length} content mappings`
+      );
 
       // Step 4: Extract styles and layout information
-      const styles = await this.mcpCapabilities!.getStyles(request.sourceFileKey);
+      const styles = await this.mcpCapabilities?.getStyles(
+        request.sourceFileKey
+      );
+
+      if (!styles) {
+        errors.push('Failed to retrieve styles');
+        throw new Error('Styles are undefined');
+      }
+
       const styleInfo = await this.extractStyleInformation(targetNodes, styles);
-      
-      adaptationLog.push(`Extracted style information from ${styles.length} styles`);
+
+      adaptationLog.push(
+        `Extracted style information from ${styles.length} styles`
+      );
 
       // Step 5: Generate adapted component
-      const componentName = this.generateComponentName(fileInfo.name, request.sourceNodeId);
+      const componentName = this.generateComponentName(
+        fileInfo.name,
+        request.sourceNodeId
+      );
       const { jsxCode, cssCode } = await this.generateAdaptedComponent(
         componentName,
         targetNodes,
@@ -339,11 +375,11 @@ export class FigmaMCPAgent {
         preservedElements: request.preserveElements || [],
         adaptationLog,
         warnings,
-        errors
+        errors,
       };
-
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
       errors.push(errorMessage);
       adaptationLog.push(`Error during adaptation: ${errorMessage}`);
 
@@ -356,14 +392,14 @@ export class FigmaMCPAgent {
         preservedElements: [],
         adaptationLog,
         warnings,
-        errors
+        errors,
       };
     }
   }
 
   private async createContentMappings(
-    nodes: FigmaNode[], 
-    resumeData: ParsedResume, 
+    nodes: FigmaNode[],
+    resumeData: ParsedResume,
     customMappings?: Record<string, string>
   ): Promise<Record<string, string>> {
     const mappings: Record<string, string> = {};
@@ -382,8 +418,8 @@ export class FigmaMCPAgent {
   }
 
   private async analyzeNodeForMapping(
-    node: FigmaNode, 
-    resumeData: ParsedResume, 
+    node: FigmaNode,
+    resumeData: ParsedResume,
     mappings: Record<string, string>
   ): Promise<void> {
     // Skip if already mapped
@@ -395,7 +431,11 @@ export class FigmaMCPAgent {
     // Smart mapping based on node name and content
     if (nodeName.includes('name') || nodeText.includes('name')) {
       mappings[node.id] = '{resume.name}';
-    } else if (nodeName.includes('title') || nodeName.includes('job') || nodeText.includes('title')) {
+    } else if (
+      nodeName.includes('title') ||
+      nodeName.includes('job') ||
+      nodeText.includes('title')
+    ) {
       mappings[node.id] = '{resume.title}';
     } else if (nodeName.includes('email') || nodeText.includes('email')) {
       mappings[node.id] = '{resume.contact?.email}';
@@ -403,11 +443,21 @@ export class FigmaMCPAgent {
       mappings[node.id] = '{resume.contact?.phone}';
     } else if (nodeName.includes('location') || nodeText.includes('location')) {
       mappings[node.id] = '{resume.contact?.location}';
-    } else if (nodeName.includes('summary') || nodeName.includes('about') || nodeText.includes('summary')) {
+    } else if (
+      nodeName.includes('summary') ||
+      nodeName.includes('about') ||
+      nodeText.includes('summary')
+    ) {
       mappings[node.id] = '{resume.summary}';
-    } else if (nodeName.includes('experience') || nodeText.includes('experience')) {
+    } else if (
+      nodeName.includes('experience') ||
+      nodeText.includes('experience')
+    ) {
       mappings[node.id] = '{resume.experience.map(exp => ...)}';
-    } else if (nodeName.includes('education') || nodeText.includes('education')) {
+    } else if (
+      nodeName.includes('education') ||
+      nodeText.includes('education')
+    ) {
       mappings[node.id] = '{resume.education?.map(edu => ...)}';
     } else if (nodeName.includes('skill') || nodeText.includes('skill')) {
       mappings[node.id] = '{resume.skills.map(skill => ...)}';
@@ -424,7 +474,10 @@ export class FigmaMCPAgent {
     }
   }
 
-  private async extractStyleInformation(nodes: FigmaNode[], styles: FigmaStyle[]): Promise<Record<string, unknown>> {
+  private async extractStyleInformation(
+    nodes: FigmaNode[],
+    styles: FigmaStyle[]
+  ): Promise<Record<string, unknown>> {
     const styleInfo: Record<string, unknown> = {};
 
     // Extract color information
@@ -445,9 +498,9 @@ export class FigmaMCPAgent {
   }
 
   private extractNodeStyles(
-    node: FigmaNode, 
-    colors: Set<string>, 
-    fonts: Set<string>, 
+    node: FigmaNode,
+    colors: Set<string>,
+    fonts: Set<string>,
     spacing: Set<number>
   ): void {
     // Extract colors from fills
@@ -476,7 +529,10 @@ export class FigmaMCPAgent {
   }
 
   private rgbaToHex(r: number, g: number, b: number, a: number): string {
-    const toHex = (n: number) => Math.round(n * 255).toString(16).padStart(2, '0');
+    const toHex = (n: number) =>
+      Math.round(n * 255)
+        .toString(16)
+        .padStart(2, '0');
     return `#${toHex(r)}${toHex(g)}${toHex(b)}${a < 1 ? toHex(a) : ''}`;
   }
 
@@ -495,7 +551,7 @@ export class FigmaMCPAgent {
   ): Promise<{ jsxCode: string; cssCode: string }> {
     // Generate JSX code with mapped content
     const jsxBody = this.generateJSXFromNodes(nodes, mappedFields);
-    
+
     const jsxCode = `import React from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import styles from './${this.toKebabCase(componentName)}.module.css';
@@ -513,23 +569,33 @@ export const ${componentName}: React.FC<${componentName}Props> = ({ resume }) =>
 export default ${componentName};`;
 
     // Generate CSS with extracted styles
-    const cssCode = this.generateCSSFromStyles(componentName, styleInfo, request);
+    const cssCode = this.generateCSSFromStyles(
+      componentName,
+      styleInfo,
+      request
+    );
 
     return { jsxCode, cssCode };
   }
 
-  private generateJSXFromNodes(nodes: FigmaNode[], mappedFields: Record<string, string>): string {
+  private generateJSXFromNodes(
+    nodes: FigmaNode[],
+    mappedFields: Record<string, string>
+  ): string {
     if (nodes.length === 0) return '<div></div>';
 
     const primaryNode = nodes[0];
     return this.nodeToJSX(primaryNode, mappedFields);
   }
 
-  private nodeToJSX(node: FigmaNode, mappedFields: Record<string, string>): string {
+  private nodeToJSX(
+    node: FigmaNode,
+    mappedFields: Record<string, string>
+  ): string {
     const mapping = mappedFields[node.id];
     const className = this.generateClassName(node.name);
-    const classNameAccess = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(className) 
-      ? `styles.${className}` 
+    const classNameAccess = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(className)
+      ? `styles.${className}`
       : `styles['${className}']`;
 
     switch (node.type) {
@@ -537,16 +603,19 @@ export default ${componentName};`;
         const content = mapping || `{\`${node.characters || ''}\`}`;
         return `<span className={${classNameAccess}}>${content}</span>`;
       }
-      
+
       case 'FRAME':
       case 'GROUP':
       case 'RECTANGLE': {
-        const children = node.children?.map(child => this.nodeToJSX(child, mappedFields)).join('\n      ') || '';
+        const children =
+          node.children
+            ?.map((child) => this.nodeToJSX(child, mappedFields))
+            .join('\n      ') || '';
         return `<div className={${classNameAccess}}>
       ${children}
     </div>`;
       }
-      
+
       default:
         return `<div className={${classNameAccess}}></div>`;
     }
@@ -564,17 +633,21 @@ export default ${componentName};`;
     styleInfo: Record<string, unknown>,
     request: FigmaAdaptationRequest
   ): string {
-    const colors = styleInfo.colors as string[] || [];
+    const colors = (styleInfo.colors as string[]) || [];
     const primaryColor = colors[0] || '#000000';
     const secondaryColor = colors[1] || '#666666';
 
     // Apply color scheme strategy
     let finalColors = { primary: primaryColor, secondary: secondaryColor };
-    
-    if (request.colorScheme === 'resume-colors' && request.targetResumeData.customColors) {
+
+    if (
+      request.colorScheme === 'resume-colors' &&
+      request.targetResumeData.customColors
+    ) {
       finalColors = {
         primary: request.targetResumeData.customColors.primary || primaryColor,
-        secondary: request.targetResumeData.customColors.secondary || secondaryColor
+        secondary:
+          request.targetResumeData.customColors.secondary || secondaryColor,
       };
     }
 
@@ -680,9 +753,7 @@ export default ${componentName};`;
   }
 
   private toKebabCase(str: string): string {
-    return str
-      .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-      .toLowerCase();
+    return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
   }
 }
 

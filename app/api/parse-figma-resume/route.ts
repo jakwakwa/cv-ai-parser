@@ -64,7 +64,7 @@ function extractAllTextFromNode(node: FigmaNode, depth = 0): void {
   // Extract text from current node if it's a TEXT node
   if (node.type === 'TEXT') {
     console.log(`${indent}Found TEXT node with characters:`, node.characters);
-    if (node.characters && node.characters.trim()) {
+    if (node.characters?.trim()) {
       extractAndStoreContent(node.characters, node.name);
     } else {
       console.log(`${indent}TEXT node has no characters or empty text`);
@@ -83,13 +83,13 @@ function extractAllTextFromNode(node: FigmaNode, depth = 0): void {
 }
 
 function extractAndStoreContent(text: string, layerName: string): void {
-  const lower = text.toLowerCase();
+  const _lower = text.toLowerCase();
   const layerLower = layerName.toLowerCase();
   const cleanText = text.trim();
 
   if (!cleanText) return;
 
-  console.log('Extracting from layer "' + layerName + '": "' + cleanText + '"'); // Debug log
+  console.log(`Extracting from layer "${layerName}": "${cleanText}"`); // Debug log
 
   // Store all text content for debugging and fallback
   if (!figmaContentStore.allTexts) {
@@ -159,6 +159,7 @@ function extractAndStoreContent(text: string, layerName: string): void {
 
   // Extract contact information with better patterns
   const emailPattern = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/;
+  // biome-ignore lint/complexity/noUselessEscapeInRegex: <it works>
   const phonePattern = /[\+\(]?\d[\d\s\-\(\)]{8,}/;
 
   if (cleanText.match(emailPattern)) {
@@ -428,6 +429,7 @@ function mapTextContent(text: string, layerName: string): string {
   }
   if (
     layerLower.includes('contact-phone') ||
+    // biome-ignore lint/complexity/noUselessEscapeInRegex: <it works>
     (layerLower.includes('contact') && /[\+\(]?\d[\d\s\-\(\)]{8,}/.test(text))
   ) {
     const extractedPhone = figmaContentStore.contact?.phone || text;
@@ -437,6 +439,7 @@ function mapTextContent(text: string, layerName: string): string {
     layerLower.includes('contact-location') ||
     (layerLower.includes('contact') &&
       !text.includes('@') &&
+      // biome-ignore lint/complexity/noUselessEscapeInRegex: <it works>
       !/[\+\(]?\d[\d\s\-\(\)]{8,}/.test(text))
   ) {
     const extractedLocation = figmaContentStore.contact?.location || text;
@@ -586,7 +589,7 @@ function generateCSSFromFigmaStructure(
   extractClassNames(node);
 
   // Generate CSS based on the actual layer structure
-  let css = `/* Styles generated from Figma with extracted colors */
+  const css = `/* Styles generated from Figma with extracted colors */
 /* Primary: ${primaryColor}, Secondary: ${secondaryColor}, Accent: ${accentColor} */
 
 /* Main container */
@@ -1399,6 +1402,7 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
 
     // Reset the content store for this generation
     Object.keys(figmaContentStore).forEach(
+      // biome-ignore lint/suspicious/noExplicitAny: <ok for now>
       (key) => delete (figmaContentStore as any)[key]
     );
 
@@ -1411,7 +1415,7 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
     console.log(
       'Extracted Summary:',
       figmaContentStore.summary
-        ? figmaContentStore.summary.substring(0, 100) + '...'
+        ? `${figmaContentStore.summary.substring(0, 100)}...`
         : 'NOT FOUND'
     );
     console.log('Extracted Contact:', figmaContentStore.contact || 'NOT FOUND');
@@ -1559,7 +1563,6 @@ export const figmaDebugInfo = {
 
     // Persist component on the server (development/demo).
     try {
-      // biome-ignore lint/correctness/noUnreachable: <demo>
       const fs = await import('node:fs/promises');
       const path = await import('node:path');
       const genDir = path.join(process.cwd(), 'src', 'generated-resumes');
