@@ -1,8 +1,13 @@
+/**
+ * Component: DocsLayout
+ * Refactored to use design tokens following ITCSS architecture
+ */
+
 .layout {
   display: grid;
   grid-template-columns: 16rem minmax(0, 1fr) 13rem;
   gap: var(--spacing-xl);
-  max-width: var(--max-width-3xl);
+  max-width: 1200px;
   margin: 0 auto;
   padding: var(--spacing-lg) var(--spacing-md);
 }
@@ -25,11 +30,16 @@
 
 .navLink {
   text-decoration: none;
-  color: var(--color-text-secondary); /* gray-500 */
+  color: var(--color-text-secondary);
+  transition: var(--transition-fast);
+}
+
+.navLink:hover {
+  color: var(--color-accent-teal);
 }
 
 .navLinkActive {
-  color: var(--color-accent-blue); /* teal-600 */
+  color: var(--color-accent-teal);
   font-weight: var(--font-weight-semibold);
 }
 
@@ -58,13 +68,15 @@
 .tocLink {
   text-decoration: none;
   color: inherit;
+  transition: var(--transition-fast);
 }
 
 .tocLink:hover {
   text-decoration: underline;
+  color: var(--color-accent-teal);
 }
 
 .tocLink[aria-current='true'] {
-  color: var(--color-accent);
+  color: var(--color-accent-teal);
   font-weight: var(--font-weight-semibold);
 }

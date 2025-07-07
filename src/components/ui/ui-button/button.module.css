@@ -21,7 +21,7 @@
 }
 
 .button:focus-visible {
-    outline: 2px solid hsl(var(--ring));
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -81,34 +81,35 @@
 }
 
 .button.default {
-    background-color: var(--color-primary-dark);
-    color: var(--color-text-light);
-    border: 1px solid var(--color-border-light);
+    background-color: var(--color-accent-teal);
+    color: var(--color-background-primary);
+    border: 1px solid var(--color-accent-teal);
 }
 
 .button.default:hover {
-    background-color: var(--color-background-dark);
-    color: var(--color-text-hover);
+    background-color: var(--color-accent-teal-dark);
+    color: var(--color-background-primary);
+    border-color: var(--color-accent-teal-dark);
 }
 
 .button.destructive {
-    background-color: hsl(var(--destructive));
-    color: hsl(var(--destructive-foreground));
+    background-color: var(--color-error);
+    color: var(--color-background-primary);
 }
 
 .button.destructive:hover {
-    background-color: hsl(var(--destructive) / 0.9);
+    background-color: var(--color-error-dark);
 }
 
 .button.outline {
-    border: 1px solid hsl(var(--input));
-    background-color: hsl(var(--background));
+    border: 1px solid var(--color-border-medium);
+    background-color: var(--color-background-primary);
     color: var(--color-text-primary);
 }
 
 .button.outline:hover {
-    background-color: hsl(var(--accent));
-    color: hsl(var(--accent-foreground));
+    background-color: var(--color-hover);
+    color: var(--color-text-primary);
 }
 
 .button.ghost {

@@ -21,18 +21,18 @@ const themeScript = `
     window.addEventListener('storage', function(e) {
       if (e.key === 'theme' || e.type === 'storage') {
         initializeTheme();
-      }
+    }
     });
     
     // Listen for system theme changes when using system preference
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    mediaQuery.addEventListener('change', function(e) {
-      const currentTheme = localStorage.getItem('theme');
-      if (currentTheme === 'system' || !currentTheme) {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      mediaQuery.addEventListener('change', function(e) {
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'system' || !currentTheme) {
         // Re-apply system theme to trigger CSS media query updates
         applyTheme('system');
-      }
-    });
+        }
+      });
     
   } catch (error) {
     document.documentElement.setAttribute('data-theme', 'light');

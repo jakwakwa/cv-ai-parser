@@ -56,6 +56,11 @@
   max-width: 800px;
   margin: 0 auto;
   width: 100%;
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--color-shadow-medium);
+  overflow: hidden;
 }
 
 .inputCard {
@@ -71,7 +76,7 @@
   gap: var(--spacing-sm);
   padding: var(--spacing-lg);
   border-bottom: 1px solid var(--color-border-light);
-  background-color: var(--color-background-secondary);
+  background-color: var(--color-border-medium);
 }
 
 .figmaIcon {
@@ -185,7 +190,7 @@
 
 /* Customization Card */
 .customizationCard {
-  background: var(--color-background-primary);
+  background: var(--color-background-secondary);
   border: 1px solid var(--color-border-light);
   border-radius: var(--border-radius-medium);
   padding: var(--spacing-lg);
@@ -242,7 +247,7 @@
 
 /* Results Section */
 .resultsSection {
-  background: var(--color-background-primary);
+  background: var(--color-background-secondary);
   border: 1px solid var(--color-border-light);
   border-radius: var(--border-radius-medium);
   overflow: hidden;
@@ -254,7 +259,7 @@
   justify-content: space-between;
   padding: var(--spacing-lg);
   border-bottom: 1px solid var(--color-border-light);
-  background-color: var(--color-background-secondary);
+  background-color: var(--color-border-medium);
 }
 
 .resultsTitle {
