@@ -1,6 +1,6 @@
 /* ProfileHeader styles */
 .header {
-  border-bottom: 1px solid var(--color-border-light-translucent);
+  border-bottom: 1px solid var(--resume-skill-border);
   height: 290px;
   display: grid;
   grid-template-columns: 1fr;
@@ -23,7 +23,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: var(--color-gradient-profile-left);
+  background: linear-gradient(146.96deg, var(--resume-skill-border) 7.87%, var(--resume-main-icons) 110.99%);
 }
 
 @media (min-width: 768px) {
@@ -34,8 +34,8 @@
 
 .right {
   padding: var(--spacing-lg);
-  background-color: var(--color-background-secondary);
-  color: var(--color-text-primary);
+  background-color: var(--resume-profile-header-background);
+  color: var(--coffee);
   display: flex;
   flex-direction: column;
   font-family: var(--font-family-primary);

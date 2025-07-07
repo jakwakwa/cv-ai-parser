@@ -18,8 +18,8 @@
     justify-content: flex-start;
     gap: 8px;
     align-items: center;
-    border-bottom: 1px solid var(--light-brown-border);
-    color: var(--charcoal);
+    border-bottom: 1px solid var(--resume-skill-border);
+    color: var(--resume-section-titles);
     font-family: var(--font-family-primary);
 }
 
@@ -30,7 +30,7 @@
 
 .icon {
     margin-right: var(--spacing-sm);
-    color: var(--teal-main, #116964);
+    color: var(--resume-job-title);
 }
 
 .skill {
@@ -40,8 +40,8 @@
     border-radius: 50px;
     font-weight: var(--font-weight-semibold);
     background-color: transparent;
-    color: var(--teal-main);
-    border: 1px solid var(--light-brown-border);
+    color: var(--resume-job-title);
+    border: 1px solid var(--resume-skill-border);
     margin-right: 0.3rem;
     margin-bottom: 0.35rem;
     display: inline-block;
@@ -49,7 +49,7 @@
 
 .emptyStateMessage {
     font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
+    color: var(--resume-body-text);
     font-family: var(--font-family-base);
 }
 

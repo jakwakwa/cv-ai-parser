@@ -1,6 +1,6 @@
 /* ExperienceSection styles migrated from old location */
 .experienceSection {
-    color: var(--color-text-primary);
+    color: var(--resume-body-text);
     
 }
 
@@ -13,8 +13,8 @@
     justify-content: flex-start;
     gap: 8px;
     align-items: center;
-    border-bottom: 1px solid var(--color-border-light);
-    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--resume-skill-border);
+    color: var(--resume-section-titles);
 }
 
 .jobTitle {
@@ -23,7 +23,7 @@
     font-weight: 600;
     letter-spacing: 0.03rem;
     margin-top: 1rem;
-    color: var(--color-text-primary);
+    color: var(--resume-job-title);
 }
 
 .company {
@@ -34,7 +34,7 @@
     font-weight: 600;
     margin-top: 0.25rem;
     margin-left: 0.05rem;
-    color: var(--color-text-secondary);
+    color: var(--resume-main-icons);
 }
 
 .duration {
@@ -43,7 +43,7 @@
     margin-left:0.15rem;
     margin-bottom:0.55rem;
     font-family: 'DM Mono', Menlo, monospace;
-    color: var(--color-accent-teal);
+    color: var(--resume-dates);
 }
 
 .details {
@@ -77,7 +77,7 @@
 }
 
 .noExperienceMessage {
-    color: var(--color-text-secondary); /* text-gray-600 */
+    color: var(--resume-body-text); /* text-gray-600 */
     font-size: 0.875rem; /* text-sm */
 }
 
