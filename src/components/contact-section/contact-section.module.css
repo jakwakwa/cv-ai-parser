@@ -15,8 +15,8 @@
     justify-content: flex-start;
     gap: 5px;
     align-items: center;
-    border-bottom: 1px solid var(--color-border-light);
-    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--resume-skill-border);
+    color: var(--resume-section-titles);
     font-family: var(--font-family-primary);
 }
 
@@ -31,16 +31,14 @@
 .text,
 .link {
     font-size: 0.675rem;
-    color: var(--color-text-primary);
+    color: var(--resume-body-text);
     font-family: var(--font-family-base);
 }
 
 .link {
-    color: var(--color-accent-teal);
     text-decoration: none;
     transition: var(--transition-fast);
 }
-
 .link:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
