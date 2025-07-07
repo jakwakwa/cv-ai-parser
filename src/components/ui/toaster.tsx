@@ -21,9 +21,9 @@ export function Toaster() {
           {...props}
           style={
             variant === 'destructive'
-              ? { background: '#fee2e2' }
+              ? { background: '#d5667d' }
               : variant === 'default' || variant == null
-                ? { background: '#e6f9ed' }
+                ? { background: '#14b8a6' }
                 : undefined
           }
         >

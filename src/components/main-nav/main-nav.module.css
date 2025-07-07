@@ -27,6 +27,19 @@
   font-family: var(--font-family-primary);
 }
 
+/* Mobile responsive brand text */
+@media (max-width: 768px) {
+  .brand {
+    font-size: var(--font-size-xxs);
+  }
+}
+
+@media (max-width: 480px) {
+  .brand {
+    font-size: var(--font-size-xs);
+  }
+}
+
 .navigation {
   display: flex;
   align-items: center;
