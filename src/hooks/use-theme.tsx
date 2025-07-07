@@ -6,6 +6,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useState,
 } from 'react';
 
@@ -32,13 +33,9 @@ export function ThemeProvider({
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
   const [mounted, setMounted] = useState(false);
 
-  // Apply theme to document
-  const applyTheme = useCallback((newTheme: Theme) => {
-    const root = document.documentElement;
-    root.setAttribute('data-theme', newTheme);
-
-    // Get the actual resolved theme based on system preference
-    const getResolvedTheme = (currentTheme: Theme): 'light' | 'dark' => {
+  // Get the actual resolved theme based on system preference
+  const getResolvedTheme = useCallback(
+    (currentTheme: Theme): 'light' | 'dark' => {
       if (currentTheme === 'system') {
         if (typeof window !== 'undefined') {
           return window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -48,35 +45,54 @@ export function ThemeProvider({
         return 'light';
       }
       return currentTheme;
-    };
+    },
+    []
+  );
 
-    // Update resolved theme
-    const resolved = getResolvedTheme(newTheme);
-    setResolvedTheme(resolved);
-
-    // Store preference
-    localStorage.setItem('theme', newTheme);
+  // Apply theme to DOM immediately (synchronous)
+  const applyTheme = useCallback((newTheme: Theme) => {
+    if (typeof window !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', newTheme);
+    }
   }, []);
 
   // Set theme function
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
     applyTheme(newTheme);
+
+    // Update resolved theme
+    const resolved = getResolvedTheme(newTheme);
+    setResolvedTheme(resolved);
+
+    // Store preference
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newTheme);
+    }
   };
 
-  // Initialize theme on mount
-  useEffect(() => {
+  // Initialize theme on mount (before paint)
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const savedTheme = localStorage.getItem('theme') as Theme;
     const initialTheme = savedTheme || defaultTheme;
 
-    setThemeState(initialTheme);
+    // Apply theme immediately to prevent flash
     applyTheme(initialTheme);
+
+    setThemeState(initialTheme);
+
+    // Update resolved theme
+    const resolved = getResolvedTheme(initialTheme);
+    setResolvedTheme(resolved);
+
     setMounted(true);
-  }, [defaultTheme, applyTheme]);
+  }, [defaultTheme, applyTheme, getResolvedTheme]);
 
   // Listen for system theme changes
   useEffect(() => {
-    if (theme !== 'system') return;
+    if (typeof window === 'undefined' || theme !== 'system') return;
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -91,11 +107,6 @@ export function ThemeProvider({
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [theme]);
 
-  // Prevent hydration mismatch
-  if (!mounted) {
-    return null;
-  }
-
   const value: ThemeContextType = {
     theme,
     setTheme,
@@ -103,7 +114,9 @@ export function ThemeProvider({
   };
 
   return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>
+      {mounted ? children : <div suppressHydrationWarning>{children}</div>}
+    </ThemeContext.Provider>
   );
 }
 

@@ -14,33 +14,33 @@
 }
 
 .loadingCard {
-  background: white;
-  border-radius: 12px;
-  padding: 3rem;
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-medium);
+  padding: var(--spacing-xl);
   text-align: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--color-shadow-medium);
 }
 
 .loadingSpinner {
-  width: 56px;
-  height: 56px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #2563eb;
-  border-radius: 50%;
+  width: var(--spacing-xxl);
+  height: var(--spacing-xxl);
+  border: 3px solid var(--color-border-light);
+  border-top: 3px solid var(--color-info);
+  border-radius: var(--border-radius-full);
   animation: spin 1s linear infinite;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto var(--spacing-lg);
 }
 
 .loadingTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 0.5rem;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
 }
 
 .loadingSubtitle {
-  font-size: 1rem;
-  color: #666;
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
 }
 
 @keyframes spin {
@@ -52,22 +52,22 @@
 .toolGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: var(--spacing-xl);
   width: 100%;
 }
 
 @media (min-width: 1024px) {
   .toolGrid {
     grid-template-columns: 1fr 1fr;
-    gap: 3rem;
+    gap: var(--spacing-xxl);
   }
 }
 
 /* Panels */
 .panel {
-  background: white;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-medium);
+  border: 1px solid var(--color-border-light);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -76,37 +76,37 @@
 .panelHeader {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
-  background-color: #fafafa;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border-light);
+  background-color: var(--color-background-secondary);
 }
 
 .panelIcon {
-  color: #2563eb;
+  color: var(--color-info);
   flex-shrink: 0;
 }
 
 .panelTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1a1a1a;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
   margin: 0;
 }
 
 /* Drop Zone */
 .dropZone {
-  margin: 1.5rem;
-  border: 2px dashed #d1d5db;
-  border-radius: 8px;
-  background-color: #f9fafb;
-  transition: all 0.2s ease;
+  margin: var(--spacing-lg);
+  border: 2px dashed var(--color-border-medium);
+  border-radius: var(--border-radius-medium);
+  background-color: var(--color-background-secondary);
+  transition: var(--transition-fast);
   position: relative;
 }
 
 .dropZone:hover {
-  border-color: #2563eb;
-  background-color: #eff6ff;
+  border-color: var(--color-info);
+  background-color: var(--color-info-light);
 }
 
 .fileInput {
@@ -115,78 +115,78 @@
 
 .dropZoneButton {
   width: 100%;
-  padding: 3rem 2rem;
+  padding: var(--spacing-xxl) var(--spacing-xl);
   background: none;
   border: none;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  color: #6b7280;
-  transition: color 0.2s ease;
+  gap: var(--spacing-sm);
+  color: var(--color-text-secondary);
+  transition: var(--transition-fast);
 }
 
 .dropZoneButton:hover {
-  color: #2563eb;
+  color: var(--color-info);
 }
 
 .uploadIcon {
-  color: #9ca3af;
-  transition: color 0.2s ease;
+  color: var(--color-text-muted);
+  transition: var(--transition-fast);
 }
 
 .dropZoneButton:hover .uploadIcon {
-  color: #2563eb;
+  color: var(--color-info);
 }
 
 .dropText {
-  font-size: 1.125rem;
-  font-weight: 500;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
   margin: 0;
 }
 
 .dropSubtext {
-  font-size: 0.875rem;
-  color: #9ca3af;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
   margin: 0;
 }
 
 .fileTypes {
-  font-size: 0.75rem;
-  color: #9ca3af;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
 }
 
 /* File Selected State */
 .fileSelected {
-  padding: 2rem;
+  padding: var(--spacing-xl);
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-xs);
 }
 
 .fileName {
-  font-weight: 600;
-  color: #1a1a1a;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
   margin: 0;
   word-break: break-word;
 }
 
 .fileSize {
-  font-size: 0.875rem;
-  color: #6b7280;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
   margin: 0;
 }
 
 .changeFileButton {
-  margin-top: 1rem;
+  margin-top: var(--spacing-md);
 }
 
 /* Customization Section */
 .customizationSection {
-  padding: 0 1.5rem 1.5rem;
+  padding: 0 var(--spacing-lg) var(--spacing-lg);
 }
 
 .colorButton {
@@ -194,29 +194,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  color: #4b5563;
-  font-size: 0.875rem;
-  font-weight: 500;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-background-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-medium);
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-fast);
 }
 
 .colorButton:hover {
-  background: #f3f4f6;
-  border-color: #d1d5db;
-  color: #2563eb;
+  background: var(--color-background-tertiary);
+  border-color: var(--color-border-medium);
+  color: var(--color-info);
 }
 
 /* Input Method Toggle */
 .inputMethodToggle {
   display: flex;
-  gap: 0.5rem;
-  padding: 1.5rem 1.5rem 0;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-lg) var(--spacing-lg) 0;
 }
 
 .methodButton {
@@ -224,44 +224,44 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  color: #6b7280;
-  font-size: 0.875rem;
-  font-weight: 500;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-background-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-medium);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-fast);
 }
 
 .methodButton:hover {
-  background: #f3f4f6;
-  border-color: #d1d5db;
+  background: var(--color-background-tertiary);
+  border-color: var(--color-border-medium);
 }
 
 .methodButtonActive {
-  background: #2563eb;
-  border-color: #2563eb;
-  color: white;
+  background: var(--color-info);
+  border-color: var(--color-info);
+  color: var(--color-text-inverse);
 }
 
 .methodButtonActive:hover {
-  background: #1d4ed8;
-  border-color: #1d4ed8;
+  background: var(--color-info-dark);
+  border-color: var(--color-info-dark);
 }
 
 .methodButton:disabled,
 .methodButtonActive:disabled {
-  background: #d1d5db !important;
-  color: #6b7280 !important;
-  border-color: #d1d5db !important;
+  background: var(--color-disabled) !important;
+  color: var(--color-text-secondary) !important;
+  border-color: var(--color-disabled) !important;
 }
 
 /* Textarea Container */
 .textareaContainer {
-  padding: 1.5rem;
+  padding: var(--spacing-lg);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -270,34 +270,34 @@
 .jobSpecTextarea {
   width: 100%;
   min-height: 200px;
-  padding: 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 0.875rem;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-medium);
+  font-size: var(--font-size-sm);
   font-family: inherit;
   resize: vertical;
-  transition: border-color 0.2s ease;
+  transition: var(--transition-fast);
 }
 
 .jobSpecTextarea:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--color-info);
 }
 
 .characterCount {
-  margin-top: 0.5rem;
+  margin-top: var(--spacing-xs);
   text-align: right;
-  font-size: 0.75rem;
-  color: #6b7280;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
 }
 
 .characterWarning {
-  color: #ef4444;
+  color: var(--color-error);
 }
 
 /* File Upload Container */
 .fileUploadContainer {
-  padding: 1.5rem;
+  padding: var(--spacing-lg);
 }
 
 .fileUploadButton {
@@ -305,101 +305,101 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  background: white;
-  border: 2px dashed #d1d5db;
-  border-radius: 8px;
-  color: #6b7280;
-  font-size: 0.875rem;
-  font-weight: 500;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md);
+  background: var(--color-background-primary);
+  border: 2px dashed var(--color-border-medium);
+  border-radius: var(--border-radius-medium);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-fast);
 }
 
 .fileUploadButton:hover {
-  border-color: #2563eb;
-  color: #2563eb;
-  background: #eff6ff;
+  border-color: var(--color-info);
+  color: var(--color-info);
+  background: var(--color-info-light);
 }
 
 /* Tone Section */
 .toneSection {
-  padding: 0 1.5rem;
+  padding: 0 var(--spacing-lg);
 }
 
 .sectionTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin: 0 0 1rem 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-md) 0;
 }
 
 .toneOptions {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-xs);
 }
 
 .toneButton {
   width: 100%;
-  padding: 1rem;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  padding: var(--spacing-md);
+  background: var(--color-background-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-medium);
   text-align: left;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-fast);
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--spacing-xxs);
 }
 
 .toneButton:hover {
-  background: #f3f4f6;
-  border-color: #d1d5db;
+  background: var(--color-background-tertiary);
+  border-color: var(--color-border-medium);
 }
 
 .toneButtonActive {
-  background: #eff6ff;
-  border-color: #2563eb;
+  background: var(--color-info-light);
+  border-color: var(--color-info);
 }
 
 .toneName {
-  font-weight: 600;
-  color: #1a1a1a;
-  font-size: 0.875rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
 }
 
 .toneDescription {
-  font-size: 0.75rem;
-  color: #6b7280;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
 }
 
 .toneButtonActive .toneName {
-  color: #2563eb;
+  color: var(--color-info);
 }
 
 /* Instructions Section */
 .instructionsSection {
-  padding: 1.5rem;
+  padding: var(--spacing-lg);
 }
 
 .instructionsTextarea {
   width: 100%;
   min-height: 100px;
-  padding: 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 0.875rem;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-medium);
+  font-size: var(--font-size-sm);
   font-family: inherit;
   resize: vertical;
-  transition: border-color 0.2s ease;
+  transition: var(--transition-fast);
 }
 
 .instructionsTextarea:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--color-info);
 }
 
 /* Action Section */
@@ -407,29 +407,29 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
 }
 
 .errorMessage {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
-  color: #dc2626;
-  font-size: 0.875rem;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-error-light);
+  border: 1px solid var(--color-error-light);
+  border-radius: var(--border-radius-medium);
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
 }
 
 .createButton {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 2rem;
-  font-size: 1.125rem;
-  font-weight: 600;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
 }
 
 /* Dialog Overrides */
@@ -437,22 +437,22 @@
 .dialogTitle {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1a1a1a;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
 }
 
 .errorDescription,
 .dialogDescription {
-  font-size: 0.875rem;
-  color: #6b7280;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
   line-height: 1.5;
 }
 
 .viewResumeButton {
   width: 100%;
-  margin-top: 1rem;
+  margin-top: var(--spacing-md);
 }
 
 /* Disabled state for job tailoring panel */
@@ -462,84 +462,75 @@
 }
 
 .disabledPanel button {
-  background-color: #d1d5db !important;
-  border-color: #d1d5db !important;
-  color: #6b7280 !important;
+  background-color: var(--color-disabled) !important;
+  border-color: var(--color-disabled) !important;
+  color: var(--color-text-secondary) !important;
 }
 
 /* Tailor toggle styling */
 .tailorToggle {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  font-size: 0.875rem;
-  color: #4b5563;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
 }
 
 .tailorToggle input {
-  width: 1rem;
-  height: 1rem;
-  accent-color: #2563eb;
+  width: var(--spacing-md);
+  height: var(--spacing-md);
+  accent-color: var(--color-info);
 }
 
 /* Disabled state styles for method buttons inside a disabled panel */
 .disabledPanel .methodButton,
 .disabledPanel .methodButtonActive {
-  background: #d1d5db !important;
-  border-color: #d1d5db !important;
-  color: #6b7280 !important;
+  background: var(--color-disabled) !important;
+  border-color: var(--color-disabled) !important;
+  color: var(--color-text-secondary) !important;
 }
 
 .disabledPanel .methodButton:hover,
 .disabledPanel .methodButtonActive:hover,
 .disabledPanel .methodButton:focus,
 .disabledPanel .methodButtonActive:focus {
-  background: #d1d5db !important;
-  border-color: #d1d5db !important;
-  color: #6b7280 !important;
+  background: var(--color-disabled) !important;
+  border-color: var(--color-disabled) !important;
+  color: var(--color-text-secondary) !important;
   outline: none !important;
 }
 
 .methodButton[disabled],
 .methodButtonActive[disabled] {
-  background: #d1d5db !important;
-  color: #6b7280 !important;
-  border-color: #d1d5db !important;
+  background: var(--color-disabled) !important;
+  color: var(--color-text-secondary) !important;
+  border-color: var(--color-disabled) !important;
 }
 
 .methodButtonDisabled {
-  background: #d1d5db !important;
-  color: #6b7280 !important;
-  border-color: #d1d5db !important;
+  background: var(--color-disabled) !important;
+  color: var(--color-text-secondary) !important;
+  border-color: var(--color-disabled) !important;
 }
 
-.disabledPanel .inputMethodToggle .methodButton,
-.disabledPanel .inputMethodToggle .methodButtonActive,
-.disabledPanel .inputMethodToggle button:disabled {
-  background: #d1d5db !important;
-  border-color: #d1d5db !important;
-  color: #6b7280 !important;
-}
-
-/* FINAL override for disabled method buttons */
 .disabledPanel > .inputMethodToggle > button[disabled] {
-  background: #d1d5db !important;
-  border-color: #d1d5db !important;
-  color: #6b7280 !important;
+  background: var(--color-disabled) !important;
+  border-color: var(--color-disabled) !important;
+  color: var(--color-text-secondary) !important;
 }
 
 /* Override active tone button text color when panel disabled */
 .disabledPanel .toneButtonActive,
 .disabledPanel .toneButton {
-  background: #d1d5db !important;
-  border-color: #d1d5db !important;
-  color: #6b7280 !important;
+  background: var(--color-disabled) !important;
+  border-color: var(--color-disabled) !important;
+  color: var(--color-text-secondary) !important;
 }
 
 .disabledPanel .toneButtonActive .toneName,
 .disabledPanel .toneButton .toneName {
-  color: #6b7280 !important;
+  color: var(--color-text-secondary) !important;
 }
 
 /* Mobile: hide disabled job-spec panel entirely */
@@ -555,7 +546,7 @@
   max-width: 550px;
   max-height: 80vh;
   overflow-y: auto;
-  padding: 1rem !important;
+  padding: var(--spacing-md) !important;
 }
 
 @media (min-width: 768px) {
@@ -568,7 +559,7 @@
 
 /* Profile image dialog adjustments */
 .profileDialogContent {
-  padding: 10px !important;
+  padding: var(--spacing-xs) !important;
   width: 95vw !important;
   max-width: 600px;
   max-height: 90vh;

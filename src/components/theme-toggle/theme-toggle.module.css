@@ -51,11 +51,11 @@
 
 /* Theme-specific icon colors */
 .toggleButton[title*="Light"] .icon {
-  color: #f59e0b; /* Sun color */
+  color: var(--color-warning); /* Sun color */
 }
 
 .toggleButton[title*="Dark"] .icon {
-  color: #6366f1; /* Moon color */
+  color: var(--color-secondary-blue); /* Moon color */
 }
 
 .toggleButton[title*="System"] .icon {

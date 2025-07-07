@@ -8,7 +8,6 @@ import { ToastProvider } from '@/hooks/use-toast';
 import { AuthModalProvider } from '@/src/components/auth-component/AuthModalContext';
 import { AuthProvider } from '@/src/components/auth-provider/auth-provider';
 import { SiteFooter } from '@/src/components/site-footer/SiteFooter';
-import { ThemeScript } from '@/src/components/theme-script/theme-script';
 import { Toaster } from '@/src/components/ui/toaster';
 import { ThemeProvider } from '@/src/hooks/use-theme';
 
@@ -83,7 +82,6 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <ThemeScript />
         <ThemeProvider>
           <ToastProvider>
             <AuthProvider>

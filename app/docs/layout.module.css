@@ -1,5 +1,5 @@
 .docsRoot {
-  background: #ffffff;
+  background: var(--color-background-primary);
   flex: 1;
   color: var(--color-text-body);
   display: flex;

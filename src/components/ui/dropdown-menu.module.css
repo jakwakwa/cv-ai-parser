@@ -41,7 +41,7 @@
 }
 
 .subContent {
-  z-index: 50;
+  z-index: 9999;
   min-width: 8rem;
   overflow: hidden;
   border-radius: var(--border-radius-small);
@@ -207,13 +207,13 @@
   align-items: center;
   gap: var(--spacing-md);
   border-radius: 0.125rem;
-  padding-left: var(--spacing-sm);
+  /* padding-left: var(--spacing-sm);
   padding-right: var(--spacing-sm);
   padding-top: var(--spacing-sm);
   padding-bottom: var(--spacing-sm);
   margin-top: var(--spacing-sm);
-  margin-bottom: var(--spacing-sm);
-  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-sm); */
+  font-size: var(--font-size-md);
   outline: none;
   transition: var(--transition-fast);
   font-family: var(--font-family-base);

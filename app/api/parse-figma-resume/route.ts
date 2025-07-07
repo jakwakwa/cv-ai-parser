@@ -60,7 +60,7 @@ const figmaContentStore: {
 function extractAllTextFromNode(node: FigmaNode, depth = 0): void {
   const indent = '  '.repeat(depth);
   console.log(`${indent}Processing node: "${node.name}" (type: ${node.type})`);
-  
+
   // Extract text from current node if it's a TEXT node
   if (node.type === 'TEXT') {
     console.log(`${indent}Found TEXT node with characters:`, node.characters);
@@ -70,7 +70,7 @@ function extractAllTextFromNode(node: FigmaNode, depth = 0): void {
       console.log(`${indent}TEXT node has no characters or empty text`);
     }
   }
-  
+
   // Recursively extract from children
   if (node.children && node.children.length > 0) {
     console.log(`${indent}Node has ${node.children.length} children`);
@@ -86,188 +86,268 @@ function extractAndStoreContent(text: string, layerName: string): void {
   const lower = text.toLowerCase();
   const layerLower = layerName.toLowerCase();
   const cleanText = text.trim();
-  
+
   if (!cleanText) return;
-  
+
   console.log('Extracting from layer "' + layerName + '": "' + cleanText + '"'); // Debug log
-  
+
   // Store all text content for debugging and fallback
   if (!figmaContentStore.allTexts) {
     figmaContentStore.allTexts = [];
   }
   figmaContentStore.allTexts.push({
     layer: layerName,
-    text: cleanText
+    text: cleanText,
   });
-  
+
   // Enhanced name extraction patterns
   const namePatterns = [
-    /^[A-Z][a-z]+ [A-Z][a-z]+$/,  // First Last
-    /^[A-Z][a-z]+ [A-Z]\. [A-Z][a-z]+$/,  // First M. Last
-    /^[A-Z][a-z]+ [A-Z][a-z]+ [A-Z][a-z]+$/,  // First Middle Last
-    /^[A-Z\s]+$/  // ALL CAPS names like "JOHN DOE"
+    /^[A-Z][a-z]+ [A-Z][a-z]+$/, // First Last
+    /^[A-Z][a-z]+ [A-Z]\. [A-Z][a-z]+$/, // First M. Last
+    /^[A-Z][a-z]+ [A-Z][a-z]+ [A-Z][a-z]+$/, // First Middle Last
+    /^[A-Z\s]+$/, // ALL CAPS names like "JOHN DOE"
   ];
-  
+
   // Extract name from CURRICULUM VITAE text or any layer with name patterns
-  if (layerLower.includes('summary-name') && cleanText.includes('CURRICULUM VITAE')) {
-    const lines = cleanText.split('\n').map(line => line.trim()).filter(line => line);
+  if (
+    layerLower.includes('summary-name') &&
+    cleanText.includes('CURRICULUM VITAE')
+  ) {
+    const lines = cleanText
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line);
     if (lines.length > 1) {
       figmaContentStore.name = lines[1]; // Second line should be the name
       console.log(`Extracted name from CV: ${figmaContentStore.name}`);
     }
-  } else if (!figmaContentStore.name && namePatterns.some(pattern => pattern.test(cleanText))) {
+  } else if (
+    !figmaContentStore.name &&
+    namePatterns.some((pattern) => pattern.test(cleanText))
+  ) {
     figmaContentStore.name = cleanText;
     console.log(`Extracted name from pattern: ${cleanText}`);
-  } else if (!figmaContentStore.name && (layerLower.includes('name') || layerLower.includes('title'))) {
+  } else if (
+    !figmaContentStore.name &&
+    (layerLower.includes('name') || layerLower.includes('title'))
+  ) {
     figmaContentStore.name = cleanText;
     console.log(`Extracted name from layer name: ${cleanText}`);
   }
-  
+
   // Extract summary content - be more flexible
   if (layerLower.includes('summary-content') && cleanText.length > 50) {
     figmaContentStore.summary = cleanText;
-    console.log(`Extracted summary from specific layer: ${cleanText.substring(0, 100)}...`);
-  } else if (!figmaContentStore.summary && cleanText.length > 100 && 
-             (cleanText.includes('I am') || cleanText.includes('experienced') || 
-              cleanText.includes('professional') || cleanText.includes('specialize') ||
-              cleanText.includes('passionate') || cleanText.includes('dedicated'))) {
+    console.log(
+      `Extracted summary from specific layer: ${cleanText.substring(0, 100)}...`
+    );
+  } else if (
+    !figmaContentStore.summary &&
+    cleanText.length > 100 &&
+    (cleanText.includes('I am') ||
+      cleanText.includes('experienced') ||
+      cleanText.includes('professional') ||
+      cleanText.includes('specialize') ||
+      cleanText.includes('passionate') ||
+      cleanText.includes('dedicated'))
+  ) {
     figmaContentStore.summary = cleanText;
-    console.log(`Extracted summary from content pattern: ${cleanText.substring(0, 100)}...`);
+    console.log(
+      `Extracted summary from content pattern: ${cleanText.substring(0, 100)}...`
+    );
   }
-  
+
   // Extract contact information with better patterns
   const emailPattern = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/;
   const phonePattern = /[\+\(]?\d[\d\s\-\(\)]{8,}/;
-  
+
   if (cleanText.match(emailPattern)) {
     if (!figmaContentStore.contact) figmaContentStore.contact = {};
-    figmaContentStore.contact.email = cleanText.match(emailPattern)?.[0] || cleanText;
+    figmaContentStore.contact.email =
+      cleanText.match(emailPattern)?.[0] || cleanText;
     console.log(`Extracted email: ${figmaContentStore.contact.email}`);
   } else if (cleanText.match(phonePattern)) {
     if (!figmaContentStore.contact) figmaContentStore.contact = {};
-    figmaContentStore.contact.phone = cleanText.match(phonePattern)?.[0] || cleanText;
+    figmaContentStore.contact.phone =
+      cleanText.match(phonePattern)?.[0] || cleanText;
     console.log(`Extracted phone: ${figmaContentStore.contact.phone}`);
-  } else if (layerLower.includes('contact') && !cleanText.includes('@') && 
-             !phonePattern.test(cleanText) && cleanText.length > 3) {
+  } else if (
+    layerLower.includes('contact') &&
+    !cleanText.includes('@') &&
+    !phonePattern.test(cleanText) &&
+    cleanText.length > 3
+  ) {
     if (!figmaContentStore.contact) figmaContentStore.contact = {};
     figmaContentStore.contact.location = cleanText;
     console.log(`Extracted location: ${cleanText}`);
   }
-  
-     // Extract experience information - matching actual Figma layer names
-   if (layerLower.includes('experience-title') || layerLower.includes('exp-title') || 
-       layerLower.includes('job-title') || layerLower.includes('position')) {
-     if (!figmaContentStore.experience) figmaContentStore.experience = [];
-     if (figmaContentStore.experience.length === 0) {
-       figmaContentStore.experience.push({ position: cleanText });
-     } else {
-       figmaContentStore.experience[0].position = cleanText;
-     }
-     console.log(`Extracted job title: ${cleanText}`);
-   } else if (layerLower.includes('exp-company') || layerLower.includes('company')) {
-     if (!figmaContentStore.experience) figmaContentStore.experience = [];
-     if (figmaContentStore.experience.length === 0) {
-       figmaContentStore.experience.push({ company: cleanText });
-     } else {
-       figmaContentStore.experience[0].company = cleanText;
-     }
-     console.log(`Extracted company: ${cleanText}`);
-   } else if (layerLower.includes('exp-year') || layerLower.includes('exp-period') || 
-              layerLower.includes('period') || layerLower.includes('date')) {
-     if (!figmaContentStore.experience) figmaContentStore.experience = [];
-     if (figmaContentStore.experience.length === 0) {
-       figmaContentStore.experience.push({ period: cleanText });
-     } else {
-       figmaContentStore.experience[0].period = cleanText;
-     }
-     console.log(`Extracted period: ${cleanText}`);
-   } else if (layerLower.includes('exp-detail') || layerLower.includes('exp-desc') || 
-              layerLower.includes('description')) {
-     if (!figmaContentStore.experience) figmaContentStore.experience = [];
-     if (figmaContentStore.experience.length === 0) {
-       figmaContentStore.experience.push({ description: cleanText });
-     } else {
-       figmaContentStore.experience[0].description = cleanText;
-     }
-     console.log(`Extracted job description: ${cleanText.substring(0, 100)}...`);
-   }
-  
-           // Extract education information - matching actual Figma layer names
-    if (layerLower.includes('education-degree') || layerLower.includes('degree')) {
-      if (!figmaContentStore.education) figmaContentStore.education = [];
-      if (figmaContentStore.education.length === 0) {
-        figmaContentStore.education.push({ degree: cleanText });
-      } else {
-        figmaContentStore.education[figmaContentStore.education.length - 1].degree = cleanText;
-      }
-      console.log(`Extracted education degree: ${cleanText}`);
-    } else if (layerLower.includes('education-school') || layerLower.includes('school') || 
-               layerLower.includes('university')) {
-      if (!figmaContentStore.education) figmaContentStore.education = [];
-      if (figmaContentStore.education.length === 0) {
-        figmaContentStore.education.push({ school: cleanText });
-      } else {
-        figmaContentStore.education[figmaContentStore.education.length - 1].school = cleanText;
-      }
-      console.log(`Extracted education school: ${cleanText}`);
-    } else if (layerLower.includes('education-year') || layerLower.includes('year')) {
-      if (!figmaContentStore.education) figmaContentStore.education = [];
-      if (figmaContentStore.education.length === 0) {
-        figmaContentStore.education.push({ year: cleanText });
-      } else {
-        figmaContentStore.education[figmaContentStore.education.length - 1].year = cleanText;
-      }
-      console.log(`Extracted education year: ${cleanText}`);
+
+  // Extract experience information - matching actual Figma layer names
+  if (
+    layerLower.includes('experience-title') ||
+    layerLower.includes('exp-title') ||
+    layerLower.includes('job-title') ||
+    layerLower.includes('position')
+  ) {
+    if (!figmaContentStore.experience) figmaContentStore.experience = [];
+    if (figmaContentStore.experience.length === 0) {
+      figmaContentStore.experience.push({ position: cleanText });
+    } else {
+      figmaContentStore.experience[0].position = cleanText;
     }
-   
-        // Extract skills - matching actual Figma layer names
-     if (layerLower === 'skill' || (layerLower.includes('skill') && !layerLower.includes('skills-list'))) {
-       if (!figmaContentStore.skills) figmaContentStore.skills = [];
-       // For individual skill items, add directly
-       if (layerLower === 'skill') {
-         figmaContentStore.skills.push(cleanText);
-         console.log(`Extracted individual skill: ${cleanText}`);
-       } else {
-         // For skill lists, split by common separators
-         const skills = cleanText.split(/[,•\n\r]+/).map(s => s.trim()).filter(s => s);
-         figmaContentStore.skills.push(...skills);
-         console.log(`Extracted skills: ${skills.join(', ')}`);
-       }
-     }
-   
-        // Extract certifications - matching actual Figma layer names
-      if (layerLower.includes('certification-degree') || layerLower.includes('certificate-degree')) {
-        if (!figmaContentStore.certifications) figmaContentStore.certifications = [];
-        // Start a new certification item
-        figmaContentStore.certifications.push({ name: cleanText });
-        console.log(`Extracted certification degree (new item): ${cleanText}`);
-      } else if (layerLower.includes('certification-school') || layerLower.includes('certificate-school')) {
-        if (!figmaContentStore.certifications) figmaContentStore.certifications = [];
-        if (figmaContentStore.certifications.length === 0) {
-          // No degree found first – create item then set issuer
-          figmaContentStore.certifications.push({ issuer: cleanText });
-        } else {
-          // Update the latest certification item
-          const last = figmaContentStore.certifications[figmaContentStore.certifications.length - 1];
-          last.issuer = cleanText;
-        }
-        console.log(`Extracted certification school: ${cleanText}`);
-      } else if (layerLower.includes('certification-year') || layerLower.includes('certificate-year')) {
-        if (!figmaContentStore.certifications) figmaContentStore.certifications = [];
-        if (figmaContentStore.certifications.length === 0) {
-          figmaContentStore.certifications.push({ year: cleanText });
-        } else {
-          const last = figmaContentStore.certifications[figmaContentStore.certifications.length - 1];
-          last.year = cleanText;
-        }
-        console.log(`Extracted certification year: ${cleanText}`);
-      }
+    console.log(`Extracted job title: ${cleanText}`);
+  } else if (
+    layerLower.includes('exp-company') ||
+    layerLower.includes('company')
+  ) {
+    if (!figmaContentStore.experience) figmaContentStore.experience = [];
+    if (figmaContentStore.experience.length === 0) {
+      figmaContentStore.experience.push({ company: cleanText });
+    } else {
+      figmaContentStore.experience[0].company = cleanText;
+    }
+    console.log(`Extracted company: ${cleanText}`);
+  } else if (
+    layerLower.includes('exp-year') ||
+    layerLower.includes('exp-period') ||
+    layerLower.includes('period') ||
+    layerLower.includes('date')
+  ) {
+    if (!figmaContentStore.experience) figmaContentStore.experience = [];
+    if (figmaContentStore.experience.length === 0) {
+      figmaContentStore.experience.push({ period: cleanText });
+    } else {
+      figmaContentStore.experience[0].period = cleanText;
+    }
+    console.log(`Extracted period: ${cleanText}`);
+  } else if (
+    layerLower.includes('exp-detail') ||
+    layerLower.includes('exp-desc') ||
+    layerLower.includes('description')
+  ) {
+    if (!figmaContentStore.experience) figmaContentStore.experience = [];
+    if (figmaContentStore.experience.length === 0) {
+      figmaContentStore.experience.push({ description: cleanText });
+    } else {
+      figmaContentStore.experience[0].description = cleanText;
+    }
+    console.log(`Extracted job description: ${cleanText.substring(0, 100)}...`);
+  }
+
+  // Extract education information - matching actual Figma layer names
+  if (
+    layerLower.includes('education-degree') ||
+    layerLower.includes('degree')
+  ) {
+    if (!figmaContentStore.education) figmaContentStore.education = [];
+    if (figmaContentStore.education.length === 0) {
+      figmaContentStore.education.push({ degree: cleanText });
+    } else {
+      figmaContentStore.education[
+        figmaContentStore.education.length - 1
+      ].degree = cleanText;
+    }
+    console.log(`Extracted education degree: ${cleanText}`);
+  } else if (
+    layerLower.includes('education-school') ||
+    layerLower.includes('school') ||
+    layerLower.includes('university')
+  ) {
+    if (!figmaContentStore.education) figmaContentStore.education = [];
+    if (figmaContentStore.education.length === 0) {
+      figmaContentStore.education.push({ school: cleanText });
+    } else {
+      figmaContentStore.education[
+        figmaContentStore.education.length - 1
+      ].school = cleanText;
+    }
+    console.log(`Extracted education school: ${cleanText}`);
+  } else if (
+    layerLower.includes('education-year') ||
+    layerLower.includes('year')
+  ) {
+    if (!figmaContentStore.education) figmaContentStore.education = [];
+    if (figmaContentStore.education.length === 0) {
+      figmaContentStore.education.push({ year: cleanText });
+    } else {
+      figmaContentStore.education[figmaContentStore.education.length - 1].year =
+        cleanText;
+    }
+    console.log(`Extracted education year: ${cleanText}`);
+  }
+
+  // Extract skills - matching actual Figma layer names
+  if (
+    layerLower === 'skill' ||
+    (layerLower.includes('skill') && !layerLower.includes('skills-list'))
+  ) {
+    if (!figmaContentStore.skills) figmaContentStore.skills = [];
+    // For individual skill items, add directly
+    if (layerLower === 'skill') {
+      figmaContentStore.skills.push(cleanText);
+      console.log(`Extracted individual skill: ${cleanText}`);
+    } else {
+      // For skill lists, split by common separators
+      const skills = cleanText
+        .split(/[,•\n\r]+/)
+        .map((s) => s.trim())
+        .filter((s) => s);
+      figmaContentStore.skills.push(...skills);
+      console.log(`Extracted skills: ${skills.join(', ')}`);
+    }
+  }
+
+  // Extract certifications - matching actual Figma layer names
+  if (
+    layerLower.includes('certification-degree') ||
+    layerLower.includes('certificate-degree')
+  ) {
+    if (!figmaContentStore.certifications)
+      figmaContentStore.certifications = [];
+    // Start a new certification item
+    figmaContentStore.certifications.push({ name: cleanText });
+    console.log(`Extracted certification degree (new item): ${cleanText}`);
+  } else if (
+    layerLower.includes('certification-school') ||
+    layerLower.includes('certificate-school')
+  ) {
+    if (!figmaContentStore.certifications)
+      figmaContentStore.certifications = [];
+    if (figmaContentStore.certifications.length === 0) {
+      // No degree found first – create item then set issuer
+      figmaContentStore.certifications.push({ issuer: cleanText });
+    } else {
+      // Update the latest certification item
+      const last =
+        figmaContentStore.certifications[
+          figmaContentStore.certifications.length - 1
+        ];
+      last.issuer = cleanText;
+    }
+    console.log(`Extracted certification school: ${cleanText}`);
+  } else if (
+    layerLower.includes('certification-year') ||
+    layerLower.includes('certificate-year')
+  ) {
+    if (!figmaContentStore.certifications)
+      figmaContentStore.certifications = [];
+    if (figmaContentStore.certifications.length === 0) {
+      figmaContentStore.certifications.push({ year: cleanText });
+    } else {
+      const last =
+        figmaContentStore.certifications[
+          figmaContentStore.certifications.length - 1
+        ];
+      last.year = cleanText;
+    }
+    console.log(`Extracted certification year: ${cleanText}`);
+  }
 }
 
 function mapTextContent(text: string, layerName: string): string {
   const lower = text.toLowerCase();
   const layerLower = layerName.toLowerCase();
-  
+
   // Map based on layer names from Figma structure (content already extracted in first pass)
   if (layerLower.includes('summary-name')) {
     // Use extracted name or fallback to Figma text
@@ -275,18 +355,26 @@ function mapTextContent(text: string, layerName: string): string {
       return `{resume.name || "${figmaContentStore.name}"}`;
     }
     if (text.includes('CURRICULUM VITAE')) {
-      const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+      const lines = text
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line);
       if (lines.length > 1) {
         return `{resume.name || "${lines[1]}"}`;
       }
     }
     return '{resume.name || "Your Name"}';
   }
-  
-  if (layerLower.includes('summary-text') || layerLower.includes('summary-content')) {
+
+  if (
+    layerLower.includes('summary-text') ||
+    layerLower.includes('summary-content')
+  ) {
     // Use extracted summary or fallback to Figma text
     if (figmaContentStore.summary) {
-      const escapedText = figmaContentStore.summary.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+      const escapedText = figmaContentStore.summary
+        .replace(/`/g, '\\`')
+        .replace(/\$/g, '\\$');
       return `{resume.summary || \`${escapedText}\`}`;
     }
     if (text.length > 20) {
@@ -295,44 +383,77 @@ function mapTextContent(text: string, layerName: string): string {
     }
     return '{resume.summary || "Your professional summary"}';
   }
-  
-  if (layerLower.includes('experience-title') || layerLower.includes('exp-title') || layerLower.includes('job-title')) {
-    const extractedPosition = figmaContentStore.experience?.[0]?.position || text;
+
+  if (
+    layerLower.includes('experience-title') ||
+    layerLower.includes('exp-title') ||
+    layerLower.includes('job-title')
+  ) {
+    const extractedPosition =
+      figmaContentStore.experience?.[0]?.position || text;
     return `{resume.experience?.[0]?.position || "${extractedPosition}"}`;
   }
   if (layerLower.includes('exp-company') || layerLower.includes('company')) {
     const extractedCompany = figmaContentStore.experience?.[0]?.company || text;
     return `{resume.experience?.[0]?.company || "${extractedCompany}"}`;
   }
-  if (layerLower.includes('exp-year') || layerLower.includes('exp-period') || layerLower.includes('period')) {
+  if (
+    layerLower.includes('exp-year') ||
+    layerLower.includes('exp-period') ||
+    layerLower.includes('period')
+  ) {
     const extractedPeriod = figmaContentStore.experience?.[0]?.period || text;
     return `{resume.experience?.[0]?.startDate && resume.experience?.[0]?.endDate ? \`\${resume.experience[0].startDate} - \${resume.experience[0].endDate}\` : "${extractedPeriod}"}`;
   }
-  if (layerLower.includes('exp-detail') || layerLower.includes('exp-desc') || layerLower.includes('description')) {
-    const extractedDescription = figmaContentStore.experience?.[0]?.description || text;
-    const escapedDesc = extractedDescription.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+  if (
+    layerLower.includes('exp-detail') ||
+    layerLower.includes('exp-desc') ||
+    layerLower.includes('description')
+  ) {
+    const extractedDescription =
+      figmaContentStore.experience?.[0]?.description || text;
+    const escapedDesc = extractedDescription
+      .replace(/`/g, '\\`')
+      .replace(/\$/g, '\\$');
     return `{resume.experience?.[0]?.description || \`${escapedDesc}\`}`;
   }
-  
+
   // Contact fields with extracted data as fallback
-  if (layerLower.includes('contact-email') || (layerLower.includes('contact') && text.includes('@'))) {
+  if (
+    layerLower.includes('contact-email') ||
+    (layerLower.includes('contact') && text.includes('@'))
+  ) {
     const extractedEmail = figmaContentStore.contact?.email || text;
     return `{resume.contact?.email || "${extractedEmail}"}`;
   }
-  if (layerLower.includes('contact-phone') || (layerLower.includes('contact') && /[\+\(]?\d[\d\s\-\(\)]{8,}/.test(text))) {
+  if (
+    layerLower.includes('contact-phone') ||
+    (layerLower.includes('contact') && /[\+\(]?\d[\d\s\-\(\)]{8,}/.test(text))
+  ) {
     const extractedPhone = figmaContentStore.contact?.phone || text;
     return `{resume.contact?.phone || "${extractedPhone}"}`;
   }
-  if (layerLower.includes('contact-location') || (layerLower.includes('contact') && !text.includes('@') && !/[\+\(]?\d[\d\s\-\(\)]{8,}/.test(text))) {
+  if (
+    layerLower.includes('contact-location') ||
+    (layerLower.includes('contact') &&
+      !text.includes('@') &&
+      !/[\+\(]?\d[\d\s\-\(\)]{8,}/.test(text))
+  ) {
     const extractedLocation = figmaContentStore.contact?.location || text;
     return `{resume.contact?.location || "${extractedLocation}"}`;
   }
-  
-  if (layerLower.includes('education-degree') || layerLower.includes('degree')) {
+
+  if (
+    layerLower.includes('education-degree') ||
+    layerLower.includes('degree')
+  ) {
     const extractedDegree = figmaContentStore.education?.[0]?.degree || text;
     return `{resume.education?.[0]?.degree || "${extractedDegree}"}`;
   }
-  if (layerLower.includes('education-school') || layerLower.includes('school')) {
+  if (
+    layerLower.includes('education-school') ||
+    layerLower.includes('school')
+  ) {
     const extractedSchool = figmaContentStore.education?.[0]?.school || text;
     return `{resume.education?.[0]?.institution || "${extractedSchool}"}`;
   }
@@ -340,23 +461,40 @@ function mapTextContent(text: string, layerName: string): string {
     const extractedYear = figmaContentStore.education?.[0]?.year || text;
     return `{resume.education?.[0]?.year || "${extractedYear}"}`;
   }
-  if (layerLower.includes('certification-degree') || layerLower.includes('certificate-degree') || layerLower.includes('certification')) {
+  if (
+    layerLower.includes('certification-degree') ||
+    layerLower.includes('certificate-degree') ||
+    layerLower.includes('certification')
+  ) {
     const extractedCert = figmaContentStore.certifications?.[0]?.name || text;
     return `{resume.certifications?.[0]?.name || "${extractedCert}"}`;
   }
-  if (layerLower.includes('certification-school') || layerLower.includes('certificate-school') || layerLower.includes('issuer')) {
-    const extractedIssuer = figmaContentStore.certifications?.[0]?.issuer || text;
+  if (
+    layerLower.includes('certification-school') ||
+    layerLower.includes('certificate-school') ||
+    layerLower.includes('issuer')
+  ) {
+    const extractedIssuer =
+      figmaContentStore.certifications?.[0]?.issuer || text;
     return `{resume.certifications?.[0]?.issuer || "${extractedIssuer}"}`;
   }
-  if (layerLower.includes('certification-year') || layerLower.includes('certificate-year') || layerLower.includes('cert-year')) {
-    const extractedCertYear = figmaContentStore.certifications?.[0]?.year || text;
+  if (
+    layerLower.includes('certification-year') ||
+    layerLower.includes('certificate-year') ||
+    layerLower.includes('cert-year')
+  ) {
+    const extractedCertYear =
+      figmaContentStore.certifications?.[0]?.year || text;
     return `{resume.certifications?.[0]?.year || "${extractedCertYear}"}`;
   }
-  if (layerLower === 'skill' || (layerLower.includes('skill') && !layerLower.includes('skills-list'))) {
+  if (
+    layerLower === 'skill' ||
+    (layerLower.includes('skill') && !layerLower.includes('skills-list'))
+  ) {
     const extractedSkill = figmaContentStore.skills?.[0] || text;
     return `{resume.skills?.[0] || "${extractedSkill}"}`;
   }
-  
+
   // Section titles - use actual text from Figma
   if (lower.includes('experience') && layerLower.includes('sectiontitle')) {
     return `{"${text}"}`;
@@ -373,18 +511,18 @@ function mapTextContent(text: string, layerName: string): string {
   if (lower.includes('skills') && layerLower.includes('sectiontitle')) {
     return `{"${text}"}`;
   }
-  
+
   // Generic section titles
   if (layerLower.includes('sectiontitle')) {
     return `{"${text}"}`;
   }
-  
+
   // Preserve actual Figma text content as fallback
   if (text.length > 0 && text.trim() !== '') {
     const escapedText = text.replace(/`/g, '\\`').replace(/\$/g, '\\$');
     return `{\`${escapedText}\`}`;
   }
-  
+
   // Default fallback
   return `{\`${text}\`}`;
 }
@@ -400,7 +538,7 @@ function extractColorsFromNode(node: FigmaNode, colors: Set<string>): void {
       }
     }
   }
-  
+
   // Extract colors from strokes
   if (node.strokes) {
     for (const stroke of node.strokes) {
@@ -411,7 +549,7 @@ function extractColorsFromNode(node: FigmaNode, colors: Set<string>): void {
       }
     }
   }
-  
+
   // Recursively extract from children
   if (node.children) {
     for (const child of node.children) {
@@ -421,14 +559,22 @@ function extractColorsFromNode(node: FigmaNode, colors: Set<string>): void {
 }
 
 function rgbaToHex(r: number, g: number, b: number, a: number): string {
-  const toHex = (n: number) => Math.round(n * 255).toString(16).padStart(2, '0');
+  const toHex = (n: number) =>
+    Math.round(n * 255)
+      .toString(16)
+      .padStart(2, '0');
   return `#${toHex(r)}${toHex(g)}${toHex(b)}${a < 1 ? toHex(a) : ''}`;
 }
 
-function generateCSSFromFigmaStructure(node: FigmaNode, primaryColor: string, secondaryColor: string, accentColor: string): string {
+function generateCSSFromFigmaStructure(
+  node: FigmaNode,
+  primaryColor: string,
+  secondaryColor: string,
+  accentColor: string
+): string {
   // Extract all unique class names from the node structure
   const classNames = new Set<string>();
-  
+
   function extractClassNames(n: FigmaNode) {
     const className = n.name.replace(/\s+/g, '').toLowerCase();
     classNames.add(className);
@@ -436,9 +582,9 @@ function generateCSSFromFigmaStructure(node: FigmaNode, primaryColor: string, se
       n.children.forEach(extractClassNames);
     }
   }
-  
+
   extractClassNames(node);
-  
+
   // Generate CSS based on the actual layer structure
   let css = `/* Styles generated from Figma with extracted colors */
 /* Primary: ${primaryColor}, Secondary: ${secondaryColor}, Accent: ${accentColor} */
@@ -858,10 +1004,10 @@ function nodeToJsx(node: FigmaNode, parentNode?: FigmaNode): string {
       const nodeName = node.name.toLowerCase();
       const className = node.name.replace(/\s+/g, '').toLowerCase();
       // Use bracket notation for CSS class names to handle hyphens and special characters
-      const classNameAccess = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(className) 
-        ? `styles.${className}` 
+      const classNameAccess = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(className)
+        ? `styles.${className}`
         : `styles['${className}']`;
-      
+
       // Handle repeated sections with mapping
       if (nodeName === 'experience-list') {
         return `<div className={${classNameAccess}}>{resume.experience?.map((exp, index) => (
@@ -873,11 +1019,18 @@ function nodeToJsx(node: FigmaNode, parentNode?: FigmaNode): string {
           </div>
         )) || []}</div>`;
       }
-      
+
       // Handle education container that has education-list children
-      if (nodeName === 'education' && node.children?.some(child => child.name.toLowerCase() === 'education-list')) {
+      if (
+        nodeName === 'education' &&
+        node.children?.some(
+          (child) => child.name.toLowerCase() === 'education-list'
+        )
+      ) {
         // Find the education-list child and generate its content
-        const educationList = node.children.find(child => child.name.toLowerCase() === 'education-list');
+        const educationList = node.children.find(
+          (child) => child.name.toLowerCase() === 'education-list'
+        );
         if (educationList) {
           return `<div className={${classNameAccess}}>
             <div className={styles['education-list']}>{resume.education?.map((edu, index) => (
@@ -890,12 +1043,12 @@ function nodeToJsx(node: FigmaNode, parentNode?: FigmaNode): string {
           </div>`;
         }
       }
-      
+
       // Skip standalone education-list as it's handled by parent
       if (nodeName === 'education-list') {
         return '';
       }
-      
+
       if (nodeName === 'certification-list') {
         return `<div className={${classNameAccess}}>{resume.certifications?.map((cert, index) => (
           <div key={index}>
@@ -905,7 +1058,7 @@ function nodeToJsx(node: FigmaNode, parentNode?: FigmaNode): string {
           </div>
         )) || []}</div>`;
       }
-      
+
       if (nodeName === 'skills-list') {
         return `<div className={${classNameAccess}}>{resume.skills?.map((skill, index) => (
           <div key={index} className={styles.skill}>
@@ -913,7 +1066,7 @@ function nodeToJsx(node: FigmaNode, parentNode?: FigmaNode): string {
           </div>
         )) || []}</div>`;
       }
-      
+
       if (nodeName === 'contact-list') {
         return `<div className={${classNameAccess}}>
           <p>{resume.contact?.email}</p>
@@ -921,9 +1074,10 @@ function nodeToJsx(node: FigmaNode, parentNode?: FigmaNode): string {
           <p>{resume.contact?.location}</p>
         </div>`;
       }
-      
+
       // Process children with parent context
-      const childrenJsx = node.children?.map(child => nodeToJsx(child, node)).join('\n') || '';
+      const childrenJsx =
+        node.children?.map((child) => nodeToJsx(child, node)).join('\n') || '';
       return `<div className={${classNameAccess}}>${childrenJsx}</div>`;
     }
     default:
@@ -931,13 +1085,18 @@ function nodeToJsx(node: FigmaNode, parentNode?: FigmaNode): string {
   }
 }
 
-function extractFileKeyAndNodeId(figmaUrl: string): { fileKey: string; nodeId?: string } | null {
+function extractFileKeyAndNodeId(
+  figmaUrl: string
+): { fileKey: string; nodeId?: string } | null {
   try {
     const url = new URL(figmaUrl);
     const segments = url.pathname.split('/');
     // Figma links can use either /file/FILEKEY or /design/FILEKEY now.
-    const fileSegmentIndex = segments.findIndex((seg) => seg === 'file' || seg === 'design');
-    if (fileSegmentIndex === -1 || segments.length <= fileSegmentIndex + 1) return null;
+    const fileSegmentIndex = segments.findIndex(
+      (seg) => seg === 'file' || seg === 'design'
+    );
+    if (fileSegmentIndex === -1 || segments.length <= fileSegmentIndex + 1)
+      return null;
     const fileKey = segments[fileSegmentIndex + 1];
 
     const nodeId = url.searchParams.get('node-id') || undefined;
@@ -949,7 +1108,7 @@ function extractFileKeyAndNodeId(figmaUrl: string): { fileKey: string; nodeId?: 
 
 export async function POST(req: Request) {
   const { FIGMA_API_KEY } = process.env;
-  
+
   try {
     const { figmaLink, customColors = {} } = await req.json();
 
@@ -1045,20 +1204,20 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
 }`;
 
       return new Response(
-        JSON.stringify({ 
-          jsx: mockJsxCode, 
-          css: mockCssCode, 
-          componentName: mockComponentName, 
-          rawFigma: { mockData: true, fileKey, nodeId }, 
+        JSON.stringify({
+          jsx: mockJsxCode,
+          css: mockCssCode,
+          componentName: mockComponentName,
+          rawFigma: { mockData: true, fileKey, nodeId },
           customColors,
           extractedColors: {
             primary: '#116964',
             secondary: '#565854',
             accent: '#a49990',
-            all: ['#116964', '#565854', '#a49990', '#3e2f22']
+            all: ['#116964', '#565854', '#a49990', '#3e2f22'],
           },
           success: true,
-          message: 'Mock component generated (FIGMA_API_KEY not configured)'
+          message: 'Mock component generated (FIGMA_API_KEY not configured)',
         }),
         {
           status: 200,
@@ -1078,9 +1237,12 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
 
     try {
       if (nodeId) {
-        figmaResponse = await fetch(`${apiBase}/files/${fileKey}/nodes?ids=${encodeURIComponent(nodeId)}`, {
-          headers,
-        });
+        figmaResponse = await fetch(
+          `${apiBase}/files/${fileKey}/nodes?ids=${encodeURIComponent(nodeId)}`,
+          {
+            headers,
+          }
+        );
       } else {
         figmaResponse = await fetch(`${apiBase}/files/${fileKey}`, { headers });
       }
@@ -1095,14 +1257,16 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
           errorData = { err: errorText };
         }
 
-        console.warn(`Figma API error (${figmaResponse.status}): ${errorData.err || errorText} - using fallback`);
+        console.warn(
+          `Figma API error (${figmaResponse.status}): ${errorData.err || errorText} - using fallback`
+        );
         throw new Error(`Figma API failed: ${errorData.err || errorText}`);
       }
 
       nodeResponseJson = await figmaResponse.json();
     } catch (fetchError) {
       console.error('Figma API fetch error:', fetchError);
-      
+
       // Return mock response if API fails
       console.warn('Figma API failed - returning mock response');
       const mockComponentName = 'FigmaResumeDemo';
@@ -1179,20 +1343,28 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
 }`;
 
       return new Response(
-        JSON.stringify({ 
-          jsx: mockJsxCode, 
-          css: mockCssCode, 
-          componentName: mockComponentName, 
-          rawFigma: { fallback: true, fileKey, nodeId, error: fetchError instanceof Error ? fetchError.message : 'Unknown error' }, 
+        JSON.stringify({
+          jsx: mockJsxCode,
+          css: mockCssCode,
+          componentName: mockComponentName,
+          rawFigma: {
+            fallback: true,
+            fileKey,
+            nodeId,
+            error:
+              fetchError instanceof Error
+                ? fetchError.message
+                : 'Unknown error',
+          },
           customColors,
           extractedColors: {
             primary: '#116964',
             secondary: '#565854',
             accent: '#a49990',
-            all: ['#116964', '#565854', '#a49990', '#3e2f22']
+            all: ['#116964', '#565854', '#a49990', '#3e2f22'],
           },
           success: true,
-          message: 'Fallback component generated (Figma API unavailable)'
+          message: 'Fallback component generated (Figma API unavailable)',
         }),
         {
           status: 200,
@@ -1203,106 +1375,152 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
 
     // For demo purposes pick the first node in the response
     const firstNode: FigmaNode | undefined = nodeResponseJson?.nodes
-      ? (Object.values(nodeResponseJson.nodes as Record<string, { document: FigmaNode }>)[0] as { document: FigmaNode })?.document
+      ? (
+          Object.values(
+            nodeResponseJson.nodes as Record<string, { document: FigmaNode }>
+          )[0] as { document: FigmaNode }
+        )?.document
       : (nodeResponseJson?.document as FigmaNode);
 
     if (!firstNode) {
-      return new Response(JSON.stringify({ 
-        error: 'Could not locate node in Figma file.',
-        details: 'The specified node ID may not exist in this file, or the file structure may be different than expected.'
-      }), {
-        status: 400,
-      });
+      return new Response(
+        JSON.stringify({
+          error: 'Could not locate node in Figma file.',
+          details:
+            'The specified node ID may not exist in this file, or the file structure may be different than expected.',
+        }),
+        {
+          status: 400,
+        }
+      );
     }
 
     const componentName = `FigmaResume${firstNode.name.replace(/[^a-zA-Z0-9]/g, '')}`;
-    
+
     // Reset the content store for this generation
-    Object.keys(figmaContentStore).forEach(key => delete (figmaContentStore as any)[key]);
-    
+    Object.keys(figmaContentStore).forEach(
+      (key) => delete (figmaContentStore as any)[key]
+    );
+
     // First pass: Extract all text content from the Figma tree
     console.log('Starting text extraction from Figma node tree...');
     extractAllTextFromNode(firstNode);
-    
+
     console.log('=== FIGMA CONTENT EXTRACTION SUMMARY ===');
     console.log('Extracted Name:', figmaContentStore.name || 'NOT FOUND');
-    console.log('Extracted Summary:', figmaContentStore.summary ? figmaContentStore.summary.substring(0, 100) + '...' : 'NOT FOUND');
+    console.log(
+      'Extracted Summary:',
+      figmaContentStore.summary
+        ? figmaContentStore.summary.substring(0, 100) + '...'
+        : 'NOT FOUND'
+    );
     console.log('Extracted Contact:', figmaContentStore.contact || 'NOT FOUND');
-    console.log('Extracted Experience:', figmaContentStore.experience || 'NOT FOUND');
-    console.log('Extracted Education:', figmaContentStore.education || 'NOT FOUND');
+    console.log(
+      'Extracted Experience:',
+      figmaContentStore.experience || 'NOT FOUND'
+    );
+    console.log(
+      'Extracted Education:',
+      figmaContentStore.education || 'NOT FOUND'
+    );
     console.log('Extracted Skills:', figmaContentStore.skills || 'NOT FOUND');
-    console.log('Extracted Certifications:', figmaContentStore.certifications || 'NOT FOUND');
-    console.log('Total text nodes found:', figmaContentStore.allTexts?.length || 0);
+    console.log(
+      'Extracted Certifications:',
+      figmaContentStore.certifications || 'NOT FOUND'
+    );
+    console.log(
+      'Total text nodes found:',
+      figmaContentStore.allTexts?.length || 0
+    );
     console.log('=== END EXTRACTION SUMMARY ===');
-    
-    console.log('Full extracted content store:', JSON.stringify(figmaContentStore, null, 2));
-    
+
+    console.log(
+      'Full extracted content store:',
+      JSON.stringify(figmaContentStore, null, 2)
+    );
+
     const jsxBody = nodeToJsx(firstNode, undefined);
-    
+
     // Extract colors from the Figma node
     const extractedColors = new Set<string>();
     extractColorsFromNode(firstNode, extractedColors);
     const colorsArray = Array.from(extractedColors);
-    
+
     // Create color variables for CSS
-    const primaryColor = colorsArray[0] || '#0891b2';
-    const secondaryColor = colorsArray[1] || '#64748b';
-    const accentColor = colorsArray[2] || '#06b6d4';
+    const primaryColor = colorsArray[0] || 'var(--color-accent-teal)';
+    const secondaryColor = colorsArray[1] || 'var(--color-text-secondary)';
+    const accentColor = colorsArray[2] || 'var(--color-accent-teal-bright)';
 
     // Generate default resume object with extracted Figma content
     console.log('Generating default resume with extracted content...');
     const defaultResumeObject = {
       name: figmaContentStore.name || 'John Doe',
-      summary: figmaContentStore.summary || 'Professional summary from your Figma design',
+      summary:
+        figmaContentStore.summary ||
+        'Professional summary from your Figma design',
       contact: {
         email: figmaContentStore.contact?.email || 'email@example.com',
         phone: figmaContentStore.contact?.phone || '+1 (555) 123-4567',
-        location: figmaContentStore.contact?.location || 'Your Location'
+        location: figmaContentStore.contact?.location || 'Your Location',
       },
-      experience: figmaContentStore.experience && figmaContentStore.experience.length > 0 ? 
-        figmaContentStore.experience.map(exp => ({
-          position: exp.position || 'Frontend Engineer',
-          company: exp.company || 'Your Company',
-          startDate: exp.period ? exp.period.split(' - ')[0] || '2020' : '2020',
-          endDate: exp.period ? exp.period.split(' - ')[1] || '2024' : '2024',
-          description: exp.description || 'Your job description and achievements'
-        })) : [
-        {
-          position: 'Frontend Engineer',
-          company: 'Your Company',
-          startDate: '2020',
-          endDate: '2024',
-          description: 'Your job description and achievements'
-        }
-      ],
-      education: figmaContentStore.education && figmaContentStore.education.length > 0 ?
-        figmaContentStore.education.map(edu => ({
-          degree: edu.degree || 'Your Degree',
-          institution: edu.school || 'Your School',
-          year: edu.year || '2020'
-        })) : [
-        {
-          degree: 'Your Degree',
-          institution: 'Your School',
-          year: '2020'
-        }
-      ],
-      certifications: figmaContentStore.certifications && figmaContentStore.certifications.length > 0 ?
-        figmaContentStore.certifications.map(cert => ({
-          name: cert.name || 'Your Certification',
-          issuer: cert.issuer || 'Issuing Organization',
-          year: cert.year || '2023'
-        })) : [
-        {
-          name: 'Your Certification',
-          issuer: 'Issuing Organization',
-          year: '2023'
-        }
-      ],
-      skills: figmaContentStore.skills && figmaContentStore.skills.length > 0 ?
-        figmaContentStore.skills : ['JavaScript', 'TypeScript', 'React', 'UI/UX Design']
+      experience:
+        figmaContentStore.experience && figmaContentStore.experience.length > 0
+          ? figmaContentStore.experience.map((exp) => ({
+              position: exp.position || 'Frontend Engineer',
+              company: exp.company || 'Your Company',
+              startDate: exp.period
+                ? exp.period.split(' - ')[0] || '2020'
+                : '2020',
+              endDate: exp.period
+                ? exp.period.split(' - ')[1] || '2024'
+                : '2024',
+              description:
+                exp.description || 'Your job description and achievements',
+            }))
+          : [
+              {
+                position: 'Frontend Engineer',
+                company: 'Your Company',
+                startDate: '2020',
+                endDate: '2024',
+                description: 'Your job description and achievements',
+              },
+            ],
+      education:
+        figmaContentStore.education && figmaContentStore.education.length > 0
+          ? figmaContentStore.education.map((edu) => ({
+              degree: edu.degree || 'Your Degree',
+              institution: edu.school || 'Your School',
+              year: edu.year || '2020',
+            }))
+          : [
+              {
+                degree: 'Your Degree',
+                institution: 'Your School',
+                year: '2020',
+              },
+            ],
+      certifications:
+        figmaContentStore.certifications &&
+        figmaContentStore.certifications.length > 0
+          ? figmaContentStore.certifications.map((cert) => ({
+              name: cert.name || 'Your Certification',
+              issuer: cert.issuer || 'Issuing Organization',
+              year: cert.year || '2023',
+            }))
+          : [
+              {
+                name: 'Your Certification',
+                issuer: 'Issuing Organization',
+                year: '2023',
+              },
+            ],
+      skills:
+        figmaContentStore.skills && figmaContentStore.skills.length > 0
+          ? figmaContentStore.skills
+          : ['JavaScript', 'TypeScript', 'React', 'UI/UX Design'],
     };
-    
+
     console.log('Default resume object:', defaultResumeObject);
 
     const jsxCode = `import React from 'react';
@@ -1332,7 +1550,12 @@ export const figmaDebugInfo = {
 `;
 
     // Generate CSS based on actual Figma structure
-    const cssModule = generateCSSFromFigmaStructure(firstNode, primaryColor, secondaryColor, accentColor);
+    const cssModule = generateCSSFromFigmaStructure(
+      firstNode,
+      primaryColor,
+      secondaryColor,
+      accentColor
+    );
 
     // Persist component on the server (development/demo).
     try {
@@ -1345,27 +1568,31 @@ export const figmaDebugInfo = {
         .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
         .toLowerCase();
       await fs.writeFile(path.join(genDir, `${kebab}.tsx`), jsxCode, 'utf8');
-      await fs.writeFile(path.join(genDir, `${kebab}.module.css`), cssModule, 'utf8');
+      await fs.writeFile(
+        path.join(genDir, `${kebab}.module.css`),
+        cssModule,
+        'utf8'
+      );
     } catch (writeErr) {
       console.warn('Failed to persist generated files', writeErr);
     }
 
     // Return generated code so the client can write it locally (or further refine).
     return new Response(
-      JSON.stringify({ 
-        jsx: jsxCode, 
-        css: cssModule, 
-        componentName, 
-        rawFigma: nodeResponseJson, 
+      JSON.stringify({
+        jsx: jsxCode,
+        css: cssModule,
+        componentName,
+        rawFigma: nodeResponseJson,
         customColors,
         extractedColors: {
           primary: primaryColor,
           secondary: secondaryColor,
           accent: accentColor,
-          all: colorsArray
+          all: colorsArray,
         },
         success: true,
-        message: `Component ${componentName} generated successfully`
+        message: `Component ${componentName} generated successfully`,
       }),
       {
         status: 200,
@@ -1375,9 +1602,12 @@ export const figmaDebugInfo = {
   } catch (err: unknown) {
     console.error('Unexpected error:', err);
     const msg = err instanceof Error ? err.message : 'Unknown error';
-    return new Response(JSON.stringify({ 
-      error: 'An unexpected error occurred while processing your request.',
-      details: msg
-    }), { status: 500 });
+    return new Response(
+      JSON.stringify({
+        error: 'An unexpected error occurred while processing your request.',
+        details: msg,
+      }),
+      { status: 500 }
+    );
   }
 }
