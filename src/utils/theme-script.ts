@@ -38,6 +38,13 @@ export const themeScript = `
         }
       });
     }
+    
+    // Listen for theme changes in localStorage
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'theme') {
+        initializeTheme();
+      }
+    });
   } catch (error) {
     // Fallback to light theme if anything goes wrong
     document.documentElement.setAttribute('data-theme', 'light');
