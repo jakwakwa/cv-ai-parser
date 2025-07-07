@@ -1,0 +1,82 @@
+/**
+ * Component: MobileDrawer
+ * Mobile-only navigation drawer that slides up from bottom
+ * Uses design tokens following ITCSS architecture
+ */
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  backdrop-filter: blur(2px);
+}
+
+.drawer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--color-background-primary);
+  border-top-left-radius: var(--border-radius-lg);
+  border-top-right-radius: var(--border-radius-lg);
+  box-shadow: 0 -4px 6px -1px var(--color-button-shadow);
+  z-index: 51;
+  max-height: 80vh;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.handle {
+  width: 40px;
+  height: 4px;
+  background-color: var(--color-border-dark);
+  border-radius: var(--border-radius-full);
+  margin: var(--spacing-md) auto var(--spacing-sm);
+  opacity: 0.6;
+}
+
+.content {
+  padding: var(--spacing-sm) var(--spacing-lg) var(--spacing-xl);
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-sm);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  border-radius: var(--border-radius-md);
+  transition: var(--transition-fast);
+  font-family: var(--font-family-base);
+  min-height: 48px; /* Touch-friendly minimum height */
+}
+
+.navLink:hover,
+.navLink:focus {
+  background-color: var(--color-background-secondary);
+  color: var(--color-accent-teal);
+}
+
+.navLink:active {
+  background-color: var(--color-background-tertiary);
+  transform: scale(0.98);
+}
+
+/* Ensure drawer is only visible on mobile */
+@media (min-width: 769px) {
+  .backdrop,
+  .drawer {
+    display: none;
+  }
+}
