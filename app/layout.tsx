@@ -82,19 +82,6 @@ export default function RootLayout({
         />
       </head>
       <body>
-<<<<<<< HEAD
-        <ToastProvider>
-          <AuthProvider>
-            <AuthModalProvider>
-              <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-                {children}
-                <SiteFooter />
-              </div>
-            </AuthModalProvider>
-          </AuthProvider>
-          <Toaster />
-        </ToastProvider>
-=======
         <ThemeProvider>
           <ToastProvider>
             <AuthProvider>
@@ -111,12 +98,9 @@ export default function RootLayout({
                 </div>
               </AuthModalProvider>
             </AuthProvider>
-            <ToastProvider>
-              <Toaster />
-            </ToastProvider>
+            <Toaster />
           </ToastProvider>
         </ThemeProvider>
->>>>>>> origin/feature/staging-jobfit-tailor
         <Analytics />
       </body>
     </html>
