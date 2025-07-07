@@ -74,6 +74,7 @@
 }
 
 .panelHeader {
+
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
@@ -102,6 +103,12 @@
   background-color: var(--color-background-secondary);
   transition: var(--transition-fast);
   position: relative;
+  display: flex;
+    justify-content: space-around;
+    align-content: space-around;
+    align-items: stretch;
+    padding: 1rem;
+    flex-direction: row;
 }
 
 .dropZone:hover {
@@ -196,7 +203,7 @@
   justify-content: center;
   gap: var(--spacing-xs);
   padding: var(--spacing-sm) var(--spacing-md);
-  background: var(--color-background-primary);
+  background: var(--color-primary-button-custom);
   border: 1px solid var(--color-border-light);
   border-radius: var(--border-radius-medium);
   color: var(--color-text-light);
@@ -242,14 +249,16 @@
 }
 
 .methodButtonActive {
-  background: var(--color-info);
-  border-color: var(--color-info);
+  background-color: var(--color-accent-teal);
   color: var(--color-text-inverse);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.methodButtonActive:hover {
-  background: var(--color-info-dark);
-  border-color: var(--color-info-dark);
+.methodButtonDisabled {
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .methodButton:disabled,
@@ -267,32 +276,16 @@
   flex-direction: column;
 }
 
-.jobSpecTextarea {
-  width: 100%;
-  min-height: 200px;
-  padding: var(--spacing-md);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--border-radius-medium);
-  font-size: var(--font-size-sm);
-  font-family: inherit;
-  resize: vertical;
-  transition: var(--transition-fast);
-}
-
-.jobSpecTextarea:focus {
-  outline: none;
-  border-color: var(--color-info);
-}
-
 .characterCount {
-  margin-top: var(--spacing-xs);
   text-align: right;
   font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-xs);
 }
 
 .characterWarning {
   color: var(--color-error);
+  font-weight: var(--font-weight-medium);
 }
 
 /* File Upload Container */
@@ -383,23 +376,6 @@
 /* Instructions Section */
 .instructionsSection {
   padding: var(--spacing-lg);
-}
-
-.instructionsTextarea {
-  width: 100%;
-  min-height: 100px;
-  padding: var(--spacing-md);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--border-radius-medium);
-  font-size: var(--font-size-sm);
-  font-family: inherit;
-  resize: vertical;
-  transition: var(--transition-fast);
-}
-
-.instructionsTextarea:focus {
-  outline: none;
-  border-color: var(--color-info);
 }
 
 /* Action Section */
@@ -543,15 +519,15 @@
 /* Responsive dialog content sizing for color picker */
 .colorDialogContent {
   width: 90vw !important;
-  max-width: 550px;
-  max-height: 80vh;
+  max-width: 850px;
+  max-height: 90vh;
   overflow-y: auto;
-  padding: var(--spacing-md) !important;
+  /* padding: var(--spacing-md) !important; */
 }
 
 @media (min-width: 768px) {
   .colorDialogContent {
-    width: 600px !important;
+    width: 800px !important;
     max-width: 90vw;
     max-height: 85vh;
   }

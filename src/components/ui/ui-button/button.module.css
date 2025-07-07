@@ -81,9 +81,10 @@
 }
 
 .button.default {
-    background-color: var(--color-accent-teal);
-    color: var(--color-background-primary);
-    border: 1px solid var(--color-accent-teal);
+    background-color: var(--color-button-default-background);
+    color: var(--color-button-default-text);
+    border: 1px solid var(--color-button-default-border);
+    font-weight: 800;
 }
 
 .button.default:hover {

@@ -1,15 +1,15 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { 
-  FileText,
+import {
   ArrowRight,
+  Bot,
+  FileText as BriefcaseIcon,
+  FileText,
+  Palette,
   Plus,
   Upload,
-  FileText as BriefcaseIcon,
-  Palette,
-  Bot
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/src/components/ui/ui-button/button';
 import styles from './home-page-content.module.css';
 
@@ -21,12 +21,11 @@ export default function HomePageContent() {
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>
-            AI-Powered Resume Builder
-          </h1>
+          <h1 className={styles.heroTitle}>AI-Powered Resume Builder</h1>
           <p className={styles.heroSubtitle}>
-            Transform your career with our intelligent resume tools. Create tailored resumes 
-            from scratch or convert your Figma designs into professional resume components.
+            Transform your career with our intelligent resume tools. Create
+            tailored resumes from scratch or convert your Figma designs into
+            professional resume components.
           </p>
           <div className={styles.heroCta}>
             <Button
@@ -43,20 +42,15 @@ export default function HomePageContent() {
 
       {/* Features Grid */}
       <section className={styles.features}>
-        <h2 className={styles.sectionTitle}>Choose Your Path</h2>
-        
         <div className={styles.featuresGrid}>
           {/* Resume Tailor Card */}
           <div className={styles.featureCard}>
-            <div className={styles.featureIcon}>
-              <Plus size={32} />
-            </div>
             <h3 className={styles.featureTitle}>AI Resume Tailor</h3>
             <p className={styles.featureDescription}>
-              Upload your resume and a job description. Our AI will automatically 
-              optimize your resume for that specific role.
+              Upload your resume and a job description. Our AI will
+              automatically optimize your resume for that specific role.
             </p>
-            
+
             <div className={styles.featureHighlights}>
               <div className={styles.highlight}>
                 <Upload size={16} />
@@ -75,7 +69,7 @@ export default function HomePageContent() {
                 <span>Custom styling</span>
               </div>
             </div>
-            
+
             <Button
               variant="primary"
               className={styles.featureButton}
@@ -88,15 +82,12 @@ export default function HomePageContent() {
 
           {/* Figma to Resume Card */}
           <div className={styles.featureCard}>
-            <div className={styles.featureIcon}>
-              <FileText size={32} />
-            </div>
             <h3 className={styles.featureTitle}>Figma to Resume</h3>
             <p className={styles.featureDescription}>
-              Have a resume design in Figma? Convert it directly into a deployable 
-              React component with just one click.
+              Have a resume design in Figma? Convert it directly into a
+              deployable React component with just one click.
             </p>
-            
+
             <div className={styles.featureHighlights}>
               <div className={styles.highlight}>
                 <FileText size={16} />
@@ -115,7 +106,7 @@ export default function HomePageContent() {
                 <span>Export ready code</span>
               </div>
             </div>
-            
+
             <Button
               variant="primary"
               className={styles.featureButton}
@@ -134,7 +125,10 @@ export default function HomePageContent() {
         <div className={styles.benefitsGrid}>
           <div className={styles.benefit}>
             <h4>AI-Powered</h4>
-            <p>Advanced AI analyzes job requirements and optimizes your resume content</p>
+            <p>
+              Advanced AI analyzes job requirements and optimizes your resume
+              content
+            </p>
           </div>
           <div className={styles.benefit}>
             <h4>Professional Design</h4>
