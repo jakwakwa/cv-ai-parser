@@ -26,13 +26,18 @@
 }
 
 .heroTitle {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-extrabold);
   font-size: var(--font-size-hero);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
   text-align: center;
-  line-height: 40px;
   margin-bottom: var(--spacing-md);
-  line-height: 1.2;
+  color: var(--color-hero-gradient-fallback);
+  background-image: var(--color-hero-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .heroSubtitle {
@@ -202,19 +207,19 @@
     font-size: 2rem;
     line-height: 2;
   }
-  
+
   .heroSubtitle {
     font-size: 1rem;
   }
-  
+
   .sectionTitle {
     font-size: 1.5rem;
   }
-  
+
   .featureCard {
     padding: 1.5rem;
   }
-  
+
   .benefits {
     padding: 2rem 1rem;
   }

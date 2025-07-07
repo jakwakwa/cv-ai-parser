@@ -20,13 +20,14 @@ export default function TabNavigation({ initialView }: TabNavigationProps) {
 
   return (
     <div className={styles.tabNavigationContainer}>
+      <p>More Options</p>
       <Button
         type="button"
         variant="default"
         onClick={() => handleTabClick('upload')}
         className={`${styles.tabButton} ${currentView === 'upload' ? styles.activeTab : styles.inactiveTab}`}
       >
-        Upload
+        Tailor New Resume
       </Button>
       <Button
         type="button"

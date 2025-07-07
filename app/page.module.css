@@ -3,11 +3,14 @@
  * Refactored to use design tokens following ITCSS architecture
  */
 
+
+
 .pageWrapper {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--color-background-secondary);
+  background: var(--color-page-background-fallback);
+  background-image: var(--color-page-background-gradient);
 }
 
 .mainContent {

@@ -1,0 +1,162 @@
+/**
+ * Typography Mixins
+ * Following ITCSS architecture - mixins for consistent font usage
+ */
+
+/* Poppins Font Mixins */
+@define-mixin poppins-light {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+}
+
+@define-mixin poppins-regular {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-normal);
+  font-style: normal;
+}
+
+@define-mixin poppins-medium {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-medium);
+  font-style: normal;
+}
+
+@define-mixin poppins-semibold {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-semibold);
+  font-style: normal;
+}
+
+@define-mixin poppins-bold {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-style: normal;
+}
+
+@define-mixin poppins-extrabold {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-extrabold);
+  font-style: normal;
+}
+
+/* Poppins Italic Mixins */
+@define-mixin poppins-light-italic {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-light);
+  font-style: italic;
+}
+
+@define-mixin poppins-regular-italic {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-normal);
+  font-style: italic;
+}
+
+@define-mixin poppins-medium-italic {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-medium);
+  font-style: italic;
+}
+
+@define-mixin poppins-semibold-italic {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-semibold);
+  font-style: italic;
+}
+
+@define-mixin poppins-bold-italic {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-style: italic;
+}
+
+@define-mixin poppins-extrabold-italic {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-extrabold);
+  font-style: italic;
+}
+
+/* DM Sans Mixins */
+@define-mixin dm-sans-regular {
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
+  font-style: normal;
+}
+
+@define-mixin dm-sans-medium {
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-medium);
+  font-style: normal;
+}
+
+@define-mixin dm-sans-bold {
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-bold);
+  font-style: normal;
+}
+
+/* DM Mono Mixins */
+@define-mixin dm-mono-regular {
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-normal);
+  font-style: normal;
+}
+
+@define-mixin dm-mono-medium {
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-medium);
+  font-style: normal;
+}
+
+@define-mixin dm-mono-bold {
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-bold);
+  font-style: normal;
+}
+
+/* Typography Scale Mixins */
+@define-mixin text-xs {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-tight);
+}
+
+@define-mixin text-sm {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+}
+
+@define-mixin text-base {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+}
+
+@define-mixin text-lg {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-normal);
+}
+
+@define-mixin text-xl {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-xs);
+}
+
+@define-mixin text-2xl {
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-tight);
+}
+
+@define-mixin text-hero {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-extrabold);
+  font-size: var(--font-size-4xl);
+}
+
+/* Text Gradient Mixin */
+@define-mixin text-gradient {
+  color: #94D1C8;
+  background-image: linear-gradient(270deg, #94D1C8 27%, #71D990 70%, #2679C7 100%, #FF8E5F 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+} 
