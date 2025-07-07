@@ -1,0 +1,72 @@
+/* mobile first */
+.libraryContainer {
+    flex: 1;
+    align-items: flex-start;
+    align-content: flex-start;
+    justify-content: flex-start;
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-lg);
+    width: 100%;
+    max-width: var(--max-width-xl);
+    margin: var(--spacing-lg) auto;
+    padding: var(--spacing-lg);
+    background-color: var(--color-background-secondary);
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--color-shadow-medium);
+}
+
+.libraryLayout {
+    min-height: 100vh;
+
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--color-shadow-medium);
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-background-secondary);
+    /* background-color: var(--color-background-primary); */
+}
+
+
+.toolsMain {
+    flex: 1;
+    width: 100%;
+    max-width: 100%;
+    padding: var(--spacing-lg) var(--spacing-md);
+    margin: 0 auto;
+}
+
+/* Responsive breakpoints for maximum width utilization */
+@media (min-width: 640px) {
+    .toolsMain {
+        padding: var(--spacing-lg) var(--spacing-lg);
+    }
+}
+
+@media (min-width: 768px) {
+    .mainContainer {
+        flex-direction: column;
+    }
+    .toolsMain {
+        padding: var(--spacing-xl) var(--spacing-xl);
+    }
+}
+
+@media (min-width: 1024px) {
+    .toolsMain {
+        padding: var(--spacing-xl) var(--spacing-xl);
+    }
+}
+
+@media (min-width: 1280px) {
+    .toolsMain {
+        padding: var(--spacing-xl) var(--spacing-xxl);
+    }
+}
+
+@media (min-width: 1536px) {
+    .toolsMain {
+        max-width: 1536px;
+        padding: var(--spacing-xl) var(--spacing-xxl);
+    }
+}

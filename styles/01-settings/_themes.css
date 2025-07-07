@@ -19,6 +19,7 @@
     --color-text-primary: #1f2937;
     --color-text-secondary: #6b7280;
     --color-text-light: #374151;
+    --color-text-hover: #1f2937;
     --color-text-muted: #9ca3af;
     --color-text-inverse: #ffffff;
     
@@ -67,6 +68,9 @@
     --color-input-border: var(--color-border-medium);
     --color-button-shadow: rgba(0, 0, 0, 0.1);
     
+    /* Legacy compatibility */
+    --color-background-dark: var(--color-background-secondary);
+    
     /* Special Colors */
     --color-primary-dark: #2c3844;
     --color-primary-darker: #25303a;
@@ -74,6 +78,14 @@
     --color-gradient-primary: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     --color-radial-gradient-start: rgba(20, 252, 252, 0.9);
     --color-radial-gradient-end: rgba(44, 40, 44, 0.9);
+
+    /* Hero Gradient Colors - Light Theme */
+    --color-hero-gradient-fallback: #27C2BF;
+    --color-hero-gradient: linear-gradient(45deg, #27C2BF 35%, #F2B188 60%, #11A7F7 82%, #EBB5A0);
+
+    /* Page Background Gradient - Light Theme */
+    --color-page-background-fallback: #f4f1ec;
+    --color-page-background-gradient: linear-gradient(315deg, hsla(16, 43%, 93%, 1) 1%, hsla(0, 0%, 95%, 1) 52%, hsla(165, 62%, 90%, 1) 100%);
 
     /* Resume Colors - Light Theme */
     --resume-job-title-light: #116964;
@@ -141,7 +153,7 @@
     color-scheme: dark;
     
     /* Background Colors - Dark grays instead of pure black */
-    --color-background-primary: #1f2937;
+    --color-background-primary: #121924;
     --color-background-secondary: #111827;
     --color-background-tertiary: #374151;
     --color-background-overlay: rgba(31, 41, 55, 0.95);
@@ -155,7 +167,7 @@
     --color-text-inverse: #1f2937;
     
     /* Border Colors - Subtle borders in dark mode */
-    --color-border-light: #374151;
+    --color-border-light: #054842;
     --color-border-medium: #4b5563;
     --color-border-dark: #6b7280;
     --color-border-neutral: #374151;
@@ -199,6 +211,9 @@
     --color-input-border: var(--color-border-medium);
     --color-button-shadow: rgba(0, 0, 0, 0.3);
     
+    /* Legacy compatibility */
+    --color-background-dark: var(--color-background-secondary);
+    
     /* Special Colors */
     --color-primary-dark: #0f172a;
     --color-primary-darker: #020617;
@@ -206,6 +221,14 @@
     --color-gradient-primary: linear-gradient(135deg, #1f2937 0%, #374151 100%);
     --color-radial-gradient-start: rgba(20, 252, 252, 0.7);
     --color-radial-gradient-end: rgba(17, 24, 39, 0.9);
+
+    /* Hero Gradient Colors - Dark Theme */
+    --color-hero-gradient-fallback: #66CCCA;
+    --color-hero-gradient: linear-gradient(45deg, #66CCCA 35%, #EDC3A8 66%, #1CC6D9 82%, #EBB5A0);
+
+    /* Page Background Gradient - Dark Theme */
+    --color-page-background-fallback: #111929;
+    --color-page-background-gradient: linear-gradient(to left, #111929, #0b1c2b, #061e2b, #03212a, #022329, #012228, #012027, #001f26, #001a25, #011522, #040e1e, #070419);
 
     /* Resume Colors - Dark Theme */
     --resume-job-title-dark: #2dd4bf;
@@ -281,6 +304,7 @@
     --color-text-primary: #1f2937;
     --color-text-secondary: #6b7280;
     --color-text-light: #374151;
+    --color-text-hover: #1f2937;
     --color-text-muted: #9ca3af;
     --color-text-inverse: #ffffff;
     
@@ -336,6 +360,14 @@
     --color-radial-gradient-start: rgba(20, 252, 252, 0.9);
     --color-radial-gradient-end: rgba(44, 40, 44, 0.9);
 
+    /* Hero Gradient Colors - System Theme (Light Default) */
+    --color-hero-gradient-fallback: #27C2BF;
+    --color-hero-gradient: linear-gradient(45deg, #27C2BF 35%, #F2B188 60%, #11A7F7 82%, #EBB5A0);
+
+    /* Page Background Gradient - System Theme (Light Default) */
+    --color-page-background-fallback: #f4f1ec;
+    --color-page-background-gradient: linear-gradient(315deg, hsla(16, 43%, 93%, 1) 1%, hsla(0, 0%, 95%, 1) 52%, hsla(165, 62%, 90%, 1) 100%);
+
     /* Resume Colors - System Theme (Light Default) */
     --resume-job-title-system: var(--resume-job-title-light);
     --resume-sub-icons-system: var(--resume-sub-icons-light);
@@ -375,8 +407,8 @@
     --resume-sub-titles-issuer-ink-system: var(--resume-sub-titles-issuer-ink-light);
     --resume-sub-titles-companies-ink-system: var(--resume-sub-titles-companies-ink-light);
     --resume-profile-name-darkest-system: var(--resume-profile-name-darkest-light);
-    --resume-section-titles-darkest-system: var(--resume-section-titles-light);
-    --resume-dates-darkest-system: var(--resume-dates-light);
+    --resume-section-titles-darkest-system: var(--resume-section-titles-darkest-light);
+    --resume-dates-darkest-system: var(--resume-dates-darkest-light);
     --resume-body-text-ink-system: var(--resume-body-text-ink-light);
     --resume-profile-header-background-sand-system: var(--resume-profile-header-background-sand-light);
     --resume-skill-border-sand-system: var(--resume-skill-border-sand-light);
@@ -464,6 +496,14 @@
     --color-radial-gradient-start: rgba(20, 252, 252, 0.7);
     --color-radial-gradient-end: rgba(17, 24, 39, 0.9);
 
+    /* Hero Gradient Colors - System Theme (Dark Override) */
+    --color-hero-gradient-fallback: #66CCCA;
+    --color-hero-gradient: linear-gradient(45deg, #66CCCA 35%, #EDC3A8 66%, #1CC6D9 82%, #EBB5A0);
+
+    /* Page Background Gradient - System Theme (Dark Override) */
+    --color-page-background-fallback: #111929;
+    --color-page-background-gradient: linear-gradient(to left, #111929, #0b1c2b, #061e2b, #03212a, #022329, #012228, #012027, #001f26, #001a25, #011522, #040e1e, #070419);
+
     /* Resume Colors - System Theme (Dark Override) */
     --resume-job-title-system: var(--resume-job-title-dark);
     --resume-sub-icons-system: var(--resume-sub-icons-dark);
@@ -503,8 +543,8 @@
     --resume-sub-titles-issuer-ink-system: var(--resume-sub-titles-issuer-ink-dark);
     --resume-sub-titles-companies-ink-system: var(--resume-sub-titles-companies-ink-dark);
     --resume-profile-name-darkest-system: var(--resume-profile-name-darkest-dark);
-    --resume-section-titles-darkest-system: var(--resume-section-titles-dark);
-    --resume-dates-darkest-system: var(--resume-dates-dark);
+    --resume-section-titles-darkest-system: var(--resume-section-titles-darkest-dark);
+    --resume-dates-darkest-system: var(--resume-dates-darkest-dark);
     --resume-body-text-ink-system: var(--resume-body-text-ink-dark);
     --resume-profile-header-background-sand-system: var(--resume-profile-header-background-sand-dark);
     --resume-skill-border-sand-system: var(--resume-skill-border-sand-dark);
