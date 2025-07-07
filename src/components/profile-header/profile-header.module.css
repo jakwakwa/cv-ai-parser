@@ -1,6 +1,6 @@
 /* ProfileHeader styles */
 .header {
-  border-bottom: 1px solid var(--resume-skill-border);
+  border-bottom: 1px solid rgba(164, 153, 144, 0.5);
   height: 290px;
   display: grid;
   grid-template-columns: 1fr;
@@ -18,7 +18,7 @@
 }
 
 .left {
-  padding: var(--spacing-lg);
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -28,23 +28,23 @@
 
 @media (min-width: 768px) {
   .left {
-    padding: var(--spacing-lg);
+    padding: 1.5rem;
   }
 }
 
 .right {
-  padding: var(--spacing-lg);
-  background-color: var(--resume-profile-header-background);
-  color: var(--coffee);
+  padding: 1.5rem;
+  background-color: var(--resume-profile-header-background, #f5f5f5);
+  color: var(--coffee, #3e2f22);
   display: flex;
   flex-direction: column;
-  font-family: var(--font-family-primary);
+  font-family: var(--font-dm-sans);
 }
 
 @media (min-width: 768px) {
   .right {
-    padding-left: var(--spacing-lg);
-    padding-right: var(--spacing-lg);
+    padding-left: 2rem;
+    padding-right: 2rem;
     grid-column: span 2 / span 2;
     justify-content: center;
   }
@@ -64,38 +64,38 @@
   max-height: 230px;
   width: 100%;
   height: auto;
-  border-radius: var(--border-radius-full);
+  border-radius: 50%;
   object-fit: cover;
 }
 
 .contentBody {
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-normal);
+  font-size: 0.735rem;
+  line-height: 1.35;
 }
 
 /* New typography styles converted from Tailwind */
 .cvHeader {
   /* font-dm-mono-header text-md */
-  letter-spacing: var(--letter-spacing-wide);
+  letter-spacing: 0.3rem;
   font-family: var(--font-dm-mono);
-  margin-bottom: var(--spacing-xxs);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-regular);
+  margin-bottom: 3px;
+  font-size: 0.75rem;
+  font-weight: 400;
 }
 
 .profileName {
   /* text-2xl font-bold mb-1 */
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-xs);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
 }
 
 .jobTitle {
   /* text-md mb-4 font-dm-mono-subheading */
-  font-size: var(--font-size-base);
-  margin-bottom: var(--spacing-md);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-tight);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  line-height: 1;
   font-family: var(--font-dm-mono);
 }
 
