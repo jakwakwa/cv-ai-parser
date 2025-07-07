@@ -3,28 +3,28 @@
   max-width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: var(--spacing-lg);
 }
 
 .headerSection {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-lg);
 }
 
 .title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 0.5rem;
-  line-height: 1.2;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+  line-height: var(--line-height-tight);
 }
 
 .subtitle {
-  font-size: 1.125rem;
-  color: #666;
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
   max-width: 600px;
   margin: 0 auto;
-  line-height: 1.6;
+  line-height: var(--line-height-normal);
 }
 
 .loadingContainer {
@@ -33,21 +33,21 @@
   align-items: center;
   justify-content: center;
   min-height: 400px;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .loadingSpinner {
-  width: 48px;
-  height: 48px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #2563eb;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+  width: var(--spacing-xxl);
+  height: var(--spacing-xxl);
+  border: 3px solid var(--color-spinner-track);
+  border-top: 3px solid var(--color-accent-blue);
+  border-radius: var(--border-radius-full);
+  animation: spin var(--animation-spin);
 }
 
 .loadingText {
-  font-size: 1rem;
-  color: #666;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
 }
 
 @keyframes spin {
@@ -58,10 +58,10 @@
 /* Responsive adjustments */
 @media (min-width: 768px) {
   .title {
-    font-size: 3rem;
+    font-size: var(--font-size-4xl);
   }
   
   .subtitle {
-    font-size: 1.25rem;
+    font-size: var(--font-size-xl);
   }
 }

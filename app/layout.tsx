@@ -7,8 +7,9 @@ import Script from 'next/script';
 import { ToastProvider } from '@/hooks/use-toast';
 import { AuthModalProvider } from '@/src/components/auth-component/AuthModalContext';
 import { AuthProvider } from '@/src/components/auth-provider/auth-provider';
-import { Toaster } from '@/src/components/ui/toaster';
 import { SiteFooter } from '@/src/components/site-footer/SiteFooter';
+import { Toaster } from '@/src/components/ui/toaster';
+import { ThemeProvider } from '@/src/hooks/use-theme';
 
 export const metadata: Metadata = {
   title:
@@ -81,6 +82,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+<<<<<<< HEAD
         <ToastProvider>
           <AuthProvider>
             <AuthModalProvider>
@@ -92,6 +94,29 @@ export default function RootLayout({
           </AuthProvider>
           <Toaster />
         </ToastProvider>
+=======
+        <ThemeProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <AuthModalProvider>
+                <div
+                  style={{
+                    minHeight: '100vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  {children}
+                  <SiteFooter />
+                </div>
+              </AuthModalProvider>
+            </AuthProvider>
+            <ToastProvider>
+              <Toaster />
+            </ToastProvider>
+          </ToastProvider>
+        </ThemeProvider>
+>>>>>>> origin/feature/staging-jobfit-tailor
         <Analytics />
       </body>
     </html>
