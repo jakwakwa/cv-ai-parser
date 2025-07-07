@@ -98,9 +98,7 @@ export default function RootLayout({
                 </div>
               </AuthModalProvider>
             </AuthProvider>
-            <ToastProvider>
-              <Toaster />
-            </ToastProvider>
+            <Toaster />
           </ToastProvider>
         </ThemeProvider>
         <Analytics />
