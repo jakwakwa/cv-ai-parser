@@ -8,6 +8,7 @@ import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import { SiteHeader } from '@/src/components/site-header/site-header';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import ResumeLibrary from '@/src/containers/resume-library/resume-library';
+import styles from './layout.module.css';
 
 // Component that handles URL parameters - needs to be wrapped in Suspense
 function LibraryPageContent() {
@@ -74,7 +75,7 @@ function LibraryPageContent() {
   }, [searchParams, router, toast]);
 
   return (
-    <main className="mainUserContainer">
+    <main className={styles.libraryContainer}>
       {!user && !authLoading && (
         <div className="text-center bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-md mx-auto mt-12">
           Redirecting to home screen.

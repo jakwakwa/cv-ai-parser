@@ -1,0 +1,628 @@
+/**
+ * Settings: Themes
+ * Theme-specific design token variants for light and dark modes
+ * Based on SkillBars theme implementation approach
+ */
+
+:root {
+  /* Default theme (light mode) */
+  &[data-theme="light"] {
+    color-scheme: light;
+    
+    /* Background Colors */
+    --color-background-primary: #ffffff;
+    --color-background-secondary: #f9fafb;
+    --color-background-tertiary: #ebeef3;
+    --color-background-overlay: rgba(255, 255, 255, 0.95);
+    
+    /* Text Colors */
+    --color-text-primary: #1f2937;
+    --color-text-secondary: #6b7280;
+    --color-text-light: #374151;
+    --color-text-hover: #1f2937;
+    --color-text-muted: #9ca3af;
+    --color-text-inverse: #ffffff;
+    
+    /* Border Colors */
+    --color-border-light: #e5e7eb;
+    --color-border-medium: #bdd7de;
+    --color-border-dark: #9ca3af;
+    --color-border-neutral: #e5e7eb;
+    
+    /* Interactive Colors - Keep consistent across themes */
+    --color-accent-teal: #0d9488;
+    --color-accent-teal-light: #f0fdfa;
+    --color-accent-teal-dark: #0f766e;
+    --color-accent-teal-bright: #14b8a6;
+    
+    --color-secondary-blue: #1dc6b7;
+    --color-secondary-blue-light: #e0e7ff;
+    --color-secondary-blue-dark: #3730a3;
+    
+    /* State Colors */
+    --color-success: #a6d6d1;
+    --color-success-light: #8dd0ca;
+    --color-success-dark: #15803d;
+    
+    --color-warning: #f59e0b;
+    --color-warning-light: #fef3c7;
+    --color-warning-dark: #d97706;
+    
+    --color-error: #dc2626;
+    --color-error-light: #fef2f2;
+    --color-error-dark: #b91c1c;
+    
+    --color-info: #14b8a6;
+    --color-info-light: #eff6ff;
+    --color-info-dark: #1d4ed8;
+    
+    /* Semantic Colors */
+    --color-disabled: #d1d5db;
+    --color-focus: var(--color-accent-teal);
+    --color-hover: var(--color-background-tertiary);
+    
+    /* Component-specific Colors */
+    --color-card-background: var(--color-background-primary);
+    --color-card-border: var(--color-border-light);
+    --color-input-background: var(--color-background-primary);
+    --color-input-border: var(--color-border-medium);
+    --color-button-shadow: rgba(0, 0, 0, 0.1);
+
+    /* Custom Input Styles */
+    --color-input-background-custom: #f8f8ff;
+    --shadow-input: inset 5px 5px 10px #41414105, inset -5px -5px 10px #cacdcf63;
+    
+    /* Legacy compatibility */
+    --color-background-dark: var(--color-background-secondary);
+    
+    /* Special Colors */
+    --color-primary-dark: #2c3844;
+    --color-primary-darker: #25303a;
+    --color-primary-overlay: rgba(44, 56, 68, 0.9);
+    --color-gradient-primary: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --color-radial-gradient-start: rgba(20, 252, 252, 0.9);
+    --color-radial-gradient-end: rgba(44, 40, 44, 0.9);
+
+    /* Hero Gradient Colors - Light Theme */
+    --color-hero-gradient-fallback: #27C2BF;
+    --color-hero-gradient: linear-gradient(45deg, #374151 35%, #04cbb7 60%, #02796d 82%, #0bcbf4);
+
+    /* Page Background Gradient - Light Theme */
+    --color-page-background-fallback: #a4d7d6;
+    --color-page-background-gradient: linear-gradient(325deg, hsl(186.49deg 28.25% 79.06%) 1%, #ffffff 70%, #a4d7d6 100%);
+
+    /* Button Default Colors - Light Theme */
+    --color-button-default-background: #376871;
+    --color-button-default-text: #adfff8;
+    --color-button-default-border: #1d3e4c;
+
+    /* Feature Card Colors - Light Theme */
+    --color-feature-card-background: #d8e6ec;
+
+    /* Shadows - Light Theme */
+    --shadow-feature-card: 1px 2px 2px hsl(223.22deg 3.42% 65.3% / 20%), 2px 4px 4px hsl(220deg 34.19% 86.96% / 6%), 4px 8px 8px #a9bebd59, 8px 16px 16px hsl(220deg 52.3% 94.23% / 20%), 16px 32px 32px hsl(220deg 6.38% 84.27% / 20%);
+
+    /* Resume Colors - Light Theme */
+    --resume-job-title-light: #116964;
+    --resume-sub-icons-light: #116964;
+    --resume-profile-header-subtitle-light: #116964;
+    --resume-sidebar-background-light: #f5f5f5;
+    --resume-main-icons-light: #a67244;
+    --resume-sub-titles-issuer-light: #a67244;
+    --resume-sub-titles-companies-light: #a67244;
+    --resume-profile-name-light: #565854;
+    --resume-section-titles-light: #565854;
+    --resume-dates-light: #565854;
+    --resume-body-text-light: #3e2f22;
+    --resume-profile-header-background-light: #faf4ec;
+    --resume-skill-border-light: #a49990;
+
+    /* Elegant Gold & Slate - Light Theme */
+    --resume-job-title-gold-light: #7a6b3f;
+    --resume-sub-icons-gold-light: #7a6b3f;
+    --resume-profile-header-subtitle-slate-light: #404143;
+    --resume-sidebar-background-gold-light: #F0EEF1;
+    --resume-main-icons-gold-light: #3d637f;
+    --resume-sub-titles-issuer-gold-light: #7a6b3f;
+    --resume-sub-titles-companies-gold-light: #7a6b3f;
+    --resume-profile-name-slate-light: #404143;
+    --resume-section-titles-slate-light: #404143;
+    --resume-dates-slate-light: #404143;
+    --resume-body-text-gold-light: #27272F;
+    --resume-profile-header-background-gold-light: #F0EEF1;
+    --resume-skill-border-gold-light: #A6A6A8;
+
+    /* Minimalist Sand & Ink - Light Theme */
+    --resume-job-title-ink-light: #22211D;
+    --resume-sub-icons-ink-light: #22211D;
+    --resume-profile-header-subtitle-sand-light: #E6DFD9;
+    --resume-sidebar-background-ink-light: #FFFCF9;
+    --resume-main-icons-ink-light: #5d5a4b;
+    --resume-sub-titles-issuer-ink-light: #22211D;
+    --resume-sub-titles-companies-ink-light: #22211D;
+    --resume-profile-name-darkest-light: #0D0D0B;
+    --resume-section-titles-darkest-light: #0D0D0B;
+    --resume-dates-darkest-light: #0D0D0D;
+    --resume-body-text-ink-light: #22211D;
+    --resume-profile-header-background-sand-light: #E6DFD9;
+    --resume-skill-border-sand-light: #E6DFD9;
+
+    /* Modern Blue & Mint - Light Theme */
+    --resume-job-title-blue-light: #2D3340;
+    --resume-sub-icons-mint-light: #BAD9D3;
+    --resume-profile-header-subtitle-blue-light: #2E3442;
+    --resume-sidebar-background-modern-light: #EDEBF0;
+    --resume-main-icons-modern-light: #9225a7;
+    --resume-sub-titles-issuer-modern-light: #9225a7;
+    --resume-sub-titles-companies-modern-light: #9225a7;
+    --resume-profile-name-modern-light: #2E3442;
+    --resume-section-titles-modern-light: #2E3442;
+    --resume-dates-modern-light: #2E3442;
+    --resume-body-text-blue-light: #2D3340;
+    --resume-profile-header-background-modern-light: #EDEBF0;
+    --resume-skill-border-mint-light: #9CC4C3;
+  }
+  
+  /* Dark theme */
+  &[data-theme="dark"] {
+    color-scheme: dark;
+    
+    /* Background Colors - Dark grays instead of pure black */
+    --color-background-primary: #0a0a0c;
+    --color-background-secondary: #111827;
+    --color-background-tertiary: #162438;
+    --color-primary-button-custom: #0d9488;
+    --color-background-overlay: rgba(31, 41, 55, 0.95);
+    
+    /* Text Colors - Light grays for better readability */
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-text-light: #e5e7eb;
+    --color-text-hover: #4d607ffa;
+    --color-text-muted: #9ca3af;
+    --color-text-inverse: #1f2937;
+    
+    /* Border Colors - Subtle borders in dark mode */
+    --color-border-light: #489b9333;
+    --color-border-medium: #0a2935;
+    --color-border-dark: #6b7280;
+    --color-border-neutral: #374151;
+    
+    /* Interactive Colors - Brighter in dark mode for contrast */
+    --color-accent-teal: #14b8a6;
+    --color-accent-teal-light: rgba(20, 184, 166, 0.1);
+    --color-accent-teal-dark: #0d9488;
+    --color-accent-teal-bright: #2dd4bf;
+    
+    --color-secondary-blue: #5bb5e1;
+    --color-secondary-blue-light: rgba(99, 102, 241, 0.1);
+    --color-secondary-blue-dark: #4f46e5;
+    
+    /* State Colors - Adjusted for dark backgrounds */
+    --color-success: #8dd0ca;
+    --color-success-light: rgba(34, 197, 94, 0.1);
+    --color-success-dark: #a6d9d4;
+    
+    --color-warning: #fbbf24;
+    --color-warning-light: rgba(251, 191, 36, 0.1);
+    --color-warning-dark: #f59e0b;
+    
+    --color-error: #ef4444;
+    --color-error-light: rgba(239, 68, 68, 0.1);
+    --color-error-dark: #dc2626;
+    
+    --color-info: #0d9488;
+    --color-info-light: rgba(59, 130, 246, 0.1);
+    --color-info-dark: #2563eb;
+    
+    /* Semantic Colors */
+    --color-disabled: #4b5563;
+    --color-focus: var(--color-accent-teal);
+    --color-hover: var(--color-background-tertiary);
+    
+    /* Component-specific Colors */
+    --color-card-background: var(--color-background-secondary);
+    --color-card-border: var(--color-border-light);
+    --color-input-background: var(--color-background-tertiary);
+    --color-input-border: var(--color-border-medium);
+    --color-button-shadow: rgba(0, 0, 0, 0.3);
+
+    /* Custom Input Styles */
+    --color-input-background-custom: #162d408c;
+    --shadow-input: inset 5px 5px 10px #0b101296, inset -5px -5px 10px #1d1e2136;
+    
+    /* Legacy compatibility */
+    --color-background-dark: var(--color-background-secondary);
+    
+    /* Special Colors */
+    --color-primary-dark: #0f172a;
+    --color-primary-darker: #020617;
+    --color-primary-overlay: rgba(15, 23, 42, 0.9);
+    --color-gradient-primary: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    --color-radial-gradient-start: rgba(20, 252, 252, 0.7);
+    --color-radial-gradient-end: rgba(17, 24, 39, 0.9);
+
+    /* Hero Gradient Colors - Dark Theme */
+    --color-hero-gradient-fallback: #66CCCA;
+    --color-hero-gradient: linear-gradient(45deg, #8af0ee 25%, #EDC3A8 66%, #1CC6D9 82%, #EBB5A0);
+
+    /* Page Background Gradient - Dark Theme */
+    --color-page-background-fallback: #005c63;
+    --color-page-background-gradient: radial-gradient(circle, rgba(0, 92, 99, 1) 0%, rgba(21, 51, 80, 1) 53%, rgba(7, 29, 66, 1) 100%);
+
+    /* Button Default Colors - Dark Theme */
+    --color-button-default-background: #0b3e47;
+    --color-button-default-text: #3da299;
+    --color-button-default-border: #1d3e4c;
+
+    /* Feature Card Colors - Dark Theme */
+    --color-feature-card-background: #17273a;
+
+    /* Shadows - Dark Theme */
+    --shadow-feature-card: 1px 2px 2px hsl(0deg 0% 0% / 10%), 2px 4px 4px hsl(213.53deg 41.46% 16.08% / 97%), 4px 8px 8px #09141524, 8px 16px 16px hsl(169.76deg 57.58% 5.78% / 23%), 16px 32px 32px hsl(211.03deg 63.04% 18.04%);
+
+    /* Resume Colors - Dark Theme */
+    --resume-job-title-dark: #2dd4bf;
+    --resume-sub-icons-dark: #2dd4bf;
+    --resume-profile-header-subtitle-dark: #14b8a6;
+    --resume-sidebar-background-dark: #1f2937;
+    --resume-main-icons-dark: #818cf8;
+    --resume-sub-titles-issuer-dark: #818cf8;
+    --resume-sub-titles-companies-dark: #818cf8;
+    --resume-profile-name-dark: #f9fafb;
+    --resume-section-titles-dark: #f9fafb;
+    --resume-dates-dark: #e5e7eb;
+    --resume-body-text-dark: #d1d5db;
+    --resume-profile-header-background-dark: #111827;
+    --resume-skill-border-dark: #4b5563;
+
+    /* Elegant Gold & Slate - Dark Theme */
+    --resume-job-title-gold-dark: #fbbf24;
+    --resume-sub-icons-gold-dark: #fbbf24;
+    --resume-profile-header-subtitle-slate-dark: #6b7280;
+    --resume-sidebar-background-gold-dark: #111827;
+    --resume-main-icons-gold-dark: #60a5fa;
+    --resume-sub-titles-issuer-gold-dark: #fbbf24;
+    --resume-sub-titles-companies-gold-dark: #fbbf24;
+    --resume-profile-name-slate-dark: #f3f4f6;
+    --resume-section-titles-slate-dark: #f3f4f6;
+    --resume-dates-slate-dark: #e5e7eb;
+    --resume-body-text-gold-dark: #d1d5db;
+    --resume-profile-header-background-gold-dark: #1f2937;
+    --resume-skill-border-gold-dark: #9ca3af;
+
+    /* Minimalist Sand & Ink - Dark Theme */
+    --resume-job-title-ink-dark: #f9fafb;
+    --resume-sub-icons-ink-dark: #f9fafb;
+    --resume-profile-header-subtitle-sand-dark: #6b7280;
+    --resume-sidebar-background-ink-dark: #1f2937;
+    --resume-main-icons-ink-dark: #a1a1aa;
+    --resume-sub-titles-issuer-ink-dark: #f9fafb;
+    --resume-sub-titles-companies-ink-dark: #f9fafb;
+    --resume-profile-name-darkest-dark: #f3f4f6;
+    --resume-section-titles-darkest-dark: #f3f4f6;
+    --resume-dates-darkest-dark: #e5e7eb;
+    --resume-body-text-ink-dark: #d1d5db;
+    --resume-profile-header-background-sand-dark: #374151;
+    --resume-skill-border-sand-dark: #6b7280;
+
+    /* Modern Blue & Mint - Dark Theme */
+    --resume-job-title-blue-dark: #f9fafb;
+    --resume-sub-icons-mint-dark: #6ee7b7;
+    --resume-profile-header-subtitle-blue-dark: #93c5fd;
+    --resume-sidebar-background-modern-dark: #1f2937;
+    --resume-main-icons-modern-dark: #c084fc;
+    --resume-sub-titles-issuer-modern-dark: #c084fc;
+    --resume-sub-titles-companies-modern-dark: #c084fc;
+    --resume-profile-name-modern-dark: #e5e7eb;
+    --resume-section-titles-modern-dark: #e5e7eb;
+    --resume-dates-modern-dark: #d1d5db;
+    --resume-body-text-blue-dark: #f9fafb;
+    --resume-profile-header-background-modern-dark: #111827;
+    --resume-skill-border-mint-dark: #3b82f6;
+  }
+  
+  /* System preference theme (defaults to light, overridden by media query) */
+  &[data-theme="system"] {
+    color-scheme: light;
+    
+    /* Default to light theme values */
+    --color-background-primary: #ffffff;
+    --color-background-secondary: #bdc6d869;
+    --color-background-tertiary: #ebeef3;
+    --color-background-overlay: rgba(255, 255, 255, 0.95);
+    
+    --color-text-primary: #1f2937;
+    --color-text-secondary: #6b7280;
+    --color-text-light: #374151;
+    --color-text-hover: #1f2937;
+    --color-text-muted: #9ca3af;
+    --color-text-inverse: #ffffff;
+    
+    --color-border-light: #e5e7eb;
+    --color-border-medium: #bdd7de;
+    --color-border-dark: #9ca3af;
+    --color-border-neutral: #e5e7eb;
+    
+    /* Interactive colors remain consistent */
+    --color-accent-teal: #0d9488;
+    --color-accent-teal-light: #f0fdfa;
+    --color-accent-teal-dark: #0f766e;
+    --color-accent-teal-bright: #14b8a6;
+    
+    --color-secondary-blue: #1dc6b7;
+    --color-secondary-blue-light: #e0e7ff;
+    --color-secondary-blue-dark: #3730a3;
+    
+    /* State colors */
+    --color-success: #a6d9d4;
+    --color-success-light: #dcfce7;
+    --color-success-dark: #15803d;
+    
+    --color-warning: #f59e0b;
+    --color-warning-light: #fef3c7;
+    --color-warning-dark: #d97706;
+    
+    --color-error: #dc2626;
+    --color-error-light: #fef2f2;
+    --color-error-dark: #b91c1c;
+    
+    --color-info: #14b8a6;
+    --color-info-light: #eff6ff;
+    --color-info-dark: #1d4ed8;
+    
+    /* Semantic colors */
+    --color-disabled: #d1d5db;
+    --color-focus: var(--color-accent-teal);
+    --color-hover: var(--color-background-tertiary);
+    
+    /* Component-specific colors */
+    --color-card-background: var(--color-background-primary);
+    --color-card-border: var(--color-border-light);
+    --color-input-background: var(--color-background-primary);
+    --color-input-border: var(--color-border-medium);
+    --color-button-shadow: rgba(0, 0, 0, 0.1);
+
+    /* Custom Input Styles */
+    --color-input-background-custom: #f8f8ff;
+    --shadow-input: inset 5px 5px 10px #41414105, inset -5px -5px 10px #cacdcf63;
+    
+    /* Special colors */
+    --color-primary-dark: #2c3844;
+    --color-primary-darker: #25303a;
+    --color-primary-overlay: rgba(44, 56, 68, 0.9);
+    --color-gradient-primary: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --color-radial-gradient-start: rgba(20, 252, 252, 0.9);
+    --color-radial-gradient-end: rgba(44, 40, 44, 0.9);
+
+    /* Hero Gradient Colors - System Theme (Light Default) */
+    --color-hero-gradient-fallback: #27C2BF;
+    --color-hero-gradient: linear-gradient(45deg, #374151 35%, #04cbb7 60%, #02796d 82%, #0bcbf4);
+
+    /* Page Background Gradient - System Theme (Light Default) */
+    --color-page-background-fallback: #a4d7d6;
+    --color-page-background-gradient: linear-gradient(325deg, hsl(186.49deg 28.25% 79.06%) 1%, #ffffff 70%, #a4d7d6 100%);
+
+    /* Button Default Colors - System Theme (Light Default) */
+    --color-button-default-background: #376871;
+    --color-button-default-text: #adfff8;
+    --color-button-default-border: #1d3e4c;
+
+    /* Feature Card Colors - System Theme (Light Default) */
+    --color-feature-card-background: #d8e6ec;
+
+    /* Shadows - System Theme (Light Default) */
+    --shadow-feature-card: 1px 2px 2px hsl(223.22deg 3.42% 65.3% / 20%), 2px 4px 4px hsl(220deg 34.19% 86.96% / 6%), 4px 8px 8px #a9bebd59, 8px 16px 16px hsl(220deg 52.3% 94.23% / 20%), 16px 32px 32px hsl(220deg 6.38% 84.27% / 20%);
+
+    /* Resume Colors - System Theme (Light Default) */
+    --resume-job-title-system: var(--resume-job-title-light);
+    --resume-sub-icons-system: var(--resume-sub-icons-light);
+    --resume-profile-header-subtitle-system: var(--resume-profile-header-subtitle-light);
+    --resume-sidebar-background-system: var(--resume-sidebar-background-light);
+    --resume-main-icons-system: var(--resume-main-icons-light);
+    --resume-sub-titles-issuer-system: var(--resume-sub-titles-issuer-light);
+    --resume-sub-titles-companies-system: var(--resume-sub-titles-companies-light);
+    --resume-profile-name-system: var(--resume-profile-name-light);
+    --resume-section-titles-system: var(--resume-section-titles-light);
+    --resume-dates-system: var(--resume-dates-light);
+    --resume-body-text-system: var(--resume-body-text-light);
+    --resume-profile-header-background-system: var(--resume-profile-header-background-light);
+    --resume-skill-border-system: var(--resume-skill-border-light);
+
+    /* Elegant Gold & Slate - System Theme (Light Default) */
+    --resume-job-title-gold-system: var(--resume-job-title-gold-light);
+    --resume-sub-icons-gold-system: var(--resume-sub-icons-gold-light);
+    --resume-profile-header-subtitle-slate-system: var(--resume-profile-header-subtitle-slate-light);
+    --resume-sidebar-background-gold-system: var(--resume-sidebar-background-gold-light);
+    --resume-main-icons-gold-system: var(--resume-main-icons-gold-light);
+    --resume-sub-titles-issuer-gold-system: var(--resume-sub-titles-issuer-gold-light);
+    --resume-sub-titles-companies-gold-system: var(--resume-sub-titles-companies-gold-light);
+    --resume-profile-name-slate-system: var(--resume-profile-name-slate-light);
+    --resume-section-titles-slate-system: var(--resume-section-titles-slate-light);
+    --resume-dates-slate-system: var(--resume-dates-slate-light);
+    --resume-body-text-gold-system: var(--resume-body-text-gold-light);
+    --resume-profile-header-background-gold-system: var(--resume-profile-header-background-gold-light);
+    --resume-skill-border-gold-system: var(--resume-skill-border-gold-light);
+
+    /* Minimalist Sand & Ink - System Theme (Light Default) */
+    --resume-job-title-ink-system: var(--resume-job-title-ink-light);
+    --resume-sub-icons-ink-system: var(--resume-sub-icons-ink-light);
+    --resume-profile-header-subtitle-sand-system: var(--resume-profile-header-subtitle-sand-light);
+    --resume-sidebar-background-ink-system: var(--resume-sidebar-background-ink-light);
+    --resume-main-icons-ink-system: var(--resume-main-icons-ink-light);
+    --resume-sub-titles-issuer-ink-system: var(--resume-sub-titles-issuer-ink-light);
+    --resume-sub-titles-companies-ink-system: var(--resume-sub-titles-companies-ink-light);
+    --resume-profile-name-darkest-system: var(--resume-profile-name-darkest-light);
+    --resume-section-titles-darkest-system: var(--resume-section-titles-darkest-light);
+    --resume-dates-darkest-system: var(--resume-dates-darkest-light);
+    --resume-body-text-ink-system: var(--resume-body-text-ink-light);
+    --resume-profile-header-background-sand-system: var(--resume-profile-header-background-sand-light);
+    --resume-skill-border-sand-system: var(--resume-skill-border-sand-light);
+
+    /* Modern Blue & Mint - System Theme (Light Default) */
+    --resume-job-title-blue-system: var(--resume-job-title-blue-light);
+    --resume-sub-icons-mint-system: var(--resume-sub-icons-mint-light);
+    --resume-profile-header-subtitle-blue-system: var(--resume-profile-header-subtitle-blue-light);
+    --resume-sidebar-background-modern-system: var(--resume-sidebar-background-modern-light);
+    --resume-main-icons-modern-system: var(--resume-main-icons-modern-light);
+    --resume-sub-titles-issuer-modern-system: var(--resume-sub-titles-issuer-modern-light);
+    --resume-sub-titles-companies-modern-system: var(--resume-sub-titles-companies-modern-light);
+    --resume-profile-name-modern-system: var(--resume-profile-name-modern-light);
+    --resume-section-titles-modern-system: var(--resume-section-titles-modern-light);
+    --resume-dates-modern-system: var(--resume-dates-modern-light);
+    --resume-body-text-blue-system: var(--resume-body-text-blue-light);
+    --resume-profile-header-background-modern-system: var(--resume-profile-header-background-modern-light);
+    --resume-skill-border-mint-system: var(--resume-skill-border-mint-light);
+  }
+}
+
+/* System preference detection for theme="system" */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] {
+    color-scheme: dark;
+    
+    /* Override with dark theme values when system prefers dark */
+    --color-background-primary: #1f2937;
+    --color-background-dark: #1f2e47fa;
+    --color-background-secondary: #111827;
+    --color-background-tertiary: #ebeef3;
+    --color-background-overlay: rgba(31, 41, 55, 0.95);
+    
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-text-light: #e5e7eb;
+    --color-text-hover: #4d607ffa;
+    --color-text-muted: #9ca3af;
+    --color-text-inverse: #1f2937;
+    
+    --color-border-light: #05484247;
+    --color-border-medium: #0a2935;
+    --color-border-dark: #6b7280;
+    --color-border-neutral: #374151;
+    
+    --color-accent-teal: #14b8a6;
+    --color-accent-teal-light: rgba(20, 184, 166, 0.1);
+    --color-accent-teal-dark: #0d9488;
+    --color-accent-teal-bright: #2dd4bf;
+    
+    --color-secondary-blue: #14b8a6;
+    --color-secondary-blue-light: rgba(99, 102, 241, 0.1);
+    --color-secondary-blue-dark: #4f46e5;
+    
+    --color-success: #8dd0ca;
+    --color-success-light: rgba(34, 197, 94, 0.1);
+    --color-success-dark: #a6d9d4;
+    
+    --color-warning: #fbbf24;
+    --color-warning-light: rgba(251, 191, 36, 0.1);
+    --color-warning-dark: #f59e0b;
+    
+    --color-error: #ef4444;
+    --color-error-light: rgba(239, 68, 68, 0.1);
+    --color-error-dark: #dc2626;
+    
+    --color-info: #0d9488;
+    --color-info-light: rgba(59, 130, 246, 0.1);
+    --color-info-dark: #2563eb;
+    
+    --color-disabled: #4b5563;
+    --color-focus: var(--color-accent-teal);
+    --color-hover: var(--color-background-tertiary);
+    
+    --color-card-background: var(--color-background-secondary);
+    --color-card-border: var(--color-border-light);
+    --color-input-background: var(--color-background-tertiary);
+    --color-input-border: var(--color-border-medium);
+    --color-button-shadow: rgba(0, 0, 0, 0.3);
+
+    /* Custom Input Styles */
+    --color-input-background-custom: #1f2937;
+    --shadow-input: inset 5px 5px 10px #0b101296, inset -5px -5px 10px #1d1e2136;
+    
+    --color-primary-dark: #0f172a;
+    --color-primary-darker: #020617;
+    --color-primary-overlay: rgba(15, 23, 42, 0.9);
+    --color-gradient-primary: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    --color-radial-gradient-start: rgba(20, 252, 252, 0.7);
+    --color-radial-gradient-end: rgba(17, 24, 39, 0.9);
+
+    /* Hero Gradient Colors - System Theme (Dark Override) */
+    --color-hero-gradient-fallback: #66CCCA;
+    --color-hero-gradient: linear-gradient(45deg, #8af0ee 25%, #EDC3A8 66%, #1CC6D9 82%, #EBB5A0);
+
+    /* Page Background Gradient - System Theme (Dark Override) */
+    --color-page-background-fallback: #005c63;
+    --color-page-background-gradient: radial-gradient(circle, rgba(0, 92, 99, 1) 0%, rgba(21, 51, 80, 1) 53%, rgba(7, 29, 66, 1) 100%);
+
+    /* Button Default Colors - System Theme (Dark Override) */
+    --color-button-default-background: #0b3e47;
+    --color-button-default-text: #3da299;
+    --color-button-default-border: #1d3e4c;
+
+    /* Feature Card Colors - System Theme (Dark Override) */
+    --color-feature-card-background: #17273a;
+
+    /* Shadows - System Theme (Dark Override) */
+    --shadow-feature-card: 1px 2px 2px hsl(0deg 0% 0% / 10%), 2px 4px 4px hsl(213.53deg 41.46% 16.08% / 97%), 4px 8px 8px #09141524, 8px 16px 16px hsl(169.76deg 57.58% 5.78% / 23%), 16px 32px 32px hsl(211.03deg 63.04% 18.04%);
+
+    /* Resume Colors - System Theme (Dark Override) */
+    --resume-job-title-system: var(--resume-job-title-dark);
+    --resume-sub-icons-system: var(--resume-sub-icons-dark);
+    --resume-profile-header-subtitle-system: var(--resume-profile-header-subtitle-dark);
+    --resume-sidebar-background-system: var(--resume-sidebar-background-dark);
+    --resume-main-icons-system: var(--resume-main-icons-dark);
+    --resume-sub-titles-issuer-system: var(--resume-sub-titles-issuer-dark);
+    --resume-sub-titles-companies-system: var(--resume-sub-titles-companies-dark);
+    --resume-profile-name-system: var(--resume-profile-name-dark);
+    --resume-section-titles-system: var(--resume-section-titles-dark);
+    --resume-dates-system: var(--resume-dates-dark);
+    --resume-body-text-system: var(--resume-body-text-dark);
+    --resume-profile-header-background-system: var(--resume-profile-header-background-dark);
+    --resume-skill-border-system: var(--resume-skill-border-dark);
+
+    /* Elegant Gold & Slate - System Theme (Dark Override) */
+    --resume-job-title-gold-system: var(--resume-job-title-gold-dark);
+    --resume-sub-icons-gold-system: var(--resume-sub-icons-gold-dark);
+    --resume-profile-header-subtitle-slate-system: var(--resume-profile-header-subtitle-slate-dark);
+    --resume-sidebar-background-gold-system: var(--resume-sidebar-background-gold-dark);
+    --resume-main-icons-gold-system: var(--resume-main-icons-gold-dark);
+    --resume-sub-titles-issuer-gold-system: var(--resume-sub-titles-issuer-gold-dark);
+    --resume-sub-titles-companies-gold-system: var(--resume-sub-titles-companies-gold-dark);
+    --resume-profile-name-slate-system: var(--resume-profile-name-slate-dark);
+    --resume-section-titles-slate-system: var(--resume-section-titles-slate-dark);
+    --resume-dates-slate-system: var(--resume-dates-slate-dark);
+    --resume-body-text-gold-system: var(--resume-body-text-gold-dark);
+    --resume-profile-header-background-gold-system: var(--resume-profile-header-background-gold-dark);
+    --resume-skill-border-gold-system: var(--resume-skill-border-gold-dark);
+
+    /* Minimalist Sand & Ink - System Theme (Dark Override) */
+    --resume-job-title-ink-system: var(--resume-job-title-ink-dark);
+    --resume-sub-icons-ink-system: var(--resume-sub-icons-ink-dark);
+    --resume-profile-header-subtitle-sand-system: var(--resume-profile-header-subtitle-sand-dark);
+    --resume-sidebar-background-ink-system: var(--resume-sidebar-background-ink-dark);
+    --resume-main-icons-ink-system: var(--resume-main-icons-ink-dark);
+    --resume-sub-titles-issuer-ink-system: var(--resume-sub-titles-issuer-ink-dark);
+    --resume-sub-titles-companies-ink-system: var(--resume-sub-titles-companies-ink-dark);
+    --resume-profile-name-darkest-system: var(--resume-profile-name-darkest-dark);
+    --resume-section-titles-darkest-system: var(--resume-section-titles-darkest-dark);
+    --resume-dates-darkest-system: var(--resume-dates-darkest-dark);
+    --resume-body-text-ink-system: var(--resume-body-text-ink-dark);
+    --resume-profile-header-background-sand-system: var(--resume-profile-header-background-sand-dark);
+    --resume-skill-border-sand-system: var(--resume-skill-border-sand-dark);
+
+    /* Modern Blue & Mint - System Theme (Dark Override) */
+    --resume-job-title-blue-system: var(--resume-job-title-blue-dark);
+    --resume-sub-icons-mint-system: var(--resume-sub-icons-mint-dark);
+    --resume-profile-header-subtitle-blue-system: var(--resume-profile-header-subtitle-blue-dark);
+    --resume-sidebar-background-modern-system: var(--resume-sidebar-background-modern-dark);
+    --resume-main-icons-modern-system: var(--resume-main-icons-modern-dark);
+    --resume-sub-titles-issuer-modern-system: var(--resume-sub-titles-issuer-modern-dark);
+    --resume-sub-titles-companies-modern-system: var(--resume-sub-titles-companies-modern-dark);
+    --resume-profile-name-modern-system: var(--resume-profile-name-modern-dark);
+    --resume-section-titles-modern-system: var(--resume-section-titles-modern-dark);
+    --resume-dates-modern-system: var(--resume-dates-modern-dark);
+    --resume-body-text-blue-system: var(--resume-body-text-blue-dark);
+    --resume-profile-header-background-modern-system: var(--resume-profile-header-background-modern-dark);
+    --resume-skill-border-mint-system: var(--resume-skill-border-mint-dark);
+  }
+} 

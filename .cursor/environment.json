@@ -6,6 +6,18 @@
     {
       "name": "zsh",
       "command": "git status"
+    },
+    {
+      "name": "zsh",
+      "command": "pnpm build"
+    },
+    {
+      "name": "zsh",
+      "command": "pnpm lint"
+    },
+    {
+      "name": "zsh",
+      "command": "pnpm dev"
     }
   ]
 }

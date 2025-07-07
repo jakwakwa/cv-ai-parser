@@ -7,13 +7,13 @@ import {
   FileText,
   Globe,
   Lock,
+  Search,
   Trash2,
 } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ResumeDatabase } from '@/lib/database';
 import type { Resume } from '@/lib/types';
 import { useAuth } from '@/src/components/auth-provider/auth-provider';
-import { Badge } from '@/src/components/ui/badge';
 import {
   Card,
   CardContent,
@@ -32,6 +32,7 @@ export default function ResumeLibrary({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const loadResumes = useCallback(async () => {
     if (!supabase) return;
@@ -89,27 +90,22 @@ export default function ResumeLibrary({
     });
   };
 
-  const getMethodBadgeColor = (method: string) => {
-    switch (method) {
-      case 'ai':
-        return styles.badgeGreen;
-      case 'regex_fallback':
-        return styles.badgeYellow;
-      default:
-        return styles.badgeGray;
+  // Filter resumes based on search term (slug name)
+  const filteredResumes = useMemo(() => {
+    if (!searchTerm.trim()) {
+      return resumes;
     }
-  };
 
-  const getMethodLabel = (method: string) => {
-    switch (method) {
-      case 'ai':
-        return 'AI Parsed';
-      case 'regex_fallback':
-        return 'Text Analysis';
-      default:
-        return 'Unknown';
-    }
-  };
+    const normalizedSearchTerm = searchTerm.toLowerCase().trim();
+    return resumes.filter((resume) => {
+      // Search in slug name if it exists
+      if (resume.slug) {
+        return resume.slug.toLowerCase().includes(normalizedSearchTerm);
+      }
+      // Fallback to searching in title if no slug
+      return resume.title.toLowerCase().includes(normalizedSearchTerm);
+    });
+  }, [resumes, searchTerm]);
 
   if (!user) {
     return (
@@ -141,8 +137,23 @@ export default function ResumeLibrary({
         <div className={styles.header}>
           <h2 className={styles.title}>Your Resume Library</h2>
           <p className={styles.subtitle}>
-            {resumes.length} resume{resumes.length !== 1 ? 's' : ''}
+            {filteredResumes.length} of {resumes.length} resume
+            {resumes.length !== 1 ? 's' : ''}
           </p>
+        </div>
+
+        {/* Search Filter */}
+        <div className={styles.searchContainer}>
+          <div className={styles.searchInputWrapper}>
+            <Search className={styles.searchIcon} />
+            <input
+              type="text"
+              placeholder="Filter by slug name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={styles.searchInput}
+            />
+          </div>
         </div>
 
         {error && (
@@ -151,26 +162,35 @@ export default function ResumeLibrary({
           </div>
         )}
 
-        {resumes.length === 0 ? (
+        {filteredResumes.length === 0 ? (
           <div className={styles.stateContainer}>
             <div className={styles.stateContent}>
               <div className={styles.iconContainer}>
                 <FileText className={styles.iconGray} />
               </div>
-              <h3 className={styles.stateTitle}>No resumes yet</h3>
+              <h3 className={styles.stateTitle}>
+                {searchTerm ? 'No matching resumes' : 'No resumes yet'}
+              </h3>
               <p className={styles.stateText}>
-                Upload your first resume to get started!
+                {searchTerm
+                  ? `No resumes found matching "${searchTerm}". Try adjusting your search term.`
+                  : 'Upload your first resume to get started!'}
               </p>
             </div>
           </div>
         ) : (
           <div className={styles.grid}>
-            {resumes.map((resume) => (
+            {filteredResumes.map((resume) => (
               <Card key={resume.id} className={styles.card}>
                 <CardHeader className={styles.cardHeader}>
                   <div className={styles.cardHeaderContent}>
-                    <h3 className={styles.cardTitle}>{resume.title}</h3>
+                    <div>
+                      <h2 className={styles.cardTitleLabel}>Title:</h2>
+                      <h3 className={styles.cardTitle}>{resume.title}</h3>
+                    </div>
+
                     <div className={styles.publicToggleContainer}>
+                      <div className={styles.cardTitleLabel}>visibility</div>
                       <button
                         type="button"
                         onClick={() => handleTogglePublic(resume)}
@@ -198,14 +218,15 @@ export default function ResumeLibrary({
 
                 <CardContent className={styles.cardContent}>
                   <div className={styles.contentText}>
-                    <div className={styles.contentRow}>
+                    {/* // TODO: This value always returns unknowwn after a refactor  */}
+                    {/* <div className={styles.contentRow}>
                       <span>Method:</span>
                       <Badge
                         className={`${styles.badge} ${getMethodBadgeColor(resume.parse_method || 'unknown')}`}
                       >
                         {getMethodLabel(resume.parse_method || 'unknown')}
                       </Badge>
-                    </div>
+                    </div> */}
                     {resume.confidence_score && (
                       <div className={styles.contentRow}>
                         <span>Confidence:</span>

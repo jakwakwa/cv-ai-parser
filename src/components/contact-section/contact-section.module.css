@@ -1,22 +1,24 @@
-/* ContactSection styles migrated from old location */
+/* Component: ContactSection
+ * Refactored to use design tokens following ITCSS architecture
+ */
+
 .contactSection {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-lg);
 }
 
 .sectionTitle {
-    font-size: 1.125rem;
-    font-weight: bold;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.5rem;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
     display: flex;
     justify-content: flex-start;
     gap: 5px;
     align-items: center;
-    border-bottom: 1px solid var(--light-brown-border, #a49990c7);
-    color: var(--charcoal, #565854);
+    border-bottom: 1px solid var(--resume-skill-border);
+    color: var(--resume-section-titles);
+    font-family: var(--font-family-primary);
 }
-
-
 
 .detail {
     display: flex;
@@ -29,14 +31,14 @@
 .text,
 .link {
     font-size: 0.675rem;
-    color: var(--coffee, #3e2f22);
+    color: var(--resume-body-text);
+    font-family: var(--font-family-base);
 }
 
 .link {
-    color: var(--coffee, #3e2f22);
     text-decoration: none;
+    transition: var(--transition-fast);
 }
-
 .link:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }

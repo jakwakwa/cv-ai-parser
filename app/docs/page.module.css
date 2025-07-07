@@ -1,0 +1,68 @@
+/**
+ * Page: Docs
+ * Refactored to use design tokens following ITCSS architecture
+ */
+
+.wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-family-primary);
+  color: var(--color-text-primary);
+}
+
+.lead {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xl);
+  font-family: var(--font-family-base);
+}
+
+.navSection {
+  border-top: 1px solid var(--color-border-light);
+  padding-top: var(--spacing-lg);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.link {
+  font-size: var(--font-size-base);
+  color: var(--color-accent-teal);
+  text-decoration: none;
+  transition: var(--transition-fast);
+  font-family: var(--font-family-base);
+}
+
+.link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: var(--color-accent-teal-dark);
+}
+
+.badge {
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--border-radius-small);
+  margin-left: var(--spacing-sm);
+}
+
+.comingSoon {
+  font-style: italic;
+  color: var(--color-text-secondary);
+}

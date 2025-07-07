@@ -1,22 +1,23 @@
 /* Container and Layout */
 .container {
     min-height: 100vh;
-    background-color: #111827;
+    width: 100vw;
+    background-color: var(--color-background-tertiary);
 }
 
 .wrapper {
-    max-width: 80rem;
+    max-width: var(--max-width-lg);
     margin: 0 auto;
-    padding: 1.5rem;
+    padding: var(--spacing-lg);
 }
 
 .header {
-    background-color: #f9fafb;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    background-color: var(--color-background-primary);
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--color-shadow-small);
+    border: 1px solid var(--color-border-light);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -29,39 +30,39 @@
 }
 
 .headerTitle {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #111827;
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
 }
 
 .headerSubtitle {
-    color: #6b7280;
-    margin-top: 0.25rem;
+    color: var(--color-text-secondary);
+    margin-top: var(--spacing-xs);
 }
 
 .headerActions {
     display: flex;
-    gap: 0.75rem;
+    gap: var(--spacing-sm);
 }
 
 .previewButton {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--spacing-xs);
 }
 
 .saveButton {
-    background-color: #0d9488;
+    background-color: var(--color-accent-teal);
 }
 
 .saveButton:hover {
-    background-color: #0f766e;
+    background-color: var(--color-accent-teal-dark);
 }
 
 /* Grid Layout */
 .grid {
     display: grid;
-    gap: 1.5rem;
+    gap: var(--spacing-lg);
 }
 
 .gridOneColumn {
@@ -75,18 +76,18 @@
 .editorPanel {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: var(--spacing-lg);
 }
 
 /* Cards */
 .card {
-    background-color: #dadfe4;;
-    border: 1px solid #1c1c1c;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    background-color: var(--color-background-secondary);
+    border: 1px solid var(--color-border-light);
+    box-shadow: var(--color-shadow-small);
 }
 
 .cardTitle {
-    color: #111827;
+    color: var(--color-text-primary);
     text-align: left;
 }
 
@@ -94,80 +95,80 @@
 .formGrid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: var(--spacing-md);
 }
 
 .formGridFull {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: var(--spacing-md);
 }
 
 .formField {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--spacing-xs);
 }
 
 .label {
-    color: #374151;
-    font-weight: 900;
-    font-size:0.8rem;
+    color: var(--color-text-light);
+    font-weight: var(--font-weight-black);
+    font-size:var(--font-size-sm);
 }
 
 .input {
-    background-color: #eceff1;
-    box-shadow: inset 0px 1px 2px 0px #3e2f2221;
-    border-color: #d1d5db;
-    color: #6b7280;
-    font-size: 0.75rem;
-    font-weight: 500;
+    background-color: var(--color-input-background-custom);
+    box-shadow: inset 0px 1px 2px 0px var(--color-shadow-input-inset);
+    border-color: var(--color-border-light);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
 
 }
 
 .textarea {
-    background-color: #eceff1;
-    box-shadow: inset 0px 1px 2px 0px #3e2f2221;
-    border-color: #d1d5db;
-    color: #6b7280;
-    font-size: 0.75rem;
-    font-weight: 500;
+    background-color: var(--color-input-background-custom) !important;
+    box-shadow: inset 0px 1px 2px 0px var(--color-shadow-input-inset);
+    border-color: var(--color-border-light);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
 }
 
 /* Skills Section */
 .skillsInputGroup {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--spacing-xs);
 }
 
 .addSkillButton {
-    background-color: #0d9488;
+    background-color: var(--color-accent-teal);
 }
 
 .addSkillButton:hover {
-    background-color: #0f766e;
+    background-color: var(--color-accent-teal-dark);
 }
 
 .skillsList {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: var(--spacing-xs);
 }
 
 .skillBadge {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
-    background-color: #f3f4f6;
-    color: #1f2937;
+    gap: var(--spacing-xs);
+    background-color: var(--color-background-secondary);
+    color: var(--color-text-primary);
 }
 
 .removeSkillButton {
-    margin-left: 0.25rem;
+    margin-left: var(--spacing-xs);
 }
 
 .removeSkillButton:hover {
-    color: #dc2626;
+    color: var(--color-error-text);
 }
 
 /* Experience Section */
@@ -179,21 +180,21 @@
 }
 
 .addExperienceButton {
-    background-color: #0d9488;
+    background-color: var(--color-accent-teal);
 }
 
 .addExperienceButton:hover {
-    background-color: #0f766e;
+    background-color: var(--color-accent-teal-dark);
 }
 
 .experienceItem {
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    padding: 1rem;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-medium);
+    padding: var(--spacing-md);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    background-color: #f9fafb;
+    gap: var(--spacing-md);
+    background-color: var(--color-background-tertiary);
 }
 
 .experienceItemHeader {
@@ -203,49 +204,49 @@
 }
 
 .experienceItemTitle {
-    font-weight: 500;
-    color: #5c8386;
-    font-size: 1.1rem;
-    font-weight: 700;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-accent);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
 }
 
 .removeExperienceButton {
-    color: #dc2626;
+    color: var(--color-error-text);
 }
 
 .removeExperienceButton:hover {
-    color: #b91c1c;
-    background-color: #fef2f2;
+    color: var(--color-error-dark);
+    background-color: var(--color-error-bg);
 }
 
 /* Preview Panel */
 .previewContainer {
     position: sticky;
-    top: 1.5rem;
+    top: var(--spacing-lg);
 }
 
 .previewContent {
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    background-color: #ebebf1;
-    font-size: 12px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-medium);
+    padding: var(--spacing-md);
+    background-color: var(--color-background-input);
+    font-size: var(--font-size-xs);
 }
 
 .previewHeader {
     text-align: center;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border-light);
 }
 
 .previewImageContainer {
-    width: 4rem;
-    height: 4rem;
-    margin: 0 auto 0.5rem;
-    border-radius: 50%;
+    width: var(--spacing-xxl);
+    height: var(--spacing-xxl);
+    margin: 0 auto var(--spacing-xs);
+    border-radius: var(--border-radius-full);
     overflow: hidden;
-    background-color: #e5e7eb;
+    background-color: var(--color-background-secondary);
 }
 
 .previewImage {
@@ -255,179 +256,179 @@
 }
 
 .previewName {
-    font-weight: 700;
-    font-size: 1.125rem;
-    color: #111827;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+    color: var(--color-text-primary);
 }
 
 .previewTitle {
-    color: #6b7280;
+    color: var(--color-text-secondary);
 }
 
 .previewSummary {
-    font-size: 0.875rem;
-    color: #6b7280;
-    margin-top: 0.5rem;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin-top: var(--spacing-xs);
 }
 
 .previewSection {
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-md);
 }
 
 .previewSectionTitle {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: #111827;
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-text-primary);
 }
 
 .previewContactInfo {
-    font-size: 0.75rem;
+    font-size: var(--font-size-xs);
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    color: #6b7280;
+    gap: var(--spacing-xs);
+    color: var(--color-text-secondary);
 }
 
 .previewSkillsList {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.25rem;
+    gap: var(--spacing-xs);
 }
 
 .previewSkill {
-    background-color: #f3f4f6;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-    color: #1f2937;
+    background-color: var(--color-background-secondary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-xs);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-primary);
 }
 
 .previewMoreSkills {
-    font-size: 0.75rem;
-    color: #6b7280;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
 }
 
 .previewExperienceItem {
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--spacing-sm);
 }
 
 .previewExperienceTitle {
-    font-weight: 500;
-    font-size: 0.875rem;
-    color: #111827;
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
 }
 
 .previewExperienceCompany {
-    font-size: 0.75rem;
-    color: #6b7280;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
 }
 
 .previewExperienceDuration {
-    font-size: 0.75rem;
-    color: #6b7280;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
 }
 
 .previewMoreExperience {
-    font-size: 0.75rem;
-    color: #6b7280;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
 }
 
 /* Spacing Utilities */
 .spaceY4 {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--spacing-md);
 }
 
 .spaceY6 {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: var(--spacing-lg);
 }
 
 .mb4 {
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-md);
 }
 
 .mb6 {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-lg);
 }
 
 .mt1 {
-    margin-top: 0.25rem;
+    margin-top: var(--spacing-xs);
 }
 
 .mt2 {
-    margin-top: 0.5rem;
+    margin-top: var(--spacing-sm);
 }
 
 .mb2 {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--spacing-sm);
 }
 
 .mb3 {
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--spacing-sm);
 }
 
 .mb4 {
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-md);
 }
 
 /* Text Utilities */
 .textXs {
-    font-size: 0.75rem;
+    font-size: var(--font-size-xs);
 }
 
 .textSm {
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
 }
 
 .textLg {
-    font-size: 1.125rem;
+    font-size: var(--font-size-lg);
 }
 
 .text2xl {
-    font-size: 1.5rem;
+    font-size: var(--font-size-2xl);
 }
 
 .fontBold {
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
 }
 
 .fontMedium {
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
 }
 
 .fontSemibold {
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
 }
 
 .textGray500 {
-    color: #6b7280;
+    color: var(--color-text-secondary);
 }
 
 .textGray600 {
-    color: #6b7280;
+    color: var(--color-text-secondary);
 }
 
 .textGray700 {
-    color: #374151;
+    color: var(--color-text-light);
 }
 
 .textGray800 {
-    color: #1f2937;
+    color: var(--color-text-primary);
 }
 
 .textGray900 {
-    color: #111827;
+    color: var(--color-text-primary);
 }
 
 .textRed600 {
-    color: #dc2626;
+    color: var(--color-error-text);
 }
 
 .textRed700 {
-    color: #b91c1c;
+    color: var(--color-error-dark);
 }
 
 /* Flex Utilities */
@@ -452,39 +453,39 @@
 }
 
 .gap1 {
-    gap: 0.25rem;
+    gap: var(--spacing-xs);
 }
 
 .gap2 {
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
 }
 
 .gap3 {
-    gap: 0.75rem;
+    gap: var(--spacing-sm);
 }
 
 .gap4 {
-    gap: 1rem;
+    gap: var(--spacing-md);
 }
 
 .gap6 {
-    gap: 1.5rem;
+    gap: var(--spacing-lg);
 }
 
 /* Icon Sizes */
 .iconSm {
-    width: 0.75rem;
-    height: 0.75rem;
+    width: var(--spacing-xs);
+    height: var(--spacing-xs);
 }
 
 .iconMd {
-    width: 1rem;
-    height: 1rem;
+    width: var(--spacing-sm);
+    height: var(--spacing-sm);
 }
 
 .iconLg {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: var(--spacing-lg);
+    height: var(--spacing-lg);
 }
 
 /* Responsive Design */
@@ -499,7 +500,7 @@
 
     .headerContent {
         flex-direction: column;
-        gap: 1rem;
+        gap: var(--spacing-md);
         align-items: stretch;
     }
 

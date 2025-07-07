@@ -1,0 +1,12 @@
+/**
+ * Elements: Body
+ * Base body element styling
+ */
+
+body {
+  color: var(--color-text-primary);
+  background: #374151;
+  background-color: #374151;
+  background-size: cover;
+  background-position: center;
+} 

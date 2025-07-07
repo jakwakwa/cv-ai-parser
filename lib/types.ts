@@ -9,6 +9,14 @@ export interface Profile {
   updated_at: string;
 }
 
+export interface UserAdditionalContext {
+  jobSpecSource: 'upload' | 'pasted';
+  jobSpecText?: string;
+  jobSpecFileUrl?: string;
+  tone: 'Formal' | 'Neutral' | 'Creative';
+  extraPrompt?: string;
+}
+
 export interface Resume {
   id: string;
   user_id: string;
@@ -26,6 +34,7 @@ export interface Resume {
   created_at: string;
   updated_at: string;
   custom_colors: Record<string, string>;
+  additional_context?: UserAdditionalContext;
 }
 
 export interface ResumeVersion {
