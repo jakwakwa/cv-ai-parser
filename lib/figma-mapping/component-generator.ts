@@ -1,8 +1,11 @@
-import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
-import type { GeneratedComponentBinding, FigmaElementMapping } from './mapping-engine';
+import type {
+  FigmaElementMapping,
+  GeneratedComponentBinding,
+} from './mapping-engine';
 
 export interface ComponentGenerationOptions {
   componentName: string;
+  // biome-ignore lint/suspicious/noExplicitAny: <any is fine here>
   figmaNodeStructure: any;
   mappingBindings: GeneratedComponentBinding;
   extractedColors: {
@@ -27,7 +30,6 @@ export class ComponentGenerator {
   private options: ComponentGenerationOptions;
   private dataBindings: Record<string, string> = {};
   private conditionalLogic: string[] = [];
-  private cssRules: string[] = [];
 
   constructor(options: ComponentGenerationOptions) {
     this.options = options;
@@ -50,14 +52,14 @@ export class ComponentGenerator {
   }
 
   private generateJSXCode(): string {
-    const { componentName, mappingBindings } = this.options;
-    
+    const { componentName } = this.options;
+
     // Generate component props interface
     const propsInterface = this.generatePropsInterface();
-    
+
     // Generate component body
     const componentBody = this.generateComponentBody();
-    
+
     // Generate conditional rendering logic
     const conditionalHelpers = this.generateConditionalHelpers();
 
@@ -96,7 +98,7 @@ export default ${componentName};`;
 
   private generatePropsInterface(): string {
     const { componentName } = this.options;
-    
+
     return `interface ${componentName}Props {
   resume: EnhancedParsedResume;
   className?: string;
@@ -160,7 +162,7 @@ function renderList(items: string[], maxItems: number = 5): string[] {
     let componentBody = '';
 
     // Generate sections based on mappings
-    mappingBindings.mappings.forEach(mapping => {
+    mappingBindings.mappings.forEach((mapping) => {
       const sectionCode = this.generateSectionCode(mapping);
       if (sectionCode) {
         componentBody += `      ${sectionCode}\n`;
@@ -176,7 +178,7 @@ function renderList(items: string[], maxItems: number = 5): string[] {
   }
 
   private generateSectionCode(mapping: FigmaElementMapping): string {
-    const { elementType, dataBinding, elementId } = mapping;
+    const { elementType, elementId } = mapping;
 
     switch (elementType) {
       case 'text':
@@ -194,11 +196,11 @@ function renderList(items: string[], maxItems: number = 5): string[] {
 
   private generateTextElement(mapping: FigmaElementMapping): string {
     const { dataBinding, elementId, fallback, formatting } = mapping;
-    
+
     // Generate data access path
     const dataPath = this.convertDataBindingToAccess(dataBinding);
     const className = this.generateClassName(elementId);
-    
+
     // Apply formatting if specified
     let valueExpression = dataPath;
     if (formatting?.maxLength) {
@@ -234,19 +236,23 @@ function renderList(items: string[], maxItems: number = 5): string[] {
     if (dataBinding.includes('experience')) {
       return this.generateExperienceList(dataPath, className, itemClassName);
     }
-    
+
     if (dataBinding.includes('education')) {
       return this.generateEducationList(dataPath, className, itemClassName);
     }
-    
+
     if (dataBinding.includes('skills')) {
       return this.generateSkillsList(dataPath, className, itemClassName);
     }
-    
+
     return this.generateGenericList(dataPath, className, itemClassName);
   }
 
-  private generateExperienceList(dataPath: string, containerClass: string, itemClass: string): string {
+  private generateExperienceList(
+    dataPath: string,
+    containerClass: string,
+    itemClass: string
+  ): string {
     return `<div className={styles.${containerClass}}>
         {${dataPath}?.map((exp, index) => (
           <div key={exp.id || \`exp-\${index}\`} className={styles.${itemClass}}>
@@ -285,7 +291,11 @@ function renderList(items: string[], maxItems: number = 5): string[] {
       </div>`;
   }
 
-  private generateEducationList(dataPath: string, containerClass: string, itemClass: string): string {
+  private generateEducationList(
+    dataPath: string,
+    containerClass: string,
+    itemClass: string
+  ): string {
     return `<div className={styles.${containerClass}}>
         {${dataPath}?.map((edu, index) => (
           <div key={edu.id || \`edu-\${index}\`} className={styles.${itemClass}}>
@@ -318,7 +328,11 @@ function renderList(items: string[], maxItems: number = 5): string[] {
       </div>`;
   }
 
-  private generateSkillsList(dataPath: string, containerClass: string, itemClass: string): string {
+  private generateSkillsList(
+    dataPath: string,
+    containerClass: string,
+    itemClass: string
+  ): string {
     return `<div className={styles.${containerClass}}>
         {${dataPath}?.map((skill, index) => (
           <span key={index} className={styles.${itemClass}}>
@@ -328,7 +342,11 @@ function renderList(items: string[], maxItems: number = 5): string[] {
       </div>`;
   }
 
-  private generateGenericList(dataPath: string, containerClass: string, itemClass: string): string {
+  private generateGenericList(
+    dataPath: string,
+    containerClass: string,
+    itemClass: string
+  ): string {
     return `<div className={styles.${containerClass}}>
         {${dataPath}?.map((item, index) => (
           <div key={index} className={styles.${itemClass}}>
@@ -349,7 +367,7 @@ function renderList(items: string[], maxItems: number = 5): string[] {
 
   private generateConditionalElement(mapping: FigmaElementMapping): string {
     const { dataBinding, elementId, conditions } = mapping;
-    
+
     if (!conditions || conditions.length === 0) {
       return this.generateTextElement(mapping);
     }
@@ -727,11 +745,11 @@ function renderList(items: string[], maxItems: number = 5): string[] {
     // Convert dot notation to safe property access
     const parts = dataBinding.split('.');
     let accessPath = 'safeResume';
-    
+
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];
       if (part === 'resume') continue; // Skip 'resume' prefix
-      
+
       // Use optional chaining for nested properties
       if (i === 0 || parts[i - 1] === 'resume') {
         accessPath += `.${part}`;
@@ -739,7 +757,7 @@ function renderList(items: string[], maxItems: number = 5): string[] {
         accessPath += `?.${part}`;
       }
     }
-    
+
     return accessPath;
   }
 
@@ -750,10 +768,11 @@ function renderList(items: string[], maxItems: number = 5): string[] {
       .toLowerCase();
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: <testing>
   private generateConditionExpression(condition: any): string {
     const { field, operator, value } = condition;
     const fieldAccess = this.convertDataBindingToAccess(field);
-    
+
     switch (operator) {
       case 'exists':
         return `${fieldAccess} !== undefined && ${fieldAccess} !== null`;
@@ -773,8 +792,6 @@ function renderList(items: string[], maxItems: number = 5): string[] {
   }
 
   private toKebabCase(str: string): string {
-    return str
-      .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-      .toLowerCase();
+    return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
   }
 }

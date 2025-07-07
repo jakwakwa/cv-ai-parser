@@ -2,11 +2,6 @@
 
 import Link from 'next/link';
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/src/components/ui/avatar';
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,

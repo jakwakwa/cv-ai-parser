@@ -30,6 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     // Get initial session
+    // biome-ignore lint/suspicious/noExplicitAny: <ok now>
     supabase.auth.getSession().then((response: any) => {
       setUser(response.data.session?.user ?? null);
       setLoading(false);
@@ -38,6 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth changes
     const {
       data: { subscription },
+      // biome-ignore lint/suspicious/noExplicitAny: <ok now>
     } = supabase.auth.onAuthStateChange(async (_event: any, session: any) => {
       setUser(session?.user ?? null);
       setLoading(false);

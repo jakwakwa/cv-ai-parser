@@ -6,7 +6,6 @@ import {
   FileText as BriefcaseIcon,
   FileText,
   Palette,
-  Plus,
   Upload,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';

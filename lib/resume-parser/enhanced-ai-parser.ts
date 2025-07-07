@@ -1,9 +1,14 @@
 import { google } from '@ai-sdk/google';
 import { generateObject } from 'ai';
 import { AI_MODEL } from '@/lib/config';
-import { enhancedResumeSchema, type EnhancedParsedResume } from './enhanced-schema';
+import {
+  type EnhancedParsedResume,
+  enhancedResumeSchema,
+} from './enhanced-schema';
 
-export async function parseWithEnhancedAI(content: string): Promise<EnhancedParsedResume> {
+export async function parseWithEnhancedAI(
+  content: string
+): Promise<EnhancedParsedResume> {
   const { object } = await generateObject({
     model: google(AI_MODEL),
     schema: enhancedResumeSchema,
@@ -14,7 +19,9 @@ export async function parseWithEnhancedAI(content: string): Promise<EnhancedPars
   return object;
 }
 
-export async function parseWithEnhancedAIPDF(file: File): Promise<EnhancedParsedResume> {
+export async function parseWithEnhancedAIPDF(
+  file: File
+): Promise<EnhancedParsedResume> {
   console.log(`Starting enhanced PDF AI parsing with model: ${AI_MODEL}`);
 
   const { object } = await generateObject({
@@ -173,38 +180,52 @@ The goal is to create a comprehensive data structure that can be seamlessly mapp
 `;
 
 // Utility function to convert legacy resume data to enhanced format
-export function convertToEnhancedFormat(legacyResume: any): EnhancedParsedResume {
+export function convertToEnhancedFormat(
+  // biome-ignore lint/suspicious/noExplicitAny: <ok for now>
+  legacyResume: any
+): EnhancedParsedResume {
   const enhanced: EnhancedParsedResume = {
     name: legacyResume.name || '',
     title: legacyResume.title || '',
     summary: legacyResume.summary,
     profileImage: legacyResume.profileImage,
     customColors: legacyResume.customColors,
-    
-    contact: legacyResume.contact ? {
-      ...legacyResume.contact,
-      address: legacyResume.contact.location ? {
-        city: extractCityFromLocation(legacyResume.contact.location),
-        country: extractCountryFromLocation(legacyResume.contact.location),
-      } : undefined,
-      social: extractSocialLinks(legacyResume.contact),
-    } : undefined,
 
-    experience: legacyResume.experience?.map((exp: any, index: number) => ({
-      ...exp,
-      id: exp.id || `exp-${index}`,
-      startDate: parseDateString(exp.duration, 'start'),
-      endDate: parseDateString(exp.duration, 'end'),
-      responsibilities: exp.details?.filter((detail: string) => 
-        !containsMetrics(detail) && !containsAchievementKeywords(detail)
-      ),
-      achievements: exp.details?.filter((detail: string) => 
-        containsMetrics(detail) || containsAchievementKeywords(detail)
-      ),
-      technologies: extractTechnologies(exp.details?.join(' ') || ''),
-      metrics: extractMetrics(exp.details?.join(' ') || ''),
-    })) || [],
+    contact: legacyResume.contact
+      ? {
+          ...legacyResume.contact,
+          address: legacyResume.contact.location
+            ? {
+                city: extractCityFromLocation(legacyResume.contact.location),
+                country: extractCountryFromLocation(
+                  legacyResume.contact.location
+                ),
+              }
+            : undefined,
+          social: extractSocialLinks(legacyResume.contact),
+        }
+      : undefined,
 
+    experience:
+      // biome-ignore lint/suspicious/noExplicitAny: <ok for now>
+      legacyResume.experience?.map((exp: any, index: number) => ({
+        ...exp,
+        id: exp.id || `exp-${index}`,
+        startDate: parseDateString(exp.duration, 'start'),
+        endDate: parseDateString(exp.duration, 'end'),
+        responsibilities: exp.details?.filter(
+          (detail: string) =>
+            !containsMetrics(detail) && !containsAchievementKeywords(detail)
+        ),
+        achievements: exp.details?.filter(
+          (detail: string) =>
+            containsMetrics(detail) || containsAchievementKeywords(detail)
+        ),
+        technologies: extractTechnologies(exp.details?.join(' ') || ''),
+        metrics: extractMetrics(exp.details?.join(' ') || ''),
+      })) || [],
+
+    // biome-ignore lint/suspicious/noExplicitAny: <ok for now>
     education: legacyResume.education?.map((edu: any, index: number) => ({
       ...edu,
       id: edu.id || `edu-${index}`,
@@ -212,11 +233,14 @@ export function convertToEnhancedFormat(legacyResume: any): EnhancedParsedResume
       endDate: parseDateString(edu.duration, 'end'),
     })),
 
-    certifications: legacyResume.certifications?.map((cert: any, index: number) => ({
-      ...cert,
-      id: cert.id || `cert-${index}`,
-      credentialId: cert.id,
-    })),
+    certifications: legacyResume.certifications?.map(
+      // biome-ignore lint/suspicious/noExplicitAny: <ok for now>
+      (cert: any, index: number) => ({
+        ...cert,
+        id: cert.id || `cert-${index}`,
+        credentialId: cert.id,
+      })
+    ),
 
     skills: {
       all: legacyResume.skills || [],
@@ -252,9 +276,13 @@ function extractCountryFromLocation(location: string): string | undefined {
   return parts[parts.length - 1]?.trim();
 }
 
-function extractSocialLinks(contact: any): Array<{ platform: string; url: string; username?: string }> | undefined {
-  const social: Array<{ platform: string; url: string; username?: string }> = [];
-  
+function extractSocialLinks(
+  // biome-ignore lint/suspicious/noExplicitAny: <ok for now>
+  contact: any
+): Array<{ platform: string; url: string; username?: string }> | undefined {
+  const social: Array<{ platform: string; url: string; username?: string }> =
+    [];
+
   if (contact.linkedin) {
     social.push({
       platform: 'LinkedIn',
@@ -262,7 +290,7 @@ function extractSocialLinks(contact: any): Array<{ platform: string; url: string
       username: extractUsernameFromUrl(contact.linkedin, 'linkedin'),
     });
   }
-  
+
   if (contact.github) {
     social.push({
       platform: 'GitHub',
@@ -274,37 +302,43 @@ function extractSocialLinks(contact: any): Array<{ platform: string; url: string
   return social.length > 0 ? social : undefined;
 }
 
-function extractUsernameFromUrl(url: string, platform: string): string | undefined {
+function extractUsernameFromUrl(
+  url: string,
+  platform: string
+): string | undefined {
   try {
     const urlObj = new URL(url);
     const pathname = urlObj.pathname;
-    
+
     if (platform === 'linkedin') {
-      const match = pathname.match(/\/in\/([^\/]+)/);
+      const match = pathname.match(/\/in\/([^/]+)/);
       return match?.[1];
     }
-    
+
     if (platform === 'github') {
-      const match = pathname.match(/\/([^\/]+)$/);
+      const match = pathname.match(/\/([^/]+)$/);
       return match?.[1];
     }
   } catch {
     return undefined;
   }
-  
+
   return undefined;
 }
 
-function parseDateString(duration: string | undefined, type: 'start' | 'end'): string | undefined {
+function parseDateString(
+  duration: string | undefined,
+  type: 'start' | 'end'
+): string | undefined {
   if (!duration) return undefined;
-  
+
   const dateRegex = /(\w+\s+\d{4})/g;
   const matches = duration.match(dateRegex);
-  
+
   if (!matches) return undefined;
-  
+
   const dateStr = type === 'start' ? matches[0] : matches[matches.length - 1];
-  
+
   try {
     const date = new Date(dateStr);
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
@@ -315,55 +349,104 @@ function parseDateString(duration: string | undefined, type: 'start' | 'end'): s
 
 function containsMetrics(text: string): boolean {
   const metricPatterns = [
-    /\d+%/,           // Percentages
-    /\$[\d,]+/,       // Dollar amounts
-    /\d+[kKmM]/,      // Thousands/millions (10k, 5M)
-    /\d+x/,           // Multipliers (2x, 10x)
-    /\d+\+/,          // Plus numbers (100+)
+    /\d+%/, // Percentages
+    /\$[\d,]+/, // Dollar amounts
+    /\d+[kKmM]/, // Thousands/millions (10k, 5M)
+    /\d+x/, // Multipliers (2x, 10x)
+    /\d+\+/, // Plus numbers (100+)
   ];
-  
-  return metricPatterns.some(pattern => pattern.test(text));
+
+  return metricPatterns.some((pattern) => pattern.test(text));
 }
 
 function containsAchievementKeywords(text: string): boolean {
   const achievementKeywords = [
-    'achieved', 'improved', 'increased', 'reduced', 'optimized',
-    'implemented', 'launched', 'delivered', 'led', 'managed',
-    'created', 'developed', 'built', 'designed', 'established',
+    'achieved',
+    'improved',
+    'increased',
+    'reduced',
+    'optimized',
+    'implemented',
+    'launched',
+    'delivered',
+    'led',
+    'managed',
+    'created',
+    'developed',
+    'built',
+    'designed',
+    'established',
   ];
-  
+
   const lowerText = text.toLowerCase();
-  return achievementKeywords.some(keyword => lowerText.includes(keyword));
+  return achievementKeywords.some((keyword) => lowerText.includes(keyword));
 }
 
 function extractTechnologies(text: string): string[] {
   const techKeywords = [
     // Programming languages
-    'JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'C#', 'Go', 'Rust', 'Swift', 'Kotlin',
+    'JavaScript',
+    'TypeScript',
+    'Python',
+    'Java',
+    'C++',
+    'C#',
+    'Go',
+    'Rust',
+    'Swift',
+    'Kotlin',
     // Frameworks
-    'React', 'Vue', 'Angular', 'Node.js', 'Express', 'Django', 'Flask', 'Spring', 'Laravel',
+    'React',
+    'Vue',
+    'Angular',
+    'Node.js',
+    'Express',
+    'Django',
+    'Flask',
+    'Spring',
+    'Laravel',
     // Databases
-    'MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'SQLite', 'DynamoDB',
+    'MySQL',
+    'PostgreSQL',
+    'MongoDB',
+    'Redis',
+    'SQLite',
+    'DynamoDB',
     // Cloud/DevOps
-    'AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'Jenkins', 'Git', 'GitHub', 'GitLab',
+    'AWS',
+    'Azure',
+    'GCP',
+    'Docker',
+    'Kubernetes',
+    'Jenkins',
+    'Git',
+    'GitHub',
+    'GitLab',
     // Other tools
-    'Figma', 'Sketch', 'Adobe', 'Photoshop', 'Illustrator',
+    'Figma',
+    'Sketch',
+    'Adobe',
+    'Photoshop',
+    'Illustrator',
   ];
-  
-  const foundTech = techKeywords.filter(tech => 
+
+  const foundTech = techKeywords.filter((tech) =>
     text.toLowerCase().includes(tech.toLowerCase())
   );
-  
+
   return [...new Set(foundTech)]; // Remove duplicates
 }
 
-function extractMetrics(text: string): Array<{ description: string; value: string; unit?: string }> {
-  const metrics: Array<{ description: string; value: string; unit?: string }> = [];
-  
+function extractMetrics(
+  text: string
+): Array<{ description: string; value: string; unit?: string }> {
+  const metrics: Array<{ description: string; value: string; unit?: string }> =
+    [];
+
   // Extract percentages
   const percentageMatches = text.match(/(\d+)%/g);
   if (percentageMatches) {
-    percentageMatches.forEach(match => {
+    percentageMatches.forEach((match) => {
       metrics.push({
         description: 'Percentage improvement',
         value: match.replace('%', ''),
@@ -371,11 +454,11 @@ function extractMetrics(text: string): Array<{ description: string; value: strin
       });
     });
   }
-  
+
   // Extract dollar amounts
   const dollarMatches = text.match(/\$(\d+(?:,\d+)*(?:[kKmM])?)/g);
   if (dollarMatches) {
-    dollarMatches.forEach(match => {
+    dollarMatches.forEach((match) => {
       metrics.push({
         description: 'Financial impact',
         value: match.replace('$', ''),
@@ -383,26 +466,35 @@ function extractMetrics(text: string): Array<{ description: string; value: strin
       });
     });
   }
-  
+
   return metrics;
 }
 
 function categorizeTechnicalSkill(skill: string): string {
   const categories = {
-    'Programming Languages': ['JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'C#', 'Go', 'Rust'],
+    'Programming Languages': [
+      'JavaScript',
+      'TypeScript',
+      'Python',
+      'Java',
+      'C++',
+      'C#',
+      'Go',
+      'Rust',
+    ],
     'Frontend Frameworks': ['React', 'Vue', 'Angular', 'Svelte'],
     'Backend Frameworks': ['Node.js', 'Express', 'Django', 'Flask', 'Spring'],
-    'Databases': ['MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'SQLite'],
+    Databases: ['MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'SQLite'],
     'Cloud Platforms': ['AWS', 'Azure', 'GCP', 'Heroku'],
     'DevOps Tools': ['Docker', 'Kubernetes', 'Jenkins', 'Git'],
     'Design Tools': ['Figma', 'Sketch', 'Adobe', 'Photoshop'],
   };
-  
+
   for (const [category, skills] of Object.entries(categories)) {
-    if (skills.some(s => skill.toLowerCase().includes(s.toLowerCase()))) {
+    if (skills.some((s) => skill.toLowerCase().includes(s.toLowerCase()))) {
       return category;
     }
   }
-  
+
   return 'Other';
 }

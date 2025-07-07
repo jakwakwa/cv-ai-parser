@@ -3,6 +3,7 @@ import { createBrowserClient } from '@supabase/ssr';
 export function createClient() {
   // Don't create client during static generation
   if (typeof window === 'undefined') {
+    // biome-ignore lint/suspicious/noExplicitAny: <ok now>
     return null as any;
   }
 
