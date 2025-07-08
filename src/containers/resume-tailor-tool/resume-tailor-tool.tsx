@@ -15,7 +15,10 @@ import {
   Wand,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useRef, useState } from 'react';
+import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
+import { IS_JOB_TAILORING_ENABLED } from '@/lib/config';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import ColorPicker from '@/src/components/color-picker/color-picker';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
@@ -91,6 +94,9 @@ const ResumeTailorTool = ({
     null
   );
   const [viewLocalResume, setViewLocalResume] = useState(false);
+
+  // New: usePdfDownloader hook
+  const { downloadPdf, isDownloading } = usePdfDownloader();
 
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -275,8 +281,11 @@ const ResumeTailorTool = ({
       <div className={styles.container}>
         <ResumeDisplayButtons
           onDownloadPdf={() => {
-            // trigger browser print as simple download (placeholder)
-            window.print();
+            // Use the usePdfDownloader hook instead of window.print()
+            downloadPdf(
+              document.getElementById('resume-content') as HTMLElement,
+              `${localResumeData.name?.replace(/ /g, '_') || 'resume'}.pdf`
+            );
           }}
           onEditResume={() => setViewLocalResume(false)}
           onUploadNew={() => setViewLocalResume(false)}
