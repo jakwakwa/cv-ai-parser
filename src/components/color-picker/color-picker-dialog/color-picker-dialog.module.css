@@ -66,6 +66,21 @@
   margin-right: var(--spacing-sm);
 }
 
+/* --------------------------------------------------
+   Dark theme overrides (system / dark mode)          
+   -------------------------------------------------- */
+:root[data-theme='dark'] .dialogContent {
+  background-color: var(--color-background-secondary);
+}
+
+:root[data-theme='dark'] .contentContainer {
+  background-color: var(--color-background-secondary);
+}
+
+:root[data-theme='dark'] .dialogHeader {
+  background-color: var(--color-background-secondary);
+}
+
 /* Responsive adjustments for mobile devices */
 @media (max-width: 768px) {
   .dialogContent {
