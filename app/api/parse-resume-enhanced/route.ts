@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
       (formData.get('customColors') as string) || '{}'
     );
     const isAuthenticated = formData.get('isAuthenticated') === 'true';
+    const profileImage = formData.get('profileImage') as string | null;
 
     // Extract new JobFit fields
     const jobSpecFile = formData.get('jobSpecFile') as File | null;
@@ -216,6 +217,7 @@ export async function POST(request: NextRequest) {
     const finalParsedData = {
       ...finalResume,
       customColors: customColors || {},
+      profileImage: profileImage || finalResume.profileImage, // Prioritize newly uploaded image
     };
 
     // Save to database if authenticated
@@ -240,7 +242,10 @@ export async function POST(request: NextRequest) {
           additionalContext,
         });
       } catch (error) {
-        console.error('Database save failed (missing migration?), continuing without save:', error);
+        console.error(
+          'Database save failed (missing migration?), continuing without save:',
+          error
+        );
         // Continue without saving - user will still get the tailored resume
         // TODO: Remove this try-catch after running the database migration
       }

@@ -62,6 +62,7 @@ const ResumeUploader = ({
   const [error, setError] = React.useState('');
   const [uploadedFile, setUploadedFile] = React.useState<File | null>(null);
   const [profileImage, setProfileImage] = React.useState('');
+  const [showProfileUploader, setShowProfileUploader] = React.useState(false);
   const [showColorDialog, setShowColorDialog] = React.useState(false);
   const [customColors, setCustomColors] =
     React.useState<Record<string, string>>(resumeColors);
@@ -499,14 +500,6 @@ const ResumeUploader = ({
         )}
       </section>
 
-      {/* Profile Image Uploader - Moved here */}
-      <div className={styles.uploaderStepSections}>
-        <h3 className="text-lg font-medium text-white">
-          Profile Picture (Optional)
-        </h3>
-        <ProfileImageUploader onImageChange={handleProfileImageChange} />
-      </div>
-
       {/* JobFit Tailor Toggle */}
       {isJobTailoringEnabled && (
         <div className={styles.jobTailoringToggle}>
@@ -696,6 +689,30 @@ const ResumeUploader = ({
             />
           </DialogContent>
         </Dialog>
+
+        {showProfileUploader && (
+          <Dialog
+            open={showProfileUploader}
+            onOpenChange={setShowProfileUploader}
+          >
+            <DialogContent>
+              <DialogTitle className={styles.dialogTitle}>
+                <CheckCircle size={24} /> Resume Parsed Successfully!
+              </DialogTitle>
+              <DialogDescription className={styles.dialogDescription}>
+                Your resume has been successfully parsed. Now, optionally upload
+                a profile image or proceed to view your resume.
+              </DialogDescription>
+              <ProfileImageUploader onImageChange={handleProfileImageChange} />
+              <Button
+                onClick={() => setShowProfileUploader(false)}
+                className={styles.viewResumeButton}
+              >
+                View My Resume
+              </Button>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       <div className={styles.userSubmitResumeBtn}>
