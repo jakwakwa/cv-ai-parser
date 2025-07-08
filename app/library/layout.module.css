@@ -26,6 +26,7 @@
 
 .libraryLayout {
     min-height: 100vh;
+    position: relative; /* ensure mobile drawer positions correctly */
 
     border-radius: var(--border-radius-medium);
     box-shadow: var(--color-shadow-medium);
