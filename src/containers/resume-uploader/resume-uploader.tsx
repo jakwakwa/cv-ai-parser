@@ -62,7 +62,6 @@ const ResumeUploader = ({
   const [error, setError] = React.useState('');
   const [uploadedFile, setUploadedFile] = React.useState<File | null>(null);
   const [profileImage, setProfileImage] = React.useState('');
-  const [showProfileUploader, setShowProfileUploader] = React.useState(false);
   const [showColorDialog, setShowColorDialog] = React.useState(false);
   const [customColors, setCustomColors] =
     React.useState<Record<string, string>>(resumeColors);
@@ -228,6 +227,9 @@ const ResumeUploader = ({
       formData.append('file', uploadedFile);
       formData.append('customColors', JSON.stringify(customColors));
       formData.append('isAuthenticated', isAuthenticated.toString());
+      if (profileImage) {
+        formData.append('profileImage', profileImage);
+      }
 
       // Append JobFit Tailor fields if enabled and toggled
       if (isJobTailoringEnabled && isJobTailoringToggled) {
@@ -329,7 +331,6 @@ const ResumeUploader = ({
       // Pass the parsed data and the full info object to the parent
       onResumeUploaded(parsedResume, uploadInfoWithMethodAndConfidence);
 
-      setShowProfileUploader(true); // Move to next step
       setError('');
     } catch (err: unknown) {
       // Provide more helpful error messages
@@ -497,6 +498,14 @@ const ResumeUploader = ({
           </Button>
         )}
       </section>
+
+      {/* Profile Image Uploader - Moved here */}
+      <div className={styles.uploaderStepSections}>
+        <h3 className="text-lg font-medium text-white">
+          Profile Picture (Optional)
+        </h3>
+        <ProfileImageUploader onImageChange={handleProfileImageChange} />
+      </div>
 
       {/* JobFit Tailor Toggle */}
       {isJobTailoringEnabled && (
@@ -687,30 +696,6 @@ const ResumeUploader = ({
             />
           </DialogContent>
         </Dialog>
-
-        {showProfileUploader && (
-          <Dialog
-            open={showProfileUploader}
-            onOpenChange={setShowProfileUploader}
-          >
-            <DialogContent>
-              <DialogTitle className={styles.dialogTitle}>
-                <CheckCircle size={24} /> Resume Parsed Successfully!
-              </DialogTitle>
-              <DialogDescription className={styles.dialogDescription}>
-                Your resume has been successfully parsed. Now, optionally upload
-                a profile image or proceed to view your resume.
-              </DialogDescription>
-              <ProfileImageUploader onImageChange={handleProfileImageChange} />
-              <Button
-                onClick={() => setShowProfileUploader(false)}
-                className={styles.viewResumeButton}
-              >
-                View My Resume
-              </Button>
-            </DialogContent>
-          </Dialog>
-        )}
       </div>
 
       <div className={styles.userSubmitResumeBtn}>
