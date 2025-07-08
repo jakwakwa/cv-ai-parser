@@ -62,6 +62,9 @@ const ResumeUploader = ({
   const [error, setError] = React.useState('');
   const [uploadedFile, setUploadedFile] = React.useState<File | null>(null);
   const [profileImage, setProfileImage] = React.useState('');
+  // Store resumeId and parsed resume so we can perform updates
+  const [resumeId, setResumeId] = React.useState<string | undefined>(undefined);
+  const [parsedResumeData, setParsedResumeData] = React.useState<ParsedResume | null>(null);
   const [showProfileUploader, setShowProfileUploader] = React.useState(false);
   const [showColorDialog, setShowColorDialog] = React.useState(false);
   const [customColors, setCustomColors] =
@@ -329,6 +332,10 @@ const ResumeUploader = ({
       // Pass the parsed data and the full info object to the parent
       onResumeUploaded(parsedResume, uploadInfoWithMethodAndConfidence);
 
+      // Store for later updates (e.g., profile image)
+      setResumeId(uploadInfoWithMethodAndConfidence.resumeId);
+      setParsedResumeData(parsedResume);
+
       setShowProfileUploader(true); // Move to next step
       setError('');
     } catch (err: unknown) {
@@ -371,6 +378,28 @@ const ResumeUploader = ({
 
   const handleProfileImageChange = (imageUrl: string) => {
     setProfileImage(imageUrl);
+
+    // Immediately update resume in DB if available
+    if (isAuthenticated && resumeId && parsedResumeData) {
+      const updatedData: ParsedResume = {
+        ...parsedResumeData,
+        profileImage: imageUrl,
+      };
+
+      // Fire and forget – no UI blocking
+      fetch(`/api/resumes/${resumeId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ parsedData: updatedData }),
+      })
+        .then(() => {
+          // Update local reference so subsequent edits use new picture
+          setParsedResumeData(updatedData);
+        })
+        .catch((error) => {
+          console.error('Failed to save profile image:', error);
+        });
+    }
   };
 
   const handleColorsChange = (colors: Record<string, string>) => {
