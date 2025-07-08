@@ -2,12 +2,13 @@
 
 import { ArrowLeft } from 'lucide-react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import type { Resume } from '@/lib/types'; // Import the Resume type
 import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
+import ResumeTailorCommentary from '@/src/components/resume-tailor-commentary/resume-tailor-commentary'; // Import the new component
 import { SiteHeader } from '@/src/components/site-header/site-header';
 import { Button } from '@/src/components/ui/ui-button/button';
 import ResumeDisplay from '@/src/containers/resume-display/resume-display';
@@ -25,6 +26,9 @@ export default function ViewResumePage() {
   const [resume, setResume] = useState<Resume | null>(null); // Change to 'resume' and Resume type
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [aiTailorCommentary, setAiTailorCommentary] = useState<string | null>(
+    null
+  ); // Rename aiSummary to aiTailorCommentary
 
   const searchParams = useSearchParams();
 
@@ -76,6 +80,14 @@ export default function ViewResumePage() {
         }
         const result = await response.json();
         setResume(result.data); // Store the entire resume object
+        // Extract AI tailoring commentary from parsed_data.metadata if available
+        if (result.data?.parsed_data?.metadata?.aiTailorCommentary) {
+          setAiTailorCommentary(
+            result.data.parsed_data.metadata.aiTailorCommentary
+          );
+        } else {
+          setAiTailorCommentary(null);
+        }
       } catch (err: unknown) {
         setError(
           (err as Error).message ||
@@ -232,6 +244,8 @@ export default function ViewResumePage() {
             onEditResume={handleEdit}
             isOnResumePage={true}
           />
+          <ResumeTailorCommentary aiTailorCommentary={aiTailorCommentary} />{' '}
+          {/* Render AI tailoring commentary */}
           <ResumeDisplay resumeData={resume.parsed_data} isAuth={!!user} />
         </div>
       </main>

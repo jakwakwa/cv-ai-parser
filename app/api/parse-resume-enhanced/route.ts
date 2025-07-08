@@ -5,6 +5,7 @@ import { extractJobSpecification } from '@/lib/jobfit/jobSpecExtractor';
 import { userAdditionalContextSchema } from '@/lib/jobfit/schemas';
 import { tailorResume } from '@/lib/jobfit/tailorResume';
 import { parseWithAI, parseWithAIPDF } from '@/lib/resume-parser/ai-parser';
+import type { AIParsedResume } from '@/lib/resume-parser/schema';
 import { createClient } from '@/lib/supabase/server';
 import type { Resume, UserAdditionalContext } from '@/lib/types';
 import { createSlug } from '@/lib/utils';
@@ -175,42 +176,48 @@ export async function POST(request: NextRequest) {
     }
 
     // PARALLEL PROCESSING: Parse resume and job spec simultaneously
-    const parseResumePromise =
-      file.type === 'application/pdf'
-        ? parseWithAIPDF(file)
-        : parseWithAI(await file.text());
-
     const jobSpecPromise =
       hasJobSpec && additionalContext?.jobSpecText
         ? extractJobSpecification(additionalContext.jobSpecText)
         : Promise.resolve(null);
 
-    const [parsedResume, jobSpecResult] = await Promise.all([
-      parseResumePromise,
-      jobSpecPromise,
-    ]);
+    // Get job spec first to determine parsing approach
+    const jobSpecResult = await jobSpecPromise;
 
-    // Tailor resume if job spec provided
-    let finalResume = parsedResume;
+    // Parse resume with conditional tailoring
+    let finalResume: AIParsedResume;
     let tailoringMetadata = {};
 
     if (jobSpecResult && additionalContext) {
-      console.log('Tailoring resume to job specification...');
+      console.log(
+        'Parsing resume with integrated job specification tailoring...'
+      );
 
-      const tailoredResume = await tailorResume({
-        originalResume: parsedResume,
-        jobSpec: jobSpecResult.data,
+      // Use integrated tailored parsing
+      const parseOptions = {
+        jobSpec: additionalContext.jobSpecText,
         tone: additionalContext.tone,
-        extraPrompt: additionalContext.extraPrompt,
-        enableStreaming: false, // TODO: Implement streaming in Phase 5
-      });
+      };
 
-      finalResume = tailoredResume;
+      finalResume =
+        file.type === 'application/pdf'
+          ? await parseWithAIPDF(file, parseOptions)
+          : await parseWithAI(await file.text(), parseOptions);
+
       tailoringMetadata = {
         jobSpecConfidence: jobSpecResult.confidence,
         tailoringApplied: true,
+        tailoringMethod: 'integrated',
         tone: additionalContext.tone,
       };
+    } else {
+      console.log('Parsing resume without tailoring...');
+
+      // Standard parsing without tailoring
+      finalResume =
+        file.type === 'application/pdf'
+          ? await parseWithAIPDF(file)
+          : await parseWithAI(await file.text());
     }
 
     // Merge custom colors (preserve original colors even after tailoring)
@@ -225,7 +232,7 @@ export async function POST(request: NextRequest) {
     if (isAuthenticated && user) {
       try {
         const resumeTitle: string =
-          parsedResume.name || file.name.split('.')[0] || 'Untitled Resume';
+          finalResume.name || file.name.split('.')[0] || 'Untitled Resume';
         const slug = `${createSlug(resumeTitle)}-${Math.floor(1000 + Math.random() * 9000)}`;
 
         savedResume = await ResumeDatabase.saveResume(supabase, {
@@ -251,6 +258,18 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Expose AI summary only if present in enhanced parsing
+    let aiTailorCommentary: string | null = null;
+    if (
+      'metadata' in finalParsedData &&
+      finalParsedData.metadata &&
+      typeof finalParsedData.metadata === 'object'
+    ) {
+      aiTailorCommentary =
+        (finalParsedData.metadata as { aiTailorCommentary?: string })
+          .aiTailorCommentary || null;
+    }
+
     return Response.json({
       data: finalParsedData,
       meta: {
@@ -259,6 +278,7 @@ export async function POST(request: NextRequest) {
         resumeId: savedResume?.id,
         resumeSlug: savedResume?.slug,
         ...tailoringMetadata,
+        aiTailorCommentary,
       },
     });
   } catch (error) {

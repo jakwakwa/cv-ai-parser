@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema'; // Import EnhancedParsedResume
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import ResumeTailorTool from '@/src/containers/resume-tailor-tool/resume-tailor-tool';
@@ -23,7 +24,7 @@ export default function ResumeTailorPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleResumeCreated = async (
-    _parsedData: ParsedResume,
+    _parsedData: EnhancedParsedResume, // Update to EnhancedParsedResume
     _info: ParseInfo
   ) => {
     // Pass the parsed data to the ResumeTailorTool. The ResumeTailorTool will handle

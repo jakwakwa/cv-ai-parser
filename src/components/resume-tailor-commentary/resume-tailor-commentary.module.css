@@ -1,0 +1,39 @@
+.card {
+  width: 100%;
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+  margin-top: var(--spacing-lg); /* Add some margin from buttons */
+  box-shadow: var(--color-shadow-medium);
+}
+
+.cardHeader {
+  background-color: var(--color-info-light);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-info);
+}
+
+.cardHeaderContent {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-accent-teal-dark);
+  margin: 0;
+}
+
+.cardContent {
+  padding: var(--spacing-lg);
+}
+
+.summaryText {
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-normal);
+  margin: 0;
+} 

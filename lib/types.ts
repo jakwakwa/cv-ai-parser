@@ -1,3 +1,4 @@
+import type { EnhancedParsedResume } from './resume-parser/enhanced-schema';
 import type { ParsedResume } from './resume-parser/schema';
 
 export interface Profile {
@@ -24,7 +25,7 @@ export interface Resume {
   original_filename: string | null;
   file_type: string | null;
   file_size: number | null;
-  parsed_data: ParsedResume;
+  parsed_data: EnhancedParsedResume;
   parse_method: string | null;
   confidence_score: number | null;
   is_public: boolean;

@@ -19,9 +19,11 @@ import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useRef, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { IS_JOB_TAILORING_ENABLED } from '@/lib/config';
-import type { ParsedResume } from '@/lib/resume-parser/schema';
+import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema'; // Import EnhancedParsedResume
+import type { ParsedResume } from '@/lib/resume-parser/schema'; // Keep ParsedResume for onResumeCreated prop for now if ParseInfo still uses it.
 import ColorPicker from '@/src/components/color-picker/color-picker';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
+import ResumeTailorCommentary from '@/src/components/resume-tailor-commentary/resume-tailor-commentary';
 import {
   Dialog,
   DialogContent,
@@ -42,10 +44,11 @@ interface ParseInfo {
   filename: string;
   fileType: string;
   fileSize: number;
+  aiTailorCommentary?: string; // Rename aiSummary to aiTailorCommentary here
 }
 
 interface ResumeTailorToolProps {
-  onResumeCreated: (data: ParsedResume, info: ParseInfo) => void;
+  onResumeCreated: (data: EnhancedParsedResume, info: ParseInfo) => void; // Update to EnhancedParsedResume
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
   isAuthenticated?: boolean;
@@ -80,6 +83,9 @@ const ResumeTailorTool = ({
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [modalErrorMessage, setModalErrorMessage] = useState('');
   const [showColorDialog, setShowColorDialog] = useState(false);
+  const [aiTailorCommentary, setAiTailorCommentary] = useState<string | null>(
+    null
+  ); // Rename aiSummary to aiTailorCommentary
 
   // Customization states
   const [profileImage, setProfileImage] = useState('');
@@ -90,9 +96,11 @@ const ResumeTailorTool = ({
   const [createdResumeSlug, setCreatedResumeSlug] = useState<string | null>(
     null
   );
-  const [localResumeData, setLocalResumeData] = useState<ParsedResume | null>(
-    null
-  );
+  const [localResumeData, setLocalResumeData] =
+    useState<EnhancedParsedResume | null>(
+      // Changed to EnhancedParsedResume
+      null
+    );
   const [viewLocalResume, setViewLocalResume] = useState(false);
 
   // New: usePdfDownloader hook
@@ -215,15 +223,16 @@ const ResumeTailorTool = ({
         throw new Error(result.error || 'Parsing failed.');
       }
 
-      const parsedData: ParsedResume = result.data;
+      const parsedData: EnhancedParsedResume = result.data; // Changed to EnhancedParsedResume
       const uploadInfo: ParseInfo = {
         ...result.meta,
         fileType: uploadedFile.type,
         fileSize: uploadedFile.size,
       };
 
-      onResumeCreated(parsedData, uploadInfo);
+      onResumeCreated(parsedData, uploadInfo); // parsedData is now EnhancedParsedResume
       setLocalResumeData(parsedData);
+      setAiTailorCommentary(uploadInfo.aiTailorCommentary || null); // Capture AI tailoring commentary
       if (uploadInfo.resumeSlug) {
         setCreatedResumeSlug(uploadInfo.resumeSlug);
       }
@@ -290,6 +299,8 @@ const ResumeTailorTool = ({
           onEditResume={() => setViewLocalResume(false)}
           onUploadNew={() => setViewLocalResume(false)}
         />
+        <ResumeTailorCommentary aiTailorCommentary={aiTailorCommentary} />{' '}
+        {/* Render AI tailoring commentary */}
         <ResumeDisplay resumeData={localResumeData} isAuth={false} />
       </div>
     );

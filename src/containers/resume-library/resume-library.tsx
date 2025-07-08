@@ -187,6 +187,11 @@ export default function ResumeLibrary({
                     <div>
                       <h2 className={styles.cardTitleLabel}>Title:</h2>
                       <h3 className={styles.cardTitle}>{resume.title}</h3>
+                      {resume.parsed_data.metadata?.aiTailorCommentary && (
+                        <p className={styles.aiSummaryPlaintext}>
+                          {resume.parsed_data.metadata.aiTailorCommentary}
+                        </p>
+                      )}
                     </div>
 
                     <div className={styles.publicToggleContainer}>

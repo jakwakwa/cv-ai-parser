@@ -1,6 +1,5 @@
 {
-    "recommendations": [
-        "esbenp.prettier-vscode",
-        "biomejs.biome"
-    ]
+  "recommendations": [
+    "denoland.vscode-deno"
+  ]
 }

@@ -196,6 +196,7 @@ export const enhancedResumeSchema = z.object({
           visualEmphasis: z.array(z.string()).optional(),
         })
         .optional(),
+      aiTailorCommentary: z.string().optional(), // AI-generated summary/commentary for UI
     })
     .optional(),
 });

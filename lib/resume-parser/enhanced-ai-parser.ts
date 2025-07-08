@@ -156,6 +156,7 @@ ENHANCED EXTRACTION REQUIREMENTS:
    - Note any color schemes or design preferences mentioned
    - Determine content priority based on space allocation and emphasis
    - Extract any specific formatting preferences
+   - **Generate a short, human-readable summary or commentary about the resume parsing result and include it in the output as metadata.aiTailorCommentary. This should highlight the overall strengths, unique aspects, and any notable findings from the resume.**
 
 9. DATA TRANSFORMATION:
    - Normalize all dates to consistent formats
