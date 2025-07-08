@@ -58,7 +58,7 @@ export const ResumeDisplayButtons: React.FC<ResumeDisplayButtonsProps> = ({
     if (onUploadNew) {
       onUploadNew();
     } else {
-      router.push('/');
+      router.push('/tools/tailor');
     }
   };
 
