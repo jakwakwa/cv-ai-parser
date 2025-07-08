@@ -92,6 +92,8 @@ const ResumeTailorTool = ({
     null
   );
   const [viewLocalResume, setViewLocalResume] = useState(false);
+  const [resumeId, setResumeId] = useState<string | undefined>(undefined);
+  const [parsedResumeData, setParsedResumeData] = useState<ParsedResume | null>(null);
 
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -219,6 +221,8 @@ const ResumeTailorTool = ({
 
       onResumeCreated(parsedData, uploadInfo);
       setLocalResumeData(parsedData);
+      setResumeId(uploadInfo.resumeId);
+      setParsedResumeData(parsedData);
       if (uploadInfo.resumeSlug) {
         setCreatedResumeSlug(uploadInfo.resumeSlug);
       }
@@ -237,6 +241,24 @@ const ResumeTailorTool = ({
 
   const handleProfileImageChange = (imageUrl: string) => {
     setProfileImage(imageUrl);
+
+    // Immediately update DB if we have a resumeId and authenticated user
+    if (isAuthenticated && resumeId && parsedResumeData) {
+      const updatedData: ParsedResume = {
+        ...parsedResumeData,
+        profileImage: imageUrl,
+      };
+
+      fetch(`/api/resumes/${resumeId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ parsedData: updatedData }),
+      })
+        .then(() => {
+          setParsedResumeData(updatedData);
+        })
+        .catch((err) => console.error('Failed to save profile image:', err));
+    }
   };
 
   const handleColorsChange = (colors: Record<string, string>) => {
