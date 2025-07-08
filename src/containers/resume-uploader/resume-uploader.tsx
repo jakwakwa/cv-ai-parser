@@ -228,6 +228,9 @@ const ResumeUploader = ({
       formData.append('file', uploadedFile);
       formData.append('customColors', JSON.stringify(customColors));
       formData.append('isAuthenticated', isAuthenticated.toString());
+      if (profileImage) {
+        formData.append('profileImage', profileImage);
+      }
 
       // Append JobFit Tailor fields if enabled and toggled
       if (isJobTailoringEnabled && isJobTailoringToggled) {
@@ -329,7 +332,6 @@ const ResumeUploader = ({
       // Pass the parsed data and the full info object to the parent
       onResumeUploaded(parsedResume, uploadInfoWithMethodAndConfidence);
 
-      setShowProfileUploader(true); // Move to next step
       setError('');
     } catch (err: unknown) {
       // Provide more helpful error messages

@@ -5,7 +5,7 @@
     align-content: flex-start;
     justify-content: flex-start;
     display: flex;
-    flex-direction: row;
+    flex-direction: column; /* Changed to column for mobile first */
     gap: var(--spacing-lg);
     width: 100%;
     max-width: var(--max-width-xl);
@@ -44,6 +44,9 @@
 }
 
 @media (min-width: 768px) {
+    .libraryContainer {
+        flex-direction: row; /* Back to row for desktop */
+    }
     .mainContainer {
         flex-direction: column;
     }
