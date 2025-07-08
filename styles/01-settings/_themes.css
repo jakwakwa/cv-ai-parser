@@ -482,10 +482,10 @@
     color-scheme: dark;
     
     /* Override with dark theme values when system prefers dark */
-    --color-background-primary: #1f2937;
-    --color-background-dark: #1f2e47fa;
+    --color-background-primary: #0a0a0c;
     --color-background-secondary: #111827;
-    --color-background-tertiary: #ebeef3;
+    --color-background-tertiary: #162438;
+    --color-primary-button-custom: #0d9488;
     --color-background-overlay: rgba(31, 41, 55, 0.95);
     
     --color-text-primary: #f9fafb;
@@ -495,7 +495,7 @@
     --color-text-muted: #9ca3af;
     --color-text-inverse: #1f2937;
     
-    --color-border-light: #05484247;
+    --color-border-light: #489b9333;
     --color-border-medium: #0a2935;
     --color-border-dark: #6b7280;
     --color-border-neutral: #374151;
@@ -505,7 +505,7 @@
     --color-accent-teal-dark: #0d9488;
     --color-accent-teal-bright: #2dd4bf;
     
-    --color-secondary-blue: #14b8a6;
+    --color-secondary-blue: #5bb5e1;
     --color-secondary-blue-light: rgba(99, 102, 241, 0.1);
     --color-secondary-blue-dark: #4f46e5;
     
@@ -536,8 +536,11 @@
     --color-button-shadow: rgba(0, 0, 0, 0.3);
 
     /* Custom Input Styles */
-    --color-input-background-custom: #1f2937;
+    --color-input-background-custom: #162d408c;
     --shadow-input: inset 5px 5px 10px #0b101296, inset -5px -5px 10px #1d1e2136;
+    
+    /* Legacy compatibility */
+    --color-background-dark: var(--color-background-secondary);
     
     --color-primary-dark: #0f172a;
     --color-primary-darker: #020617;

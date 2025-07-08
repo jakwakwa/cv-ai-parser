@@ -74,7 +74,6 @@ const ResumeTailorTool = ({
   const [extraPrompt, setExtraPrompt] = useState('');
 
   // UI states
-  const [showProfileUploader, setShowProfileUploader] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [modalErrorMessage, setModalErrorMessage] = useState('');
   const [showColorDialog, setShowColorDialog] = useState(false);
@@ -222,7 +221,11 @@ const ResumeTailorTool = ({
       if (uploadInfo.resumeSlug) {
         setCreatedResumeSlug(uploadInfo.resumeSlug);
       }
-      setShowProfileUploader(true);
+      if (uploadInfo.resumeSlug) {
+        router.push(`/resume/${uploadInfo.resumeSlug}`);
+      } else {
+        setViewLocalResume(true);
+      }
       setError('');
     } catch (err: unknown) {
       const errorMessage =
@@ -297,43 +300,6 @@ const ResumeTailorTool = ({
         </DialogContent>
       </Dialog>
 
-      <Dialog open={showProfileUploader} onOpenChange={setShowProfileUploader}>
-        <DialogContent
-          className={styles.profileDialogContent}
-          onPointerDownOutside={(e) => e.preventDefault()}
-        >
-          <DialogTitle className={styles.dialogTitle}>
-            <CheckCircle size={24} /> Resume Tailored Successfully!
-          </DialogTitle>
-          <DialogDescription className={styles.dialogDescription}>
-            Your resume has been tailored to the job description. Optionally
-            upload a profile image or proceed to view your resume.
-          </DialogDescription>
-          <ProfileImageUploader
-            onImageChange={handleProfileImageChange}
-            showPrompt={true}
-            onSkip={() => {
-              setProfileImage(''); // Clear profile image if skipped
-              if (createdResumeSlug) {
-                router.push(`/resume/${createdResumeSlug}`);
-              } else {
-                setShowProfileUploader(false);
-                setViewLocalResume(true);
-              }
-            }}
-            onComplete={() => {
-              // after selecting image or continue, go to view resume
-              setShowProfileUploader(false);
-              if (createdResumeSlug) {
-                router.push(`/resume/${createdResumeSlug}`);
-              } else {
-                setViewLocalResume(true);
-              }
-            }}
-          />
-        </DialogContent>
-      </Dialog>
-
       <div className={styles.toolGrid}>
         {/* Left Panel - Resume Upload */}
         <div className={styles.panel}>
@@ -387,6 +353,15 @@ const ResumeTailorTool = ({
                 </span>
               </div>
             )}
+          </div>
+
+          {/* Profile Image Uploader */}
+          <div className={styles.customizationSection}>
+            <h3 className={styles.sectionTitle}>Profile Picture (Optional)</h3>
+            <ProfileImageUploader
+              onImageChange={handleProfileImageChange}
+              showPrompt={false}
+            />
           </div>
 
           {/* Color Customization & Tailor Toggle */}
