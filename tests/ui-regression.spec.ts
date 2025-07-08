@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 
 // Test files expected at tests/fixtures/
 const RESUME_TXT = 'tests/fixtures/sample-resume.txt';
-const AVATAR_JPG = 'tests/fixtures/avatar.jpg';
+const AVATAR_JPG = 'public/placeholder-user.jpg';
 
 // Viewport widths to test
 const BREAKPOINTS = [320, 375, 414, 768] as const;
