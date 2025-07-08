@@ -33,16 +33,6 @@ export async function POST(request: NextRequest) {
     const tone = formData.get('tone') as string;
     const extraPrompt = formData.get('extraPrompt') as string | null;
 
-    // Debug logging
-    console.log('Enhanced API called with:', {
-      hasFile: !!file,
-      hasJobSpecFile: !!jobSpecFile,
-      hasJobSpecText: !!jobSpecText,
-      jobSpecTextLength: jobSpecText?.length || 0,
-      tone,
-      hasExtraPrompt: !!extraPrompt,
-      allFormDataKeys: Array.from(formData.keys()),
-    });
 
     // Validate inputs
     if (!file) {
@@ -126,12 +116,7 @@ export async function POST(request: NextRequest) {
         extraPrompt: extraPrompt?.trim() || undefined,
       };
 
-      // Debug: Log what we're trying to validate
-      console.log('About to validate contextData:', {
-        ...contextData,
-        jobSpecTextLength: contextData.jobSpecText?.length,
-        jobSpecTextPreview: `${contextData.jobSpecText?.substring(0, 50)}...`,
-      });
+   
 
       // Validate context structure
       const validation = userAdditionalContextSchema.safeParse(contextData);
@@ -151,8 +136,6 @@ export async function POST(request: NextRequest) {
       }
       additionalContext = validation.data;
     } else if (!hasJobSpec) {
-      // Enhanced endpoint called without job tailoring - this is allowed
-      // Just proceed with regular resume parsing
       console.log(
         'Enhanced API called without job specification - proceeding with regular parsing'
       );
@@ -269,17 +252,6 @@ export async function POST(request: NextRequest) {
         (finalParsedData.metadata as { aiTailorCommentary?: string })
           .aiTailorCommentary || null;
     }
-
-    console.log('=== AI COMMENTARY DEBUG ===');
-    console.log('aiTailorCommentary value:', aiTailorCommentary);
-    console.log('About to return meta object:', {
-      method: 'ai_enhanced',
-      filename: file.name,
-      resumeId: savedResume?.id,
-      resumeSlug: savedResume?.slug,
-      ...tailoringMetadata,
-      aiTailorCommentary,
-    });
 
     return Response.json({
       data: finalParsedData,

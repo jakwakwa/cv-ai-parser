@@ -219,28 +219,16 @@ const ResumeTailorTool = ({
         throw new Error(result.error || 'Parsing failed.');
       }
 
-      const parsedData: EnhancedParsedResume = result.data; // Changed to EnhancedParsedResume
+      const parsedData: EnhancedParsedResume = result.data;
       const uploadInfo: ParseInfo = {
         ...result.meta,
         fileType: uploadedFile.type,
         fileSize: uploadedFile.size,
       };
 
-      console.log('=== COMPONENT DEBUG ===');
-      console.log('API Response:', result);
-      console.log('uploadInfo:', uploadInfo);
-      console.log(
-        'aiTailorCommentary from API:',
-        uploadInfo.aiTailorCommentary
-      );
-      console.log(
-        'Setting aiTailorCommentary to:',
-        uploadInfo.aiTailorCommentary || null
-      );
-
-      onResumeCreated(parsedData, uploadInfo); // parsedData is now EnhancedParsedResume
+      onResumeCreated(parsedData, uploadInfo);
       setLocalResumeData(parsedData);
-      setAiTailorCommentary(uploadInfo.aiTailorCommentary || null); // Capture AI tailoring commentary
+      setAiTailorCommentary(uploadInfo.aiTailorCommentary || null);
       if (uploadInfo.resumeSlug) {
         setCreatedResumeSlug(uploadInfo.resumeSlug);
       }
