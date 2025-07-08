@@ -30,6 +30,7 @@ import { Button } from '@/src/components/ui/ui-button/button';
 import ProfileImageUploader from '@/src/containers/profile-image-uploader/profile-image-uploader';
 import ResumeDisplay from '@/src/containers/resume-display/resume-display';
 import styles from './resume-tailor-tool.module.css';
+import { DialogClose } from '@/src/components/ui/dialog';
 
 interface ParseInfo {
   resumeId?: string;
@@ -430,6 +431,11 @@ const ResumeTailorTool = ({
                   currentColors={customColors}
                   onColorsChange={handleColorsChange}
                 />
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+                  <DialogClose asChild>
+                    <Button variant="default">Done</Button>
+                  </DialogClose>
+                </div>
               </DialogContent>
             </Dialog>
 
