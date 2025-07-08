@@ -1,25 +1,11 @@
 {
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "eslint.workingDirectories": [
-    {
-      "mode": "auto"
-    }
-  ],
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
-  "workbench.panel.showLabels": false,
-  "accessibility.verbosity.panelChat": false,
-  "workbench.view.showQuietly": {
-    "workbench.panel.output": true
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
   },
+  "accessibility.verbosity.panelChat": false,
   "cursor.chat.terminalShowHoverHint": true,
   "cursor.cmdk.autoSelect": false,
   "cursor.composer.backspaceRemoveContext": false,
@@ -49,11 +35,47 @@
     "**/id_dsa",
     "**/.ssh/id_*"
   ],
+  "deno.enablePaths": [
+    "supabase/functions"
+  ],
+  "deno.lint": true,
+  "deno.unstable": [
+    "bare-node-builtins",
+    "byonm",
+    "sloppy-imports",
+    "unsafe-proto",
+    "webgpu",
+    "broadcast-channel",
+    "worker-options",
+    "cron",
+    "kv",
+    "ffi",
+    "fs",
+    "http",
+    "net"
+  ],
   "editor.codeActionWidget.includeNearbyQuickFixes": false,
   "editor.codeLens": false,
   "editor.colorDecorators": false,
   "editor.colorDecoratorsActivatedOn": "click",
   "editor.comments.ignoreEmptyLines": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.fontFamily": "Dank Mono, Monaco, 'Courier New', monospace",
-  "editor.fontSize": 11
+  "editor.fontSize": 11,
+  "editor.formatOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "workbench.panel.showLabels": false,
+  "workbench.view.showQuietly": {
+    "workbench.panel.output": true
+  }
 }

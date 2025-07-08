@@ -356,6 +356,17 @@ export default function PageContent() {
             resumeData={{
               ...resumeData,
               customColors: user ? resumeData.customColors : localCustomColors, // Prioritize resumeData's colors if user is authenticated, else use localCustomColors
+              // Ensure skills property matches expected structure
+              skills:
+                typeof resumeData.skills === 'object' &&
+                resumeData.skills !== null &&
+                !Array.isArray(resumeData.skills)
+                  ? resumeData.skills
+                  : {
+                      all: Array.isArray(resumeData.skills)
+                        ? resumeData.skills
+                        : [],
+                    },
             }}
             isAuth={!!user}
           />

@@ -3,9 +3,9 @@ import { IS_JOB_TAILORING_ENABLED } from '@/lib/config';
 import { ResumeDatabase } from '@/lib/database';
 import { extractJobSpecification } from '@/lib/jobfit/jobSpecExtractor';
 import { userAdditionalContextSchema } from '@/lib/jobfit/schemas';
-import { tailorResume } from '@/lib/jobfit/tailorResume';
+// import { tailorResume } from '@/lib/jobfit/tailorResume';
 import { parseWithAI, parseWithAIPDF } from '@/lib/resume-parser/ai-parser';
-import type { AIParsedResume } from '@/lib/resume-parser/schema';
+import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
 import { createClient } from '@/lib/supabase/server';
 import type { Resume, UserAdditionalContext } from '@/lib/types';
 import { createSlug } from '@/lib/utils';
@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
     const jobSpecResult = await jobSpecPromise;
 
     // Parse resume with conditional tailoring
-    let finalResume: AIParsedResume;
+    let finalResume: EnhancedParsedResume;
     let tailoringMetadata = {};
 
     if (jobSpecResult && additionalContext) {
@@ -269,6 +269,17 @@ export async function POST(request: NextRequest) {
         (finalParsedData.metadata as { aiTailorCommentary?: string })
           .aiTailorCommentary || null;
     }
+
+    console.log('=== AI COMMENTARY DEBUG ===');
+    console.log('aiTailorCommentary value:', aiTailorCommentary);
+    console.log('About to return meta object:', {
+      method: 'ai_enhanced',
+      filename: file.name,
+      resumeId: savedResume?.id,
+      resumeSlug: savedResume?.slug,
+      ...tailoringMetadata,
+      aiTailorCommentary,
+    });
 
     return Response.json({
       data: finalParsedData,

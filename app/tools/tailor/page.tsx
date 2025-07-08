@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema'; // Import EnhancedParsedResume
-import type { ParsedResume } from '@/lib/resume-parser/schema';
+// import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import ResumeTailorTool from '@/src/containers/resume-tailor-tool/resume-tailor-tool';
 import styles from './page.module.css';

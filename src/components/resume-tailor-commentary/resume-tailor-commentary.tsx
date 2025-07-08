@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { Card, CardContent, CardHeader } from '@/src/components/ui/card';
 import styles from './resume-tailor-commentary.module.css';
 

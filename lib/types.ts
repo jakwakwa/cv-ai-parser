@@ -1,5 +1,5 @@
 import type { EnhancedParsedResume } from './resume-parser/enhanced-schema';
-import type { ParsedResume } from './resume-parser/schema';
+// import type { ParsedResume } from './resume-parser/schema';
 
 export interface Profile {
   id: string;

@@ -1,12 +1,20 @@
-import { IS_AI_PARSING_ENABLED } from '@/lib/config';
+import type { NextRequest } from 'next/server';
+// import { IS_JOB_TAILORING_ENABLED } from '@/lib/config'; 
 import { ResumeDatabase } from '@/lib/database';
-import { parseWithAI, parseWithAIPDF } from '@/lib/resume-parser/ai-parser';
+import {
+  parseWithAI,
+  parseWithAIPDF,
+} from '@/lib/resume-parser/ai-parser';
+import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema'; // Use EnhancedParsedResume
 import { parseWithRegex } from '@/lib/resume-parser/regex-parser';
-import type { AIParsedResume, ParsedResume } from '@/lib/resume-parser/schema';
+// import type { ParsedResume } from '@/lib/resume-parser/schema';
 import { createClient } from '@/lib/supabase/server';
+import type { Resume } from '@/lib/types';
 import { createSlug } from '@/lib/utils';
 
-export async function POST(request: Request) {
+const MIN_CHARS_FOR_AI = 50;
+
+export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
@@ -14,157 +22,149 @@ export async function POST(request: Request) {
       (formData.get('customColors') as string) || '{}'
     );
     const isAuthenticated = formData.get('isAuthenticated') === 'true';
+    const profileImage = formData.get('profileImage') as string | null;
 
     if (!file) {
-      return new Response(JSON.stringify({ error: 'No file provided.' }), {
-        status: 400,
+      return Response.json(
+        { error: 'Resume file is required' },
+        { status: 400 }
+      );
+    }
+
+    let resumeContent = '';
+    let parseMethod = 'ai';
+    let confidence = 0;
+    let parsedResume: EnhancedParsedResume; // Change to EnhancedParsedResume
+
+    if (file.type === 'application/pdf') {
+      // Use direct PDF parsing with Gemini 2.0 Flash
+      parsedResume = await parseWithAIPDF(file);
+      parseMethod = 'ai_pdf';
+      confidence = 98; // Higher confidence for direct PDF parsing
+    } else {
+      resumeContent = await file.text();
+      if (resumeContent.length < MIN_CHARS_FOR_AI) {
+        // Fallback to regex parser if content is too short for AI
+        const regexResult = parseWithRegex(resumeContent); // Get the result object
+        parsedResume = regexResult.data as EnhancedParsedResume; // Extract data and cast
+        parseMethod = 'regex_fallback';
+        confidence = 60; // Lower confidence for regex fallback
+      } else {
+        // Use AI parsing for text files
+        parsedResume = await parseWithAI(resumeContent);
+        parseMethod = 'ai';
+        confidence = 90; // Default confidence for AI parsing
+      }
+    }
+
+    // Merge custom colors and profile image
+    const finalParsedData = {
+      ...parsedResume,
+      customColors: customColors || {},
+      profileImage: profileImage || parsedResume.profileImage,
+    };
+
+    // Save to database if authenticated
+    let savedResume: Resume | undefined;
+    if (isAuthenticated) {
+      const supabase = await createClient(); // Await createClient
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+
+      if (authError || !authData.user) {
+        return Response.json(
+          { error: 'Authentication required' },
+          { status: 401 }
+        );
+      }
+
+      const resumeTitle: string =
+        finalParsedData.name || file.name.split('.')[0] || 'Untitled Resume';
+      const slug = `${createSlug(resumeTitle)}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      savedResume = await ResumeDatabase.saveResume(supabase, {
+        userId: authData.user.id,
+        title: resumeTitle,
+        originalFilename: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+        parsedData: finalParsedData,
+        parseMethod: parseMethod,
+        confidenceScore: confidence,
+        isPublic: true,
+        slug,
       });
     }
 
-    const supabase = await createClient();
-    let user = null;
-    let userError = null;
+    return Response.json({
+      data: finalParsedData,
+      meta: {
+        method: parseMethod,
+        confidence: confidence,
+        filename: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+        resumeId: savedResume?.id,
+        resumeSlug: savedResume?.slug,
+        // No aiTailorCommentary here as this is the regular parse endpoint
+      },
+    });
+  } catch (error) {
+    console.error('Resume parsing failed:', error);
 
-    // Only check authentication if the user is supposed to be authenticated
-    if (isAuthenticated) {
-      const authResult = await supabase.auth.getUser();
-      user = authResult.data.user;
-      userError = authResult.error;
-
-      if (userError || !user) {
-        return new Response(
-          JSON.stringify({
-            error: 'Authentication required. Please sign in again.',
-          }),
+    // Handle specific AI-related errors
+    if (error instanceof Error) {
+      if (error.message.includes('quota')) {
+        return Response.json(
+          {
+            error:
+              'AI parsing failed: You exceeded your Google Gemini quota. Please check your Google AI Studio billing details.',
+          },
+          { status: 500 }
+        );
+      }
+      if (error.message.includes('Request too large') || error.message.includes('INVALID_ARGUMENT')) {
+        return Response.json(
+          {
+            error:
+              'AI parsing failed: The resume is too large for the AI model. Please try a shorter resume or use the text analysis fallback.',
+          },
+          { status: 400 }
+        );
+      }
+      if (error.message.includes('PDF parsing failed')) {
+        return Response.json(
+          {
+            error:
+              'Failed to parse the PDF document. This might be due to a very poor quality scan or an unsupported PDF format. Please ensure the PDF contains selectable text.',
+          },
+          { status: 400 }
+        );
+      }
+      if (error.message.includes('Could not extract meaningful text')) {
+        return Response.json(
+          {
+            error:
+              'Could not extract meaningful text from the file. The file might be corrupted, password-protected, or contain only images. Please ensure the document contains clear, selectable text.',
+          },
+          { status: 400 }
+        );
+      }
+      if (error.message.includes('No active session found')) {
+        return Response.json(
+          {
+            error:
+              'Your session has expired. Please sign in again to save your resume.',
+          },
           { status: 401 }
         );
       }
     }
 
-    let parsedResume: AIParsedResume | ParsedResume;
-    let parseMethod: 'ai' | 'ai_pdf' | 'regex' | 'regex_fallback' = 'regex';
-    let confidence = 0;
-
-    if (IS_AI_PARSING_ENABLED) {
-      try {
-        if (file.type === 'application/pdf') {
-          // Use direct PDF parsing with Gemini 2.0 Flash
-          parsedResume = await parseWithAIPDF(file);
-          parseMethod = 'ai_pdf';
-          confidence = 98; // Higher confidence for direct PDF parsing
-        } else {
-          // For text files, extract content first
-          const fileContent = await file.text();
-          parsedResume = await parseWithAI(fileContent);
-          parseMethod = 'ai';
-          confidence = 95;
-        }
-      } catch (aiError) {
-        console.error('AI parsing failed:', aiError); // Log the detailed error
-        // Fallback to regex for text files only
-        if (file.type === 'text/plain') {
-          const fileContent = await file.text();
-          const regexResult = parseWithRegex(fileContent);
-          parsedResume = regexResult.data;
-          confidence = regexResult.confidence;
-          parseMethod = 'regex_fallback';
-        } else {
-          throw new Error(
-            'PDF parsing failed and no fallback available for non-text files'
-          );
-        }
-      }
-    } else {
-      // AI parsing disabled - only handle text files
-      if (file.type !== 'text/plain') {
-        throw new Error(
-          'AI parsing is disabled. Only text files are supported.'
-        );
-      }
-      const fileContent = await file.text();
-      const regexResult = parseWithRegex(fileContent);
-      parsedResume = regexResult.data;
-      confidence = regexResult.confidence;
-      parseMethod = 'regex';
-    }
-
-    // Ensure customColors are merged and create a plain JS object for database serialization
-    const finalParsedData: ParsedResume = JSON.parse(
-      JSON.stringify({
-        ...parsedResume,
-        customColors: customColors || {},
-      })
-    );
-
-    // Only save to database for authenticated users
-    let savedResume: { id: string; slug: string } | undefined;
-
-    if (isAuthenticated && user) {
-      const resumeTitle =
-        parsedResume.name || file.name.split('.')[0] || 'Untitled Resume';
-      let generatedSlug = `${createSlug(resumeTitle)}-${Math.floor(1000 + Math.random() * 9000)}`;
-      const MAX_RETRIES = 5;
-      let retries = 0;
-
-      while (retries < MAX_RETRIES) {
-        try {
-          savedResume = await ResumeDatabase.saveResume(supabase, {
-            userId: user.id,
-            title: resumeTitle,
-            originalFilename: file.name,
-            fileType: file.type,
-            fileSize: file.size,
-            parsedData: finalParsedData,
-            parseMethod: parseMethod,
-            confidenceScore: confidence,
-            isPublic: true,
-            slug: generatedSlug,
-          });
-          break; // If save is successful, break the loop
-        } catch (dbError: unknown) {
-          if (
-            dbError instanceof Error &&
-            dbError.message.includes(
-              'duplicate key value violates unique constraint "resumes_slug_key"'
-            )
-          ) {
-            // If a collision occurs, append a counter instead of a new uuid
-            generatedSlug = `${createSlug(resumeTitle)}-${Math.floor(1000 + Math.random() * 9000)}-${retries + 1}`;
-            retries++;
-          } else {
-            throw dbError; // Re-throw other database errors
-          }
-        }
-      }
-
-      if (!savedResume) {
-        throw new Error(
-          'Failed to save resume after multiple retries due to slug collision.'
-        );
-      }
-    }
-
-    return new Response(
-      JSON.stringify({
-        data: finalParsedData,
-        meta: {
-          method: parseMethod,
-          confidence,
-          filename: file.name,
-          resumeId: savedResume?.id,
-          resumeSlug: savedResume?.slug,
-        },
-      }),
-      { status: 200 }
-    );
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : 'An unknown error occurred.';
-    return new Response(
-      JSON.stringify({
-        error: 'Failed to parse resume.',
-        details: errorMessage,
-      }),
+    return Response.json(
+      {
+        error: 'Failed to process resume',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }

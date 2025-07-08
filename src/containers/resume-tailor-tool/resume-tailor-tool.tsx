@@ -6,7 +6,6 @@ import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import {
   AlertTriangle,
   FileText as BriefcaseIcon,
-  CheckCircle,
   FileText,
   Upload as FileUpIcon,
   Palette,
@@ -15,12 +14,9 @@ import {
   Wand,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useRef, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
-import { IS_JOB_TAILORING_ENABLED } from '@/lib/config';
 import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema'; // Import EnhancedParsedResume
-import type { ParsedResume } from '@/lib/resume-parser/schema'; // Keep ParsedResume for onResumeCreated prop for now if ParseInfo still uses it.
 import ColorPicker from '@/src/components/color-picker/color-picker';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
 import ResumeTailorCommentary from '@/src/components/resume-tailor-commentary/resume-tailor-commentary';
@@ -93,7 +89,7 @@ const ResumeTailorTool = ({
   // Toggle to enable/disable the job tailoring panel
   const [tailorEnabled, setTailorEnabled] = useState(false);
   // Track created resume slug for redirect
-  const [createdResumeSlug, setCreatedResumeSlug] = useState<string | null>(
+  const [_createdResumeSlug, setCreatedResumeSlug] = useState<string | null>(
     null
   );
   const [localResumeData, setLocalResumeData] =
@@ -103,8 +99,8 @@ const ResumeTailorTool = ({
     );
   const [viewLocalResume, setViewLocalResume] = useState(false);
 
-  // New: usePdfDownloader hook
-  const { downloadPdf, isDownloading } = usePdfDownloader();
+  //  usePdfDownloader hook
+  const { downloadPdf } = usePdfDownloader();
 
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -229,6 +225,18 @@ const ResumeTailorTool = ({
         fileType: uploadedFile.type,
         fileSize: uploadedFile.size,
       };
+
+      console.log('=== COMPONENT DEBUG ===');
+      console.log('API Response:', result);
+      console.log('uploadInfo:', uploadInfo);
+      console.log(
+        'aiTailorCommentary from API:',
+        uploadInfo.aiTailorCommentary
+      );
+      console.log(
+        'Setting aiTailorCommentary to:',
+        uploadInfo.aiTailorCommentary || null
+      );
 
       onResumeCreated(parsedData, uploadInfo); // parsedData is now EnhancedParsedResume
       setLocalResumeData(parsedData);

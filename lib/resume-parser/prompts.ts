@@ -1,3 +1,6 @@
+// Import the enhanced schema
+// import { enhancedResumeSchema } from './enhanced-schema';
+
 const RESUME_JSON_SCHEMA = `
 {
   "type": "object",
@@ -214,12 +217,11 @@ Instructions:
 - Use the desired tone throughout (e.g., professional, enthusiastic, concise, etc.).
 - For each experience entry, rephrase bullet points to highlight accomplishments and skills that match the job requirements.
 - Remove or de-emphasize content that is not relevant to the job spec.
-- Ensure the output strictly follows this JSON schema:
-${RESUME_JSON_SCHEMA}
-
+- Generate a short, human-readable commentary about the tailoring process and include it in metadata.aiTailorCommentary. This should highlight how well the resume matches the job, key strengths, and any notable optimizations made.
+- Ensure the output strictly follows the enhanced resume schema with metadata.aiTailorCommentary included.
 - If a summary is present, rewrite it to be under 600 characters, but not less than 500, and ensure it is highly relevant to the job spec.
 - Omit optional fields if not present.
-- Output only the JSON object, with extra commentary.
+- Output only the JSON object, no extra commentary outside the JSON.
 
 Resume content to tailor:
 ---

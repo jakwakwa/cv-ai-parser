@@ -1,12 +1,12 @@
 import { google } from '@ai-sdk/google';
 import { generateObject } from 'ai';
 import { AI_MODEL } from '@/lib/config';
+import { type EnhancedParsedResume, enhancedResumeSchema } from './enhanced-schema';
 import {
   getResumeParsingPrompt,
   getResumeParsingPromptForPDF,
   getTailoredResumeParsingPrompt,
 } from './prompts';
-import { type AIParsedResume, aiResumeSchema } from './schema';
 
 // Extended options for parsing with tailoring support
 interface ParseOptions {
@@ -17,7 +17,7 @@ interface ParseOptions {
 export async function parseWithAI(
   content: string,
   options?: ParseOptions
-): Promise<AIParsedResume> {
+): Promise<EnhancedParsedResume> {
   // Check if we have the required parameters for tailored parsing
   const hasOptions = options?.tone;
   const hasJobSpec = options?.jobSpec;
@@ -34,7 +34,7 @@ export async function parseWithAI(
 
   const { object } = await generateObject({
     model: google(AI_MODEL),
-    schema: aiResumeSchema,
+    schema: enhancedResumeSchema,
     prompt,
   });
 
@@ -46,7 +46,7 @@ export async function parseWithAI(
 export async function parseWithAIPDF(
   file: File,
   options?: ParseOptions
-): Promise<AIParsedResume> {
+): Promise<EnhancedParsedResume> {
   console.log(`Starting PDF AI parsing with model: ${AI_MODEL}`);
 
   // Check if we have the required parameters for tailored parsing
@@ -65,7 +65,7 @@ export async function parseWithAIPDF(
 
     const { object } = await generateObject({
       model: google(AI_MODEL),
-      schema: aiResumeSchema,
+      schema: enhancedResumeSchema,
       messages: [
         {
           role: 'user',
@@ -82,7 +82,9 @@ ${options.jobSpec as string}
 
 Desired tone: ${options.tone as string}
 
-Please tailor the summary, experience descriptions, and skills to emphasize elements most relevant to this job specification while using the specified tone.`,
+Please tailor the summary, experience descriptions, and skills to emphasize elements most relevant to this job specification while using the specified tone.
+
+IMPORTANT: Generate a short, human-readable commentary about the tailoring process and include it in metadata.aiTailorCommentary. This should highlight how well the resume matches the job, key strengths, and any notable optimizations made.`,
             },
             {
               type: 'file',
@@ -101,7 +103,7 @@ Please tailor the summary, experience descriptions, and skills to emphasize elem
   // Standard PDF parsing
   const { object } = await generateObject({
     model: google(AI_MODEL),
-    schema: aiResumeSchema,
+    schema: enhancedResumeSchema,
     messages: [
       {
         role: 'user',

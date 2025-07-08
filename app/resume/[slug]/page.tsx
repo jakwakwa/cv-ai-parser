@@ -2,17 +2,72 @@
 
 import { ArrowLeft } from 'lucide-react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
-import type { Resume } from '@/lib/types'; // Import the Resume type
+import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
+import type { ParsedResume } from '@/lib/resume-parser/schema'; // Import ParsedResume
+import type { Resume } from '@/lib/types';
 import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
-import ResumeTailorCommentary from '@/src/components/resume-tailor-commentary/resume-tailor-commentary'; // Import the new component
+import ResumeTailorCommentary from '@/src/components/resume-tailor-commentary/resume-tailor-commentary';
 import { SiteHeader } from '@/src/components/site-header/site-header';
 import { Button } from '@/src/components/ui/ui-button/button';
 import ResumeDisplay from '@/src/containers/resume-display/resume-display';
 import ResumeEditor from '@/src/containers/resume-editor/resume-editor';
+
+// Helper function to convert EnhancedParsedResume to ParsedResume for the editor
+const convertToParsedResume = (
+  enhancedResume: EnhancedParsedResume
+): ParsedResume => {
+  const skillsArray = Array.isArray(enhancedResume.skills) // Check if it's already a simple array
+    ? enhancedResume.skills
+    : enhancedResume.skills?.all || [
+        // Prioritize 'all' if it exists
+        ...(enhancedResume.skills?.technical?.map((s) => s.name) || []),
+        ...(enhancedResume.skills?.soft || []),
+        ...(enhancedResume.skills?.languages?.map((l) => l.name) || []), // Assuming language objects have a 'name' property
+      ];
+
+  return {
+    name: enhancedResume.name,
+    title: enhancedResume.title,
+    summary: enhancedResume.summary,
+    profileImage: enhancedResume.profileImage,
+    customColors: enhancedResume.customColors,
+    contact: enhancedResume.contact
+      ? {
+          email: enhancedResume.contact.email,
+          phone: enhancedResume.contact.phone,
+          location: enhancedResume.contact.location,
+          website: enhancedResume.contact.website,
+          github: enhancedResume.contact.github,
+          linkedin: enhancedResume.contact.linkedin,
+        }
+      : undefined, // Ensure contact is optional if undefined
+    experience: enhancedResume.experience.map((exp) => ({
+      id: exp.id,
+      title: exp.title,
+      company: exp.company,
+      duration: exp.duration,
+      details: exp.details || [], // Ensure details is always an array
+    })),
+    education: enhancedResume.education?.map((edu) => ({
+      id: edu.id,
+      degree: edu.degree,
+      institution: edu.institution,
+      duration: edu.duration,
+      note: edu.note,
+    })),
+    certifications: enhancedResume.certifications?.map((cert) => ({
+      id: cert.id,
+      name: cert.name,
+      issuer: cert.issuer,
+      date: cert.date,
+    })),
+    skills: skillsArray,
+  };
+};
 
 export default function ViewResumePage() {
   const router = useRouter();
@@ -23,12 +78,12 @@ export default function ViewResumePage() {
   const { toast } = useToast();
 
   const [viewMode, setViewMode] = useState<'view' | 'edit'>('view');
-  const [resume, setResume] = useState<Resume | null>(null); // Change to 'resume' and Resume type
+  const [resume, setResume] = useState<Resume | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [aiTailorCommentary, setAiTailorCommentary] = useState<string | null>(
     null
-  ); // Rename aiSummary to aiTailorCommentary
+  );
 
   const searchParams = useSearchParams();
 
@@ -57,9 +112,7 @@ export default function ViewResumePage() {
             variant: 'destructive',
           });
           break;
-        // Add more cases for other toast messages as needed
       }
-      // Clean up the URL to prevent the toast from reappearing on refresh
       router.replace(window.location.pathname);
     }
   }, [searchParams, router, toast]);
@@ -79,8 +132,7 @@ export default function ViewResumePage() {
           throw new Error(errorData.error || 'Failed to fetch resume.');
         }
         const result = await response.json();
-        setResume(result.data); // Store the entire resume object
-        // Extract AI tailoring commentary from parsed_data.metadata if available
+        setResume(result.data);
         if (result.data?.parsed_data?.metadata?.aiTailorCommentary) {
           setAiTailorCommentary(
             result.data.parsed_data.metadata.aiTailorCommentary
@@ -103,7 +155,6 @@ export default function ViewResumePage() {
 
   const handleSaveEdits = async (updatedData: Record<string, unknown>) => {
     if (!resume || !resume.id) {
-      // Use 'resume' here
       setError('Cannot save: Resume ID is missing.');
       return;
     }
@@ -113,7 +164,6 @@ export default function ViewResumePage() {
 
     try {
       const response = await fetch(`/api/resumes/${resume.id}`, {
-        // Use 'resume.id' here
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -127,7 +177,7 @@ export default function ViewResumePage() {
       }
 
       const result = await response.json();
-      setResume(result.data); // Update with saved data (entire resume object)
+      setResume(result.data);
       setViewMode('view');
       router.push(`${window.location.pathname}?toast=resume_saved`);
     } catch (err: unknown) {
@@ -190,7 +240,6 @@ export default function ViewResumePage() {
   }
 
   if (!resume) {
-    // Check for 'resume' object
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
@@ -207,12 +256,15 @@ export default function ViewResumePage() {
   }
 
   if (viewMode === 'edit') {
+    // Convert to ParsedResume format before passing to ResumeEditor
+    const resumeDataForEditor = convertToParsedResume(resume.parsed_data);
+
     return (
       <div className="pageWrapper">
         <SiteHeader />
         <main>
           <ResumeEditor
-            resumeData={resume.parsed_data}
+            resumeData={resumeDataForEditor}
             onSave={handleSaveEdits}
             onCancel={handleCancelEdit}
             onCustomColorsChange={(colors) =>
@@ -245,7 +297,6 @@ export default function ViewResumePage() {
             isOnResumePage={true}
           />
           <ResumeTailorCommentary aiTailorCommentary={aiTailorCommentary} />{' '}
-          {/* Render AI tailoring commentary */}
           <ResumeDisplay resumeData={resume.parsed_data} isAuth={!!user} />
         </div>
       </main>
