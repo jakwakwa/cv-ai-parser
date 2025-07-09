@@ -15,6 +15,15 @@ export async function PUT(
   const { id } = await params;
   const body = await request.json();
 
+  // Ownership validation
+  const resume = await ResumeDatabase.getResume(id);
+  if (!resume) {
+    return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
+  }
+  if ((resume as any).userId !== session.user.id) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
   try {
     const updatedResume = await ResumeDatabase.updateResume(id, body);
     return NextResponse.json(updatedResume);
@@ -38,8 +47,16 @@ export async function DELETE(
 
   const { id } = await params;
 
+  // Ownership validation
+  const resume = await ResumeDatabase.getResume(id);
+  if (!resume) {
+    return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
+  }
+  if ((resume as any).userId !== session.user.id) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
   try {
-    // Optional: Check if the resume belongs to the user before deleting
     await ResumeDatabase.deleteResume(id);
     return NextResponse.json({ message: 'Resume deleted successfully' });
   } catch (error) {
