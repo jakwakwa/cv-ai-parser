@@ -54,7 +54,7 @@
   --color-text-secondary: #6b7280;
   --color-text-light: #374151;
   --color-text-success: #a6d9d4;
-  --color-text-info: #0369a1;
+  --color-text-info: #1f2937;
 
   /* Border Colors */
   --color-border-light: #e5e7eb;
@@ -71,7 +71,7 @@
 
   /* Secondary Colors */
   --color-secondary-blue: #5bb5e1;
-  --color-secondary-blue-dark: #5bb5e1;
+  --color-secondary-blue-dark: #0d9488;
 
   /* Error Colors */
   --color-error-text: #dc2626;
