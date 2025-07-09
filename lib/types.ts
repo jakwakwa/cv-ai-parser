@@ -34,6 +34,7 @@ export interface Resume {
   createdAt: string;
   updatedAt: string;
   customColors: Record<string, string>;
+  userId: string;
   additionalContext?: UserAdditionalContext;
 }
 

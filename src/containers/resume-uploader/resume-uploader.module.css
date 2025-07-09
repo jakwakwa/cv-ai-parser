@@ -131,6 +131,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .dropText {
@@ -646,7 +648,7 @@
 
 
 .colorButton:hover {
-  background-color: var(--color-button-default-border);
+  background-color: var(--color-secondary-hover); 
   color: var(--color-text-inverse);
   border-color: var(--color-accent-teal-dark);
 }

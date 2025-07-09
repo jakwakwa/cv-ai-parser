@@ -20,7 +20,7 @@ export async function PUT(
   if (!resume) {
     return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
   }
-  if ((resume as any).userId !== session.user.id) {
+  if (resume.userId !== session.user.id) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
@@ -52,7 +52,7 @@ export async function DELETE(
   if (!resume) {
     return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
   }
-  if ((resume as any).userId !== session.user.id) {
+  if (resume.userId !== session.user.id) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
