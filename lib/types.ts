@@ -1,13 +1,12 @@
 import type { EnhancedParsedResume } from './resume-parser/enhanced-schema';
-// import type { ParsedResume } from './resume-parser/schema';
 
 export interface Profile {
   id: string;
   email: string;
-  full_name: string | null;
-  avatar_url: string | null;
-  created_at: string;
-  updated_at: string;
+  fullName: string | null;
+  avatarUrl: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface UserAdditionalContext {
@@ -20,29 +19,28 @@ export interface UserAdditionalContext {
 
 export interface Resume {
   id: string;
-  user_id: string;
   title: string;
-  original_filename: string | null;
-  file_type: string | null;
-  file_size: number | null;
-  parsed_data: EnhancedParsedResume;
-  parse_method: string | null;
-  confidence_score: number | null;
-  is_public: boolean;
+  originalFilename: string | null;
+  fileType: string | null;
+  fileSize: number | null;
+  parsedData: any;
+  parseMethod: string | null;
+  confidenceScore: number | null;
+  isPublic: boolean;
   slug: string | null;
-  view_count: number;
-  download_count: number;
-  created_at: string;
-  updated_at: string;
-  custom_colors: Record<string, string>;
-  additional_context?: UserAdditionalContext;
+  viewCount: number;
+  downloadCount: number;
+  createdAt: string;
+  updatedAt: string;
+  customColors: Record<string, string>;
+  additionalContext?: UserAdditionalContext;
 }
 
 export interface ResumeVersion {
   id: string;
-  resume_id: string;
-  version_number: number;
-  parsed_data: unknown;
-  changes_summary: string | null;
-  created_at: string;
+  resumeId: string;
+  versionNumber: number;
+  parsedData: unknown;
+  changesSummary: string | null;
+  createdAt: string;
 }

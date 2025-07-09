@@ -1,27 +1,26 @@
 import type { NextRequest } from 'next/server';
-// import { IS_JOB_TAILORING_ENABLED } from '@/lib/config'; 
-import { ResumeDatabase } from '@/lib/database';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { ResumeDatabase } from '@/lib/db';
 import {
   parseWithAI,
   parseWithAIPDF,
 } from '@/lib/resume-parser/ai-parser';
 import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema'; // Use EnhancedParsedResume
 import { parseWithRegex } from '@/lib/resume-parser/regex-parser';
-// import type { ParsedResume } from '@/lib/resume-parser/schema';
-import { createClient } from '@/lib/supabase/server';
 import type { Resume } from '@/lib/types';
 import { createSlug } from '@/lib/utils';
 
 const MIN_CHARS_FOR_AI = 50;
 
 export async function POST(request: NextRequest) {
+  const session = await getServerSession(authOptions);
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const customColors = JSON.parse(
       (formData.get('customColors') as string) || '{}'
     );
-    const isAuthenticated = formData.get('isAuthenticated') === 'true';
     const profileImage = formData.get('profileImage') as string | null;
 
     if (!file) {
@@ -66,23 +65,13 @@ export async function POST(request: NextRequest) {
 
     // Save to database if authenticated
     let savedResume: Resume | undefined;
-    if (isAuthenticated) {
-      const supabase = await createClient(); // Await createClient
-      const { data: authData, error: authError } = await supabase.auth.getUser();
-
-      if (authError || !authData.user) {
-        return Response.json(
-          { error: 'Authentication required' },
-          { status: 401 }
-        );
-      }
-
+    if (session?.user?.id) {
       const resumeTitle: string =
         finalParsedData.name || file.name.split('.')[0] || 'Untitled Resume';
       const slug = `${createSlug(resumeTitle)}-${Math.floor(1000 + Math.random() * 9000)}`;
 
-      savedResume = await ResumeDatabase.saveResume(supabase, {
-        userId: authData.user.id,
+      savedResume = await ResumeDatabase.saveResume({
+        userId: session.user.id,
         title: resumeTitle,
         originalFilename: file.name,
         fileType: file.type,

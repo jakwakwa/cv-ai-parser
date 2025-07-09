@@ -1,11 +1,15 @@
 import type { NextRequest } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { IS_JOB_TAILORING_ENABLED } from '@/lib/config';
+import { ResumeDatabase } from '@/lib/db';
 import { extractJobSpecification } from '@/lib/jobfit/jobSpecExtractor';
 import { userAdditionalContextSchema } from '@/lib/jobfit/schemas';
 // import { tailorResume } from '@/lib/jobfit/tailorResume';
 import { parseWithAI, parseWithAIPDF } from '@/lib/resume-parser/ai-parser';
 import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
-import type { UserAdditionalContext } from '@/lib/types';
+import type { Resume, UserAdditionalContext } from '@/lib/types';
+import { createSlug } from '@/lib/utils';
 
 // Feature flag guard
 if (!IS_JOB_TAILORING_ENABLED) {
@@ -13,8 +17,19 @@ if (!IS_JOB_TAILORING_ENABLED) {
 }
 
 export async function POST(request: NextRequest) {
+  console.log('[API] parse-resume-enhanced: Request received');
+  const session = await getServerSession(authOptions);
+  console.log('[API] Session:', session);
   try {
     const formData = await request.formData();
+    // --- LOGGING: Log all FormData fields ---
+    for (const [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        console.log(`[API] FormData: ${key} = [File: ${value.name}, size: ${value.size}]`);
+      } else {
+        console.log(`[API] FormData: ${key} =`, value);
+      }
+    }
 
     // Extract existing fields
     const file = formData.get('file') as File;
@@ -189,6 +204,43 @@ export async function POST(request: NextRequest) {
       profileImage: profileImage || finalResume.profileImage, // Prioritize newly uploaded image
     };
 
+    // Save to database if authenticated
+    let savedResume: Resume | undefined;
+    if (session?.user?.id) {
+      const resumeTitle: string =
+        finalResume.name || file.name.split('.')[0] || 'Untitled Resume';
+      const slug = `${createSlug(resumeTitle)}-${Math.floor(
+        1000 + Math.random() * 9000
+      )}`;
+      console.log('[API] Saving resume to DB with data:', {
+        userId: session.user.id,
+        title: resumeTitle,
+        originalFilename: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+        parsedData: finalParsedData,
+        parseMethod: 'ai_enhanced',
+        confidenceScore: 98,
+        isPublic: true,
+        slug,
+        additionalContext,
+      });
+      savedResume = await ResumeDatabase.saveResume({
+        userId: session.user.id,
+        title: resumeTitle,
+        originalFilename: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+        parsedData: finalParsedData,
+        parseMethod: 'ai_enhanced',
+        confidenceScore: 98,
+        isPublic: true,
+        slug,
+        additionalContext,
+      });
+      console.log('[API] Saved resume:', savedResume);
+    }
+
     // Expose AI summary only if present in enhanced parsing
     let aiTailorCommentary: string | null = null;
     if (
@@ -201,15 +253,19 @@ export async function POST(request: NextRequest) {
           .aiTailorCommentary || null;
     }
 
-    return Response.json({
+    const responseObj = {
       data: finalParsedData,
       meta: {
         method: 'ai_enhanced',
         filename: file.name,
+        resumeId: savedResume?.id,
+        resumeSlug: savedResume?.slug,
         ...tailoringMetadata,
         aiTailorCommentary,
       },
-    });
+    };
+    console.log('[API] Sending response:', responseObj);
+    return Response.json(responseObj);
   } catch (error) {
     console.error('Enhanced resume parsing failed:', error);
     return Response.json(

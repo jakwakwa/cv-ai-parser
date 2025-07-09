@@ -10,8 +10,7 @@ import {
   Search,
   Trash2,
 } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ResumeDatabase } from '@/lib/database';
+import { useMemo, useState } from 'react';
 import type { Resume } from '@/lib/types';
 import {
   Card,
@@ -22,42 +21,32 @@ import {
 import styles from './resume-library.module.css';
 
 export default function ResumeLibrary({
+  initialResumes,
   onSelectResume,
+  onResumesUpdate,
   userId,
 }: {
+  initialResumes: Resume[];
   onSelectResume: (resume: Resume) => void;
+  onResumesUpdate: (resumes: Resume[]) => void;
   userId: string;
 }) {
-  const [resumes, setResumes] = useState<Resume[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [resumes, setResumes] = useState<Resume[]>(initialResumes);
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const loadResumes = useCallback(async () => {
-    if (!userId) return;
+  const handleDeleteResume = async (id: string) => {
     try {
-      setLoading(true);
-      const userResumes = await ResumeDatabase.getUserResumes(userId);
-      setResumes(userResumes as any); //TODO: Fix this type
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load resumes');
-    } finally {
-      setLoading(false);
-    }
-  }, [userId]);
-
-  useEffect(() => {
-    loadResumes();
-  }, [loadResumes]);
-
-  const handleDeleteResume = async (id: string, _title: string) => {
-    try {
-      setError(''); // Clear any previous errors
+      setError('');
       setDeleting(id);
-      await ResumeDatabase.deleteResume(id);
-      setResumes(resumes.filter((r) => r.id !== id));
-      // Optional: Show success message
+      const response = await fetch(`/api/resumes/${id}`, { method: 'DELETE' });
+      if (!response.ok) {
+        throw new Error('Failed to delete resume');
+      }
+      const updatedResumes = resumes.filter((r) => r.id !== id);
+      setResumes(updatedResumes);
+      onResumesUpdate(updatedResumes); // Notify parent component
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete resume');
     } finally {
@@ -67,12 +56,20 @@ export default function ResumeLibrary({
 
   const handleTogglePublic = async (resume: Resume) => {
     try {
-      const updated = await ResumeDatabase.updateResume(resume.id, {
-        is_public: !resume.is_public,
+      const response = await fetch(`/api/resumes/${resume.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isPublic: !resume.isPublic }),
       });
-      setResumes(
-        resumes.map((r) => (r.id === resume.id ? (updated as any) : r))
-      ); // TODO: Fix this type
+      if (!response.ok) {
+        throw new Error('Failed to update resume');
+      }
+      const updatedResume = await response.json();
+      const updatedResumes = resumes.map((r) =>
+        r.id === resume.id ? updatedResume : r
+      );
+      setResumes(updatedResumes);
+      onResumesUpdate(updatedResumes); // Notify parent component
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update resume');
     }
@@ -121,10 +118,6 @@ export default function ResumeLibrary({
         </div>
       </div>
     );
-  }
-
-  if (loading) {
-    return <div className={styles.loadingSpinner} />;
   }
 
   return (
@@ -183,9 +176,9 @@ export default function ResumeLibrary({
                     <div>
                       <h2 className={styles.cardTitleLabel}>Title:</h2>
                       <h3 className={styles.cardTitle}>{resume.title}</h3>
-                      {resume.parsed_data.metadata?.aiTailorCommentary && (
+                      {resume.parsedData.metadata?.aiTailorCommentary && (
                         <p className={styles.aiSummaryPlaintext}>
-                          {resume.parsed_data.metadata.aiTailorCommentary}
+                          {resume.parsedData.metadata.aiTailorCommentary}
                         </p>
                       )}
                     </div>
@@ -196,12 +189,12 @@ export default function ResumeLibrary({
                         type="button"
                         onClick={() => handleTogglePublic(resume)}
                         className={`${styles.publicToggle} ${
-                          resume.is_public
+                          resume.isPublic
                             ? styles.publicTogglePublic
                             : styles.publicTogglePrivate
                         }`}
                       >
-                        {resume.is_public ? (
+                        {resume.isPublic ? (
                           <>
                             <Globe className={styles.publicToggleIcon} />
                             Public
@@ -223,16 +216,16 @@ export default function ResumeLibrary({
                     {/* <div className={styles.contentRow}>
                       <span>Method:</span>
                       <Badge
-                        className={`${styles.badge} ${getMethodBadgeColor(resume.parse_method || 'unknown')}`}
+                        className={`${styles.badge} ${getMethodBadgeColor(resume.parseMethod || 'unknown')}`}
                       >
-                        {getMethodLabel(resume.parse_method || 'unknown')}
+                        {getMethodLabel(resume.parseMethod || 'unknown')}
                       </Badge>
                     </div> */}
-                    {resume.confidence_score && (
+                    {resume.confidenceScore && (
                       <div className={styles.contentRow}>
                         <span>Confidence:</span>
                         <span className={styles.contentValue}>
-                          {resume.confidence_score}%
+                          {resume.confidenceScore}%
                         </span>
                       </div>
                     )}
@@ -240,21 +233,21 @@ export default function ResumeLibrary({
                       <span>Views:</span>
                       <span className={styles.contentIconContainer}>
                         <Eye className={styles.contentIcon} />
-                        {resume.view_count}
+                        {resume.viewCount}
                       </span>
                     </div>
                     <div className={styles.contentRow}>
                       <span>Downloads:</span>
                       <span className={styles.contentIconContainer}>
                         <Download className={styles.contentIcon} />
-                        {resume.download_count}
+                        {resume.downloadCount}
                       </span>
                     </div>
                     <div className={styles.contentRow}>
                       <span>Created:</span>
                       <span className={styles.contentIconContainer}>
                         <Calendar className={styles.contentIcon} />
-                        {formatDate(resume.created_at)}
+                        {formatDate(resume.createdAt)}
                       </span>
                     </div>
                   </div>
@@ -268,7 +261,7 @@ export default function ResumeLibrary({
                   >
                     View
                   </button>
-                  {resume.is_public && resume.slug && (
+                  {resume.isPublic && resume.slug && (
                     <button
                       type="button"
                       onClick={() =>
@@ -283,7 +276,7 @@ export default function ResumeLibrary({
                   )}
                   <button
                     type="button"
-                    onClick={() => handleDeleteResume(resume.id, resume.title)}
+                    onClick={() => handleDeleteResume(resume.id)}
                     disabled={deleting === resume.id}
                     className={styles.deleteButton}
                   >

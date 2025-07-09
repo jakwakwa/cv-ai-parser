@@ -5,6 +5,8 @@ import '../src/index.css';
 import { Analytics } from '@vercel/analytics/next';
 import Script from 'next/script';
 import { ToastProvider } from '@/hooks/use-toast';
+import { AuthModalProvider } from '@/src/components/auth-component/AuthModalContext';
+import AuthProvider from '@/src/components/auth-provider/auth-provider';
 import { SiteFooter } from '@/src/components/site-footer/SiteFooter';
 import { Toaster } from '@/src/components/ui/toaster';
 import { ThemeProvider } from '@/src/hooks/use-theme';
@@ -77,20 +79,24 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider>
-          <ToastProvider>
-            <div
-              style={{
-                minHeight: '100vh',
-                minWidth: '100vw',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              {children}
-              <SiteFooter />
-            </div>
-            <Toaster />
-          </ToastProvider>
+          <AuthProvider>
+            <AuthModalProvider>
+              <ToastProvider>
+                <div
+                  style={{
+                    minHeight: '100vh',
+                    minWidth: '100vw',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  {children}
+                  <SiteFooter />
+                </div>
+                <Toaster />
+              </ToastProvider>
+            </AuthModalProvider>
+          </AuthProvider>
         </ThemeProvider>
         <Analytics />
       </body>

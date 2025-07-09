@@ -8,7 +8,6 @@ import { useToast } from '@/hooks/use-toast';
 import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
 import type { ParsedResume } from '@/lib/resume-parser/schema'; // Import ParsedResume
 import type { Resume } from '@/lib/types';
-import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
 import ResumeTailorCommentary from '@/src/components/resume-tailor-commentary/resume-tailor-commentary';
 import { SiteHeader } from '@/src/components/site-header/site-header';
@@ -73,7 +72,6 @@ export default function ViewResumePage() {
   const router = useRouter();
   const params = useParams();
   const { slug } = params;
-  const { user, loading: authLoading } = useAuth();
   const { isDownloading, downloadPdf } = usePdfDownloader();
   const { toast } = useToast();
 
@@ -133,9 +131,9 @@ export default function ViewResumePage() {
         }
         const result = await response.json();
         setResume(result.data);
-        if (result.data?.parsed_data?.metadata?.aiTailorCommentary) {
+        if (result.data?.parsedData?.metadata?.aiTailorCommentary) {
           setAiTailorCommentary(
-            result.data.parsed_data.metadata.aiTailorCommentary
+            result.data.parsedData.metadata.aiTailorCommentary
           );
         } else {
           setAiTailorCommentary(null);
@@ -153,7 +151,21 @@ export default function ViewResumePage() {
     fetchResume();
   }, [slug]);
 
-  const handleSaveEdits = async (updatedData: Record<string, unknown>) => {
+  useEffect(() => {
+    if (slug) {
+      // Use a separate effect to increment view count to avoid re-triggering on data change
+      const incrementView = async () => {
+        try {
+          await fetch(`/api/resume/${slug}/view`, { method: 'POST' });
+        } catch (error) {
+          console.error('Failed to increment view count:', error);
+        }
+      };
+      incrementView();
+    }
+  }, [slug]); // Fire only once when slug is available
+
+  const handleSaveEdits = async (updatedData: ParsedResume) => {
     if (!resume || !resume.id) {
       setError('Cannot save: Resume ID is missing.');
       return;
@@ -177,9 +189,15 @@ export default function ViewResumePage() {
       }
 
       const result = await response.json();
-      setResume(result.data);
+
+      // Directly update the state with the returned data
+      setResume(result);
       setViewMode('view');
-      router.push(`${window.location.pathname}?toast=resume_saved`);
+
+      toast({
+        title: 'Success!',
+        description: 'Resume saved successfully!',
+      });
     } catch (err: unknown) {
       setError((err as Error).message || 'Failed to save edits.');
       toast({
@@ -204,16 +222,18 @@ export default function ViewResumePage() {
     if (resume) {
       downloadPdf(
         document.getElementById('resume-content') as HTMLElement,
-        `${resume.parsed_data.name?.replace(/ /g, '_') || 'resume'}.pdf`
+        `${resume.parsedData.name?.replace(/ /g, '_') || 'resume'}.pdf`
       );
     }
   };
 
-  if (authLoading || loading) {
+  if (loading) {
     return (
       <div className="loadingContainer">
         <div className="loadingSpinner" />
-        <p className="loadingText">Loading Resume...</p>
+        <p className="loadingText">
+          {viewMode === 'edit' ? 'Saving Changes...' : 'Loading Resume...'}
+        </p>
       </div>
     );
   }
@@ -257,7 +277,7 @@ export default function ViewResumePage() {
 
   if (viewMode === 'edit') {
     // Convert to ParsedResume format before passing to ResumeEditor
-    const resumeDataForEditor = convertToParsedResume(resume.parsed_data);
+    const resumeDataForEditor = convertToParsedResume(resume.parsedData);
 
     return (
       <div className="pageWrapper">
@@ -272,8 +292,8 @@ export default function ViewResumePage() {
                 if (!prevResume) return null;
                 return {
                   ...prevResume,
-                  parsed_data: {
-                    ...prevResume.parsed_data,
+                  parsedData: {
+                    ...prevResume.parsedData,
                     customColors: colors,
                   },
                 };
@@ -297,7 +317,7 @@ export default function ViewResumePage() {
             isOnResumePage={true}
           />
           <ResumeTailorCommentary aiTailorCommentary={aiTailorCommentary} />{' '}
-          <ResumeDisplay resumeData={resume.parsed_data} isAuth={!!user} />
+          <ResumeDisplay resumeData={resume.parsedData} isAuth={true} />
         </div>
       </main>
     </div>

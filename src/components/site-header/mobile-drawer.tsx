@@ -1,9 +1,8 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { useAuthModal } from '../auth-component/AuthModalContext';
 import styles from './mobile-drawer.module.css';
 
 interface MobileDrawerProps {
@@ -12,11 +11,8 @@ interface MobileDrawerProps {
 }
 
 export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
-  const { setAuthModalOpen } = useAuthModal();
-
   // Close drawer when clicking on a link
   const handleLinkClick = () => {
-    setAuthModalOpen(false);
     onClose();
   };
 
@@ -67,25 +63,25 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
             }}
           >
             <div className={styles.handle} />
-            
+
             <div className={styles.content}>
               <nav className={styles.navigation}>
-                <Link 
-                  href="/tools/tailor" 
+                <Link
+                  href="/tools/tailor"
                   className={styles.navLink}
                   onClick={handleLinkClick}
                 >
                   Resume Tailor
                 </Link>
-                <Link 
-                  href="/tools/figma-to-resume" 
+                <Link
+                  href="/tools/figma-to-resume"
                   className={styles.navLink}
                   onClick={handleLinkClick}
                 >
                   Figma to Resume
                 </Link>
-                <Link 
-                  href="/docs" 
+                <Link
+                  href="/docs"
                   className={styles.navLink}
                   onClick={handleLinkClick}
                 >

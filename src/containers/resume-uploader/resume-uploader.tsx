@@ -4,7 +4,6 @@ import type { PDFDocumentProxy } from 'pdfjs-dist';
 import React from 'react';
 import { IS_JOB_TAILORING_ENABLED } from '@/lib/config';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
-import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import ColorPicker from '@/src/components/color-picker/color-picker';
 import {
   Dialog,
@@ -57,7 +56,6 @@ const ResumeUploader = ({
   setIsLoading,
   isAuthenticated = false,
 }: ResumeUploaderProps) => {
-  const { supabase } = useAuth();
   const [_dragActive, setDragActive] = React.useState(false);
   const [error, setError] = React.useState('');
   const [uploadedFile, setUploadedFile] = React.useState<File | null>(null);
@@ -206,23 +204,6 @@ const ResumeUploader = ({
     setIsLoading(true);
 
     try {
-      // Only check authentication for authenticated users
-      if (isAuthenticated) {
-        if (!supabase) {
-          throw new Error(
-            'Authentication system not available. Please try again.'
-          );
-        }
-
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-
-        if (!session) {
-          throw new Error('No active session found. Please sign in again.');
-        }
-      }
-
       // Create FormData to send file directly
       const formData = new FormData();
       formData.append('file', uploadedFile);

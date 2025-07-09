@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
+.formTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+}
+
+.submitButton {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  background-color: #eee;
+  cursor: pointer;
+}
+
+.toggleButton {
+  padding: 0.5rem;
+  border: none;
+  background-color: transparent;
+  color: blue;
+  cursor: pointer;
+  text-align: center;
+}
+
+.errorMessage {
+  color: red;
+  text-align: center;
+} 

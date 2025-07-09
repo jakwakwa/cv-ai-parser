@@ -1,17 +1,17 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
+import { withAccelerate } from "@prisma/extension-accelerate";
 
-declare global {
-  // allow global `var` declarations
-  // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined;
-}
+// Learn more about instantiating PrismaClient in Next.js here: https://www.prisma.io/docs/data-platform/accelerate/getting-started
 
-export const db =
-  global.prisma ||
-  new PrismaClient({
-    log: ['query'],
-  });
+const prismaClientSingleton = () => {
+  return new PrismaClient().$extends(withAccelerate());
+};
 
-if (process.env.NODE_ENV !== 'production') {
-  global.prisma = db;
-} 
+const globalForPrisma = global as typeof global & {
+  db?: ReturnType<typeof prismaClientSingleton>;
+};
+
+const db = globalForPrisma.db ?? prismaClientSingleton();
+if (process.env.NODE_ENV !== "production") globalForPrisma.db = db;
+
+export { db };

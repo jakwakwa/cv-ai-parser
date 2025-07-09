@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { ResumeDatabase } from '@/lib/database';
+import { ResumeDatabase } from '@/lib/db';
 import type { Resume } from '@/lib/types';
 
 // Image metadata
@@ -65,50 +65,50 @@ export default async function Image({
     // Fetch resume data
     const resume: Resume | null = await ResumeDatabase.getPublicResume(slug);
 
-    if (!resume || !resume.parsed_data) {
+    if (!resume || !resume.parsedData) {
       return generateDefaultImage();
     }
 
-    const { parsed_data } = resume;
-    const name = parsed_data.name || 'Professional Resume';
-    const title = parsed_data.title || 'Career Professional';
-    const location = parsed_data.contact?.location || '';
-    const experienceCount = parsed_data.experience?.length || 0;
+    const { parsedData } = resume;
+    const name = parsedData.name || 'Professional Resume';
+    const title = parsedData.title || 'Career Professional';
+    const location = parsedData.contact?.location || '';
+    const experienceCount = parsedData.experience?.length || 0;
 
     // Handle skills count for both legacy array and enhanced object formats
     const skillsCount = (() => {
-      if (!parsed_data.skills) return 0;
+      if (!parsedData.skills) return 0;
 
       // If it's an array (legacy format)
-      if (Array.isArray(parsed_data.skills)) {
-        return parsed_data.skills.length;
+      if (Array.isArray(parsedData.skills)) {
+        return parsedData.skills.length;
       }
 
       // If it's an object (enhanced format)
-      if (typeof parsed_data.skills === 'object') {
+      if (typeof parsedData.skills === 'object') {
         let count = 0;
 
         // Count skills from 'all' array if it exists
-        if (parsed_data.skills.all && Array.isArray(parsed_data.skills.all)) {
-          count += parsed_data.skills.all.length;
+        if (parsedData.skills.all && Array.isArray(parsedData.skills.all)) {
+          count += parsedData.skills.all.length;
         }
 
         // Count technical skills if they exist and 'all' doesn't exist
         if (
-          !parsed_data.skills.all &&
-          parsed_data.skills.technical &&
-          Array.isArray(parsed_data.skills.technical)
+          !parsedData.skills.all &&
+          parsedData.skills.technical &&
+          Array.isArray(parsedData.skills.technical)
         ) {
-          count += parsed_data.skills.technical.length;
+          count += parsedData.skills.technical.length;
         }
 
         // Count soft skills if they exist and 'all' doesn't exist
         if (
-          !parsed_data.skills.all &&
-          parsed_data.skills.soft &&
-          Array.isArray(parsed_data.skills.soft)
+          !parsedData.skills.all &&
+          parsedData.skills.soft &&
+          Array.isArray(parsedData.skills.soft)
         ) {
-          count += parsed_data.skills.soft.length;
+          count += parsedData.skills.soft.length;
         }
 
         return count;
@@ -118,8 +118,8 @@ export default async function Image({
     })();
 
     // Get primary color from custom colors or use default
-    const primaryColor = parsed_data.customColors?.primary || '#3b82f6';
-    const secondaryColor = parsed_data.customColors?.accent || '#1e40af';
+    const primaryColor = parsedData.customColors?.primary || '#3b82f6';
+    const secondaryColor = parsedData.customColors?.accent || '#1e40af';
 
     // Create a professional gradient based on custom colors
     const gradientStart = primaryColor;

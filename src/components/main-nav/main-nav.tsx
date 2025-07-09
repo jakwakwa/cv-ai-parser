@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { useAuthModal } from '../auth-component/AuthModalContext';
 import styles from './main-nav.module.css';
 
 interface MainNavProps {
@@ -7,15 +6,12 @@ interface MainNavProps {
 }
 
 export function MainNav({ onLogoClick }: MainNavProps) {
-  const { setAuthModalOpen } = useAuthModal();
-
   return (
     <div className={styles.container}>
       <Link
         href="/"
         className={styles.link}
         onClick={() => {
-          setAuthModalOpen(false);
           onLogoClick?.();
         }}
       >
@@ -25,13 +21,13 @@ export function MainNav({ onLogoClick }: MainNavProps) {
 
       <nav className={styles.navigation}>
         {/* Tools dropdown or links */}
-        <Link href="/tools/tailor" className={styles.navLink} onClick={() => setAuthModalOpen(false)}>
+        <Link href="/tools/tailor" className={styles.navLink}>
           Resume Tailor
         </Link>
-        <Link href="/tools/figma-to-resume" className={styles.navLink} onClick={() => setAuthModalOpen(false)}>
+        <Link href="/tools/figma-to-resume" className={styles.navLink}>
           Figma to Resume
         </Link>
-        <Link href="/docs" className={styles.navLink} onClick={() => setAuthModalOpen(false)}>
+        <Link href="/docs" className={styles.navLink}>
           Docs
         </Link>
       </nav>

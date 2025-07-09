@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
+    "target": "es2015",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
     "allowJs": true,
-    "target": "ES6",
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
@@ -17,12 +17,6 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "allowImportingTsExtensions": true,
-    "types": [
-      "react",
-      "react-dom",
-      "node"
-    ],
     "plugins": [
       {
         "name": "next"
@@ -32,6 +26,11 @@
       "@/*": [
         "./*"
       ]
+    }
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
     }
   },
   "include": [

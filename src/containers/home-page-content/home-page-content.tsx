@@ -20,7 +20,7 @@ export default function HomePageContent() {
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>AI-Powered Resume Builder</h1>
+          <h1 className={styles.heroTitle}>AI-Powered Resume Generator</h1>
           <p className={styles.heroSubtitle}>
             Transform your career with our intelligent resume tools. Create
             tailored resumes from scratch or convert your Figma designs into

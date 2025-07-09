@@ -1,6 +1,35 @@
 /** biome-ignore-all lint/complexity/noStaticOnlyClass: <> */
-import { db } from './prisma';
+
+import { PrismaClient } from "@prisma/client";
+import { withAccelerate } from "@prisma/extension-accelerate";
+// Learn more about instantiating PrismaClient in Next.js here: https://www.prisma.io/docs/data-platform/accelerate/getting-started
+
+
+
 import type { Resume, UserAdditionalContext } from './types';
+
+const prismaClientSingleton = () => {
+  return new PrismaClient().$extends(withAccelerate());
+};
+
+const prismaClient = prismaClientSingleton();
+
+declare global {
+  // Augment the global object with a typed prisma instance
+  // This avoids use of 'any'
+  var prismaGlobal: typeof prismaClient | undefined;
+}
+
+const prisma = global.prismaGlobal ?? prismaClient;
+
+if (process.env.NODE_ENV !== "production") {
+  global.prismaGlobal = prisma;
+}
+
+export default prisma;
+
+if (process.env.NODE_ENV !== "production") globalThis.prismaGlobal = prisma;
+
 
 export class ResumeDatabase {
   // Save a new resume
@@ -32,7 +61,22 @@ export class ResumeDatabase {
     additionalContext?: UserAdditionalContext;
   }) {
     try {
-      const resume = await db.resume.create({
+      // --- LOGGING: Log data before saving ---
+      console.log('[DB] Saving resume:', {
+        userId,
+        title,
+        originalFilename,
+        fileType,
+        fileSize,
+        parsedData,
+        parseMethod,
+        confidenceScore,
+        isPublic,
+        slug,
+        customColors,
+        additionalContext,
+      });
+      const resume = await prisma.resume.create({
         data: {
           title,
           originalFilename,
@@ -50,7 +94,9 @@ export class ResumeDatabase {
           },
         },
       });
-      return resume;
+      // --- LOGGING: Log result after saving ---
+      console.log('[DB] Resume saved:', resume);
+      return resume as unknown as Resume;
     } catch (error) {
       console.error('Error saving resume:', error);
       throw new Error('Failed to save resume.');
@@ -58,13 +104,13 @@ export class ResumeDatabase {
   }
 
   // Get user's resumes
-  static async getUserResumes(userId: string) {
+  static async getUserResumes(userId: string): Promise<Resume[]> {
     try {
-      const resumes = await db.resume.findMany({
+      const resumes = await prisma.resume.findMany({
         where: { userId },
         orderBy: { createdAt: 'desc' },
       });
-      return resumes;
+      return resumes as unknown as Resume[];
     } catch (error) {
       console.error('Error fetching user resumes:', error);
       throw new Error('Failed to fetch user resumes.');
@@ -72,12 +118,12 @@ export class ResumeDatabase {
   }
 
   // Get a specific resume
-  static async getResume(id: string) {
+  static async getResume(id: string): Promise<Resume | null> {
     try {
-      const resume = await db.resume.findUnique({
+      const resume = await prisma.resume.findUnique({
         where: { id },
       });
-      return resume;
+      return resume as unknown as Resume | null;
     } catch (error) {
       console.error('Error fetching resume:', error);
       throw new Error('Failed to fetch resume.');
@@ -85,31 +131,12 @@ export class ResumeDatabase {
   }
 
   // New method for retrieving context
-  static async getResumeWithContext(id: string) {
+  static async getResumeWithContext(id: string): Promise<Resume | null> {
     try {
-      const resume = await db.resume.findUnique({
+      const resume = await prisma.resume.findUnique({
         where: { id },
-        select: {
-          id: true,
-          title: true,
-          originalFilename: true,
-          fileType: true,
-          fileSize: true,
-          parsedData: true,
-          parseMethod: true,
-          confidenceScore: true,
-          isPublic: true,
-          slug: true,
-          customColors: true,
-          additionalContext: true,
-          view_count: true,
-          download_count: true,
-          userId: true,
-          createdAt: true,
-          updatedAt: true,
-        },
       });
-      return resume;
+      return resume as unknown as Resume | null;
     } catch (error) {
       console.error('Error fetching resume with context:', error);
       throw new Error('Failed to fetch resume with context.');
@@ -117,20 +144,12 @@ export class ResumeDatabase {
   }
 
   // Get public resume by slug
-  static async getPublicResume(slug: string) {
+  static async getPublicResume(slug: string): Promise<Resume | null> {
     try {
-      const resume = await db.resume.findUnique({
+      const resume = await prisma.resume.findUnique({
         where: { slug, isPublic: true },
       });
-
-      if (resume) {
-        await db.resume.update({
-          where: { id: resume.id },
-          data: { view_count: { increment: 1 } },
-        });
-      }
-
-      return resume;
+      return resume as unknown as Resume | null;
     } catch (error) {
       console.error('Error fetching public resume:', error);
       throw new Error('Failed to fetch public resume.');
@@ -138,13 +157,18 @@ export class ResumeDatabase {
   }
 
   // Get all public resumes for sitemap
-  static async getAllPublicResumes(): Promise<{ slug: string; updatedAt: string }[]> {
+  static async getAllPublicResumes(): Promise<
+    { slug: string; updatedAt: string }[]
+  > {
     try {
-      const resumes = await db.resume.findMany({
+      const resumes = await prisma.resume.findMany({
         where: { isPublic: true },
         select: { slug: true, updatedAt: true },
       });
-      return resumes.map((r: { slug: string; updatedAt: Date }) => ({...r, updatedAt: r.updatedAt.toISOString()}));
+      return resumes.map((r: { slug: string; updatedAt: Date }) => ({
+        ...r,
+        updatedAt: r.updatedAt.toISOString(),
+      }));
     } catch (error) {
       console.error('Error fetching public resumes:', error);
       throw new Error('Failed to fetch public resumes.');
@@ -155,16 +179,18 @@ export class ResumeDatabase {
   static async updateResume(
     id: string,
     updates: Partial<Resume> & { customColors?: Record<string, string> }
-  ) {
+  ): Promise<Resume> {
     try {
-      const resume = await db.resume.update({
+      const { slug, additionalContext, ...restOfUpdates } = updates;
+      const resume = await prisma.resume.update({
         where: { id },
         data: {
-          ...updates,
+          ...restOfUpdates,
           customColors: updates.customColors as any,
+          parsedData: updates.parsedData as any,
         },
       });
-      return resume;
+      return resume as unknown as Resume;
     } catch (error) {
       console.error('Error updating resume:', error);
       throw new Error('Failed to update resume.');
@@ -174,7 +200,7 @@ export class ResumeDatabase {
   // Delete resume
   static async deleteResume(id: string) {
     try {
-      await db.resume.delete({
+      await prisma.resume.delete({
         where: { id },
       });
     } catch (error) {
@@ -190,19 +216,19 @@ export class ResumeDatabase {
     changesSummary?: string
   ) {
     try {
-      const latestVersion = await db.resumeVersion.findFirst({
+      const latestVersion = await prisma.resumeVersion.findFirst({
         where: { resumeId },
-        orderBy: { version_number: 'desc' },
+        orderBy: { versionNumber: 'desc' },
       });
 
-      const nextVersion = latestVersion ? latestVersion.version_number + 1 : 1;
+      const nextVersion = latestVersion ? latestVersion.versionNumber + 1 : 1;
 
-      const version = await db.resumeVersion.create({
+      const version = await prisma.resumeVersion.create({
         data: {
           resumeId,
-          version_number: nextVersion,
-          parsed_data: parsedData as any,
-          changes_summary: changesSummary,
+          versionNumber: nextVersion,
+          parsedData: parsedData as any,
+          changesSummary: changesSummary,
         },
       });
       return version;
@@ -215,9 +241,9 @@ export class ResumeDatabase {
   // Get resume versions
   static async getResumeVersions(resumeId: string) {
     try {
-      const versions = await db.resumeVersion.findMany({
+      const versions = await prisma.resumeVersion.findMany({
         where: { resumeId },
-        orderBy: { version_number: 'desc' },
+        orderBy: { versionNumber: 'desc' },
       });
       return versions;
     } catch (error) {
@@ -226,16 +252,16 @@ export class ResumeDatabase {
     }
   }
 
-  // Increment download count
-  static async incrementDownloadCount(id: string) {
+  // Increment view count
+  static async incrementViewCount(id: string) {
     try {
-      await db.resume.update({
+      await prisma.resume.update({
         where: { id },
-        data: { download_count: { increment: 1 } },
+        data: { viewCount: { increment: 1 } },
       });
     } catch (error) {
-      console.error('Error incrementing download count:', error);
-      throw new Error('Error incrementing download count.');
+      console.error('Error incrementing view count:', error);
+      throw new Error('Error incrementing view count.');
     }
   }
 }

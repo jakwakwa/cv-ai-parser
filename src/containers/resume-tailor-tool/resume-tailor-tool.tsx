@@ -198,27 +198,45 @@ const ResumeTailorTool = ({
       formData.append('extraPrompt', extraPrompt);
     }
 
+    // --- LOGGING: Log all form data fields before sending ---
+    const formDataLog: Record<string, any> = {};
+    formData.forEach((value, key) => {
+      formDataLog[key] =
+        value instanceof File
+          ? `[File: ${value.name}, size: ${value.size}]`
+          : value;
+    });
+    console.log('[TailorTool] Submitting resume:', formDataLog);
+    // --- END LOGGING ---
+
     try {
       const response = await fetch('/api/parse-resume-enhanced', {
         method: 'POST',
         body: formData,
       });
-
+      console.log('[TailorTool] API response status:', response.status);
+      let result: any = null;
+      try {
+        result = await response.json();
+      } catch (jsonErr) {
+        console.error(
+          '[TailorTool] Failed to parse API response JSON:',
+          jsonErr
+        );
+      }
+      console.log('[TailorTool] API response data:', result);
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
+        const errorMsg = result?.error || 'Failed to parse resume';
         if (response.status === 401) {
           throw new Error(
             'Authentication required. Please sign in to continue.'
           );
         }
-        throw new Error(errorData.error || 'Failed to parse resume');
+        throw new Error(errorMsg);
       }
-
-      const result = await response.json();
-      if (result.error) {
+      if (result?.error) {
         throw new Error(result.error || 'Parsing failed.');
       }
-
       const parsedData: EnhancedParsedResume = result.data;
       const uploadInfo: ParseInfo = {
         ...result.meta,
@@ -231,10 +249,15 @@ const ResumeTailorTool = ({
       setAiTailorCommentary(uploadInfo.aiTailorCommentary || null);
       if (uploadInfo.resumeSlug) {
         setCreatedResumeSlug(uploadInfo.resumeSlug);
-      }
-      if (uploadInfo.resumeSlug) {
+        console.log(
+          '[TailorTool] Routing to:',
+          `/resume/${uploadInfo.resumeSlug}`
+        );
         router.push(`/resume/${uploadInfo.resumeSlug}`);
       } else {
+        console.log(
+          '[TailorTool] No resumeSlug returned, showing local preview'
+        );
         setViewLocalResume(true);
       }
       setError('');

@@ -2,12 +2,10 @@
 
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import FigmaToResumeTool from '@/src/containers/figma-to-resume-tool/figma-to-resume-tool';
 import styles from './page.module.css';
 
 export default function FigmaToResumePage() {
-  const { loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,15 +19,6 @@ export default function FigmaToResumePage() {
       description: `Component ${info.componentName} was created successfully from your Figma design.`,
     });
   };
-
-  if (authLoading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loadingSpinner} />
-        <p className={styles.loadingText}>Loading...</p>
-      </div>
-    );
-  }
 
   return (
     <div className={styles.pageContainer}>
