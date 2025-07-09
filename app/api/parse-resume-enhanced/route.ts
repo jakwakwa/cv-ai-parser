@@ -1,13 +1,16 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: <experimental will get typed soon> */
 import type { NextRequest } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { IS_JOB_TAILORING_ENABLED } from '@/lib/config';
-import { ResumeDatabase } from '@/lib/database';
-import { extractJobSpecification } from '@/lib/jobfit/jobSpecExtractor';
+import { ResumeDatabase } from '@/lib/db';
 import { userAdditionalContextSchema } from '@/lib/jobfit/schemas';
-// import { tailorResume } from '@/lib/jobfit/tailorResume';
-import { parseWithAI, parseWithAIPDF } from '@/lib/resume-parser/ai-parser';
+import {
+  streamableParseWithAI,
+  streamableParseWithAIPDF,
+} from '@/lib/resume-parser/ai-parser';
 import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
-import { createClient } from '@/lib/supabase/server';
-import type { Resume, UserAdditionalContext } from '@/lib/types';
+import type { UserAdditionalContext } from '@/lib/types';
 import { createSlug } from '@/lib/utils';
 
 // Feature flag guard
@@ -18,287 +21,171 @@ if (!IS_JOB_TAILORING_ENABLED) {
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-
-    // Extract existing fields
     const file = formData.get('file') as File;
-    const customColors = JSON.parse(
-      (formData.get('customColors') as string) || '{}'
-    );
-    const isAuthenticated = formData.get('isAuthenticated') === 'true';
-    const profileImage = formData.get('profileImage') as string | null;
-
-    // Extract new JobFit fields
     const jobSpecFile = formData.get('jobSpecFile') as File | null;
     const jobSpecText = formData.get('jobSpecText') as string | null;
     const tone = formData.get('tone') as string;
-    const extraPrompt = formData.get('extraPrompt') as string | null;
+    const profileImage = formData.get('profileImage') as string | null;
+    const customColors = JSON.parse(
+      (formData.get('customColors') as string) || '{}'
+    );
 
-    // Debug logging
-    console.log('Enhanced API called with:', {
-      hasFile: !!file,
-      hasJobSpecFile: !!jobSpecFile,
-      hasJobSpecText: !!jobSpecText,
-      jobSpecTextLength: jobSpecText?.length || 0,
-      tone,
-      hasExtraPrompt: !!extraPrompt,
-      allFormDataKeys: Array.from(formData.keys()),
-    });
-
-    // Validate inputs
     if (!file) {
-      return Response.json(
-        { error: 'Resume file is required' },
-        { status: 400 }
-      );
+      return Response.json({ error: 'Resume file is required' }, { status: 400 });
     }
 
-    // Build additional context object
     let additionalContext: UserAdditionalContext | undefined;
     const hasJobSpec =
-      (jobSpecFile && jobSpecFile.size > 0) ||
-      (jobSpecText && jobSpecText.trim().length > 0);
+      (jobSpecFile?.size ?? 0) > 0 || (jobSpecText?.trim()?.length ?? 0) > 0;
 
-    // Enhanced endpoint expects job tailoring data, but allow graceful fallback to regular parsing
     if (hasJobSpec) {
-      // Validate that tone is provided when job spec is given
-      if (!tone || !['Formal', 'Neutral', 'Creative'].includes(tone)) {
-        return Response.json(
-          {
-            error:
-              'Valid tone (Formal, Neutral, or Creative) is required when job specification is provided',
-          },
-          { status: 400 }
-        );
-      }
-      // Extract text from job spec file if uploaded
       let finalJobSpecText = jobSpecText;
       if (jobSpecFile && !jobSpecText) {
-        try {
-          finalJobSpecText = await jobSpecFile.text();
-          if (!finalJobSpecText || finalJobSpecText.trim().length === 0) {
-            return Response.json(
-              {
-                error:
-                  'Job specification file is empty or contains no readable text',
-              },
-              { status: 400 }
-            );
-          }
-        } catch (_error) {
-          return Response.json(
-            {
-              error:
-                "Failed to read job specification file. Please ensure it's a valid text or PDF file.",
-            },
-            { status: 400 }
-          );
-        }
+        finalJobSpecText = await jobSpecFile.text();
       }
 
-      // Validate job spec text length and content
-      if (finalJobSpecText && finalJobSpecText.length > 4000) {
-        return Response.json(
-          {
-            error:
-              'Job specification text is too long. Maximum 4000 characters allowed.',
-          },
-          { status: 400 }
-        );
-      }
-
-      // Ensure we have meaningful job spec text
-      if (!finalJobSpecText || finalJobSpecText.trim().length < 50) {
-        return Response.json(
-          {
-            error:
-              'Job specification text is too short. Please provide at least 50 characters of meaningful job description.',
-          },
-          { status: 400 }
-        );
-      }
-
-      const trimmedJobSpecText = finalJobSpecText.trim();
-      const contextData = {
-        jobSpecSource: jobSpecFile ? 'upload' : ('pasted' as const),
-        jobSpecText: trimmedJobSpecText, // Always use the trimmed text (we already validated it's not empty)
-        jobSpecFileUrl: undefined, // TODO: Handle file upload to storage in future
-        tone: tone as 'Formal' | 'Neutral' | 'Creative',
-        extraPrompt: extraPrompt?.trim() || undefined,
-      };
-
-      // Debug: Log what we're trying to validate
-      console.log('About to validate contextData:', {
-        ...contextData,
-        jobSpecTextLength: contextData.jobSpecText?.length,
-        jobSpecTextPreview: `${contextData.jobSpecText?.substring(0, 50)}...`,
+      const validation = userAdditionalContextSchema.safeParse({
+        jobSpecSource: jobSpecFile ? 'upload' : 'pasted',
+        jobSpecText: finalJobSpecText,
+        tone: tone,
       });
 
-      // Validate context structure
-      const validation = userAdditionalContextSchema.safeParse(contextData);
-      if (!validation.success) {
-        console.error('Validation failed for contextData:', contextData);
-        console.error('Validation errors:', validation.error.issues);
-        return Response.json(
-          {
-            error: 'Invalid job specification data',
-            details: validation.error.issues
-              .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
-              .join(', '),
-            received: contextData,
-          },
-          { status: 400 }
-        );
-      }
-      additionalContext = validation.data;
-    } else if (!hasJobSpec) {
-      // Enhanced endpoint called without job tailoring - this is allowed
-      // Just proceed with regular resume parsing
-      console.log(
-        'Enhanced API called without job specification - proceeding with regular parsing'
-      );
-    }
-
-    // Authentication check
-    const supabase = await createClient();
-    let user = null;
-    if (isAuthenticated) {
-      const {
-        data: { user: authUser },
-        error,
-      } = await supabase.auth.getUser();
-      if (error || !authUser) {
-        return Response.json(
-          { error: 'Authentication required' },
-          { status: 401 }
-        );
-      }
-      user = authUser;
-    }
-
-    // PARALLEL PROCESSING: Parse resume and job spec simultaneously
-    const jobSpecPromise =
-      hasJobSpec && additionalContext?.jobSpecText
-        ? extractJobSpecification(additionalContext.jobSpecText)
-        : Promise.resolve(null);
-
-    // Get job spec first to determine parsing approach
-    const jobSpecResult = await jobSpecPromise;
-
-    // Parse resume with conditional tailoring
-    let finalResume: EnhancedParsedResume;
-    let tailoringMetadata = {};
-
-    if (jobSpecResult && additionalContext) {
-      console.log(
-        'Parsing resume with integrated job specification tailoring...'
-      );
-
-      // Use integrated tailored parsing
-      const parseOptions = {
-        jobSpec: additionalContext.jobSpecText,
-        tone: additionalContext.tone,
-      };
-
-      finalResume =
-        file.type === 'application/pdf'
-          ? await parseWithAIPDF(file, parseOptions)
-          : await parseWithAI(await file.text(), parseOptions);
-
-      tailoringMetadata = {
-        jobSpecConfidence: jobSpecResult.confidence,
-        tailoringApplied: true,
-        tailoringMethod: 'integrated',
-        tone: additionalContext.tone,
-      };
-    } else {
-      console.log('Parsing resume without tailoring...');
-
-      // Standard parsing without tailoring
-      finalResume =
-        file.type === 'application/pdf'
-          ? await parseWithAIPDF(file)
-          : await parseWithAI(await file.text());
-    }
-
-    // Merge custom colors (preserve original colors even after tailoring)
-    const finalParsedData = {
-      ...finalResume,
-      customColors: customColors || {},
-      profileImage: profileImage || finalResume.profileImage, // Prioritize newly uploaded image
-    };
-
-    // Save to database if authenticated
-    let savedResume: Resume | undefined;
-    if (isAuthenticated && user) {
-      try {
-        const resumeTitle: string =
-          finalResume.name || file.name.split('.')[0] || 'Untitled Resume';
-        const slug = `${createSlug(resumeTitle)}-${Math.floor(1000 + Math.random() * 9000)}`;
-
-        savedResume = await ResumeDatabase.saveResume(supabase, {
-          userId: user.id,
-          title: resumeTitle,
-          originalFilename: file.name,
-          fileType: file.type,
-          fileSize: file.size,
-          parsedData: finalParsedData,
-          parseMethod: 'ai_enhanced',
-          confidenceScore: 98,
-          isPublic: true,
-          slug,
-          additionalContext,
-        });
-      } catch (error) {
-        console.error(
-          'Database save failed (missing migration?), continuing without save:',
-          error
-        );
-        // Continue without saving - user will still get the tailored resume
-        // TODO: Remove this try-catch after running the database migration
+      if (validation.success) {
+        additionalContext = validation.data;
       }
     }
 
-    // Expose AI summary only if present in enhanced parsing
-    let aiTailorCommentary: string | null = null;
-    if (
-      'metadata' in finalParsedData &&
-      finalParsedData.metadata &&
-      typeof finalParsedData.metadata === 'object'
-    ) {
-      aiTailorCommentary =
-        (finalParsedData.metadata as { aiTailorCommentary?: string })
-          .aiTailorCommentary || null;
-    }
+    const parseOptions = additionalContext
+      ? { jobSpec: additionalContext.jobSpecText, tone: additionalContext.tone }
+      : undefined;
 
-    console.log('=== AI COMMENTARY DEBUG ===');
-    console.log('aiTailorCommentary value:', aiTailorCommentary);
-    console.log('About to return meta object:', {
-      method: 'ai_enhanced',
-      filename: file.name,
-      resumeId: savedResume?.id,
-      resumeSlug: savedResume?.slug,
-      ...tailoringMetadata,
-      aiTailorCommentary,
+    const stream =
+      file.type === 'application/pdf'
+        ? await streamableParseWithAIPDF(file, parseOptions)
+        : await streamableParseWithAI(await file.text(), parseOptions);
+
+    // Create a custom stream for progress updates
+    const encoder = new TextEncoder();
+    const customStream = new ReadableStream({
+      async start(controller) {
+      
+        const writeUpdate = (update: any) => {
+          const chunk = encoder.encode(`data: ${JSON.stringify(update)}\n\n`);
+          controller.enqueue(chunk);
+        };
+
+        try {
+          // Start streaming partial objects with progress updates
+          writeUpdate({ 
+            status: 'analyzing', 
+            message: 'AI is analyzing your resume structure...',
+            progress: 10 
+          });
+
+         
+          let _partialData: any = null;
+          let progressCount = 0;
+          const progressMessages = [
+            'Extracting personal information...',
+            'Processing work experience...',
+            'Analyzing skills and qualifications...',
+            'Formatting resume sections...',
+            'Finalizing resume structure...'
+          ];
+
+          // Stream partial objects and show progress
+          for await (const partial of stream.partialObjectStream) {
+            _partialData = partial;
+            progressCount++;
+            const progress = Math.min(20 + (progressCount * 15), 90);
+            const messageIndex = Math.min(Math.floor(progressCount / 2), progressMessages.length - 1);
+            
+            writeUpdate({ 
+              status: 'processing', 
+              message: progressMessages[messageIndex],
+              progress,
+              partialData: partial 
+            });
+          }
+
+          // Get final result
+          const parsedResume: EnhancedParsedResume = await stream.object;
+          
+          // Merge custom colors and profile image
+          const finalResume: EnhancedParsedResume = {
+            ...parsedResume,
+            customColors: customColors || {},
+            profileImage: profileImage || parsedResume.profileImage,
+          };
+          
+          writeUpdate({ 
+            status: 'saving', 
+            message: 'Saving your tailored resume...',
+            progress: 95 
+          });
+
+          // Save to database
+          const session = await getServerSession(authOptions);
+          let savedResume = null;
+          if (session?.user?.id) {
+            const resumeTitle = finalResume.name || file.name.split('.')[0] || 'Untitled Resume';
+            const slug = `${createSlug(resumeTitle)}-${Math.floor(1000 + Math.random() * 9000)}`;
+            
+            savedResume = await ResumeDatabase.saveResume({
+              userId: session.user.id,
+              title: resumeTitle,
+              originalFilename: file.name,
+              fileType: file.type,
+              fileSize: file.size,
+              parsedData: finalResume,
+              parseMethod: 'ai_enhanced',
+              confidenceScore: 98,
+              isPublic: true,
+              slug,
+              additionalContext,
+            });
+          }
+
+          // Final completion
+          writeUpdate({ 
+            status: 'completed', 
+            message: 'Resume successfully created!',
+            progress: 100,
+            data: finalResume,
+            meta: {
+              method: 'ai_enhanced',
+              confidence: 98,
+              filename: file.name,
+              fileType: file.type,
+              fileSize: file.size,
+              resumeId: savedResume?.id,
+              resumeSlug: savedResume?.slug,
+              aiTailorCommentary: finalResume.metadata?.aiTailorCommentary,
+            }
+          });
+
+          controller.close();
+        } catch (error) {
+          writeUpdate({
+            status: 'error',
+            message: error instanceof Error ? error.message : 'Failed to process resume',
+            progress: 0
+          });
+          controller.close();
+        }
+      }
     });
 
-    return Response.json({
-      data: finalParsedData,
-      meta: {
-        method: 'ai_enhanced',
-        filename: file.name,
-        resumeId: savedResume?.id,
-        resumeSlug: savedResume?.slug,
-        ...tailoringMetadata,
-        aiTailorCommentary,
+    return new Response(customStream, {
+      headers: {
+        'Content-Type': 'text/plain',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
       },
     });
   } catch (error) {
-    console.error('Enhanced resume parsing failed:', error);
     return Response.json(
-      {
-        error: 'Failed to process resume',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
+      { error: 'Failed to process resume', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }

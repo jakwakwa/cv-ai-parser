@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { signOut, useSession } from 'next-auth/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,17 +9,16 @@ import {
   DropdownMenuTrigger,
 } from '@/src/components/ui/dropdown-menu';
 import { Button } from '@/src/components/ui/ui-button/button';
-import { useAuth } from '../auth-provider/auth-provider';
 import styles from './user-nav.module.css';
 
 export function UserNav() {
-  const { user, signOut } = useAuth();
+  const { data: session } = useSession();
 
-  if (!user) {
+  if (!session?.user) {
     return null;
   }
 
-  const getInitials = (name: string | undefined) => {
+  const getInitials = (name: string | undefined | null) => {
     if (!name) return 'U';
     const names = name.split(' ');
     const initials = names.map((n) => n[0]).join('');
@@ -29,14 +29,14 @@ export function UserNav() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" nav className={styles.userNavButton}>
-          {getInitials(user.user_metadata?.full_name)}
+          {getInitials(session.user.name)}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className={styles.dropdownContent} forceMount>
         <div className={styles.dropdownLabel}>
           <div className={styles.labelContainer}>
-            <p className={styles.userName}>{user.user_metadata?.full_name}</p>
-            <p className={styles.userEmail}>{user.email}</p>
+            <p className={styles.userName}>{session.user.name}</p>
+            <p className={styles.userEmail}>{session.user.email}</p>
           </div>
         </div>
 
@@ -44,7 +44,10 @@ export function UserNav() {
           <Link href="/library">My Library</Link>
         </DropdownMenuItem>
 
-        <DropdownMenuItem className={styles.dropdownMenuItem} onClick={signOut}>
+        <DropdownMenuItem
+          className={styles.dropdownMenuItem}
+          onClick={() => signOut()}
+        >
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

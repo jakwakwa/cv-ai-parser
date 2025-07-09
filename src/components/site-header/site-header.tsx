@@ -1,7 +1,7 @@
 'use client';
 
+import { useSession } from 'next-auth/react';
 import { useState } from 'react';
-import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import { AuthModal } from '../auth-component/AuthModal';
 import { useAuthModal } from '../auth-component/AuthModalContext';
 import { MainNav } from '../main-nav/main-nav';
@@ -16,7 +16,7 @@ interface SiteHeaderProps {
 }
 
 export function SiteHeader({ onLogoClick }: SiteHeaderProps) {
-  const { user } = useAuth();
+  const { data: session } = useSession();
   const { setAuthModalOpen } = useAuthModal();
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
@@ -50,7 +50,7 @@ export function SiteHeader({ onLogoClick }: SiteHeaderProps) {
           </button>
 
           <ThemeToggle />
-          {user ? (
+          {session?.user ? (
             <UserNav />
           ) : (
             <Button

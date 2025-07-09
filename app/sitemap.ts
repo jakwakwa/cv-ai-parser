@@ -1,16 +1,13 @@
 import type { MetadataRoute } from 'next';
-import { ResumeDatabase } from '@/lib/database';
-import { createClient } from '@/lib/supabase/server';
-import type { Resume } from '@/lib/types';
+import { ResumeDatabase } from '@/lib/db';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const supabase = await createClient();
-  const resumes = await ResumeDatabase.getAllPublicResumes(supabase);
+  const resumes = await ResumeDatabase.getAllPublicResumes();
 
   const resumeEntries: MetadataRoute.Sitemap = resumes.map(
-    ({ slug, updated_at }: Partial<Resume>) => ({
+    ({ slug, updatedAt }) => ({
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/resume/${slug}`,
-      lastModified: new Date(updated_at || new Date()),
+      lastModified: new Date(updatedAt),
       changeFrequency: 'daily',
       priority: 0.7,
     })

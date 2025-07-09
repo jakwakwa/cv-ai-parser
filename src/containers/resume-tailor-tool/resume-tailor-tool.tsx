@@ -32,6 +32,20 @@ import ProfileImageUploader from '@/src/containers/profile-image-uploader/profil
 import ResumeDisplay from '@/src/containers/resume-display/resume-display';
 import styles from './resume-tailor-tool.module.css';
 
+// Add proper typing for partial data
+interface PartialResumeData {
+  name?: string;
+  title?: string;
+  experience?: Array<{
+    title?: string;
+    company?: string;
+    duration?: string;
+    details?: string[];
+  }>;
+  skills?: string[];
+  [key: string]: unknown; // For other dynamic fields during parsing
+}
+
 interface ParseInfo {
   resumeId?: string;
   resumeSlug?: string;
@@ -41,6 +55,15 @@ interface ParseInfo {
   fileType: string;
   fileSize: number;
   aiTailorCommentary?: string; // Rename aiSummary to aiTailorCommentary here
+}
+
+interface StreamUpdate {
+  status?: 'analyzing' | 'processing' | 'saving' | 'completed' | 'error';
+  message?: string;
+  progress?: number;
+  partialData?: PartialResumeData; // Replace 'any' with proper type
+  data?: EnhancedParsedResume;
+  meta?: ParseInfo;
 }
 
 interface ResumeTailorToolProps {
@@ -82,6 +105,12 @@ const ResumeTailorTool = ({
   const [aiTailorCommentary, setAiTailorCommentary] = useState<string | null>(
     null
   ); // Rename aiSummary to aiTailorCommentary
+
+  // Streaming states
+  const [streamingProgress, setStreamingProgress] = useState(0);
+  const [streamingMessage, setStreamingMessage] = useState('');
+  const [partialResumeData, setPartialResumeData] =
+    useState<PartialResumeData | null>(null);
 
   // Customization states
   const [profileImage, setProfileImage] = useState('');
@@ -198,6 +227,17 @@ const ResumeTailorTool = ({
       formData.append('extraPrompt', extraPrompt);
     }
 
+    // --- LOGGING: Log all form data fields before sending ---
+    const formDataLog: Record<string, string | File> = {};
+    formData.forEach((value, key) => {
+      formDataLog[key] =
+        value instanceof File
+          ? `[File: ${value.name}, size: ${value.size}]`
+          : value;
+    });
+    console.log('[TailorTool] Submitting resume:', formDataLog);
+    // --- END LOGGING ---
+
     try {
       const response = await fetch('/api/parse-resume-enhanced', {
         method: 'POST',
@@ -205,50 +245,138 @@ const ResumeTailorTool = ({
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
+        const errorData = await response.json();
+        const errorMsg = errorData?.error || 'Failed to parse resume';
         if (response.status === 401) {
           throw new Error(
             'Authentication required. Please sign in to continue.'
           );
         }
-        throw new Error(errorData.error || 'Failed to parse resume');
+        throw new Error(errorMsg);
       }
 
-      const result = await response.json();
-      if (result.error) {
-        throw new Error(result.error || 'Parsing failed.');
-      }
+      // Check if response is streaming (Server-Sent Events)
+      const contentType = response.headers.get('content-type');
+      if (contentType?.includes('text/plain')) {
+        // Handle streaming response using SSE format
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
 
-      const parsedData: EnhancedParsedResume = result.data; // Changed to EnhancedParsedResume
-      const uploadInfo: ParseInfo = {
-        ...result.meta,
-        fileType: uploadedFile.type,
-        fileSize: uploadedFile.size,
-      };
+        if (!reader) {
+          throw new Error('Failed to read stream');
+        }
 
-      console.log('=== COMPONENT DEBUG ===');
-      console.log('API Response:', result);
-      console.log('uploadInfo:', uploadInfo);
-      console.log(
-        'aiTailorCommentary from API:',
-        uploadInfo.aiTailorCommentary
-      );
-      console.log(
-        'Setting aiTailorCommentary to:',
-        uploadInfo.aiTailorCommentary || null
-      );
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
 
-      onResumeCreated(parsedData, uploadInfo); // parsedData is now EnhancedParsedResume
-      setLocalResumeData(parsedData);
-      setAiTailorCommentary(uploadInfo.aiTailorCommentary || null); // Capture AI tailoring commentary
-      if (uploadInfo.resumeSlug) {
-        setCreatedResumeSlug(uploadInfo.resumeSlug);
-      }
-      if (uploadInfo.resumeSlug) {
-        router.push(`/resume/${uploadInfo.resumeSlug}`);
+            const chunk = decoder.decode(value);
+            const lines = chunk.split('\n');
+
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                try {
+                  const streamUpdate = JSON.parse(
+                    line.slice(6)
+                  ) as StreamUpdate;
+
+                  // Update progress and message
+                  if (streamUpdate.progress !== undefined) {
+                    setStreamingProgress(streamUpdate.progress);
+                  }
+                  if (streamUpdate.message) {
+                    setStreamingMessage(streamUpdate.message);
+                  }
+                  if (streamUpdate.partialData) {
+                    setPartialResumeData(streamUpdate.partialData);
+                  }
+
+                  // Handle final completion
+                  if (
+                    streamUpdate.status === 'completed' &&
+                    streamUpdate.data
+                  ) {
+                    const parsedData: EnhancedParsedResume = streamUpdate.data;
+                    const uploadInfo: ParseInfo = {
+                      method: streamUpdate.meta?.method || 'ai_enhanced',
+                      confidence: streamUpdate.meta?.confidence || 98,
+                      filename:
+                        streamUpdate.meta?.filename || uploadedFile.name,
+                      resumeId: streamUpdate.meta?.resumeId,
+                      resumeSlug: streamUpdate.meta?.resumeSlug,
+                      aiTailorCommentary: streamUpdate.meta?.aiTailorCommentary,
+                      fileType: uploadedFile.type,
+                      fileSize: uploadedFile.size,
+                    };
+
+                    onResumeCreated(parsedData, uploadInfo);
+                    setLocalResumeData(parsedData);
+                    setAiTailorCommentary(
+                      uploadInfo.aiTailorCommentary || null
+                    );
+
+                    if (uploadInfo.resumeSlug) {
+                      setCreatedResumeSlug(uploadInfo.resumeSlug);
+                      console.log(
+                        '[TailorTool] Routing to:',
+                        `/resume/${uploadInfo.resumeSlug}`
+                      );
+                      router.push(`/resume/${uploadInfo.resumeSlug}`);
+                    } else {
+                      console.log(
+                        '[TailorTool] No resumeSlug returned, showing local preview'
+                      );
+                      setViewLocalResume(true);
+                    }
+                    return;
+                  }
+
+                  // Handle errors
+                  if (streamUpdate.status === 'error') {
+                    throw new Error(
+                      streamUpdate.message || 'Stream processing failed'
+                    );
+                  }
+                } catch (_parseError) {
+                  console.warn(
+                    '[TailorTool] Failed to parse stream chunk:',
+                    line
+                  );
+                }
+              }
+            }
+          }
+        } finally {
+          reader.releaseLock();
+        }
       } else {
+        // Handle regular JSON response
+        const result = await response.json();
+
+        if (result?.error) {
+          throw new Error(result.error || 'Parsing failed.');
+        }
+
+        // Fallback for non-streaming response
+        const parsedData: EnhancedParsedResume = result.data;
+        const uploadInfo: ParseInfo = {
+          method: result.meta?.method || 'ai_enhanced',
+          confidence: result.meta?.confidence || 98,
+          filename: result.meta?.filename || uploadedFile.name,
+          resumeId: result.meta?.resumeId,
+          resumeSlug: result.meta?.resumeSlug,
+          aiTailorCommentary: result.meta?.aiTailorCommentary,
+          fileType: uploadedFile.type,
+          fileSize: uploadedFile.size,
+        };
+
+        onResumeCreated(parsedData, uploadInfo);
+        setLocalResumeData(parsedData);
+        setAiTailorCommentary(uploadInfo.aiTailorCommentary || null);
         setViewLocalResume(true);
       }
+
       setError('');
     } catch (err: unknown) {
       const errorMessage =
@@ -258,6 +386,10 @@ const ResumeTailorTool = ({
       setError('');
     } finally {
       setIsLoading(false);
+      // Reset streaming states
+      setStreamingProgress(0);
+      setStreamingMessage('');
+      setPartialResumeData(null);
     }
   };
 
@@ -283,11 +415,52 @@ const ResumeTailorTool = ({
         <div className={styles.loadingCard}>
           <div className={styles.loadingSpinner} />
           <p className={styles.loadingTitle}>
-            Creating your tailored resume...
+            {streamingMessage || 'Extracting data from your resume...'}
           </p>
           <p className={styles.loadingSubtitle}>
-            AI is analyzing the job description and optimizing your resume
+            {streamingProgress > 0
+              ? `Progress: ${streamingProgress}%`
+              : 'AI is analyzing the job specifications and tailoring your resume...'}
           </p>
+          {streamingProgress > 0 && (
+            <div className={styles.progressBar}>
+              <div
+                className={styles.progressFill}
+                style={{ width: `${streamingProgress}%` }}
+              />
+            </div>
+          )}
+          {partialResumeData && (
+            <div className={styles.partialPreview}>
+              <p className={styles.previewTitle}>Partial Resume Data:</p>
+              <div className={styles.previewContent}>
+                {partialResumeData.name && (
+                  <p>
+                    <strong>Name:</strong> {partialResumeData.name}
+                  </p>
+                )}
+                {partialResumeData.title && (
+                  <p>
+                    <strong>Title:</strong> {partialResumeData.title}
+                  </p>
+                )}
+                {Array.isArray(partialResumeData.experience) &&
+                  partialResumeData.experience.length > 0 && (
+                    <p>
+                      <strong>Experience sections:</strong>{' '}
+                      {partialResumeData.experience.length}
+                    </p>
+                  )}
+                {Array.isArray(partialResumeData.skills) &&
+                  partialResumeData.skills.length > 0 && (
+                    <p>
+                      <strong>Skills found:</strong>{' '}
+                      {partialResumeData.skills.length}
+                    </p>
+                  )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -383,6 +556,17 @@ const ResumeTailorTool = ({
             )}
           </div>
 
+          {/* Tailor to job spec toggle */}
+          <label className={styles.tailorToggle} htmlFor="tailor-toggle">
+            <input
+              id="tailor-toggle"
+              type="checkbox"
+              checked={tailorEnabled}
+              onChange={() => setTailorEnabled((prev) => !prev)}
+            />
+            <span>Tailor to job spec.</span>
+          </label>
+
           {/* Profile Image Uploader */}
           <div className={styles.customizationSection}>
             <h3 className={styles.sectionTitle}>Profile Picture (Optional)</h3>
@@ -414,16 +598,6 @@ const ResumeTailorTool = ({
               </DialogContent>
             </Dialog>
 
-            {/* Tailor to job spec toggle */}
-            <label className={styles.tailorToggle} htmlFor="tailor-toggle">
-              <input
-                id="tailor-toggle"
-                type="checkbox"
-                checked={tailorEnabled}
-                onChange={() => setTailorEnabled((prev) => !prev)}
-              />
-              <span>Tailor to job spec.</span>
-            </label>
             {/* Action Button - Only show when tailor is disabled */}
             {!tailorEnabled && (
               <div className={styles.actionSection}>

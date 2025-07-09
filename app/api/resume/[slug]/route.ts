@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { ResumeDatabase } from '@/lib/database';
-import { createClient } from '@/lib/supabase/server';
+import { ResumeDatabase } from '@/lib/db';
 
 export async function GET(
   _request: Request,
@@ -13,8 +12,7 @@ export async function GET(
   }
 
   try {
-    const supabase = await createClient();
-    const resume = await ResumeDatabase.getPublicResume(supabase, slug);
+    const resume = await ResumeDatabase.getPublicResume(slug);
 
     if (!resume) {
       return NextResponse.json({ error: 'Resume not found.' }, { status: 404 });

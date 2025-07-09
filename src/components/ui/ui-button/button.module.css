@@ -81,17 +81,27 @@
 }
 
 .button.default {
-    background-color: var(--color-button-default-background);
-    color: var(--color-button-default-text);
-    border: 1px solid var(--color-button-default-border);
+ background: var(--color-button-secondary);
+  color:  var(--color-button-default-text);
+  border-radius: var(--border-radius-medium);
+  border: 1px solid var(--color-border-medium);
+    /* 
+    background-color: #bdded3;
+  color: #495b5f;
+  border: 1px solid #a0bdb6;
+  font-weight: 600;
+    
+    */
     font-weight: 800;
 }
 
 .button.default:hover {
-    background-color: var(--color-accent-teal-dark);
-    color: var(--color-background-primary);
-    border-color: var(--color-accent-teal-dark);
+   background-color: var(--color-button-default-border);
+  color: var(--color-text-inverse);
+  border-color: var(--color-accent-teal-dark);
 }
+
+
 
 .button.destructive {
     background-color: var(--color-error);
@@ -145,11 +155,17 @@
     text-decoration: underline;
     text-underline-offset: 4px;
     background: transparent;
+    border: none;
+    font-size: var(--font-size-xs);
+    text-decoration: none;
 }
 
 .button.link:hover {
     text-decoration: underline;
     color: var(--color-accent-teal-dark);
+    background: transparent;
+    border: none;
+
 }
 
 /* Disabled state using design tokens */

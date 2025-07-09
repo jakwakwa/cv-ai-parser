@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-import { ResumeDatabase } from '@/lib/database';
-import { createClient } from '@/lib/supabase/server';
+import { ResumeDatabase } from '@/lib/db';
 import type { Resume } from '@/lib/types';
 
 interface ResumeLayoutProps {
@@ -17,59 +16,55 @@ export async function generateMetadata({
     const { slug } = await params;
 
     // Fetch resume data for metadata
-    const supabase = await createClient();
-    const resume: Resume | null = await ResumeDatabase.getPublicResume(
-      supabase,
-      slug
-    );
+    const resume: Resume | null = await ResumeDatabase.getPublicResume(slug);
 
-    if (!resume || !resume.parsed_data) {
+    if (!resume || !resume.parsedData) {
       return {
         title: 'Resume Not Found | CV AI Parser',
         description: 'The requested resume could not be found.',
       };
     }
 
-    const { parsed_data } = resume;
-    const name = parsed_data.name || 'Professional Resume';
-    const title = parsed_data.title || 'Career Professional';
-    const location = parsed_data.contact?.location || '';
-    const experienceCount = parsed_data.experience?.length || 0;
+    const { parsedData } = resume;
+    const name = parsedData.name || 'Professional Resume';
+    const title = parsedData.title || 'Career Professional';
+    const location = parsedData.contact?.location || '';
+    const experienceCount = parsedData.experience?.length || 0;
 
     // Handle skills count for both legacy array and enhanced object formats
     const skillsCount = (() => {
-      if (!parsed_data.skills) return 0;
+      if (!parsedData.skills) return 0;
 
       // If it's an array (legacy format)
-      if (Array.isArray(parsed_data.skills)) {
-        return parsed_data.skills.length;
+      if (Array.isArray(parsedData.skills)) {
+        return parsedData.skills.length;
       }
 
       // If it's an object (enhanced format)
-      if (typeof parsed_data.skills === 'object') {
+      if (typeof parsedData.skills === 'object') {
         let count = 0;
 
         // Count skills from 'all' array if it exists
-        if (parsed_data.skills.all && Array.isArray(parsed_data.skills.all)) {
-          count += parsed_data.skills.all.length;
+        if (parsedData.skills.all && Array.isArray(parsedData.skills.all)) {
+          count += parsedData.skills.all.length;
         }
 
         // Count technical skills if they exist and 'all' doesn't exist
         if (
-          !parsed_data.skills.all &&
-          parsed_data.skills.technical &&
-          Array.isArray(parsed_data.skills.technical)
+          !parsedData.skills.all &&
+          parsedData.skills.technical &&
+          Array.isArray(parsedData.skills.technical)
         ) {
-          count += parsed_data.skills.technical.length;
+          count += parsedData.skills.technical.length;
         }
 
         // Count soft skills if they exist and 'all' doesn't exist
         if (
-          !parsed_data.skills.all &&
-          parsed_data.skills.soft &&
-          Array.isArray(parsed_data.skills.soft)
+          !parsedData.skills.all &&
+          parsedData.skills.soft &&
+          Array.isArray(parsedData.skills.soft)
         ) {
-          count += parsed_data.skills.soft.length;
+          count += parsedData.skills.soft.length;
         }
 
         return count;
@@ -86,35 +81,37 @@ export async function generateMetadata({
 
     // Handle skills for keywords - support both legacy array and enhanced object formats
     const skillsForKeywords = (() => {
-      if (!parsed_data.skills) return [];
+      if (!parsedData.skills) return [];
 
       // If it's an array (legacy format)
-      if (Array.isArray(parsed_data.skills)) {
-        return parsed_data.skills;
+      if (Array.isArray(parsedData.skills)) {
+        return parsedData.skills;
       }
 
       // If it's an object (enhanced format)
-      if (typeof parsed_data.skills === 'object') {
+      if (typeof parsedData.skills === 'object') {
         const allSkills = [];
 
         // Add skills from 'all' array if it exists
-        if (parsed_data.skills.all && Array.isArray(parsed_data.skills.all)) {
-          allSkills.push(...parsed_data.skills.all);
+        if (parsedData.skills.all && Array.isArray(parsedData.skills.all)) {
+          allSkills.push(...parsedData.skills.all);
         }
 
         // Add technical skills if they exist
         if (
-          parsed_data.skills.technical &&
-          Array.isArray(parsed_data.skills.technical)
+          parsedData.skills.technical &&
+          Array.isArray(parsedData.skills.technical)
         ) {
           allSkills.push(
-            ...parsed_data.skills.technical.map((skill) => skill.name || skill)
+            ...parsedData.skills.technical.map(
+              (skill: { name: string }) => skill.name || skill
+            )
           );
         }
 
         // Add soft skills if they exist
-        if (parsed_data.skills.soft && Array.isArray(parsed_data.skills.soft)) {
-          allSkills.push(...parsed_data.skills.soft);
+        if (parsedData.skills.soft && Array.isArray(parsedData.skills.soft)) {
+          allSkills.push(...parsedData.skills.soft);
         }
 
         return allSkills;
@@ -156,9 +153,9 @@ export async function generateMetadata({
         canonical: resumeUrl,
       },
       other: {
-        'profile:first_name': parsed_data.name?.split(' ')[0] || '',
+        'profile:first_name': parsedData.name?.split(' ')[0] || '',
         'profile:last_name':
-          parsed_data.name?.split(' ').slice(1).join(' ') || '',
+          parsedData.name?.split(' ').slice(1).join(' ') || '',
         'profile:username': slug,
       },
     };

@@ -25,6 +25,7 @@
   --input: 0 0% 89.8%;
   --ring: 0 0% 3.9%;
 
+
   /* Chart Colors */
   --chart-1: 12 76% 61%;
   --chart-2: 173 58% 39%;
@@ -49,11 +50,11 @@
   --color-background-info: #f0f9ff;
 
   /* Text Colors */
-  --color-text-primary: #1f2937;
+  /* --color-text-primary: #1f2937; */
   --color-text-secondary: #6b7280;
   --color-text-light: #374151;
   --color-text-success: #a6d9d4;
-  --color-text-info: #0369a1;
+  --color-text-info: #1f2937;
 
   /* Border Colors */
   --color-border-light: #e5e7eb;
@@ -70,7 +71,7 @@
 
   /* Secondary Colors */
   --color-secondary-blue: #5bb5e1;
-  --color-secondary-blue-dark: #5bb5e1;
+  --color-secondary-blue-dark: #0d9488;
 
   /* Error Colors */
   --color-error-text: #dc2626;
@@ -86,6 +87,29 @@
   --color-button-primary-hover: var(--color-accent-teal-dark);
   --color-button-secondary-bg: var(--color-secondary-blue);
   --color-button-secondary-hover: var(--color-secondary-blue-dark);
+  --color-background-primary-lighter: #e1ebea;
+
+  --color-card-gradient-start: #f5fafd;      /* very light blue (was #192E42) */
+  --color-card-gradient-end: #eaf3fa;        /* light blue (was #1A3B56) */
+  --color-card-border: #e0e7ef;              /* light border (was #062421) */
+  --color-card-content-bg: #f7fbff;          /* very light blue (was #1A3145) */
+  --color-card-content-border: #e3eaf2;      /* light border (was #162028) */
+  --color-card-footer-bg: #f3f7fa;           /* very light blue (was #152437) */
+  --color-card-footer-gradient-end: #eaf3fa; /* light blue (was #1B3D58) */
+  --color-card-footer-border: #e0e0e0;       /* light gray (was rgba(127,127,127,0.5)) */
+  --color-card-footer-border-dark: #b0b0b0;  /* medium gray (was #3D3D3D) */
+  --color-card-text-primary: #1a202c;        /* dark text (was #F5F5F5) */
+  --color-card-text-secondary: #0d9488;      /* accent teal (same as dark) */
+  --color-card-text-light: #374151;          /* muted dark (was #FFFFFF) */
+  --color-card-button-view: #e0f7f4;         /* light teal (was #15B8A7) */
+  --color-card-button-view-text: #0d9488;    /* teal (was #152437) */
+  --color-card-button-share: #e3f0fa;
+  --color-card-button-share-border: #88bae0;        /* light blue (was #16588D) */
+  --color-card-button-delete: #fbeaea;       /* light red (was #7D4545) */
+  --color-card-button-delete-border: #f5bcbc;/* light red border (was #914A4A) */
+  --color-card-public-toggle-public-bg: #e0f7f4; /* light teal (was #15B8A7) */
+  --color-card-public-toggle-private-bg: #fbeaea; /* light red (was #7D4545) */
+
 }
 
 /* Dark mode color overrides */
@@ -109,11 +133,38 @@
     --input: 0 0% 14.9%;
     --ring: 0 0% 83.1%;
 
+
+
+
     /* Dark mode semantic colors */
-    --color-background-primary: #1f2937;
+    --color-background-primary: #0d1724;
+    --color-background-priamry-lighter: #022532;
     --color-background-secondary: #374151;
-    --color-text-primary: #f9fafb;
+
+    /* --color-text-primary: #94cebf; */
     --color-text-secondary: #d1d5db;
     --color-border-light: #000;
-  }
+
+    /* Dark mode Figma Card Colors (same as light mode for now, adjust if needed) */
+    --color-card-gradient-start: #192E42;
+    --color-card-gradient-end: #1A3B56;
+    --color-card-border: #062421;
+    --color-card-content-bg: #1A3145;
+    --color-card-content-border: #162028;
+    --color-card-footer-bg: #152437;
+    --color-card-footer-gradient-end: #1B3D58;
+    --color-card-footer-border: rgba(127, 127, 127, 0.5);
+    --color-card-footer-border-dark: #3D3D3D;
+    --color-card-text-primary: #F5F5F5;
+    --color-card-text-secondary: #15B8A7;
+    --color-card-text-light: #FFFFFF;
+    --color-card-button-view: #15B8A7;
+    --color-card-button-view-text: #152437;
+    --color-card-button-share: #16588D;
+    --color-card-button-share-border: #3d7bab;
+    --color-card-button-delete: #7D4545;
+    --color-card-button-delete-border: #914A4A;
+    --color-card-public-toggle-public-bg: #15B8A7;
+    --color-card-public-toggle-private-bg: #7D4545;
+  }  
 }

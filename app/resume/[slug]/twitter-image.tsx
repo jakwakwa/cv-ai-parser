@@ -1,6 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { ResumeDatabase } from '@/lib/database';
-import { createClient } from '@/lib/supabase/server';
+import { ResumeDatabase } from '@/lib/db';
 import type { Resume } from '@/lib/types';
 
 // Image metadata
@@ -64,33 +63,29 @@ export default async function Image({
     const { slug } = await params;
 
     // Fetch resume data
-    const supabase = await createClient();
-    const resume: Resume | null = await ResumeDatabase.getPublicResume(
-      supabase,
-      slug
-    );
+    const resume: Resume | null = await ResumeDatabase.getPublicResume(slug);
 
-    if (!resume || !resume.parsed_data) {
+    if (!resume || !resume.parsedData) {
       return generateDefaultImage();
     }
 
-    const { parsed_data } = resume;
-    const name = parsed_data.name || 'Professional Resume';
-    const title = parsed_data.title || 'Career Professional';
-    const location = parsed_data.contact?.location || '';
-    const experienceCount = Array.isArray(parsed_data.experience)
-      ? parsed_data.experience.length
+    const { parsedData } = resume;
+    const name = parsedData.name || 'Professional Resume';
+    const title = parsedData.title || 'Career Professional';
+    const location = parsedData.contact?.location || '';
+    const experienceCount = Array.isArray(parsedData.experience)
+      ? parsedData.experience.length
       : 0;
     const skillsCount =
-      typeof parsed_data.skills === 'object' &&
-      parsed_data.skills !== null &&
-      Array.isArray(parsed_data.skills)
-        ? parsed_data.skills.length
+      typeof parsedData.skills === 'object' &&
+      parsedData.skills !== null &&
+      Array.isArray(parsedData.skills)
+        ? parsedData.skills.length
         : 0;
 
     // Get primary color from custom colors or use default
-    const primaryColor = parsed_data.customColors?.primary || '#3b82f6';
-    const secondaryColor = parsed_data.customColors?.accent || '#1e40af';
+    const primaryColor = parsedData.customColors?.primary || '#3b82f6';
+    const secondaryColor = parsedData.customColors?.accent || '#1e40af';
 
     // Create a professional gradient based on custom colors
     const gradientStart = primaryColor;

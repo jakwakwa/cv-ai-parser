@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema'; // Import EnhancedParsedResume
 // import type { ParsedResume } from '@/lib/resume-parser/schema';
-import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import ResumeTailorTool from '@/src/containers/resume-tailor-tool/resume-tailor-tool';
 import styles from './page.module.css';
 
@@ -19,7 +18,6 @@ interface ParseInfo {
 }
 
 export default function ResumeTailorPage() {
-  const { user, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,26 +25,11 @@ export default function ResumeTailorPage() {
     _parsedData: EnhancedParsedResume, // Update to EnhancedParsedResume
     _info: ParseInfo
   ) => {
-    // Pass the parsed data to the ResumeTailorTool. The ResumeTailorTool will handle
-    // showing the profile image uploader and subsequent navigation.
-    // For non-authenticated users, we might still want to show a toast.
-    if (!user) {
-      toast({
-        title: 'Resume Created',
-        description:
-          'Your tailored resume has been created. Sign in to save it to your library.',
-      });
-    }
+    toast({
+      title: 'Resume Created',
+      description: 'Your tailored resume has been created.',
+    });
   };
-
-  if (authLoading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loadingSpinner} />
-        <p className={styles.loadingText}>Loading...</p>
-      </div>
-    );
-  }
 
   return (
     <div className={styles.pageContainer}>
@@ -62,7 +45,7 @@ export default function ResumeTailorPage() {
         onResumeCreated={handleResumeCreated}
         isLoading={isLoading}
         setIsLoading={setIsLoading}
-        isAuthenticated={!!user}
+        isAuthenticated={true}
       />
     </div>
   );

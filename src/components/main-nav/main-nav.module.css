@@ -30,7 +30,7 @@
 /* Mobile responsive brand text */
 @media (max-width: 768px) {
   .brand {
-    font-size: var(--font-size-xxs);
+    font-size: var(--font-size-md);
   }
 }
 

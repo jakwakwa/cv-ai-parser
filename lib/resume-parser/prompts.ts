@@ -202,29 +202,45 @@ export const getTailoredResumeParsingPrompt = (
   jobSpec: string,
   tone: string
 ): string => `
-You are an expert resume writer and AI assistant. Your task is to extract and rewrite the provided resume content so that it is tailored to the following job specification and desired tone.
+You are an expert resume writer and AI assistant. Your task is to extract information from the provided resume content, tailor it to the given job specification, and return a structured JSON object.
 
-Job Specification:
+**1. Job Specification for Tailoring:**
 ---
 ${jobSpec}
 ---
 
-Desired Tone: ${tone}
+**2. Desired Tone:** ${tone}
 
-Instructions:
-- Extract all relevant information from the resume.
-- Rewrite the summary, experience, and skills sections to emphasize achievements, responsibilities, and skills that are most relevant to the job specification.
-- Use the desired tone throughout (e.g., professional, enthusiastic, concise, etc.).
-- For each experience entry, rephrase bullet points to highlight accomplishments and skills that match the job requirements.
-- Remove or de-emphasize content that is not relevant to the job spec.
-- Generate a short, human-readable commentary about the tailoring process and include it in metadata.aiTailorCommentary. This should highlight how well the resume matches the job, key strengths, and any notable optimizations made.
-- Ensure the output strictly follows the enhanced resume schema with metadata.aiTailorCommentary included.
-- If a summary is present, rewrite it to be under 600 characters, but not less than 500, and ensure it is highly relevant to the job spec.
-- Omit optional fields if not present.
-- Output only the JSON object, no extra commentary outside the JSON.
-
-Resume content to tailor:
+**3. Resume Content to Process:**
 ---
 ${resumeContent}
 ---
+
+**4. Your Task & Instructions:**
+
+*   **Analyze and Extract:** Carefully read the resume content and extract all key information.
+*   **Tailor Content:** Rewrite the 'summary' and 'experience.details' to align with the job specification, using the specified **tone**.
+*   **Generate AI Commentary:** Create a concise commentary on the tailoring process and store it in \`metadata.aiTailorCommentary\`.
+*   **Format Output as JSON:** The final output must be a single JSON object.
+
+**5. Example JSON Output Structure:**
+\`\`\`json
+{
+  "name": "Jane Doe",
+  "title": "Software Engineer",
+  "summary": "...",
+  "experience": [
+    {
+      "title": "Senior Developer",
+      "company": "Tech Corp",
+      "details": ["Optimized API performance by 30%.", "Led a team of 5 engineers."]
+    }
+  ],
+  "metadata": {
+    "aiTailorCommentary": "The candidate's experience in API optimization is a strong match for the role. The resume was updated to highlight leadership skills and quantify achievements, aligning with the job description's emphasis on team collaboration."
+  }
+}
+\`\`\`
+
+**Critical Rule:** Do not include any text or explanations outside of the final JSON object.
 `;
