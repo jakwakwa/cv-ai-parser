@@ -1,4 +1,4 @@
-import { StreamingTextResponse } from 'ai';
+/** biome-ignore-all lint/suspicious/noExplicitAny: <experimental will get typed soon> */
 import type { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -25,6 +25,10 @@ export async function POST(request: NextRequest) {
     const jobSpecFile = formData.get('jobSpecFile') as File | null;
     const jobSpecText = formData.get('jobSpecText') as string | null;
     const tone = formData.get('tone') as string;
+    const profileImage = formData.get('profileImage') as string | null;
+    const customColors = JSON.parse(
+      (formData.get('customColors') as string) || '{}'
+    );
 
     if (!file) {
       return Response.json({ error: 'Resume file is required' }, { status: 400 });
@@ -64,6 +68,7 @@ export async function POST(request: NextRequest) {
     const encoder = new TextEncoder();
     const customStream = new ReadableStream({
       async start(controller) {
+      
         const writeUpdate = (update: any) => {
           const chunk = encoder.encode(`data: ${JSON.stringify(update)}\n\n`);
           controller.enqueue(chunk);
@@ -77,7 +82,8 @@ export async function POST(request: NextRequest) {
             progress: 10 
           });
 
-          let partialData: any = null;
+         
+          let _partialData: any = null;
           let progressCount = 0;
           const progressMessages = [
             'Extracting personal information...',
@@ -89,7 +95,7 @@ export async function POST(request: NextRequest) {
 
           // Stream partial objects and show progress
           for await (const partial of stream.partialObjectStream) {
-            partialData = partial;
+            _partialData = partial;
             progressCount++;
             const progress = Math.min(20 + (progressCount * 15), 90);
             const messageIndex = Math.min(Math.floor(progressCount / 2), progressMessages.length - 1);
@@ -103,7 +109,14 @@ export async function POST(request: NextRequest) {
           }
 
           // Get final result
-          const finalResume: EnhancedParsedResume = await stream.object;
+          const parsedResume: EnhancedParsedResume = await stream.object;
+          
+          // Merge custom colors and profile image
+          const finalResume: EnhancedParsedResume = {
+            ...parsedResume,
+            customColors: customColors || {},
+            profileImage: profileImage || parsedResume.profileImage,
+          };
           
           writeUpdate({ 
             status: 'saving', 

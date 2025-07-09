@@ -1,4 +1,5 @@
 /** biome-ignore-all lint/complexity/noStaticOnlyClass: <> */
+/** biome-ignore-all lint/suspicious/noExplicitAny: <ecperimental feature. when tested it will get typed> */
 
 import { PrismaClient } from "@prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
@@ -82,12 +83,14 @@ export class ResumeDatabase {
           originalFilename,
           fileType,
           fileSize,
-          parsedData: parsedData as any,
+          parsedData: parsedData as string,
           parseMethod,
           confidenceScore,
           isPublic,
           slug,
+         
           customColors: customColors as any,
+         
           additionalContext: additionalContext as any,
           user: {
             connect: { id: userId },
@@ -181,12 +184,14 @@ export class ResumeDatabase {
     updates: Partial<Resume> & { customColors?: Record<string, string> }
   ): Promise<Resume> {
     try {
+      // biome-ignore lint/correctness/noUnusedVariables: <any>
       const { slug, additionalContext, ...restOfUpdates } = updates;
       const resume = await prisma.resume.update({
         where: { id },
         data: {
           ...restOfUpdates,
           customColors: updates.customColors as any,
+         
           parsedData: updates.parsedData as any,
         },
       });
@@ -212,6 +217,7 @@ export class ResumeDatabase {
   // Save resume version
   static async saveResumeVersion(
     resumeId: string,
+   
     parsedData: any,
     changesSummary?: string
   ) {
@@ -227,6 +233,7 @@ export class ResumeDatabase {
         data: {
           resumeId,
           versionNumber: nextVersion,
+         
           parsedData: parsedData as any,
           changesSummary: changesSummary,
         },

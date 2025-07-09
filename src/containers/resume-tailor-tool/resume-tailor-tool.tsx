@@ -32,6 +32,20 @@ import ProfileImageUploader from '@/src/containers/profile-image-uploader/profil
 import ResumeDisplay from '@/src/containers/resume-display/resume-display';
 import styles from './resume-tailor-tool.module.css';
 
+// Add proper typing for partial data
+interface PartialResumeData {
+  name?: string;
+  title?: string;
+  experience?: Array<{
+    title?: string;
+    company?: string;
+    duration?: string;
+    details?: string[];
+  }>;
+  skills?: string[];
+  [key: string]: unknown; // For other dynamic fields during parsing
+}
+
 interface ParseInfo {
   resumeId?: string;
   resumeSlug?: string;
@@ -47,7 +61,7 @@ interface StreamUpdate {
   status?: 'analyzing' | 'processing' | 'saving' | 'completed' | 'error';
   message?: string;
   progress?: number;
-  partialData?: any;
+  partialData?: PartialResumeData; // Replace 'any' with proper type
   data?: EnhancedParsedResume;
   meta?: ParseInfo;
 }
@@ -95,7 +109,8 @@ const ResumeTailorTool = ({
   // Streaming states
   const [streamingProgress, setStreamingProgress] = useState(0);
   const [streamingMessage, setStreamingMessage] = useState('');
-  const [partialResumeData, setPartialResumeData] = useState<any>(null);
+  const [partialResumeData, setPartialResumeData] =
+    useState<PartialResumeData | null>(null);
 
   // Customization states
   const [profileImage, setProfileImage] = useState('');
@@ -213,7 +228,7 @@ const ResumeTailorTool = ({
     }
 
     // --- LOGGING: Log all form data fields before sending ---
-    const formDataLog: Record<string, any> = {};
+    const formDataLog: Record<string, string | File> = {};
     formData.forEach((value, key) => {
       formDataLog[key] =
         value instanceof File
@@ -323,7 +338,7 @@ const ResumeTailorTool = ({
                       streamUpdate.message || 'Stream processing failed'
                     );
                   }
-                } catch (parseError) {
+                } catch (_parseError) {
                   console.warn(
                     '[TailorTool] Failed to parse stream chunk:',
                     line
@@ -400,12 +415,12 @@ const ResumeTailorTool = ({
         <div className={styles.loadingCard}>
           <div className={styles.loadingSpinner} />
           <p className={styles.loadingTitle}>
-            {streamingMessage || 'Creating your tailored resume...'}
+            {streamingMessage || 'Extracting data from your resume...'}
           </p>
           <p className={styles.loadingSubtitle}>
             {streamingProgress > 0
               ? `Progress: ${streamingProgress}%`
-              : 'AI is analyzing the job description and optimizing your resume'}
+              : 'AI is analyzing the job specifications and tailoring your resume...'}
           </p>
           {streamingProgress > 0 && (
             <div className={styles.progressBar}>
@@ -429,18 +444,20 @@ const ResumeTailorTool = ({
                     <strong>Title:</strong> {partialResumeData.title}
                   </p>
                 )}
-                {partialResumeData.experience?.length > 0 && (
-                  <p>
-                    <strong>Experience sections:</strong>{' '}
-                    {partialResumeData.experience.length}
-                  </p>
-                )}
-                {partialResumeData.skills?.length > 0 && (
-                  <p>
-                    <strong>Skills found:</strong>{' '}
-                    {partialResumeData.skills.length}
-                  </p>
-                )}
+                {Array.isArray(partialResumeData.experience) &&
+                  partialResumeData.experience.length > 0 && (
+                    <p>
+                      <strong>Experience sections:</strong>{' '}
+                      {partialResumeData.experience.length}
+                    </p>
+                  )}
+                {Array.isArray(partialResumeData.skills) &&
+                  partialResumeData.skills.length > 0 && (
+                    <p>
+                      <strong>Skills found:</strong>{' '}
+                      {partialResumeData.skills.length}
+                    </p>
+                  )}
               </div>
             </div>
           )}

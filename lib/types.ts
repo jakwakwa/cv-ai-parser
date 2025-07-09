@@ -1,4 +1,4 @@
-import type { EnhancedParsedResume } from './resume-parser/enhanced-schema';
+
 
 export interface Profile {
   id: string;
@@ -23,6 +23,7 @@ export interface Resume {
   originalFilename: string | null;
   fileType: string | null;
   fileSize: number | null;
+  // biome-ignore lint/suspicious/noExplicitAny: <any>
   parsedData: any;
   parseMethod: string | null;
   confidenceScore: number | null;

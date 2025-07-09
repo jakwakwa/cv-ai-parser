@@ -16,7 +16,7 @@ async function main() {
   });
 
   // Create a resume for the user
-  const resume = await prisma.resume.create({
+  const _resume = await prisma.resume.create({
     data: {
       title: 'Sample Resume',
       slug: `sample-resume-${Date.now()}`,
