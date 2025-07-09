@@ -2,6 +2,7 @@
 
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
+import { Button } from '../ui/ui-button/button';
 import styles from './authComponent.module.css';
 
 interface AuthComponentProps {
@@ -101,23 +102,26 @@ export default function AuthComponent({ onSuccess }: AuthComponentProps) {
             className={styles.input}
             required
           />
-          <button
+
+          <Button
+            variant="default"
             type="submit"
             disabled={loading}
             className={styles.submitButton}
           >
             {loading ? '...' : isSignUp ? 'Sign Up' : 'Sign In'}
-          </button>
+          </Button>
         </form>
-        <button
+        <Button
           type="button"
+          variant="link"
           onClick={() => setIsSignUp(!isSignUp)}
           className={styles.toggleButton}
         >
           {isSignUp
             ? 'Already have an account? Sign In'
             : "Don't have an account? Sign Up"}
-        </button>
+        </Button>
         {error && <p className={styles.errorMessage}>{error}</p>}
       </div>
     </div>

@@ -228,8 +228,8 @@
     --color-button-shadow: rgba(0, 0, 0, 0.3);
 
     /* Custom Input Styles */
-    --color-input-background-custom: #162d408c;
-    --shadow-input: inset 5px 5px 10px #0b101296, inset -5px -5px 10px #1d1e2136;
+    --color-input-background-custom: #213e55d6;
+    --shadow-input:inset 1px 2px 3px 2px #0b10124d, inset -5px -5px 10px #1d1e2136;
     
     /* Legacy compatibility */
     --color-background-dark: var(--color-background-secondary);
@@ -384,8 +384,8 @@
     --color-button-shadow: rgba(0, 0, 0, 0.1);
 
     /* Custom Input Styles */
-    --color-input-background-custom: #f8f8ff;
-    --shadow-input: inset 5px 5px 10px #41414105, inset -5px -5px 10px #cacdcf63;
+    --color-input-background-custom: #213e55d6;
+    --shadow-input: inset 1px 2px 3px 2px #0b10124d, inset -5px -5px 10px #1d1e2136;
     
     /* Special colors */
     --color-primary-dark: #2c3844;

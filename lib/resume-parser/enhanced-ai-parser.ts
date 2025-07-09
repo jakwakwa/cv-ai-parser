@@ -307,6 +307,9 @@ function extractUsernameFromUrl(
   url: string,
   platform: string
 ): string | undefined {
+  if (!url || typeof url !== 'string') {
+    return undefined;
+  }
   try {
     const urlObj = new URL(url);
     const pathname = urlObj.pathname;

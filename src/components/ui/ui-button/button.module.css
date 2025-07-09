@@ -145,11 +145,17 @@
     text-decoration: underline;
     text-underline-offset: 4px;
     background: transparent;
+    border: none;
+    font-size: var(--font-size-xs);
+    text-decoration: none;
 }
 
 .button.link:hover {
     text-decoration: underline;
     color: var(--color-accent-teal-dark);
+    background: transparent;
+    border: none;
+
 }
 
 /* Disabled state using design tokens */

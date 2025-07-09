@@ -10,7 +10,7 @@
   border: 1px solid var(--color-input-border);
   background-color: var(--color-input-background-custom);
   padding: 0.5rem 0.75rem; /* py-2 px-3 */
-  font-size: 1rem; /* text-base */
+  font-size: 0.75rem; /* text-base */
   color: var(--color-text-primary);
   box-shadow: var(--shadow-input);
   transition: box-shadow 0.2s ease-in-out;
