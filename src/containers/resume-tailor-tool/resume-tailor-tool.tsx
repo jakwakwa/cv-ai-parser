@@ -556,6 +556,17 @@ const ResumeTailorTool = ({
             )}
           </div>
 
+          {/* Tailor to job spec toggle */}
+          <label className={styles.tailorToggle} htmlFor="tailor-toggle">
+            <input
+              id="tailor-toggle"
+              type="checkbox"
+              checked={tailorEnabled}
+              onChange={() => setTailorEnabled((prev) => !prev)}
+            />
+            <span>Tailor to job spec.</span>
+          </label>
+
           {/* Profile Image Uploader */}
           <div className={styles.customizationSection}>
             <h3 className={styles.sectionTitle}>Profile Picture (Optional)</h3>
@@ -587,16 +598,6 @@ const ResumeTailorTool = ({
               </DialogContent>
             </Dialog>
 
-            {/* Tailor to job spec toggle */}
-            <label className={styles.tailorToggle} htmlFor="tailor-toggle">
-              <input
-                id="tailor-toggle"
-                type="checkbox"
-                checked={tailorEnabled}
-                onChange={() => setTailorEnabled((prev) => !prev)}
-              />
-              <span>Tailor to job spec.</span>
-            </label>
             {/* Action Button - Only show when tailor is disabled */}
             {!tailorEnabled && (
               <div className={styles.actionSection}>

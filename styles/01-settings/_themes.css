@@ -92,9 +92,12 @@
     --color-page-background-gradient: linear-gradient(325deg, hsl(186.49deg 28.25% 79.06%) 1%, #ffffff 70%, #a4d7d6 100%);
 
     /* Button Default Colors - Light Theme */
-    --color-button-default-background: #376871;
-    --color-button-default-text: #adfff8;
-    --color-button-default-border: #1d3e4c;
+    --color-button-default-background: #bdded3;
+    --color-button-default-text: #495b5f;
+    --color-button-default-border: #a0bdb6;
+
+
+
 
     /* Feature Card Colors - Light Theme */
     --color-feature-card-background: #d8e6ec;
@@ -180,7 +183,7 @@
     --color-text-light: #e5e7eb;
     --color-text-hover: #4d607ffa;
     --color-text-muted: #9ca3af;
-    --color-text-inverse: #1f2937;
+    --color-text-inverse: #9da0a4;
     
     /* Border Colors - Subtle borders in dark mode */
     --color-border-light: #489b9333;
@@ -446,9 +449,9 @@
     --color-page-background-gradient: linear-gradient(325deg, hsl(186.49deg 28.25% 79.06%) 1%, #ffffff 70%, #a4d7d6 100%);
 
     /* Button Default Colors - System Theme (Light Default) */
-    --color-button-default-background: #376871;
-    --color-button-default-text: #adfff8;
-    --color-button-default-border: #1d3e4c;
+    --color-button-default-background: #bdded3;
+    --color-button-default-text: #495b5f;
+    --color-button-default-border: #a0bdb6;
 
     /* Feature Card Colors - System Theme (Light Default) */
     --color-feature-card-background: #d8e6ec;
@@ -537,7 +540,7 @@
     --color-text-light: #e5e7eb;
     --color-text-hover: #4d607ffa;
     --color-text-muted: #9ca3af;
-    --color-text-inverse: #1f2937;
+    --color-text-inverse: #9da0a4;
     --color-text-input-light: #76cac1;
     
     --color-border-light: #489b9333;
