@@ -24,7 +24,9 @@ export class ResumeDatabase {
       originalFilename?: string;
       fileType?: string;
       fileSize?: number;
-      parsedData: unknown;
+      // Modified parsedData type to accept string or object,
+      // as Prisma expects Json type (object or array)
+      parsedData: string | object;
       parseMethod?: string;
       confidenceScore?: number;
       isPublic?: boolean;
@@ -34,19 +36,31 @@ export class ResumeDatabase {
       additionalContext?: UserAdditionalContext;
     }
   ) {
+    // Ensure parsedData is an object for Prisma's Json type field
+    let finalParsedData: object;
+    if (typeof parsedData === 'string') {
+      try {
+        finalParsedData = JSON.parse(parsedData);
+      } catch (e: any) { // Catch as any to access message property safely
+        throw new Error(`Failed to parse parsedData JSON string: ${e.message}`);
+      }
+    } else {
+      finalParsedData = parsedData;
+    }
+
     const { data, error } = await supabase
       .from('resumes')
       .insert({
-        user_id: userId,
-        title: title,
+        title,
         original_filename: originalFilename,
         file_type: fileType,
         file_size: fileSize,
-        parsed_data: parsedData,
+        parsed_data: finalParsedData, // Use the potentially parsed data
         parse_method: parseMethod,
         confidence_score: confidenceScore,
         is_public: isPublic,
-        slug: slug,
+        user_id: userId,
+        slug,
         custom_colors: customColors,
         additional_context: additionalContext,
       })
@@ -54,9 +68,9 @@ export class ResumeDatabase {
       .single();
 
     if (error) {
-      console.error('Error saving resume:', error);
-      throw new Error(error.message);
+      throw new Error(`Failed to save resume: ${error.message}`);
     }
+
     return data;
   }
 

@@ -54,7 +54,7 @@ const ResumeTailorTool = ({
   onResumeCreated,
   isLoading,
   setIsLoading,
-  isAuthenticated = false,
+  isAuthenticated,
 }: ResumeTailorToolProps) => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
