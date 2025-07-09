@@ -16,7 +16,7 @@
     --color-background-overlay: rgba(255, 255, 255, 0.95);
     
     /* Text Colors */
-    --color-text-primary: #1f2937;
+    --color-text-primary: #525b68;
     --color-text-secondary: #6b7280;
     --color-text-light: #374151;
     --color-text-hover: #1f2937;
@@ -70,7 +70,7 @@
 
     /* Custom Input Styles */
     --color-input-background-custom: #f8f8ff;
-    --shadow-input: inset 5px 5px 10px #41414105, inset -5px -5px 10px #cacdcf63;
+    --shadow-input: inset 1px 1px 3px 1px #abbaba59, inset -2px -2px 6px #6f859308;
     
     /* Legacy compatibility */
     --color-background-dark: var(--color-background-secondary);
@@ -86,7 +86,7 @@
     /* Hero Gradient Colors - Light Theme */
     --color-hero-gradient-fallback: #27C2BF;
     --color-hero-gradient: linear-gradient(45deg, #374151 35%, #04cbb7 60%, #02796d 82%, #0bcbf4);
-
+    --color-text-input-light: #7d9a97;
     /* Page Background Gradient - Light Theme */
     --color-page-background-fallback: #a4d7d6;
     --color-page-background-gradient: linear-gradient(325deg, hsl(186.49deg 28.25% 79.06%) 1%, #ffffff 70%, #a4d7d6 100%);
@@ -168,14 +168,14 @@
     color-scheme: dark;
     
     /* Background Colors - Dark grays instead of pure black */
-    --color-background-primary: #0a0a0c;
+    --color-background-primary: #0d1724;
     --color-background-secondary: #111827;
     --color-background-tertiary: #162438;
     --color-primary-button-custom: #0d9488;
     --color-background-overlay: rgba(31, 41, 55, 0.95);
     
     /* Text Colors - Light grays for better readability */
-    --color-text-primary: #f9fafb;
+    --color-text-primary: #94cebf;
     --color-text-secondary: #d1d5db;
     --color-text-light: #e5e7eb;
     --color-text-hover: #4d607ffa;
@@ -184,7 +184,7 @@
     
     /* Border Colors - Subtle borders in dark mode */
     --color-border-light: #489b9333;
-    --color-border-medium: #0a2935;
+    --color-border-medium: #13485d;
     --color-border-dark: #6b7280;
     --color-border-neutral: #374151;
     
@@ -226,6 +226,27 @@
     --color-input-background: var(--color-background-tertiary);
     --color-input-border: var(--color-border-medium);
     --color-button-shadow: rgba(0, 0, 0, 0.3);
+
+      /* New Figma Card Colors */
+  --color-card-gradient-start: #192E42;
+  --color-card-gradient-end: #1A3B56;
+  --color-card-border: #062421;
+  --color-card-content-bg: #1A3145;
+  --color-card-content-border: #162028;
+  --color-card-footer-bg: #152437;
+  --color-card-footer-gradient-end: #1B3D58;
+  --color-card-footer-border: rgba(127, 127, 127, 0.5);
+  --color-card-footer-border-dark: #3D3D3D;
+  --color-card-text-primary: #F5F5F5;
+  --color-card-text-secondary: #15B8A7;
+  --color-card-text-light: #FFFFFF;
+  --color-card-button-view: #15B8A7;
+  --color-card-button-view-text: #152437;
+  --color-card-button-share: #16588D;
+  --color-card-button-delete: #7D4545;
+  --color-card-button-delete-border: #914A4A;
+  --color-card-public-toggle-public-bg: #15B8A7;
+  --color-card-public-toggle-private-bg: #7D4545;
 
     /* Custom Input Styles */
     --color-input-background-custom: #213e55d6;
@@ -290,7 +311,7 @@
     --resume-body-text-gold-dark: #d1d5db;
     --resume-profile-header-background-gold-dark: #1f2937;
     --resume-skill-border-gold-dark: #9ca3af;
-
+    --color-background-primary-lighter: #022532;
     /* Minimalist Sand & Ink - Dark Theme */
     --resume-job-title-ink-dark: #f9fafb;
     --resume-sub-icons-ink-dark: #f9fafb;
@@ -305,7 +326,7 @@
     --resume-body-text-ink-dark: #d1d5db;
     --resume-profile-header-background-sand-dark: #374151;
     --resume-skill-border-sand-dark: #6b7280;
-
+    --color-text-input-light: #76cac1;
     /* Modern Blue & Mint - Dark Theme */
     --resume-job-title-blue-dark: #f9fafb;
     --resume-sub-icons-mint-dark: #6ee7b7;
@@ -332,7 +353,7 @@
     --color-background-tertiary: #ebeef3;
     --color-background-overlay: rgba(255, 255, 255, 0.95);
     
-    --color-text-primary: #1f2937;
+    --color-text-primary: #525b68;
     --color-text-secondary: #6b7280;
     --color-text-light: #374151;
     --color-text-hover: #1f2937;
@@ -385,7 +406,28 @@
 
     /* Custom Input Styles */
     --color-input-background-custom: #213e55d6;
-    --shadow-input: inset 1px 2px 3px 2px #0b10124d, inset -5px -5px 10px #1d1e2136;
+    --shadow-input: inset 1px 1px 3px 1px #abbaba59, inset -2px -2px 6px #6f859308;
+
+      /* New Figma Card Colors */
+  --color-card-gradient-start: #192E42;
+  --color-card-gradient-end: #1A3B56;
+  --color-card-border: #062421;
+  --color-card-content-bg: #1A3145;
+  --color-card-content-border: #162028;
+  --color-card-footer-bg: #152437;
+  --color-card-footer-gradient-end: #1B3D58;
+  --color-card-footer-border: rgba(127, 127, 127, 0.5);
+  --color-card-footer-border-dark: #3D3D3D;
+  --color-card-text-primary: #F5F5F5;
+  --color-card-text-secondary: #15B8A7;
+  --color-card-text-light: #FFFFFF;
+  --color-card-button-view: #15B8A7;
+  --color-card-button-view-text: #152437;
+  --color-card-button-share: #16588D;
+  --color-card-button-delete: #7D4545;
+  --color-card-button-delete-border: #914A4A;
+  --color-card-public-toggle-public-bg: #15B8A7;
+  --color-card-public-toggle-private-bg: #7D4545;
     
     /* Special colors */
     --color-primary-dark: #2c3844;
@@ -428,6 +470,8 @@
     --resume-body-text-system: var(--resume-body-text-light);
     --resume-profile-header-background-system: var(--resume-profile-header-background-light);
     --resume-skill-border-system: var(--resume-skill-border-light);
+    --color-text-input-light: #7d9a97;
+    --color-background-primary-lighter: #e1ebea;
 
     /* Elegant Gold & Slate - System Theme (Light Default) */
     --resume-job-title-gold-system: var(--resume-job-title-gold-light);
@@ -488,15 +532,16 @@
     --color-primary-button-custom: #0d9488;
     --color-background-overlay: rgba(31, 41, 55, 0.95);
     
-    --color-text-primary: #f9fafb;
+    --color-text-primary: #94cebf;
     --color-text-secondary: #d1d5db;
     --color-text-light: #e5e7eb;
     --color-text-hover: #4d607ffa;
     --color-text-muted: #9ca3af;
     --color-text-inverse: #1f2937;
+    --color-text-input-light: #76cac1;
     
     --color-border-light: #489b9333;
-    --color-border-medium: #0a2935;
+    --color-border-medium: #13485d;
     --color-border-dark: #6b7280;
     --color-border-neutral: #374151;
     
@@ -612,6 +657,8 @@
     --resume-body-text-ink-system: var(--resume-body-text-ink-dark);
     --resume-profile-header-background-sand-system: var(--resume-profile-header-background-sand-dark);
     --resume-skill-border-sand-system: var(--resume-skill-border-sand-dark);
+
+    --color-background-primary-lighter: #022532;
 
     /* Modern Blue & Mint - System Theme (Dark Override) */
     --resume-job-title-blue-system: var(--resume-job-title-blue-dark);

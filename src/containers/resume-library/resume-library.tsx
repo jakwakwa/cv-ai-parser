@@ -173,18 +173,9 @@ export default function ResumeLibrary({
               <Card key={resume.id} className={styles.card}>
                 <CardHeader className={styles.cardHeader}>
                   <div className={styles.cardHeaderContent}>
-                    <div>
-                      <h2 className={styles.cardTitleLabel}>Title:</h2>
-                      <h3 className={styles.cardTitle}>{resume.title}</h3>
-                      {resume.parsedData.metadata?.aiTailorCommentary && (
-                        <p className={styles.aiSummaryPlaintext}>
-                          {resume.parsedData.metadata.aiTailorCommentary}
-                        </p>
-                      )}
-                    </div>
-
+                    <h3 className={styles.cardTitle}>{resume.title}</h3>
                     <div className={styles.publicToggleContainer}>
-                      <div className={styles.cardTitleLabel}>visibility</div>
+                      {/* <div className={styles.cardTitleLabel}>visibility</div> */}
                       <button
                         type="button"
                         onClick={() => handleTogglePublic(resume)}
@@ -212,43 +203,43 @@ export default function ResumeLibrary({
 
                 <CardContent className={styles.cardContent}>
                   <div className={styles.contentText}>
-                    {/* // TODO: This value always returns unknowwn after a refactor  */}
-                    {/* <div className={styles.contentRow}>
-                      <span>Method:</span>
-                      <Badge
-                        className={`${styles.badge} ${getMethodBadgeColor(resume.parseMethod || 'unknown')}`}
-                      >
-                        {getMethodLabel(resume.parseMethod || 'unknown')}
-                      </Badge>
-                    </div> */}
-                    {resume.confidenceScore && (
-                      <div className={styles.contentRow}>
-                        <span>Confidence:</span>
-                        <span className={styles.contentValue}>
-                          {resume.confidenceScore}%
+                    <div>
+                      {resume.confidenceScore && (
+                        <div className={styles.statItem}>
+                          <span className={styles.statLabel}>Confidence:</span>
+                          <span className={styles.statValue}>
+                            {resume.confidenceScore}%
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <div className={styles.contentTextRight}>
+                      <div className={styles.statItem}>
+                        <span className={styles.statLabel}>Views:</span>
+                        <span className={styles.statValue}>
+                          {resume.viewCount}
                         </span>
                       </div>
-                    )}
-                    <div className={styles.contentRow}>
-                      <span>Views:</span>
-                      <span className={styles.contentIconContainer}>
-                        <Eye className={styles.contentIcon} />
-                        {resume.viewCount}
-                      </span>
-                    </div>
-                    <div className={styles.contentRow}>
-                      <span>Downloads:</span>
-                      <span className={styles.contentIconContainer}>
-                        <Download className={styles.contentIcon} />
-                        {resume.downloadCount}
-                      </span>
-                    </div>
-                    <div className={styles.contentRow}>
-                      <span>Created:</span>
-                      <span className={styles.contentIconContainer}>
-                        <Calendar className={styles.contentIcon} />
-                        {formatDate(resume.createdAt)}
-                      </span>
+                      <div className={styles.statItem}>
+                        <span className={styles.statLabel}>Downloads:</span>
+                        <span className={styles.statValue}>
+                          {resume.downloadCount}
+                        </span>
+                      </div>
+                      <div className={styles.statItem}>
+                        <span className={styles.statLabel}>Created:</span>
+                        <span className={styles.statValue}>
+                          {formatDate(resume.createdAt)}
+                        </span>
+                      </div>
+
+                      <div>
+                        {resume.parsedData.metadata?.aiTailorCommentary && (
+                          <p className={styles.aiSummaryPlaintext}>
+                            {resume.parsedData.metadata.aiTailorCommentary}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </CardContent>

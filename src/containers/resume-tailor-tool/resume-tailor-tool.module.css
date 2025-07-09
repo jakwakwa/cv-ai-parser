@@ -318,6 +318,7 @@
 .textareaContainer {
   padding: var(--spacing-lg);
   flex: 1;
+  color: var( --color-text-input-light);
   display: flex;
   flex-direction: column;
 }

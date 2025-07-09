@@ -7,19 +7,21 @@
   gap: 1rem;
   padding: var(--spacing-xl);
   background: var(--color-background-secondary);
-   border: 1px solid #ccc;  
-   border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
 }
+
 .buttonWrapper {
   display: flex;
 }
+
 .formColumn {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
   padding: 1rem;
- 
+
 }
 
 .formTitle {
@@ -30,21 +32,22 @@
 }
 
 
-  .input {
-    display: flex;
-    height: 2.5rem; /* h-10 */
-    width: 100%;
-    border-radius: var(--border-radius-medium);
-    border: 1px solid var(--color-input-border);
-    background-color: var(--color-input-background-custom);
-    padding: 0.5rem 0.75rem; /* py-2 px-3 */
-    font-size: 0.75rem; /* text-base */
-    color: var(--color-text-primary);
-    box-shadow: var(--shadow-input);
-    transition: box-shadow 0.2s ease-in-out;
-    margin-bottom: 1rem;
-  
- 
+.input {
+  display: flex;
+  height: 2.5rem;
+  /* h-10 */
+  width: 100%;
+  border-radius: var(--border-radius-medium);
+  border: 1px solid var(--color-input-border);
+  background-color: var(--color-input-background-custom);
+  padding: 0.5rem 0.75rem;
+  /* py-2 px-3 */
+  font-size: 0.75rem;
+  /* text-base */
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-input);
+  transition: box-shadow 0.2s ease-in-out;
+  margin-bottom: 1rem;
 }
 
 .submitButton {
@@ -55,7 +58,7 @@
   cursor: pointer;
   color: var(--color-button-default-text); */
   width: 100%;
-  
+
 }
 
 .input::placeholder {
@@ -76,16 +79,19 @@
 .inputFile::file-selector-button {
   border: 0;
   background: transparent;
-  font-size: 0.875rem; /* text-sm */
+  font-size: 0.875rem;
+  /* text-sm */
   font-weight: 500;
   color: var(--color-text-primary);
 }
 
 @media (min-width: 768px) {
   .input {
-    font-size: 0.875rem; /* md:text-sm */
+    font-size: 0.875rem;
+    /* md:text-sm */
   }
-} 
+}
+
 .toggleButton {
   padding: 0.5rem;
   border: none;
@@ -98,4 +104,4 @@
 .errorMessage {
   color: red;
   text-align: center;
-} 
+}

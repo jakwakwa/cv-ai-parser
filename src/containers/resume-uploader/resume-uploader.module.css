@@ -336,7 +336,7 @@
   font-family: var(--font-family-primary);
   background: var(--color-background-input);
   box-shadow: var(--color-shadow-input);
-  color: var(--color-text-primary);
+  color: var(--color-text-input-light);
 }
 
 .jobSpecTextarea::placeholder {

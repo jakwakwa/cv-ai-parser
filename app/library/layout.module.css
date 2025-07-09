@@ -11,7 +11,7 @@
     max-width: var(--max-width-xl);
     margin: var(--spacing-lg) auto;
     padding: var(--spacing-lg);
-    background-color: var(--color-background-primary);
+    background-color: var(--color-background-primary-lighter);
     border-radius: var(--border-radius-medium);
     box-shadow: var(--color-shadow-medium);
 }
@@ -23,7 +23,7 @@
     box-shadow: var(--color-shadow-medium);
     display: flex;
     flex-direction: column;
-    background-color: var(--color-background-primary);
+    background-color: var(--color-background-primary-lighter);
     /* background-color: var(--color-background-primary); */
 }
 
