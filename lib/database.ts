@@ -1,4 +1,5 @@
-/** biome-ignore-all lint/complexity/noStaticOnlyClass: <> */
+/** biome-ignore-all lint/complexity/noStaticOnlyClass: <Catch> */
+/** biome-ignore-all lint/suspicious/noExplicitAny: <Catch as any to access message property safely> */
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Resume, UserAdditionalContext } from './types';
 
@@ -41,7 +42,7 @@ export class ResumeDatabase {
     if (typeof parsedData === 'string') {
       try {
         finalParsedData = JSON.parse(parsedData);
-      } catch (e: any) { // Catch as any to access message property safely
+      } catch (e: any) { 
         throw new Error(`Failed to parse parsedData JSON string: ${e.message}`);
       }
     } else {
@@ -218,7 +219,6 @@ export class ResumeDatabase {
   static async saveResumeVersion(
     supabase: SupabaseClient,
     resumeId: string,
-    // biome-ignore lint/suspicious/noExplicitAny: <s>
     parsedData: any,
     changesSummary?: string
   ) {
