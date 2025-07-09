@@ -35,7 +35,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
   return (
     <Dialog open={isAuthModalOpen} onOpenChange={setAuthModalOpen}>
       <DialogContent
-        className={styles.AuthModal + 'dialog-content-custom-class'}
+        className={`${styles.AuthModal}dialog-content-custom-class`}
       >
         <DialogHeader>
           <DialogTitle className="hidden">Authentication</DialogTitle>

@@ -1,15 +1,6 @@
 'use client';
 
-import {
-  Calendar,
-  Download,
-  Eye,
-  FileText,
-  Globe,
-  Lock,
-  Search,
-  Trash2,
-} from 'lucide-react';
+import { FileText, Globe, Lock, Search, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { Resume } from '@/lib/types';
 import {
