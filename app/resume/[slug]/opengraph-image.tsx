@@ -1,6 +1,5 @@
 import { ImageResponse } from 'next/og';
 import { ResumeDatabase } from '@/lib/database';
-import { createClient } from '@/lib/supabase/server';
 import type { Resume } from '@/lib/types';
 
 // Image metadata
@@ -64,11 +63,7 @@ export default async function Image({
     const { slug } = await params;
 
     // Fetch resume data
-    const supabase = await createClient();
-    const resume: Resume | null = await ResumeDatabase.getPublicResume(
-      supabase,
-      slug
-    );
+    const resume: Resume | null = await ResumeDatabase.getPublicResume(slug);
 
     if (!resume || !resume.parsed_data) {
       return generateDefaultImage();

@@ -13,7 +13,6 @@ import {
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ResumeDatabase } from '@/lib/database';
 import type { Resume } from '@/lib/types';
-import { useAuth } from '@/src/components/auth-provider/auth-provider';
 import {
   Card,
   CardContent,
@@ -24,10 +23,11 @@ import styles from './resume-library.module.css';
 
 export default function ResumeLibrary({
   onSelectResume,
+  userId,
 }: {
   onSelectResume: (resume: Resume) => void;
+  userId: string;
 }) {
-  const { user, supabase } = useAuth();
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -35,30 +35,27 @@ export default function ResumeLibrary({
   const [searchTerm, setSearchTerm] = useState('');
 
   const loadResumes = useCallback(async () => {
-    if (!supabase) return;
+    if (!userId) return;
     try {
       setLoading(true);
-      const userResumes = await ResumeDatabase.getUserResumes(supabase);
-      setResumes(userResumes);
+      const userResumes = await ResumeDatabase.getUserResumes(userId);
+      setResumes(userResumes as any); //TODO: Fix this type
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load resumes');
     } finally {
       setLoading(false);
     }
-  }, [supabase]);
+  }, [userId]);
 
   useEffect(() => {
-    if (user) {
-      loadResumes();
-    }
-  }, [user, loadResumes]);
+    loadResumes();
+  }, [loadResumes]);
 
   const handleDeleteResume = async (id: string, _title: string) => {
-    if (!supabase) return;
     try {
       setError(''); // Clear any previous errors
       setDeleting(id);
-      await ResumeDatabase.deleteResume(supabase, id);
+      await ResumeDatabase.deleteResume(id);
       setResumes(resumes.filter((r) => r.id !== id));
       // Optional: Show success message
     } catch (err) {
@@ -69,14 +66,13 @@ export default function ResumeLibrary({
   };
 
   const handleTogglePublic = async (resume: Resume) => {
-    if (!supabase) {
-      return;
-    }
     try {
-      const updated = await ResumeDatabase.updateResume(supabase, resume.id, {
+      const updated = await ResumeDatabase.updateResume(resume.id, {
         is_public: !resume.is_public,
       });
-      setResumes(resumes.map((r) => (r.id === resume.id ? updated : r)));
+      setResumes(
+        resumes.map((r) => (r.id === resume.id ? (updated as any) : r))
+      ); // TODO: Fix this type
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update resume');
     }
@@ -107,7 +103,7 @@ export default function ResumeLibrary({
     });
   }, [resumes, searchTerm]);
 
-  if (!user) {
+  if (!userId) {
     return (
       <div className={styles.container}>
         <div className={styles.wrapper}>

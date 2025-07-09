@@ -1,5 +1,4 @@
 import { ResumeDatabase } from '@/lib/database';
-import { createClient } from '@/lib/supabase/server';
 
 export async function PUT(
   request: Request,
@@ -15,31 +14,8 @@ export async function PUT(
     );
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-
-  if (userError || !user) {
-    return new Response(
-      JSON.stringify({
-        error: 'Authentication required. Please sign in again.',
-      }),
-      { status: 401 }
-    );
-  }
-
   try {
-    const existingResume = await ResumeDatabase.getResume(supabase, id);
-    if (!existingResume || existingResume.user_id !== user.id) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized access or resume not found.' }),
-        { status: 403 }
-      );
-    }
-
-    const updatedResume = await ResumeDatabase.updateResume(supabase, id, {
+    const updatedResume = await ResumeDatabase.updateResume(id, {
       parsed_data: parsedData,
       updated_at: new Date().toISOString(),
     });

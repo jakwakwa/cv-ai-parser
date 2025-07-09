@@ -1,270 +1,241 @@
 /** biome-ignore-all lint/complexity/noStaticOnlyClass: <> */
-import type { SupabaseClient } from '@supabase/supabase-js';
+import { db } from './prisma';
 import type { Resume, UserAdditionalContext } from './types';
 
 export class ResumeDatabase {
   // Save a new resume
-  static async saveResume(
-    supabase: SupabaseClient,
-    {
-      title,
-      originalFilename,
-      fileType,
-      fileSize,
-      parsedData,
-      parseMethod,
-      confidenceScore,
-      isPublic = false,
-      userId,
-      slug,
-      customColors,
-      additionalContext,
-    }: {
-      title: string;
-      originalFilename?: string;
-      fileType?: string;
-      fileSize?: number;
-      parsedData: unknown;
-      parseMethod?: string;
-      confidenceScore?: number;
-      isPublic?: boolean;
-      userId: string;
-      slug: string;
-      customColors?: Record<string, string>;
-      additionalContext?: UserAdditionalContext;
-    }
-  ) {
-    const { data, error } = await supabase
-      .from('resumes')
-      .insert({
-        user_id: userId,
-        title: title,
-        original_filename: originalFilename,
-        file_type: fileType,
-        file_size: fileSize,
-        parsed_data: parsedData,
-        parse_method: parseMethod,
-        confidence_score: confidenceScore,
-        is_public: isPublic,
-        slug: slug,
-        custom_colors: customColors,
-        additional_context: additionalContext,
-      })
-      .select()
-      .single();
-
-    if (error) {
+  static async saveResume({
+    title,
+    originalFilename,
+    fileType,
+    fileSize,
+    parsedData,
+    parseMethod,
+    confidenceScore,
+    isPublic = false,
+    userId,
+    slug,
+    customColors,
+    additionalContext,
+  }: {
+    title: string;
+    originalFilename?: string;
+    fileType?: string;
+    fileSize?: number;
+    parsedData: unknown;
+    parseMethod?: string;
+    confidenceScore?: number;
+    isPublic?: boolean;
+    userId: string;
+    slug: string;
+    customColors?: Record<string, string>;
+    additionalContext?: UserAdditionalContext;
+  }) {
+    try {
+      const resume = await db.resume.create({
+        data: {
+          title,
+          originalFilename,
+          fileType,
+          fileSize,
+          parsedData: parsedData as any,
+          parseMethod,
+          confidenceScore,
+          isPublic,
+          slug,
+          customColors: customColors as any,
+          additionalContext: additionalContext as any,
+          user: {
+            connect: { id: userId },
+          },
+        },
+      });
+      return resume;
+    } catch (error) {
       console.error('Error saving resume:', error);
-      throw new Error(error.message);
+      throw new Error('Failed to save resume.');
     }
-    return data;
   }
 
   // Get user's resumes
-  static async getUserResumes(supabase: SupabaseClient) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      throw new Error('User not authenticated');
+  static async getUserResumes(userId: string) {
+    try {
+      const resumes = await db.resume.findMany({
+        where: { userId },
+        orderBy: { createdAt: 'desc' },
+      });
+      return resumes;
+    } catch (error) {
+      console.error('Error fetching user resumes:', error);
+      throw new Error('Failed to fetch user resumes.');
     }
-
-    const { data, error } = await supabase
-      .from('resumes')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      throw new Error(`Failed to fetch resumes: ${error.message}`);
-    }
-
-    return data;
   }
 
   // Get a specific resume
-  static async getResume(supabase: SupabaseClient, id: string) {
-    const { data, error } = await supabase
-      .from('resumes')
-      .select('*, custom_colors')
-      .eq('id', id)
-      .single();
-
-    if (error) {
-      throw new Error(`Failed to fetch resume: ${error.message}`);
+  static async getResume(id: string) {
+    try {
+      const resume = await db.resume.findUnique({
+        where: { id },
+      });
+      return resume;
+    } catch (error) {
+      console.error('Error fetching resume:', error);
+      throw new Error('Failed to fetch resume.');
     }
-    const resumeData = {
-      ...data,
-      parsed_data: {
-        ...data.parsed_data,
-        customColors: data.parsed_data.customColors || {},
-      },
-    };
-    return resumeData;
   }
 
   // New method for retrieving context
-  static async getResumeWithContext(
-    supabase: SupabaseClient,
-    id: string
-  ): Promise<Resume & { additional_context: UserAdditionalContext | null }> {
-    const { data, error } = await supabase
-      .from('resumes')
-      .select('*, additional_context')
-      .eq('id', id)
-      .single();
-
-    if (error) {
-      throw new Error(`Failed to fetch resume with context: ${error.message}`);
+  static async getResumeWithContext(id: string) {
+    try {
+      const resume = await db.resume.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          title: true,
+          originalFilename: true,
+          fileType: true,
+          fileSize: true,
+          parsedData: true,
+          parseMethod: true,
+          confidenceScore: true,
+          isPublic: true,
+          slug: true,
+          customColors: true,
+          additionalContext: true,
+          view_count: true,
+          download_count: true,
+          userId: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+      return resume;
+    } catch (error) {
+      console.error('Error fetching resume with context:', error);
+      throw new Error('Failed to fetch resume with context.');
     }
-
-    return data;
   }
 
   // Get public resume by slug
-  static async getPublicResume(supabase: SupabaseClient, slug: string) {
-    const { data, error } = await supabase
-      .from('resumes')
-      .select('*, custom_colors')
-      .eq('slug', slug)
-      .eq('is_public', true)
-      .single();
+  static async getPublicResume(slug: string) {
+    try {
+      const resume = await db.resume.findUnique({
+        where: { slug, isPublic: true },
+      });
 
-    if (error) {
-      throw new Error(`Failed to fetch public resume: ${error.message}`);
+      if (resume) {
+        await db.resume.update({
+          where: { id: resume.id },
+          data: { view_count: { increment: 1 } },
+        });
+      }
+
+      return resume;
+    } catch (error) {
+      console.error('Error fetching public resume:', error);
+      throw new Error('Failed to fetch public resume.');
     }
-
-    // Increment view count
-    await supabase
-      .from('resumes')
-      .update({ view_count: data.view_count + 1 })
-      .eq('id', data.id);
-
-    const resumeData = {
-      ...data,
-      parsed_data: {
-        ...data.parsed_data,
-        customColors: data.parsed_data.customColors || {},
-      },
-    };
-    return resumeData;
   }
 
   // Get all public resumes for sitemap
-  static async getAllPublicResumes(
-    supabase: SupabaseClient
-  ): Promise<{ slug: string; updated_at: string }[]> {
-    const { data, error } = await supabase
-      .from('resumes')
-      .select('slug, updated_at')
-      .eq('is_public', true);
-
-    if (error) {
-      throw new Error(`Failed to fetch public resumes: ${error.message}`);
+  static async getAllPublicResumes(): Promise<{ slug: string; updatedAt: string }[]> {
+    try {
+      const resumes = await db.resume.findMany({
+        where: { isPublic: true },
+        select: { slug: true, updatedAt: true },
+      });
+      return resumes.map((r: { slug: string; updatedAt: Date }) => ({...r, updatedAt: r.updatedAt.toISOString()}));
+    } catch (error) {
+      console.error('Error fetching public resumes:', error);
+      throw new Error('Failed to fetch public resumes.');
     }
-
-    return data || [];
   }
 
   // Update resume
   static async updateResume(
-    supabase: SupabaseClient,
     id: string,
     updates: Partial<Resume> & { customColors?: Record<string, string> }
   ) {
-    const { data, error } = await supabase
-      .from('resumes')
-      .update({
-        ...updates,
-        custom_colors: updates.customColors,
-      })
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) {
-      throw new Error(`Failed to update resume: ${error.message}`);
+    try {
+      const resume = await db.resume.update({
+        where: { id },
+        data: {
+          ...updates,
+          customColors: updates.customColors as any,
+        },
+      });
+      return resume;
+    } catch (error) {
+      console.error('Error updating resume:', error);
+      throw new Error('Failed to update resume.');
     }
-
-    return data;
   }
 
   // Delete resume
-  static async deleteResume(supabase: SupabaseClient, id: string) {
-    const { error } = await supabase.from('resumes').delete().eq('id', id);
-
-    if (error) {
-      throw new Error(`Failed to delete resume: ${error.message}`);
+  static async deleteResume(id: string) {
+    try {
+      await db.resume.delete({
+        where: { id },
+      });
+    } catch (error) {
+      console.error('Error deleting resume:', error);
+      throw new Error('Failed to delete resume.');
     }
   }
 
   // Save resume version
-
   static async saveResumeVersion(
-    supabase: SupabaseClient,
     resumeId: string,
-    // biome-ignore lint/suspicious/noExplicitAny: <s>
     parsedData: any,
     changesSummary?: string
   ) {
-    // Get current version count
-    const { data: versions } = await supabase
-      .from('resume_versions')
-      .select('version_number')
-      .eq('resume_id', resumeId)
-      .order('version_number', { ascending: false })
-      .limit(1);
+    try {
+      const latestVersion = await db.resumeVersion.findFirst({
+        where: { resumeId },
+        orderBy: { version_number: 'desc' },
+      });
 
-    const nextVersion =
-      versions && versions.length > 0 ? versions[0].version_number + 1 : 1;
+      const nextVersion = latestVersion ? latestVersion.version_number + 1 : 1;
 
-    const { data, error } = await supabase
-      .from('resume_versions')
-      .insert({
-        resume_id: resumeId,
-        version_number: nextVersion,
-        parsed_data: parsedData,
-        changes_summary: changesSummary,
-      })
-      .select()
-      .single();
-
-    if (error) {
-      throw new Error(`Failed to save resume version: ${error.message}`);
+      const version = await db.resumeVersion.create({
+        data: {
+          resumeId,
+          version_number: nextVersion,
+          parsed_data: parsedData as any,
+          changes_summary: changesSummary,
+        },
+      });
+      return version;
+    } catch (error) {
+      console.error('Error saving resume version:', error);
+      throw new Error('Failed to save resume version.');
     }
-
-    return data;
   }
 
   // Get resume versions
-  static async getResumeVersions(supabase: SupabaseClient, resumeId: string) {
-    const { data, error } = await supabase
-      .from('resume_versions')
-      .select('*')
-      .eq('resume_id', resumeId)
-      .order('version_number', { ascending: false });
-
-    if (error) {
-      throw new Error(`Failed to fetch resume versions: ${error.message}`);
+  static async getResumeVersions(resumeId: string) {
+    try {
+      const versions = await db.resumeVersion.findMany({
+        where: { resumeId },
+        orderBy: { version_number: 'desc' },
+      });
+      return versions;
+    } catch (error) {
+      console.error('Error fetching resume versions:', error);
+      throw new Error('Failed to fetch resume versions.');
     }
-
-    return data;
   }
 
   // Increment download count
-  static async incrementDownloadCount(supabase: SupabaseClient, id: string) {
-    const { data } = await supabase
-      .from('resumes')
-      .select('download_count')
-      .eq('id', id)
-      .single();
-
-    if (data) {
-      await supabase
-        .from('resumes')
-        .update({ download_count: data.download_count + 1 })
-        .eq('id', id);
+  static async incrementDownloadCount(id: string) {
+    try {
+      await db.resume.update({
+        where: { id },
+        data: { download_count: { increment: 1 } },
+      });
+    } catch (error) {
+      console.error('Error incrementing download count:', error);
+      throw new Error('Error incrementing download count.');
     }
   }
 }

@@ -1,14 +1,11 @@
 import type { NextRequest } from 'next/server';
 import { IS_JOB_TAILORING_ENABLED } from '@/lib/config';
-import { ResumeDatabase } from '@/lib/database';
 import { extractJobSpecification } from '@/lib/jobfit/jobSpecExtractor';
 import { userAdditionalContextSchema } from '@/lib/jobfit/schemas';
 // import { tailorResume } from '@/lib/jobfit/tailorResume';
 import { parseWithAI, parseWithAIPDF } from '@/lib/resume-parser/ai-parser';
 import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
-import { createClient } from '@/lib/supabase/server';
-import type { Resume, UserAdditionalContext } from '@/lib/types';
-import { createSlug } from '@/lib/utils';
+import type { UserAdditionalContext } from '@/lib/types';
 
 // Feature flag guard
 if (!IS_JOB_TAILORING_ENABLED) {
@@ -24,7 +21,6 @@ export async function POST(request: NextRequest) {
     const customColors = JSON.parse(
       (formData.get('customColors') as string) || '{}'
     );
-    const isAuthenticated = formData.get('isAuthenticated') === 'true';
     const profileImage = formData.get('profileImage') as string | null;
 
     // Extract new JobFit fields
@@ -141,23 +137,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Authentication check
-    const supabase = await createClient();
-    let user = null;
-    if (isAuthenticated) {
-      const {
-        data: { user: authUser },
-        error,
-      } = await supabase.auth.getUser();
-      if (error || !authUser) {
-        return Response.json(
-          { error: 'Authentication required' },
-          { status: 401 }
-        );
-      }
-      user = authUser;
-    }
-
     // PARALLEL PROCESSING: Parse resume and job spec simultaneously
     const jobSpecPromise =
       hasJobSpec && additionalContext?.jobSpecText
@@ -210,37 +189,6 @@ export async function POST(request: NextRequest) {
       profileImage: profileImage || finalResume.profileImage, // Prioritize newly uploaded image
     };
 
-    // Save to database if authenticated
-    let savedResume: Resume | undefined;
-    if (isAuthenticated && user) {
-      try {
-        const resumeTitle: string =
-          finalResume.name || file.name.split('.')[0] || 'Untitled Resume';
-        const slug = `${createSlug(resumeTitle)}-${Math.floor(1000 + Math.random() * 9000)}`;
-
-        savedResume = await ResumeDatabase.saveResume(supabase, {
-          userId: user.id,
-          title: resumeTitle,
-          originalFilename: file.name,
-          fileType: file.type,
-          fileSize: file.size,
-          parsedData: finalParsedData,
-          parseMethod: 'ai_enhanced',
-          confidenceScore: 98,
-          isPublic: true,
-          slug,
-          additionalContext,
-        });
-      } catch (error) {
-        console.error(
-          'Database save failed (missing migration?), continuing without save:',
-          error
-        );
-        // Continue without saving - user will still get the tailored resume
-        // TODO: Remove this try-catch after running the database migration
-      }
-    }
-
     // Expose AI summary only if present in enhanced parsing
     let aiTailorCommentary: string | null = null;
     if (
@@ -258,8 +206,6 @@ export async function POST(request: NextRequest) {
       meta: {
         method: 'ai_enhanced',
         filename: file.name,
-        resumeId: savedResume?.id,
-        resumeSlug: savedResume?.slug,
         ...tailoringMetadata,
         aiTailorCommentary,
       },

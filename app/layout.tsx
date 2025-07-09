@@ -5,14 +5,14 @@ import '../src/index.css';
 import { Analytics } from '@vercel/analytics/next';
 import Script from 'next/script';
 import { ToastProvider } from '@/hooks/use-toast';
-import { AuthModalProvider } from '@/src/components/auth-component/AuthModalContext';
-import { AuthProvider } from '@/src/components/auth-provider/auth-provider';
 import { SiteFooter } from '@/src/components/site-footer/SiteFooter';
 import { Toaster } from '@/src/components/ui/toaster';
 import { ThemeProvider } from '@/src/hooks/use-theme';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://www.airesumegen.com'),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL || 'https://www.airesumegen.com'
+  ),
   title:
     'AI Resume Parser & Online CV Generator - Convert to PDF with Custom Colors',
   description:
@@ -78,21 +78,17 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <ToastProvider>
-            <AuthProvider>
-              <AuthModalProvider>
-                <div
-                  style={{
-                    minHeight: '100vh',
-                    minWidth: '100vw',
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}
-                >
-                  {children}
-                  <SiteFooter />
-                </div>
-              </AuthModalProvider>
-            </AuthProvider>
+            <div
+              style={{
+                minHeight: '100vh',
+                minWidth: '100vw',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              {children}
+              <SiteFooter />
+            </div>
             <Toaster />
           </ToastProvider>
         </ThemeProvider>
