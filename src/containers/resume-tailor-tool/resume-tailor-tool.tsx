@@ -43,6 +43,15 @@ interface ParseInfo {
   aiTailorCommentary?: string; // Rename aiSummary to aiTailorCommentary here
 }
 
+interface StreamUpdate {
+  status?: 'analyzing' | 'processing' | 'saving' | 'completed' | 'error';
+  message?: string;
+  progress?: number;
+  partialData?: any;
+  data?: EnhancedParsedResume;
+  meta?: ParseInfo;
+}
+
 interface ResumeTailorToolProps {
   onResumeCreated: (data: EnhancedParsedResume, info: ParseInfo) => void; // Update to EnhancedParsedResume
   isLoading: boolean;
@@ -82,6 +91,11 @@ const ResumeTailorTool = ({
   const [aiTailorCommentary, setAiTailorCommentary] = useState<string | null>(
     null
   ); // Rename aiSummary to aiTailorCommentary
+
+  // Streaming states
+  const [streamingProgress, setStreamingProgress] = useState(0);
+  const [streamingMessage, setStreamingMessage] = useState('');
+  const [partialResumeData, setPartialResumeData] = useState<any>(null);
 
   // Customization states
   const [profileImage, setProfileImage] = useState('');
@@ -214,19 +228,10 @@ const ResumeTailorTool = ({
         method: 'POST',
         body: formData,
       });
-      console.log('[TailorTool] API response status:', response.status);
-      let result: any = null;
-      try {
-        result = await response.json();
-      } catch (jsonErr) {
-        console.error(
-          '[TailorTool] Failed to parse API response JSON:',
-          jsonErr
-        );
-      }
-      console.log('[TailorTool] API response data:', result);
+
       if (!response.ok) {
-        const errorMsg = result?.error || 'Failed to parse resume';
+        const errorData = await response.json();
+        const errorMsg = errorData?.error || 'Failed to parse resume';
         if (response.status === 401) {
           throw new Error(
             'Authentication required. Please sign in to continue.'
@@ -234,32 +239,129 @@ const ResumeTailorTool = ({
         }
         throw new Error(errorMsg);
       }
-      if (result?.error) {
-        throw new Error(result.error || 'Parsing failed.');
-      }
-      const parsedData: EnhancedParsedResume = result.data;
-      const uploadInfo: ParseInfo = {
-        ...result.meta,
-        fileType: uploadedFile.type,
-        fileSize: uploadedFile.size,
-      };
 
-      onResumeCreated(parsedData, uploadInfo);
-      setLocalResumeData(parsedData);
-      setAiTailorCommentary(uploadInfo.aiTailorCommentary || null);
-      if (uploadInfo.resumeSlug) {
-        setCreatedResumeSlug(uploadInfo.resumeSlug);
-        console.log(
-          '[TailorTool] Routing to:',
-          `/resume/${uploadInfo.resumeSlug}`
-        );
-        router.push(`/resume/${uploadInfo.resumeSlug}`);
+      // Check if response is streaming (Server-Sent Events)
+      const contentType = response.headers.get('content-type');
+      if (contentType?.includes('text/plain')) {
+        // Handle streaming response using SSE format
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
+
+        if (!reader) {
+          throw new Error('Failed to read stream');
+        }
+
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value);
+            const lines = chunk.split('\n');
+
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                try {
+                  const streamUpdate = JSON.parse(
+                    line.slice(6)
+                  ) as StreamUpdate;
+
+                  // Update progress and message
+                  if (streamUpdate.progress !== undefined) {
+                    setStreamingProgress(streamUpdate.progress);
+                  }
+                  if (streamUpdate.message) {
+                    setStreamingMessage(streamUpdate.message);
+                  }
+                  if (streamUpdate.partialData) {
+                    setPartialResumeData(streamUpdate.partialData);
+                  }
+
+                  // Handle final completion
+                  if (
+                    streamUpdate.status === 'completed' &&
+                    streamUpdate.data
+                  ) {
+                    const parsedData: EnhancedParsedResume = streamUpdate.data;
+                    const uploadInfo: ParseInfo = {
+                      method: streamUpdate.meta?.method || 'ai_enhanced',
+                      confidence: streamUpdate.meta?.confidence || 98,
+                      filename:
+                        streamUpdate.meta?.filename || uploadedFile.name,
+                      resumeId: streamUpdate.meta?.resumeId,
+                      resumeSlug: streamUpdate.meta?.resumeSlug,
+                      aiTailorCommentary: streamUpdate.meta?.aiTailorCommentary,
+                      fileType: uploadedFile.type,
+                      fileSize: uploadedFile.size,
+                    };
+
+                    onResumeCreated(parsedData, uploadInfo);
+                    setLocalResumeData(parsedData);
+                    setAiTailorCommentary(
+                      uploadInfo.aiTailorCommentary || null
+                    );
+
+                    if (uploadInfo.resumeSlug) {
+                      setCreatedResumeSlug(uploadInfo.resumeSlug);
+                      console.log(
+                        '[TailorTool] Routing to:',
+                        `/resume/${uploadInfo.resumeSlug}`
+                      );
+                      router.push(`/resume/${uploadInfo.resumeSlug}`);
+                    } else {
+                      console.log(
+                        '[TailorTool] No resumeSlug returned, showing local preview'
+                      );
+                      setViewLocalResume(true);
+                    }
+                    return;
+                  }
+
+                  // Handle errors
+                  if (streamUpdate.status === 'error') {
+                    throw new Error(
+                      streamUpdate.message || 'Stream processing failed'
+                    );
+                  }
+                } catch (parseError) {
+                  console.warn(
+                    '[TailorTool] Failed to parse stream chunk:',
+                    line
+                  );
+                }
+              }
+            }
+          }
+        } finally {
+          reader.releaseLock();
+        }
       } else {
-        console.log(
-          '[TailorTool] No resumeSlug returned, showing local preview'
-        );
+        // Handle regular JSON response
+        const result = await response.json();
+
+        if (result?.error) {
+          throw new Error(result.error || 'Parsing failed.');
+        }
+
+        // Fallback for non-streaming response
+        const parsedData: EnhancedParsedResume = result.data;
+        const uploadInfo: ParseInfo = {
+          method: result.meta?.method || 'ai_enhanced',
+          confidence: result.meta?.confidence || 98,
+          filename: result.meta?.filename || uploadedFile.name,
+          resumeId: result.meta?.resumeId,
+          resumeSlug: result.meta?.resumeSlug,
+          aiTailorCommentary: result.meta?.aiTailorCommentary,
+          fileType: uploadedFile.type,
+          fileSize: uploadedFile.size,
+        };
+
+        onResumeCreated(parsedData, uploadInfo);
+        setLocalResumeData(parsedData);
+        setAiTailorCommentary(uploadInfo.aiTailorCommentary || null);
         setViewLocalResume(true);
       }
+
       setError('');
     } catch (err: unknown) {
       const errorMessage =
@@ -269,6 +371,10 @@ const ResumeTailorTool = ({
       setError('');
     } finally {
       setIsLoading(false);
+      // Reset streaming states
+      setStreamingProgress(0);
+      setStreamingMessage('');
+      setPartialResumeData(null);
     }
   };
 
@@ -294,11 +400,50 @@ const ResumeTailorTool = ({
         <div className={styles.loadingCard}>
           <div className={styles.loadingSpinner} />
           <p className={styles.loadingTitle}>
-            Creating your tailored resume...
+            {streamingMessage || 'Creating your tailored resume...'}
           </p>
           <p className={styles.loadingSubtitle}>
-            AI is analyzing the job description and optimizing your resume
+            {streamingProgress > 0
+              ? `Progress: ${streamingProgress}%`
+              : 'AI is analyzing the job description and optimizing your resume'}
           </p>
+          {streamingProgress > 0 && (
+            <div className={styles.progressBar}>
+              <div
+                className={styles.progressFill}
+                style={{ width: `${streamingProgress}%` }}
+              />
+            </div>
+          )}
+          {partialResumeData && (
+            <div className={styles.partialPreview}>
+              <p className={styles.previewTitle}>Partial Resume Data:</p>
+              <div className={styles.previewContent}>
+                {partialResumeData.name && (
+                  <p>
+                    <strong>Name:</strong> {partialResumeData.name}
+                  </p>
+                )}
+                {partialResumeData.title && (
+                  <p>
+                    <strong>Title:</strong> {partialResumeData.title}
+                  </p>
+                )}
+                {partialResumeData.experience?.length > 0 && (
+                  <p>
+                    <strong>Experience sections:</strong>{' '}
+                    {partialResumeData.experience.length}
+                  </p>
+                )}
+                {partialResumeData.skills?.length > 0 && (
+                  <p>
+                    <strong>Skills found:</strong>{' '}
+                    {partialResumeData.skills.length}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );

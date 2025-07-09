@@ -43,6 +43,50 @@
   color: var(--color-text-secondary);
 }
 
+.progressBar {
+  width: 100%;
+  height: var(--spacing-xs);
+  background-color: var(--color-border-light);
+  border-radius: var(--border-radius-small);
+  overflow: hidden;
+  margin-top: var(--spacing-md);
+}
+
+.progressFill {
+  height: 100%;
+  background-color: var(--color-accent-teal);
+  transition: width 0.3s ease;
+  border-radius: var(--border-radius-small);
+}
+
+.partialPreview {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background-color: var(--color-background-primary);
+  border-radius: var(--border-radius-small);
+  border: 1px solid var(--color-border-light);
+}
+
+.previewTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.previewContent {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.previewContent p {
+  margin-bottom: var(--spacing-xs);
+}
+
+.previewContent strong {
+  color: var(--color-text-primary);
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
