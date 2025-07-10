@@ -173,6 +173,9 @@ importers:
       nextjs-components:
         specifier: latest
         version: 6.0.0-rc.2(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react-is@19.1.0)(react@19.1.0)(styled-jsx@5.1.6(react@19.1.0))
+      openai:
+        specifier: ^5.8.3
+        version: 5.8.3(ws@8.18.3)(zod@3.25.69)
       pdfjs-dist:
         specifier: '>=5.3.31'
         version: 5.3.31
@@ -3284,6 +3287,18 @@ packages:
   oidc-token-hash@5.1.0:
     resolution: {integrity: sha512-y0W+X7Ppo7oZX6eovsRkuzcSM40Bicg2JEJkDJ4irIt1wsYAP5MLSNv+QAogO8xivMffw/9OvV3um1pxXgt1uA==}
     engines: {node: ^10.13.0 || >=12.0.0}
+
+  openai@5.8.3:
+    resolution: {integrity: sha512-IdotKmquCnpouTRvF9xRXVhMx6K5Sc8zkD6Usf+so+NTQ+qiJ8bLSCd7LBb8b/Rof7uYltlSxJhNp+spphKI4Q==}
+    hasBin: true
+    peerDependencies:
+      ws: ^8.18.0
+      zod: ^3.23.8
+    peerDependenciesMeta:
+      ws:
+        optional: true
+      zod:
+        optional: true
 
   opencollective-postinstall@2.0.3:
     resolution: {integrity: sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==}
@@ -7690,6 +7705,11 @@ snapshots:
   object-hash@3.0.0: {}
 
   oidc-token-hash@5.1.0: {}
+
+  openai@5.8.3(ws@8.18.3)(zod@3.25.69):
+    optionalDependencies:
+      ws: 8.18.3
+      zod: 3.25.69
 
   opencollective-postinstall@2.0.3: {}
 

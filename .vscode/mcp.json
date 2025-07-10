@@ -1,0 +1,7 @@
+{
+    "servers": {
+        "piecies-mcp-server-fbce3c12": {
+            "url": "http://localhost:39300/model_context_protocol/2024-11-05/sse"
+        }
+    }
+}

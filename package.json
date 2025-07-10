@@ -67,6 +67,7 @@
     "next-auth": "^4.24.11",
     "next-themes": "latest",
     "nextjs-components": "latest",
+    "openai": "^5.8.3",
     "pdfjs-dist": ">=5.3.31",
     "react": "^19",
     "react-day-picker": "latest",
