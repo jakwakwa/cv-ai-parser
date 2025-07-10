@@ -23,7 +23,13 @@ export function Toaster() {
             variant === 'destructive'
               ? { background: '#d5667d' }
               : variant === 'default' || variant == null
-                ? { background: '#14b8a6' }
+                ? {
+                    backgroundColor: '#ccfff5',
+                    background:
+                      'linear-gradient(211deg,rgba(204, 255, 245, 1) 0%, rgba(113, 227, 202, 1) 100%)',
+                    color: '#152437',
+                    fontWeight: '800',
+                  }
                 : undefined
           }
         >

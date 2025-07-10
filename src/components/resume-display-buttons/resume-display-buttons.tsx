@@ -41,9 +41,16 @@ export const ResumeDisplayButtons: React.FC<ResumeDisplayButtonsProps> = ({
 
   return (
     <div className={styles.buttonContainer}>
-      <Button type="button" onClick={onEditResume} variant="default">
-        Edit Resume
-      </Button>
+      {(isOnResumePage || onMyLibrary) && (
+        <Button type="button" onClick={onEditResume} variant="default">
+          Edit Resume
+        </Button>
+      )}
+      {!isOnResumePage && (
+        <div className={styles.signInToolsPage}>
+          Log in to <span>edit</span> or <span>save</span>
+        </div>
+      )}
       {(isOnResumePage || onMyLibrary) && (
         <Button type="button" onClick={handleMyLibrary} variant="default">
           My Library

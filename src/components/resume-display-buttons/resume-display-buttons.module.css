@@ -5,3 +5,20 @@
   justify-content: center;
   flex-wrap: wrap;
 }
+
+.signInToolsPage {
+  display: flex;
+  font-size: 0.8rem;
+  margin-bottom: var(--spacing-lg);
+  justify-content: flex-start;
+  align-items: center;
+  height: 40px;
+  flex-wrap: wrap;
+}
+
+.signInToolsPage span {
+  font-weight: 600;
+  margin: 0 4px;
+  color: var(--color-secondary);
+  font-size: 0.8rem;
+}

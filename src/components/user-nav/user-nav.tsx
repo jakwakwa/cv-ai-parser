@@ -25,6 +25,10 @@ export function UserNav() {
     return initials.toUpperCase();
   };
 
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: '/' }); // Redirects to the root directory after logout
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -46,7 +50,7 @@ export function UserNav() {
 
         <DropdownMenuItem
           className={styles.dropdownMenuItem}
-          onClick={() => signOut()}
+          onClick={() => handleLogout()}
         >
           Log out
         </DropdownMenuItem>

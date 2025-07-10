@@ -1,3 +1,5 @@
+// components/AuthComponent/AuthComponent.tsx
+
 'use client';
 
 import { signIn } from 'next-auth/react';
@@ -22,6 +24,10 @@ export default function AuthComponent({ onSuccess }: AuthComponentProps) {
     setLoading(true);
     setError('');
 
+    // Determine if the user is currently in the /tools/ directory
+    const isInToolsDirectory = window.location.pathname.startsWith('/tools/');
+    const redirectToUrl = isInToolsDirectory ? undefined : '/library';
+
     if (isSignUp) {
       // Sign up logic
       try {
@@ -32,18 +38,28 @@ export default function AuthComponent({ onSuccess }: AuthComponentProps) {
             'Content-Type': 'application/json',
           },
         });
+
         if (res.ok) {
-          signIn('credentials', {
+          // After successful sign-up, attempt to sign in
+          const callback = await signIn('credentials', {
             email,
             password,
-            redirect: false,
-          }).then((callback) => {
-            if (callback?.ok && !callback?.error) {
-              onSuccess?.();
-            } else {
-              setError('Failed to sign in after sign up.');
-            }
+            redirect: false, // Always set to false to handle redirection manually
+            ...(redirectToUrl && { callbackUrl: redirectToUrl }), // Conditionally add callbackUrl
           });
+
+          if (callback?.ok && !callback?.error) {
+            // If signIn is successful
+            if (callback.url && !isInToolsDirectory) {
+              // Only redirect if a URL is provided AND not in tools directory
+              window.location.href = callback.url;
+            } else {
+              // Otherwise, use onSuccess or do nothing (if in tools directory)
+              onSuccess?.();
+            }
+          } else {
+            setError('Failed to sign in after sign up.');
+          }
         } else {
           setError('Failed to sign up.');
         }
@@ -54,18 +70,26 @@ export default function AuthComponent({ onSuccess }: AuthComponentProps) {
       }
     } else {
       // Sign in logic
-      signIn('credentials', {
+      const callback = await signIn('credentials', {
         email,
         password,
-        redirect: false,
-      }).then((callback) => {
-        if (callback?.ok && !callback?.error) {
-          onSuccess?.();
-        } else {
-          setError('Invalid credentials.');
-        }
-        setLoading(false);
+        redirect: false, // Always set to false to handle redirection manually
+        ...(redirectToUrl && { callbackUrl: redirectToUrl }), // Conditionally add callbackUrl
       });
+
+      if (callback?.ok && !callback?.error) {
+        // If signIn is successful
+        if (callback.url && !isInToolsDirectory) {
+          // Only redirect if a URL is provided AND not in tools directory
+          window.location.href = callback.url;
+        } else {
+          // Otherwise, use onSuccess or do nothing (if in tools directory)
+          onSuccess?.();
+        }
+      } else {
+        setError('Invalid credentials.');
+      }
+      setLoading(false);
     }
   };
 
