@@ -51,6 +51,33 @@ interface ExperienceItemProps {
   onRemove: (index: number) => void;
 }
 
+function normalizeExperienceData(
+  experience: IncomingExperience[]
+): NonNullable<ParsedResume['experience']> {
+  return (experience || []).map((exp) => {
+    const details = Array.isArray(exp.details)
+      ? exp.details
+      : typeof exp.details === 'string'
+        ? exp.details.split('\n')
+        : Array.isArray(exp.description)
+          ? exp.description
+          : typeof exp.description === 'string'
+            ? exp.description.split('\n')
+            : [];
+
+    return {
+      id: exp.id || uuidv4(),
+      company: exp.company || '',
+      title: exp.title || exp.position || '',
+      role: exp.position || exp.title || '',
+      duration: exp.duration || '',
+      details: details.filter(
+        (d): d is string => d !== null && d !== undefined
+      ),
+    };
+  });
+}
+
 const ExperienceItem = memo(function ExperienceItem({
   job,
   index,
@@ -791,7 +818,6 @@ const ResumeEditor = ({
                 )}
                 {editedData.experience?.map((job, index) => (
                   <ExperienceItem
-                    // @ts-ignore
                     key={job.id}
                     job={job}
                     index={index}

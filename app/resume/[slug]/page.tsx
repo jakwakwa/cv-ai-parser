@@ -18,35 +18,17 @@ import ResumeEditor from '@/src/containers/resume-editor/resume-editor';
 // Helper function to convert EnhancedParsedResume to ParsedResume for the editor
 const convertToParsedResume = (
   enhancedResume: EnhancedParsedResume
-): EnhancedParsedResume => {
+): ParsedResume => {
   return {
-    name: enhancedResume.name,
-    title: enhancedResume.title,
-    summary: enhancedResume.summary,
-    profileImage: enhancedResume.profileImage,
-    customColors: enhancedResume.customColors,
-    contact: enhancedResume.contact,
-    ...enhancedResume.skills,
-    experience: enhancedResume.experience.map((exp) => ({
-      id: exp.id,
-      title: exp.title,
-      company: exp.company,
-      duration: exp.duration,
-      details: exp.details || [], // Ensure details is always an array
+    ...enhancedResume,
+    skills: enhancedResume.skills || [],
+    experience: (enhancedResume.experience || []).map((exp) => ({
+      ...exp,
+      role: exp.title || '', // Ensure 'role' is always present
+      details: exp.details || [],
     })),
-    education: enhancedResume.education?.map((edu) => ({
-      id: edu.id,
-      degree: edu.degree,
-      institution: edu.institution,
-      duration: edu.duration,
-      note: edu.note,
-    })),
-    certifications: enhancedResume.certifications?.map((cert) => ({
-      id: cert.id,
-      name: cert.name,
-      issuer: cert.issuer,
-      date: cert.date,
-    })),
+    education: enhancedResume.education || [],
+    certifications: enhancedResume.certifications || [],
   };
 };
 
