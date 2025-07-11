@@ -318,11 +318,18 @@ const ResumeTailorTool = ({
 
                     if (uploadInfo.resumeSlug) {
                       setCreatedResumeSlug(uploadInfo.resumeSlug);
-                      console.log(
-                        '[TailorTool] Routing to:',
-                        `/resume/${uploadInfo.resumeSlug}`
-                      );
-                      router.push(`/resume/${uploadInfo.resumeSlug}`);
+                      if (isAuthenticated) {
+                        console.log(
+                          '[TailorTool] Authenticated user: Routing to /library'
+                        );
+                        router.push('/library');
+                      } else {
+                        console.log(
+                          '[TailorTool] Routing to:',
+                          `/resume/${uploadInfo.resumeSlug}`
+                        );
+                        router.push(`/resume/${uploadInfo.resumeSlug}`);
+                      }
                     } else {
                       console.log(
                         '[TailorTool] No resumeSlug returned, showing local preview'
@@ -374,7 +381,21 @@ const ResumeTailorTool = ({
         onResumeCreated(parsedData, uploadInfo);
         setLocalResumeData(parsedData);
         setAiTailorCommentary(uploadInfo.aiTailorCommentary || null);
-        setViewLocalResume(true);
+        if (uploadInfo.resumeSlug) {
+          setCreatedResumeSlug(uploadInfo.resumeSlug);
+          if (isAuthenticated) {
+            console.log('[TailorTool] Authenticated user: Routing to /library');
+            router.push('/library');
+          } else {
+            console.log(
+              '[TailorTool] Routing to:',
+              `/resume/${uploadInfo.resumeSlug}`
+            );
+            router.push(`/resume/${uploadInfo.resumeSlug}`);
+          }
+        } else {
+          setViewLocalResume(true);
+        }
       }
 
       setError('');
