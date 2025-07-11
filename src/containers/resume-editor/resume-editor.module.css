@@ -93,55 +93,6 @@
     text-align: left;
 }
 
-/* Form Elements */
-.formGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-md);
-}
-
-.formGridFull {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--spacing-md);
-}
-
-.formField {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-}
-
-.label {
-    color: var(--color-text-light);
-    font-weight: var(--font-weight-black);
-    font-size:var(--font-size-sm);
-    padding-bottom: var(--spacing-sm);
-}
-
-.input {
-
-    border-radius: var(--border-radius-medium);
-    border: 1px solid var(--color-input-border);
-    background-color: var(--color-input-background-custom);
-    /* py-2 px-3 */
-    font-size: 0.75rem;
-    /* text-base */
-    color: var(--color-text-input-light);
-    box-shadow: var(--shadow-input);
-    transition: box-shadow 0.2s ease-in-out;
-
-}
-
-.textarea {
-    background-color: var(--color-input-background-custom) !important;
-    box-shadow: inset 0px 1px 2px 0px var(--color-shadow-input-inset);
-    border-color: var(--color-border-light);
-    color: var( --color-text-input-light);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-}
-
 /* Skills Section */
 .skillsInputGroup {
     display: flex;
@@ -179,13 +130,6 @@
 }
 
 /* Experience Section */
-.experienceHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: row;
-}
-
 .addExperienceButton {
     background-color: var(--color-accent-teal);
 }
@@ -224,120 +168,6 @@
 .removeExperienceButton:hover {
     color: var(--color-error-dark);
     background-color: var(--color-error-bg);
-}
-
-/* Preview Panel */
-.previewContainer {
-    position: sticky;
-    top: var(--spacing-lg);
-}
-
-.previewContent {
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--border-radius-medium);
-    padding: var(--spacing-md);
-    background-color: var(--color-background-input);
-    font-size: var(--font-size-xs);
-}
-
-.previewHeader {
-    text-align: center;
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-md);
-    border-bottom: 1px solid var(--color-border-light);
-}
-
-.previewImageContainer {
-    width: var(--spacing-xxl);
-    height: var(--spacing-xxl);
-    margin: 0 auto var(--spacing-xs);
-    border-radius: var(--border-radius-full);
-    overflow: hidden;
-    background-color: var(--color-background-secondary);
-}
-
-.previewImage {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.previewName {
-    font-weight: var(--font-weight-bold);
-    font-size: var(--font-size-lg);
-    color: var(--color-text-primary);
-}
-
-.previewTitle {
-    color: var(--color-text-secondary);
-}
-
-.previewSummary {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    margin-top: var(--spacing-xs);
-}
-
-.previewSection {
-    margin-bottom: var(--spacing-md);
-}
-
-.previewSectionTitle {
-    font-weight: var(--font-weight-semibold);
-    margin-bottom: var(--spacing-xs);
-    color: var(--color-text-primary);
-}
-
-.previewContactInfo {
-    font-size: var(--font-size-xs);
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-    color: var(--color-text-secondary);
-}
-
-.previewSkillsList {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-xs);
-}
-
-.previewSkill {
-    background-color: var(--color-background-secondary);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--border-radius-xs);
-    font-size: var(--font-size-xs);
-    color: var(--color-text-primary);
-}
-
-.previewMoreSkills {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-}
-
-.previewExperienceItem {
-    margin-bottom: var(--spacing-sm);
-}
-
-.previewExperienceTitle {
-    font-weight: var(--font-weight-medium);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-primary);
-}
-
-.previewExperienceCompany {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-}
-
-.previewExperienceDuration {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-}
-
-.previewMoreExperience {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
 }
 
 /* Spacing Utilities */
@@ -485,11 +315,6 @@
     height: var(--spacing-xs);
 }
 
-.iconMd {
-    width: var(--spacing-sm);
-    height: var(--spacing-sm);
-}
-
 .iconLg {
     width: var(--spacing-lg);
     height: var(--spacing-lg);
@@ -498,10 +323,6 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .gridTwoColumns {
-        grid-template-columns: 1fr;
-    }
-
-    .formGrid {
         grid-template-columns: 1fr;
     }
 

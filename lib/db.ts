@@ -193,7 +193,15 @@ export class ResumeDatabase {
         },
       });
 
-      return resume;
+      // Convert Date fields to ISO string to match Resume type expectations
+      if (resume && typeof resume.createdAt === 'object' && resume.createdAt instanceof Date) {
+        (resume as any).createdAt = resume.createdAt.toISOString();
+      }
+      if (resume && typeof resume.updatedAt === 'object' && resume.updatedAt instanceof Date) {
+        (resume as any).updatedAt = resume.updatedAt.toISOString();
+      }
+
+      return resume as unknown as Resume;
     } catch (error) {
       console.error(`Error updating resume ${id}:`, error);
       throw new Error('Failed to update resume.');

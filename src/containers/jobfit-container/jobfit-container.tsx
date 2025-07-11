@@ -15,7 +15,7 @@ import {
 import { Button } from '@/src/components/ui/ui-button/button';
 import ProfileImageUploader from '@/src/containers/profile-image-uploader/profile-image-uploader';
 import { resumeColors } from '@/src/utils/colors';
-import styles from './resume-uploader.module.css';
+import styles from './jobfit-container.module.css';
 
 declare global {
   interface Window {
@@ -50,7 +50,7 @@ interface ResumeUploaderProps {
   isAuthenticated?: boolean;
 }
 
-const ResumeUploader = ({
+const JobFitContainer = ({
   onResumeUploaded,
   isLoading,
   setIsLoading,
@@ -745,4 +745,4 @@ const ResumeUploader = ({
   );
 };
 
-export default ResumeUploader;
+export default JobFitContainer;

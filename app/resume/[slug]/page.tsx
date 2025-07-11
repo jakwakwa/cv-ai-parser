@@ -10,10 +10,10 @@ import type { ParsedResume } from '@/lib/resume-parser/schema'; // Import Parsed
 import type { Resume } from '@/lib/types';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
 import ResumeTailorCommentary from '@/src/components/resume-tailor-commentary/resume-tailor-commentary';
-import { SiteHeader } from '@/src/components/site-header/site-header';
 import { Button } from '@/src/components/ui/ui-button/button';
 import ResumeDisplay from '@/src/containers/resume-display/resume-display';
 import ResumeEditor from '@/src/containers/resume-editor/resume-editor';
+import styles from './layout.module.css';
 
 // Helper function to convert EnhancedParsedResume to ParsedResume for the editor
 const convertToParsedResume = (
@@ -24,6 +24,7 @@ const convertToParsedResume = (
     skills: enhancedResume.skills || [],
     experience: (enhancedResume.experience || []).map((exp) => ({
       ...exp,
+      title: exp.title || '', // Ensure 'title' is always present
       role: exp.title || '', // Ensure 'role' is always present
       details: exp.details || [],
     })),
@@ -240,50 +241,39 @@ export default function ViewResumePage() {
   }
 
   if (viewMode === 'edit') {
-    // Convert to ParsedResume format before passing to ResumeEditor
+    //  FINAL  PARSED RESUME DATA CONVERSION TO ...
     const resumeDataForEditor = convertToParsedResume(resume.parsedData);
 
     return (
-      <div className="pageWrapper">
-        <SiteHeader />
-        <main>
-          <ResumeEditor
-            resumeData={resumeDataForEditor}
-            onSave={handleSaveEdits}
-            onCancel={handleCancelEdit}
-            onCustomColorsChange={(colors) =>
-              setResume((prevResume) => {
-                if (!prevResume) return null;
-                return {
-                  ...prevResume,
-                  parsedData: {
-                    ...prevResume.parsedData,
-                    customColors: colors,
-                  },
-                };
-              })
-            }
-          />
-        </main>
-      </div>
+      <ResumeEditor
+        resumeData={resumeDataForEditor}
+        onSave={handleSaveEdits}
+        onCancel={handleCancelEdit}
+        onCustomColorsChange={(colors) =>
+          setResume((prevResume) => {
+            if (!prevResume) return null;
+            return {
+              ...prevResume,
+              parsedData: {
+                ...prevResume.parsedData,
+                customColors: colors,
+              },
+            };
+          })
+        }
+      />
     );
   }
 
   return (
-    <div className="pageWrapper">
-      <SiteHeader />
-
-      <main className="mainUserContainer">
-        <div className="resumeContainer">
-          <ResumeDisplayButtons
-            onDownloadPdf={handleDownloadPdf}
-            onEditResume={handleEdit}
-            isOnResumePage={true}
-          />
-          <ResumeTailorCommentary aiTailorCommentary={aiTailorCommentary} />{' '}
-          <ResumeDisplay resumeData={resume.parsedData} isAuth={true} />
-        </div>
-      </main>
+    <div className={styles.resumeContainer}>
+      <ResumeDisplayButtons
+        onDownloadPdf={handleDownloadPdf}
+        onEditResume={handleEdit}
+        isOnResumePage={true}
+      />
+      <ResumeTailorCommentary aiTailorCommentary={aiTailorCommentary} />{' '}
+      <ResumeDisplay resumeData={resume.parsedData} isAuth={true} />
     </div>
   );
 }

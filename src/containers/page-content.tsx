@@ -11,9 +11,10 @@ import FigmaPreview from '@/src/components/figma-preview/FigmaPreview';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import { Button } from '@/src/components/ui/ui-button/button';
+import ResumeUploader from '@/src/containers/jobfit-container/resume-uploader';
+import JobFitContainer from '@/src/containers/jobfit-container/resume-uploader';
 import ResumeDisplay from '@/src/containers/resume-display/resume-display';
 import ResumeEditor from '@/src/containers/resume-editor/resume-editor';
-import ResumeUploader from '@/src/containers/resume-uploader/resume-uploader';
 
 interface ParseInfo {
   resumeId?: string; // Optional for non-auth users
@@ -232,14 +233,17 @@ export default function PageContent() {
             </div>
           </div>
 
+          {/* HOMEPAGE FEATURES */}
+
           <div ref={uploaderRef} style={{ width: '100%' }}>
-            <ResumeUploader
+            {/* JOBFIT */}
+            <JobFitContainer
               onResumeUploaded={handleResumeUploaded}
               isLoading={fileLoading}
               setIsLoading={setFileLoading}
               isAuthenticated={true}
             />
-
+            {/* FIGMA TO RESUME */}
             <FigmaLinkUploader
               onResumeGenerated={handleFigmaGenerated}
               isLoading={figmaLoading}
@@ -275,6 +279,8 @@ export default function PageContent() {
                 !Array.isArray(resumeData.skills)
                   ? resumeData.skills
                   : {
+                      // TODO: -- Find out what skills has to be once and for all
+                      // @ts-ignore
                       all: Array.isArray(resumeData.skills)
                         ? resumeData.skills
                         : [],

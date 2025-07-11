@@ -1,34 +1,19 @@
 'use client';
 
-import { Eye, EyeOff, Plus, Save, Trash2, X } from 'lucide-react';
-import { memo, useCallback, useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { Eye, EyeOff, Save, X } from 'lucide-react';
+import { useCallback, useState } from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import CertificationItem from '@/src/components/certification-item/certification-item';
-import ColorPicker from '@/src/components/color-picker/color-picker';
-import { Badge } from '@/src/components/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/src/components/ui/card';
-import { Input } from '@/src/components/ui/input';
-import { Label } from '@/src/components/ui/label';
-import { Textarea } from '@/src/components/ui/textarea';
+import { Card, CardContent } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/ui-button/button';
-import ProfileImageUploader from '@/src/containers/profile-image-uploader/profile-image-uploader';
+import { useResumeEditor } from '@/src/hooks/use-resume-editor';
+import EducationItem from './education-item/education-item';
+import ExperienceItem from './experience-item/experience-item';
+import ProfileEditorSection from './profile-section/profile-editor-section';
 import styles from './resume-editor.module.css';
-
-type IncomingExperience = {
-  id: string;
-  company?: string;
-  title?: string;
-  position?: string;
-  duration?: string;
-  details?: string | string[];
-  description?: string | string[];
-};
+import ResumePreview from './resume-preview/resume-preview';
+import SectionHeader from './section-header/section-header';
+import SkillsEditorSection from './skills-section/skills-editor-section';
 
 interface ResumeEditorProps {
   resumeData: ParsedResume;
@@ -36,242 +21,6 @@ interface ResumeEditorProps {
   onCancel: () => void;
   onCustomColorsChange?: (colors: Record<string, string>) => void;
 }
-
-// Memoized ExperienceItem subcomponent
-interface ExperienceItemProps {
-  job: NonNullable<ParsedResume['experience']>[number];
-  index: number;
-  onChange: <
-    Field extends keyof NonNullable<ParsedResume['experience']>[number],
-  >(
-    index: number,
-    field: Field,
-    value: NonNullable<ParsedResume['experience']>[number][Field]
-  ) => void;
-  onRemove: (index: number) => void;
-}
-
-function normalizeExperienceData(
-  experience: IncomingExperience[]
-): NonNullable<ParsedResume['experience']> {
-  return (experience || []).map((exp) => {
-    const details = Array.isArray(exp.details)
-      ? exp.details
-      : typeof exp.details === 'string'
-        ? exp.details.split('\n')
-        : Array.isArray(exp.description)
-          ? exp.description
-          : typeof exp.description === 'string'
-            ? exp.description.split('\n')
-            : [];
-
-    return {
-      id: exp.id || uuidv4(),
-      company: exp.company || '',
-      title: exp.title || exp.position || '',
-      role: exp.position || exp.title || '',
-      duration: exp.duration || '',
-      details: details.filter(
-        (d): d is string => d !== null && d !== undefined
-      ),
-    };
-  });
-}
-
-const ExperienceItem = memo(function ExperienceItem({
-  job,
-  index,
-  onChange,
-  onRemove,
-}: ExperienceItemProps) {
-  return (
-    <div className={styles.experienceItem}>
-      <div className={styles.experienceItemHeader}>
-        <h3 className={styles.experienceItemTitle}>Job #{index + 1}</h3>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onRemove(index)}
-          className={styles.removeExperienceButton}
-        >
-          <Trash2 className={styles.iconMd} />
-        </Button>
-      </div>
-      <div className={styles.formGridFull}>
-        <div className={styles.formField}>
-          <Label htmlFor={`experience-title-${index}`} className={styles.label}>
-            Job Title
-          </Label>
-          <Input
-            id={`experience-title-${index}`}
-            value={job.title || ''}
-            onChange={(e) => onChange(index, 'title', e.target.value)}
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.formField}>
-          <Label
-            htmlFor={`experience-company-${index}`}
-            className={styles.label}
-          >
-            Company
-          </Label>
-          <Input
-            id={`experience-company-${index}`}
-            value={job.company || ''}
-            onChange={(e) => onChange(index, 'company', e.target.value)}
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.formField}>
-          <Label
-            htmlFor={`experience-duration-${index}`}
-            className={styles.label}
-          >
-            Duration
-          </Label>
-          <Input
-            id={`experience-duration-${index}`}
-            value={job.duration || ''}
-            onChange={(e) => onChange(index, 'duration', e.target.value)}
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.formField}>
-          <Label
-            htmlFor={`experience-details-${index}`}
-            className={styles.label}
-          >
-            Details (one per line)
-          </Label>
-          <Textarea
-            id={`experience-details-${index}`}
-            value={job.details?.join('\n') || ''}
-            onChange={(e) =>
-              onChange(index, 'details', e.target.value.split('\n'))
-            }
-            className={styles.textarea}
-            rows={4}
-          />
-        </div>
-      </div>
-    </div>
-  );
-});
-
-// Memoized EducationItem subcomponent
-interface EducationItemProps {
-  edu: NonNullable<ParsedResume['education']>[number];
-  index: number;
-  onChange: <
-    Field extends keyof NonNullable<ParsedResume['education']>[number],
-  >(
-    index: number,
-    field: Field,
-    value: NonNullable<ParsedResume['education']>[number][Field]
-  ) => void;
-  onRemove: (index: number) => void;
-}
-const EducationItem = memo(function EducationItem({
-  edu,
-  index,
-  onChange,
-  onRemove,
-}: EducationItemProps) {
-  return (
-    <div className={styles.experienceItem}>
-      <div className={styles.experienceItemHeader}>
-        <h3 className={styles.experienceItemTitle}>Education #{index + 1}</h3>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onRemove(index)}
-          className={styles.removeExperienceButton}
-        >
-          <Trash2 className={styles.iconMd} />
-        </Button>
-      </div>
-      <div className={styles.formGridFull}>
-        <div className={styles.formField}>
-          <Label htmlFor={`education-degree-${index}`} className={styles.label}>
-            Degree
-          </Label>
-          <Input
-            id={`education-degree-${index}`}
-            value={edu.degree || ''}
-            onChange={(e) => onChange(index, 'degree', e.target.value)}
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.formField}>
-          <Label
-            htmlFor={`education-institution-${index}`}
-            className={styles.label}
-          >
-            Institution
-          </Label>
-          <Input
-            id={`education-institution-${index}`}
-            value={edu.institution || ''}
-            onChange={(e) => onChange(index, 'institution', e.target.value)}
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.formField}>
-          <Label
-            htmlFor={`education-duration-${index}`}
-            className={styles.label}
-          >
-            Duration
-          </Label>
-          <Input
-            id={`education-duration-${index}`}
-            value={edu.duration || ''}
-            onChange={(e) => onChange(index, 'duration', e.target.value)}
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.formField}>
-          <Label htmlFor={`education-note-${index}`} className={styles.label}>
-            Note (Optional)
-          </Label>
-          <Textarea
-            id={`education-note-${index}`}
-            value={edu.note || ''}
-            onChange={(e) => onChange(index, 'note', e.target.value)}
-            className={styles.textarea}
-            rows={2}
-          />
-        </div>
-      </div>
-    </div>
-  );
-});
-
-// Memoized SkillBadge subcomponent
-interface SkillBadgeProps {
-  skill: string;
-  onRemove: (skill: string) => void;
-}
-const SkillBadge = memo(function SkillBadge({
-  skill,
-  onRemove,
-}: SkillBadgeProps) {
-  console.info('skills [resume-editor]:', skill);
-  return (
-    <Badge className={styles.skillBadge}>
-      {skill}
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => onRemove(skill)}
-        className={styles.removeSkillButton}
-      >
-        <X className={styles.iconSm} />
-      </Button>
-    </Badge>
-  );
-});
 
 const ResumeEditor = ({
   resumeData,
@@ -281,246 +30,36 @@ const ResumeEditor = ({
 }: ResumeEditorProps) => {
   const [showPreview, setShowPreview] = useState(false);
 
-  const [editedData, setEditedData] = useState<ParsedResume>({
-    ...resumeData,
-    experience: normalizeExperienceData(
-      (resumeData.experience || []) as unknown as IncomingExperience[]
-    ),
-    education: (resumeData.education || []).map((edu) => ({
-      ...edu,
-      id: edu.id || uuidv4(),
-    })),
-    certifications: (resumeData.certifications || []).map((cert) => ({
-      ...cert,
-      id: cert.id || uuidv4(),
-    })),
-    skills: resumeData.skills || [],
-    contact: {
-      ...resumeData.contact,
-    },
-    profileImage: resumeData.profileImage || '',
-    customColors: resumeData.customColors || {},
-  });
+  const {
+    editedData,
+    handleNestedInputChange,
+    handleExperienceChange,
+    removeExperience,
+    addExperience,
+    handleSkillAdd,
+    handleSkillRemove,
+    handleProfileImageChange,
+    handleEducationChange,
+    removeEducation,
+    addEducation,
+    handleCertificationChange,
+    removeCertification,
+    addCertification,
+  } = useResumeEditor(resumeData, onCustomColorsChange);
 
-  useEffect(() => {
-    setEditedData({
-      ...resumeData,
-      experience: normalizeExperienceData(
-        (resumeData.experience || []) as unknown as IncomingExperience[]
-      ),
-      education: (resumeData.education || []).map((edu) => ({
-        ...edu,
-        id: edu.id || uuidv4(),
-      })),
-      certifications: (resumeData.certifications || []).map((cert) => ({
-        ...cert,
-        id: cert.id || uuidv4(),
-      })),
-      skills: resumeData.skills || [],
-      contact: {
-        ...resumeData.contact,
-      },
-      profileImage: resumeData.profileImage || '',
-      customColors: resumeData.customColors || {},
-    });
-  }, [resumeData]);
-
-  const handleInputChange = <Field extends keyof ParsedResume>(
-    field: Field,
-    value: ParsedResume[Field]
-  ) => {
-    setEditedData((prev: ParsedResume) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const handleNestedInputChange = <
-    Section extends keyof ParsedResume,
-    Field extends keyof NonNullable<ParsedResume[Section]>,
-  >(
-    section: Section,
-    field: Field,
-    value: NonNullable<ParsedResume[Section]>[Field]
-  ) => {
-    setEditedData((prev: ParsedResume) => {
-      const prevSectionData = prev[section];
-      let currentSectionData: NonNullable<ParsedResume[Section]>;
-
-      if (
-        typeof prevSectionData === 'object' &&
-        prevSectionData !== null &&
-        !Array.isArray(prevSectionData)
-      ) {
-        currentSectionData = prevSectionData as NonNullable<
-          ParsedResume[Section]
-        >;
-      } else if (section === 'contact') {
-        currentSectionData = {} as NonNullable<ParsedResume[Section]>;
-      } else {
-        currentSectionData = {} as NonNullable<ParsedResume[Section]>;
-      }
-
-      const updatedSection = Object.assign({}, currentSectionData, {
-        [field]: value,
-      });
-      return {
-        ...prev,
-        [section]: updatedSection,
-      };
-    });
-  };
-
-  // Memoize handlers for ExperienceItem
-  const handleExperienceChange = useCallback(
-    <Field extends keyof (typeof editedData.experience)[number]>(
-      index: number,
-      field: Field,
-      value: (typeof editedData.experience)[number][Field]
+  const handleContactChange = useCallback(
+    <K extends keyof NonNullable<ParsedResume['contact']>>(
+      field: K,
+      value: NonNullable<ParsedResume['contact']>[K]
     ) => {
-      const updatedExperience = [...(editedData.experience || [])];
-      updatedExperience[index] = {
-        ...updatedExperience[index],
-        [field]: value,
-      };
-      setEditedData((prev: ParsedResume) => ({
-        ...prev,
-        experience: updatedExperience,
-      }));
+      handleNestedInputChange('contact', field, value);
     },
-    [editedData.experience]
+    [handleNestedInputChange]
   );
-
-  const removeExperience = useCallback(
-    (index: number) => {
-      const updatedExperience = (editedData.experience || []).filter(
-        (__, i: number) => i !== index
-      );
-      setEditedData((prev: ParsedResume) => ({
-        ...prev,
-        experience: updatedExperience,
-      }));
-    },
-    [editedData.experience]
-  );
-
-  const handleAdExperienceChange = () => {
-    setEditedData((prev: ParsedResume) => ({
-      ...prev,
-      experience: [
-        ...(prev.experience || []),
-        {
-          id: uuidv4(), // "3eae32f2-79be-4463-8460-dcd15d58a407"
-          company: '',
-          title: '',
-          duration: '',
-          details: [''],
-          role: '',
-        },
-      ],
-    }));
-  };
-
-  const handleSkillAdd = (skillToAdd: string) => {
-    if (skillToAdd.trim() !== '') {
-      setEditedData((prev: ParsedResume) => ({
-        ...prev,
-        skills: [...(prev.skills || []), skillToAdd.trim()],
-      }));
-    }
-  };
-
-  const handleSkillRemove = (skillToRemove: string) => {
-    setEditedData((prev: ParsedResume) => ({
-      ...prev,
-      skills: (prev.skills || []).filter((skill) => skill !== skillToRemove),
-    }));
-  };
-
-  const handleProfileImageChange = (imageUrl: string) => {
-    setEditedData((prev: ParsedResume) => ({
-      ...prev,
-      profileImage: imageUrl,
-    }));
-  };
-
-  const handleColorsChange = (colors: Record<string, string>) => {
-    setEditedData((prev: ParsedResume) => ({
-      ...prev,
-      customColors: colors,
-    }));
-    if (onCustomColorsChange) {
-      onCustomColorsChange(colors);
-    }
-  };
 
   const handleSave = () => {
     onSave(editedData);
   };
-
-  // Memoize handlers for EducationItem
-  const handleEducationChange = useCallback(
-    <Field extends keyof NonNullable<ParsedResume['education']>[number]>(
-      index: number,
-      field: Field,
-      value: NonNullable<ParsedResume['education']>[number][Field]
-    ) => {
-      const updatedEducation = [...(editedData.education || [])];
-      updatedEducation[index] = {
-        ...updatedEducation[index],
-        [field]: value,
-      };
-      setEditedData((prev) => ({
-        ...prev,
-        education: updatedEducation,
-      }));
-    },
-    [editedData.education]
-  );
-  const removeEducation = useCallback(
-    (index: number) => {
-      const updatedEducation = (editedData.education || []).filter(
-        (__, i) => i !== index
-      );
-      setEditedData((prev) => ({
-        ...prev,
-        education: updatedEducation,
-      }));
-    },
-    [editedData.education]
-  );
-
-  // Memoize handlers for CertificationItem
-  const handleCertificationChange = useCallback(
-    <Field extends keyof NonNullable<ParsedResume['certifications']>[number]>(
-      index: number,
-      field: Field,
-      value: NonNullable<ParsedResume['certifications']>[number][Field]
-    ) => {
-      const updatedCerts = [...(editedData.certifications || [])];
-      updatedCerts[index] = {
-        ...updatedCerts[index],
-        [field]: value,
-      };
-      setEditedData((prev) => ({
-        ...prev,
-        certifications: updatedCerts,
-      }));
-    },
-    [editedData.certifications]
-  );
-  const removeCertification = useCallback(
-    (index: number) => {
-      const updatedCerts = (editedData.certifications || []).filter(
-        (__, i) => i !== index
-      );
-      setEditedData((prev) => ({
-        ...prev,
-        certifications: updatedCerts,
-      }));
-    },
-    [editedData.certifications]
-  );
 
   return (
     <div className={styles.container}>
@@ -565,251 +104,23 @@ const ResumeEditor = ({
         <div
           className={`${styles.grid} ${showPreview ? styles.gridTwoColumns : styles.gridOneColumn}`}
         >
+          {/* PROFILE Section */}
           <div className={styles.editorPanel}>
-            <Card className={styles.card}>
-              <CardHeader>
-                <CardTitle className={styles.cardTitle}>
-                  Profile Picture
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ProfileImageUploader
-                  currentImage={editedData.profileImage}
-                  onImageChange={handleProfileImageChange}
-                />
-              </CardContent>
-            </Card>
+            <ProfileEditorSection
+              profileImage={editedData.profileImage}
+              contact={editedData.contact}
+              onProfileImageChange={handleProfileImageChange}
+              onContactChange={handleContactChange}
+            />
+
+            <SkillsEditorSection
+              skills={editedData.skills || []}
+              onSkillAdd={handleSkillAdd}
+              onSkillRemove={handleSkillRemove}
+            />
 
             <Card className={styles.card}>
-              <CardHeader>
-                <CardTitle className={styles.cardTitle}>
-                  Personal Information
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className={styles.formGridFull}>
-                  <div className={styles.formField}>
-                    <Label htmlFor="name" className={styles.label}>
-                      Full Name
-                    </Label>
-                    <Input
-                      id="name"
-                      value={editedData.name || ''}
-                      onChange={(e) =>
-                        handleInputChange('name', e.target.value)
-                      }
-                      className={styles.input}
-                    />
-                  </div>
-                  <div className={styles.formField}>
-                    <Label htmlFor="title" className={styles.label}>
-                      Professional Title
-                    </Label>
-                    <Input
-                      id="title"
-                      value={editedData.title || ''}
-                      onChange={(e) =>
-                        handleInputChange('title', e.target.value)
-                      }
-                      className={styles.input}
-                    />
-                  </div>
-                  <div className={styles.formField}>
-                    <Label htmlFor="summary" className={styles.label}>
-                      Summary
-                    </Label>
-                    <Textarea
-                      id="summary"
-                      value={editedData.summary || ''}
-                      onChange={(e) =>
-                        handleInputChange('summary', e.target.value)
-                      }
-                      className={styles.textarea}
-                      rows={5}
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className={styles.card}>
-              <CardHeader>
-                <CardTitle className={styles.cardTitle}>
-                  Contact Information
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className={styles.formGrid}>
-                  <div className={styles.formField}>
-                    <Label htmlFor="email" className={styles.label}>
-                      Email
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={editedData.contact?.email || ''}
-                      onChange={(e) =>
-                        handleNestedInputChange(
-                          'contact',
-                          'email',
-                          e.target.value
-                        )
-                      }
-                      className={styles.input}
-                    />
-                  </div>
-                  <div className={styles.formField}>
-                    <Label htmlFor="phone" className={styles.label}>
-                      Phone
-                    </Label>
-                    <Input
-                      id="phone"
-                      value={editedData.contact?.phone || ''}
-                      onChange={(e) =>
-                        handleNestedInputChange(
-                          'contact',
-                          'phone',
-                          e.target.value
-                        )
-                      }
-                      className={styles.input}
-                    />
-                  </div>
-                  <div className={styles.formField}>
-                    <Label htmlFor="location" className={styles.label}>
-                      Location (City, Country)
-                    </Label>
-                    <Input
-                      id="location"
-                      value={editedData.contact?.location || ''}
-                      onChange={(e) =>
-                        handleNestedInputChange(
-                          'contact',
-                          'location',
-                          e.target.value
-                        )
-                      }
-                      className={styles.input}
-                    />
-                  </div>
-                  <div className={styles.formField}>
-                    <Label htmlFor="linkedin" className={styles.label}>
-                      LinkedIn Profile URL
-                    </Label>
-                    <Input
-                      id="linkedin"
-                      value={editedData.contact?.linkedin || ''}
-                      onChange={(e) =>
-                        handleNestedInputChange(
-                          'contact',
-                          'linkedin',
-                          e.target.value
-                        )
-                      }
-                      className={styles.input}
-                    />
-                  </div>
-                  <div className={styles.formField}>
-                    <Label htmlFor="github" className={styles.label}>
-                      GitHub Profile URL
-                    </Label>
-                    <Input
-                      id="github"
-                      value={editedData.contact?.github || ''}
-                      onChange={(e) =>
-                        handleNestedInputChange(
-                          'contact',
-                          'github',
-                          e.target.value
-                        )
-                      }
-                      className={styles.input}
-                    />
-                  </div>
-                  <div className={styles.formField}>
-                    <Label htmlFor="website" className={styles.label}>
-                      Personal Website URL
-                    </Label>
-                    <Input
-                      id="website"
-                      value={editedData.contact?.website || ''}
-                      onChange={(e) =>
-                        handleNestedInputChange(
-                          'contact',
-                          'website',
-                          e.target.value
-                        )
-                      }
-                      className={styles.input}
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className={styles.card}>
-              <CardHeader className={styles.experienceHeader}>
-                <CardTitle className={styles.cardTitle}>Skills</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className={styles.skillsInputGroup}>
-                  <Input
-                    type="text"
-                    placeholder="Add a new skill (e.g., React, Node.js)"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        const input = e.currentTarget;
-                        const value = input.value;
-                        if (value.trim()) {
-                          handleSkillAdd(value);
-                          input.value = '';
-                        }
-                      }
-                    }}
-                    className={styles.input}
-                  />
-                  <Button
-                    onClick={(e) => {
-                      const input =
-                        e.currentTarget.parentElement?.querySelector('input');
-                      if (input?.value.trim()) {
-                        handleSkillAdd(input.value);
-                        input.value = '';
-                      }
-                    }}
-                    className={styles.addSkillButton}
-                  >
-                    <Plus className={styles.iconMd} />
-                  </Button>
-                </div>
-                <div className={`${styles.skillsList} ${styles.mt2}`}>
-                  {editedData.skills?.map((skill, index) => {
-                    // Create a stable key that handles duplicate skill names
-                    const skillKey = `${skill.replace(/\s+/g, '-').toLowerCase()}-${index}`;
-                    return (
-                      <SkillBadge
-                        key={skillKey}
-                        onRemove={handleSkillRemove}
-                        skill={skill}
-                      />
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className={styles.card}>
-              <CardHeader className={styles.experienceHeader}>
-                <CardTitle className={styles.cardTitle}>Experience</CardTitle>
-                <Button
-                  onClick={() => {
-                    handleAdExperienceChange();
-                  }}
-                  className={styles.addExperienceButton}
-                >
-                  <Plus className={styles.iconMd} />
-                </Button>
-              </CardHeader>
+              <SectionHeader title="Experience" onAdd={addExperience} />
               <CardContent className={styles.spaceY4}>
                 {editedData.experience?.length === 0 && (
                   <p className="text-gray-500 text-sm">
@@ -829,28 +140,7 @@ const ResumeEditor = ({
             </Card>
 
             <Card className={styles.card}>
-              <CardHeader className={styles.experienceHeader}>
-                <CardTitle className={styles.cardTitle}>Education</CardTitle>
-                <Button
-                  onClick={() => {
-                    setEditedData((prev) => ({
-                      ...prev,
-                      education: [
-                        ...(prev.education || []),
-                        {
-                          id: uuidv4(),
-                          degree: '',
-                          institution: '',
-                          duration: '',
-                        },
-                      ],
-                    }));
-                  }}
-                  className={styles.addExperienceButton}
-                >
-                  <Plus className={styles.iconMd} />
-                </Button>
-              </CardHeader>
+              <SectionHeader title="Education" onAdd={addEducation} />
               <CardContent className={styles.spaceY4}>
                 {editedData.education?.length === 0 && (
                   <p className="text-gray-500 text-sm">
@@ -870,25 +160,7 @@ const ResumeEditor = ({
             </Card>
 
             <Card className={styles.card}>
-              <CardHeader className={styles.experienceHeader}>
-                <CardTitle className={styles.cardTitle}>
-                  Certifications
-                </CardTitle>
-                <Button
-                  onClick={() => {
-                    setEditedData((prev) => ({
-                      ...prev,
-                      certifications: [
-                        ...(prev.certifications || []),
-                        { id: uuidv4(), name: '', issuer: '' },
-                      ],
-                    }));
-                  }}
-                  className={styles.addExperienceButton}
-                >
-                  <Plus className={styles.iconMd} />
-                </Button>
-              </CardHeader>
+              <SectionHeader title="Certifications" onAdd={addCertification} />
               <CardContent className={styles.spaceY4}>
                 {editedData.certifications?.length === 0 && (
                   <p className="text-gray-500 text-sm">
@@ -907,200 +179,9 @@ const ResumeEditor = ({
                 ))}
               </CardContent>
             </Card>
-
-            <Card className={styles.card}>
-              <CardHeader>
-                <CardTitle>Color Scheme</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ColorPicker
-                  currentColors={editedData.customColors || {}}
-                  onColorsChange={handleColorsChange}
-                />
-              </CardContent>
-            </Card>
           </div>
-
-          {showPreview && (
-            <div className={styles.previewContainer}>
-              <Card className={styles.card}>
-                <CardHeader>
-                  <CardTitle className={styles.cardTitle}>
-                    Live Preview
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className={styles.previewContent}>
-                  <div className={styles.previewHeader}>
-                    {editedData.profileImage && (
-                      <div className={styles.previewImageContainer}>
-                        {/** biome-ignore lint/performance/noImgElement: expected */}
-                        <img
-                          src={editedData.profileImage}
-                          alt="Profile"
-                          className={styles.previewImage}
-                        />
-                      </div>
-                    )}
-                    <div className={styles.previewName}>
-                      {editedData.name || 'Your Name'}
-                    </div>
-                    <div className={styles.previewTitle}>
-                      {editedData.title || 'Professional Title'}
-                    </div>
-                    <div className={styles.previewSummary}>
-                      {editedData.summary ||
-                        'Your professional summary will appear here.'}
-                    </div>
-                  </div>
-
-                  <div className={styles.previewSection}>
-                    <div className={styles.previewSectionTitle}>Contact</div>
-                    <div className={styles.previewContactInfo}>
-                      {editedData.contact?.email && (
-                        <div>Email: {editedData.contact.email}</div>
-                      )}
-                      {editedData.contact?.phone && (
-                        <div>Phone: {editedData.contact.phone}</div>
-                      )}
-                      {editedData.contact?.location && (
-                        <div>Location: {editedData.contact.location}</div>
-                      )}
-                      {editedData.contact?.linkedin && (
-                        <div>LinkedIn: {editedData.contact.linkedin}</div>
-                      )}
-                      {editedData.contact?.github && (
-                        <div>GitHub: {editedData.contact.github}</div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className={styles.previewSection}>
-                    <div className={styles.previewSectionTitle}>Skills</div>
-                    <div className={styles.previewSkillsList}>
-                      {editedData.skills && editedData.skills.length > 0 ? (
-                        editedData.skills.map((skill) => (
-                          <SkillBadge
-                            key={skill}
-                            skill={skill}
-                            onRemove={() => {}}
-                          />
-                        ))
-                      ) : (
-                        <span className={styles.previewMoreSkills}>
-                          No skills listed.
-                        </span>
-                      )}
-                      {editedData.skills && editedData.skills.length > 5 && (
-                        <span className={styles.previewMoreSkills}>
-                          + {editedData.skills.length - 5} more
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className={styles.previewSection}>
-                    <div className={styles.previewSectionTitle}>Experience</div>
-                    {editedData.experience &&
-                    editedData.experience.length > 0 ? (
-                      editedData.experience.slice(0, 3).map((job, index) => (
-                        <div
-                          key={`${job.title || ''}-${job.company || ''}-${index}`}
-                          className={styles.previewExperienceItem}
-                        >
-                          <div className={styles.previewExperienceTitle}>
-                            {job.title || ''}
-                          </div>
-                          <div className={styles.previewExperienceCompany}>
-                            {job.company || ''}
-                          </div>
-                          <div className={styles.previewExperienceDuration}>
-                            {job.duration || ''}
-                          </div>
-                          {job.details && job.details.length > 0 && (
-                            <ul className={styles.mt1}>
-                              {job.details.slice(0, 2).map((detail) => (
-                                <li key={detail} className={styles.textSm}>
-                                  {detail}
-                                </li>
-                              ))}
-                              {job.details.length > 2 && (
-                                <li className={styles.textSm}>...</li>
-                              )}
-                            </ul>
-                          )}
-                        </div>
-                      ))
-                    ) : (
-                      <span className={styles.previewMoreExperience}>
-                        No experience listed.
-                      </span>
-                    )}
-                    {editedData.experience &&
-                      editedData.experience.length > 3 && (
-                        <span className={styles.previewMoreExperience}>
-                          + {editedData.experience.length - 3} more
-                        </span>
-                      )}
-                  </div>
-
-                  <div className={styles.previewSection}>
-                    <div className={styles.previewSectionTitle}>Education</div>
-                    {editedData.education && editedData.education.length > 0 ? (
-                      editedData.education.slice(0, 2).map((edu) => (
-                        <div key={edu.id} className={styles.mb2}>
-                          <div className={styles.fontSemibold}>
-                            {edu.degree}
-                          </div>
-                          <div className={styles.textSm}>{edu.institution}</div>
-                          {edu.duration && (
-                            <div className={styles.textXs}>{edu.duration}</div>
-                          )}
-                        </div>
-                      ))
-                    ) : (
-                      <span className={styles.textSm}>
-                        No education listed.
-                      </span>
-                    )}
-                    {editedData.education &&
-                      editedData.education.length > 2 && (
-                        <span className={styles.textSm}>
-                          + {editedData.education.length - 2} more
-                        </span>
-                      )}
-                  </div>
-
-                  <div className={styles.previewSection}>
-                    <div className={styles.previewSectionTitle}>
-                      Certifications
-                    </div>
-                    {editedData.certifications &&
-                    editedData.certifications.length > 0 ? (
-                      editedData.certifications.slice(0, 2).map((cert) => (
-                        <div key={cert.id} className={styles.mb2}>
-                          <div className={styles.fontSemibold}>{cert.name}</div>
-                          <div className={styles.textSm}>{cert.issuer}</div>
-                          {cert.date && (
-                            <div className={styles.textXs}>{cert.date}</div>
-                          )}
-                        </div>
-                      ))
-                    ) : (
-                      <span className={styles.textSm}>
-                        No certifications listed.
-                      </span>
-                    )}
-                    {editedData.certifications &&
-                      editedData.certifications.length > 2 && (
-                        <span className={styles.textSm}>
-                          + {editedData.certifications.length - 2} more
-                        </span>
-                      )}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
+          {/* PREVIEW CHANGES */}
+          {showPreview && <ResumePreview resumeData={editedData} />}
         </div>
       </div>
     </div>

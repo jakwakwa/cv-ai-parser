@@ -1,5 +1,8 @@
+import type {
+  ParsedJobSpec,
+  UserAdditionalContext,
+} from '@/lib/jobfit/schemas';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
-import type { ParsedJobSpec, UserAdditionalContext } from './schemas';
 
 type ToneInstructions = {
   [K in UserAdditionalContext['tone']]: string;

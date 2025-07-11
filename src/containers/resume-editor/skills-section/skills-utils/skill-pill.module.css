@@ -1,0 +1,22 @@
+.skillBadge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-primary);
+}
+
+.removeSkillButton {
+  margin-left: var(--spacing-xs);
+  color: var(--color-text-muted);
+}
+
+.removeSkillButton:hover {
+  color: var(--color-error-text);
+  background-color: transparent;
+}
+
+.iconSm {
+  width: 1rem;
+  height: 1rem;
+} 

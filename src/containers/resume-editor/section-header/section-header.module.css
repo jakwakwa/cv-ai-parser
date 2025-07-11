@@ -1,0 +1,24 @@
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+
+.cardTitle {
+  color: var(--color-text-primary);
+  text-align: left;
+}
+
+.addButton {
+  background-color: var(--color-accent-teal);
+}
+
+.addButton:hover {
+  background-color: var(--color-accent-teal-dark);
+}
+
+.iconMd {
+  width: var(--spacing-sm);
+  height: var(--spacing-sm);
+} 

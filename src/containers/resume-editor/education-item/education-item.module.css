@@ -1,0 +1,54 @@
+.educationItem {
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-medium);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.educationItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.educationItemTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
+.removeEducationButton {
+  color: var(--color-text-muted);
+}
+
+.removeEducationButton:hover {
+  color: var(--color-accent-danger);
+  background-color: var(--color-background-danger-hover);
+}
+
+.iconMd {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.formGridFull {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-md);
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  margin-bottom: var(--spacing-xs);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.input,
+.textarea {
+  width: 100%;
+} 
