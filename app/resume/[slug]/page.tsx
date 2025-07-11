@@ -29,19 +29,12 @@ const convertToParsedResume = (
     summary: enhancedResume.summary,
     profileImage: enhancedResume.profileImage,
     customColors: enhancedResume.customColors,
-    contact: enhancedResume.contact
-      ? {
-          email: enhancedResume.contact.email,
-          phone: enhancedResume.contact.phone,
-          location: enhancedResume.contact.location,
-          website: enhancedResume.contact.website,
-          github: enhancedResume.contact.github,
-          linkedin: enhancedResume.contact.linkedin,
-        }
-      : undefined, // Ensure contact is optional if undefined
+    contact: enhancedResume.contact,
+    ...enhancedResume.skills,
     experience: enhancedResume.experience.map((exp) => ({
       id: exp.id,
       title: exp.title,
+      role: exp.role,
       company: exp.company,
       duration: exp.duration,
       details: exp.details || [], // Ensure details is always an array
@@ -59,7 +52,6 @@ const convertToParsedResume = (
       issuer: cert.issuer,
       date: cert.date,
     })),
-    skills: skillsArray,
   };
 };
 

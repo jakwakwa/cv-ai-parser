@@ -8,7 +8,11 @@ import styles from './page.module.css';
 export default function UploadPage() {
   return (
     <div className={styles.pageWrapper}>
-      <SiteHeader onLogoClick={() => { window.location.href = '/'; }} />
+      <SiteHeader
+        onLogoClick={() => {
+          window.location.href = '/';
+        }}
+      />
       <main className={styles.mainContent}>
         <Suspense fallback={<div className={styles.loading}>Loading...</div>}>
           <PageContent />

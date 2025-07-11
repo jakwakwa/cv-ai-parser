@@ -1,11 +1,3 @@
-.buttonContainer {
-  display: flex;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
 .signInToolsPage {
   display: flex;
   font-size: 0.8rem;
@@ -21,4 +13,82 @@
   margin: 0 4px;
   color: var(--color-secondary);
   font-size: 0.8rem;
+}
+
+
+
+  .buttonContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 100%;
+    margin: 0rem auto;
+    padding: 3px;
+    margin-bottom: 0;
+    width: 100%;
+    /* margin-left: 1rem; */
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 80% !important;
+    flex-wrap: wrap;
+    margin: 0 !important;
+    margin: 0 !important;
+    gap: 0rem !important;
+  }
+
+  .buttonContainer button {
+    font-size: 0.6rem;
+      /* width: 90px; */
+    padding: 0px 10px !important;
+   margin: 0 !important;
+    margin: 0 !important;
+    gap: 0rem !important;
+        height: 30px !important;
+  }
+
+
+@media (min-width: 768px) {
+  .header {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+
+  .buttonContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    /* max-width: 100%; */
+          width: 100% !important;
+
+    margin-top: 0px !important;
+    margin-bottom: 0 !important;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem !important;
+    width: 100% !important;
+  }
+
+
+    .buttonContainer  button {
+          /* width: 100% !important; */
+          font-size: 0.78rem;
+    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+         margin: 0 !important;
+      height: 3rem !important;
+    padding:10px 20px !important;
+  }
+
+
+  .default {
+    width: 10px;
+  }
+
+  .mainContainer {
+    flex-direction: column;
+  }
+
+
 }

@@ -77,7 +77,7 @@ export default async function Image({
       ? parsedData.experience.length
       : 0;
     const skillsCount =
-      typeof parsedData.skills === 'object' &&
+      typeof parsedData.skills &&
       parsedData.skills !== null &&
       Array.isArray(parsedData.skills)
         ? parsedData.skills.length

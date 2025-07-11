@@ -58,17 +58,19 @@ const ExperienceSection = ({
                 )}
               </div>
             </div>
-            {job.details && job.details.length > 0 && (
+            {job.details && job.details.length >= 0 && (
               <ul className={styles.details}>
-                {job.details.map((detail) => (
-                  <li
-                    key={detail}
-                    className={`${styles.detailItem} bullet-point content-body`}
-                    style={{ color: customColors['--resume-body-text'] }}
-                  >
-                    {detail}
-                  </li>
-                ))}
+                {job.details.map((detail) =>
+                  detail !== '' ? (
+                    <li
+                      key={detail}
+                      className={`${styles.detailItem} bullet-point content-body`}
+                      style={{ color: customColors['--resume-body-text'] }}
+                    >
+                      {detail}
+                    </li>
+                  ) : null
+                )}
               </ul>
             )}
           </div>

@@ -1,6 +1,6 @@
-import bcrypt from "bcrypt";
-import { NextResponse } from "next/server";
-import { db } from "@/lib/prisma";
+import bcrypt from 'bcrypt';
+import { NextResponse } from 'next/server';
+import { db } from '@/lib/prisma';
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -14,8 +14,8 @@ export async function POST(request: Request) {
 
   if (existingUser) {
     return NextResponse.json(
-      { error: "Email already in use" },
-      { status: 409 },
+      { error: 'Email already in use' },
+      { status: 409 }
     );
   }
 
@@ -30,4 +30,4 @@ export async function POST(request: Request) {
   });
 
   return NextResponse.json(user);
-} 
+}

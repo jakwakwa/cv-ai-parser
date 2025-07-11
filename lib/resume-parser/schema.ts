@@ -16,15 +16,7 @@ export const resumeSchema = z.object({
       linkedin: z.string().optional(),
     })
     .optional(),
-  experience: z.array(
-    z.object({
-      id: z.string().optional(),
-      title: z.string().optional(),
-      company: z.string().optional(),
-      duration: z.string().optional().describe("e.g., 'Jan 2020 - Present'"),
-      details: z.array(z.string()),
-    })
-  ),
+  skills: z.array(z.string()).optional(),
   education: z
     .array(
       z.object({
@@ -46,7 +38,31 @@ export const resumeSchema = z.object({
       })
     )
     .optional(),
-  skills: z.array(z.string()),
+  experience: z.array(
+    z.object({
+      title: z.string().optional(),
+      company: z.string().optional(),
+      role: z.string(),
+      duration: z.string().optional(),
+      details: z.array(z.string().optional()),
+    })
+  ),
+  metadata: z
+    .object({
+      lastUpdated: z.string().optional(),
+      version: z.string().optional(),
+      source: z.string().optional(),
+      // Figma mapping hints
+      figmaMapping: z
+        .object({
+          primarySections: z.array(z.string()).optional(),
+          contentPriority: z.array(z.string()).optional(),
+          visualEmphasis: z.array(z.string()).optional(),
+        })
+        .optional(),
+      aiTailorCommentary: z.string().optional(), // AI-generated summary/commentary for UI
+    })
+    .optional(),
 });
 
 export const aiResumeSchema = resumeSchema.omit({

@@ -1,11 +1,9 @@
 /** biome-ignore-all lint/complexity/noStaticOnlyClass: <> */
 /** biome-ignore-all lint/suspicious/noExplicitAny: <ecperimental feature. when tested it will get typed> */
 
-import { PrismaClient } from "@prisma/client";
-import { withAccelerate } from "@prisma/extension-accelerate";
+import { PrismaClient } from '@prisma/client';
+import { withAccelerate } from '@prisma/extension-accelerate';
 // Learn more about instantiating PrismaClient in Next.js here: https://www.prisma.io/docs/data-platform/accelerate/getting-started
-
-
 
 import type { Resume, UserAdditionalContext } from './types';
 
@@ -23,14 +21,13 @@ declare global {
 
 const prisma = global.prismaGlobal ?? prismaClient;
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== 'production') {
   global.prismaGlobal = prisma;
 }
 
 export default prisma;
 
-if (process.env.NODE_ENV !== "production") globalThis.prismaGlobal = prisma;
-
+if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma;
 
 export class ResumeDatabase {
   // Save a new resume
@@ -88,9 +85,9 @@ export class ResumeDatabase {
           confidenceScore,
           isPublic,
           slug,
-         
+
           customColors: customColors as any,
-         
+
           additionalContext: additionalContext as any,
           user: {
             connect: { id: userId },
@@ -191,13 +188,14 @@ export class ResumeDatabase {
         data: {
           ...restOfUpdates,
           customColors: updates.customColors as any,
-         
+
           parsedData: updates.parsedData as any,
         },
       });
-      return resume as unknown as Resume;
+
+      return resume;
     } catch (error) {
-      console.error('Error updating resume:', error);
+      console.error(`Error updating resume ${id}:`, error);
       throw new Error('Failed to update resume.');
     }
   }
@@ -217,7 +215,7 @@ export class ResumeDatabase {
   // Save resume version
   static async saveResumeVersion(
     resumeId: string,
-   
+
     parsedData: any,
     changesSummary?: string
   ) {
@@ -233,7 +231,7 @@ export class ResumeDatabase {
         data: {
           resumeId,
           versionNumber: nextVersion,
-         
+
           parsedData: parsedData as any,
           changesSummary: changesSummary,
         },

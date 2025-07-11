@@ -7,7 +7,7 @@ import {
   Palette,
   Plus,
   ArrowRight,
-  Eye
+  Eye,
 } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { resumeColors } from '@/src/utils/colors';
@@ -60,9 +60,11 @@ const FigmaToResumeTool = ({
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [validationWarning, setValidationWarning] = useState('');
-  const [customColors, setCustomColors] = useState<Record<string, string>>(resumeColors);
+  const [customColors, setCustomColors] =
+    useState<Record<string, string>>(resumeColors);
   const [showColorDialog, setShowColorDialog] = useState(false);
-  const [generatedComponent, setGeneratedComponent] = useState<FigmaGeneratedComponent | null>(null);
+  const [generatedComponent, setGeneratedComponent] =
+    useState<FigmaGeneratedComponent | null>(null);
   const [showPreview, setShowPreview] = useState(true);
 
   const handleLinkChange = useCallback((value: string) => {
@@ -154,7 +156,8 @@ const FigmaToResumeTool = ({
         }),
       });
 
-      const responseData: FigmaApiResponse | FigmaApiError = await response.json();
+      const responseData: FigmaApiResponse | FigmaApiError =
+        await response.json();
 
       if (!response.ok) {
         const errorData = responseData as FigmaApiError;
@@ -180,23 +183,31 @@ const FigmaToResumeTool = ({
     } catch (err: unknown) {
       console.error('Figma generation error:', err);
       let errorMessage = 'An unexpected error occurred. Please try again.';
-      
+
       if (err instanceof Error) {
         errorMessage = err.message;
       }
-      
+
       setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
-  }, [figmaLink, customColors, validateFigmaLink, setIsLoading, onResumeGenerated]);
+  }, [
+    figmaLink,
+    customColors,
+    validateFigmaLink,
+    setIsLoading,
+    onResumeGenerated,
+  ]);
 
   if (isLoading) {
     return (
       <div className={styles.loadingState}>
         <div className={styles.loadingCard}>
           <div className={styles.loadingSpinner} />
-          <p className={styles.loadingTitle}>Generating your resume component...</p>
+          <p className={styles.loadingTitle}>
+            Generating your resume component...
+          </p>
           <p className={styles.loadingSubtitle}>
             Extracting design elements from Figma
           </p>
@@ -213,7 +224,7 @@ const FigmaToResumeTool = ({
             <FileText className={styles.figmaIcon} />
             <h2 className={styles.inputTitle}>Figma Design Link</h2>
           </div>
-          
+
           <div className={styles.inputWrapper}>
             <div className={styles.inputGroup}>
               <ArrowRight className={styles.inputIcon} />
@@ -271,7 +282,7 @@ const FigmaToResumeTool = ({
             <Palette size={20} />
             Customize Colors
           </button>
-          
+
           <p className={styles.colorHint}>
             Choose colors to match your personal brand
           </p>
@@ -328,7 +339,7 @@ const FigmaToResumeTool = ({
                   <code>{generatedComponent.jsxCode}</code>
                 </pre>
               </div>
-              
+
               <div className={styles.codeSection}>
                 <h3 className={styles.codeTitle}>CSS Module</h3>
                 <pre className={styles.codeBlock}>

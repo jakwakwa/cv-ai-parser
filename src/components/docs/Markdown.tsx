@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // @ts-ignore - react-markdown types issue
 import ReactMarkdown from 'react-markdown';

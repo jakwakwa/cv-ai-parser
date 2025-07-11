@@ -19,8 +19,9 @@
     padding: var(--spacing-lg);
     margin-bottom: var(--spacing-lg);
     position: sticky;
-    top: 0;
+    top: 60px;
     z-index: 10;
+    box-shadow: 10px 10px 10px black;
 }
 
 .headerContent {
@@ -43,6 +44,7 @@
 .headerActions {
     display: flex;
     gap: var(--spacing-sm);
+    flex-direction: row;
 }
 
 .previewButton {
@@ -511,5 +513,6 @@
 
     .headerActions {
         justify-content: center;
+        flex-direction: column;
     }
 }

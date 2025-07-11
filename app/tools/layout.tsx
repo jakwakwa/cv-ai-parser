@@ -11,10 +11,12 @@ export default function ToolsLayout({
 }) {
   return (
     <div className={styles.toolsLayout}>
-      <SiteHeader onLogoClick={() => { window.location.href = '/'; }} />
-      <main className={styles.toolsMain}>
-        {children}
-      </main>
+      <SiteHeader
+        onLogoClick={() => {
+          window.location.href = '/';
+        }}
+      />
+      <main className={styles.toolsMain}>{children}</main>
     </div>
   );
 }

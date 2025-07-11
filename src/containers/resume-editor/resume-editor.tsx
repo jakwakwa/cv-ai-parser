@@ -1,7 +1,7 @@
 'use client';
 
 import { Eye, EyeOff, Plus, Save, Trash2, X } from 'lucide-react';
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import ColorPicker from '@/src/components/color-picker/color-picker';
@@ -20,7 +20,7 @@ import ProfileImageUploader from '@/src/containers/profile-image-uploader/profil
 import styles from './resume-editor.module.css';
 
 type IncomingExperience = {
-  id?: string;
+  id: string;
   company?: string;
   title?: string;
   position?: string;
@@ -333,35 +333,45 @@ const SkillBadge = memo(function SkillBadge({
   );
 });
 
+// Move normalizeExperienceData outside component to avoid dependency issues
+const normalizeExperienceData = (
+  experience: IncomingExperience[]
+): ParsedResume['experience'] => {
+  return experience.map((exp) => ({
+    id: exp.id || uuidv4(),
+    company: exp.company || '',
+    title: exp.title || exp.position || '',
+    duration: exp.duration || '',
+    details: (Array.isArray(exp.details)
+      ? exp.details.filter(
+          (detail): detail is string => typeof detail === 'string'
+        )
+      : Array.isArray(exp.description)
+        ? exp.description.filter(
+            (desc): desc is string => typeof desc === 'string'
+          )
+        : exp.details
+          ? [String(exp.details)]
+          : exp.description
+            ? [String(exp.description)]
+            : []) as string[], // Ensure details is string[]
+    role: exp.title || exp.position || '',
+  }));
+};
+
 const ResumeEditor = ({
   resumeData,
   onSave,
   onCancel,
   onCustomColorsChange,
 }: ResumeEditorProps) => {
-  const normalizeExperienceData = (
-    experience: IncomingExperience[]
-  ): ParsedResume['experience'] => {
-    return experience.map((exp) => ({
-      id: exp.id || uuidv4(),
-      company: exp.company || '',
-      title: exp.title || exp.position || '',
-      duration: exp.duration || '',
-      details: Array.isArray(exp.details)
-        ? exp.details.map(String)
-        : Array.isArray(exp.description)
-          ? exp.description.map(String)
-          : exp.details
-            ? [String(exp.details)]
-            : exp.description
-              ? [String(exp.description)]
-              : [],
-    }));
-  };
+  const [showPreview, setShowPreview] = useState(false);
 
   const [editedData, setEditedData] = useState<ParsedResume>({
     ...resumeData,
-    experience: normalizeExperienceData(resumeData.experience || []),
+    experience: normalizeExperienceData(
+      (resumeData.experience || []) as unknown as IncomingExperience[]
+    ),
     education: (resumeData.education || []).map((edu) => ({
       ...edu,
       id: edu.id || uuidv4(),
@@ -370,9 +380,37 @@ const ResumeEditor = ({
       ...cert,
       id: cert.id || uuidv4(),
     })),
+    skills: resumeData.skills || [],
+    contact: {
+      ...resumeData.contact,
+    },
+    profileImage: resumeData.profileImage || '',
+    customColors: resumeData.customColors || {},
   });
-  const [showPreview, setShowPreview] = useState(false);
-  const [newSkill, setNewSkill] = useState('');
+
+  // Only update editedData when resumeData actually changes (not on every render)
+  useEffect(() => {
+    setEditedData({
+      ...resumeData,
+      experience: normalizeExperienceData(
+        (resumeData.experience || []) as unknown as IncomingExperience[]
+      ),
+      education: (resumeData.education || []).map((edu) => ({
+        ...edu,
+        id: edu.id || uuidv4(),
+      })),
+      certifications: (resumeData.certifications || []).map((cert) => ({
+        ...cert,
+        id: cert.id || uuidv4(),
+      })),
+      skills: resumeData.skills || [],
+      contact: {
+        ...resumeData.contact,
+      },
+      profileImage: resumeData.profileImage || '',
+      customColors: resumeData.customColors || {},
+    });
+  }, [resumeData]);
 
   const handleInputChange = <Field extends keyof ParsedResume>(
     field: Field,
@@ -453,39 +491,36 @@ const ResumeEditor = ({
     [editedData.experience]
   );
 
-  const addExperience = () => {
-    const newExperience = {
-      id: uuidv4(),
-      company: '',
-      title: '',
-      duration: '',
-      details: [],
-    };
+  const handleAdExperienceChange = () => {
     setEditedData((prev: ParsedResume) => ({
       ...prev,
-      experience: [...(prev.experience || []), newExperience],
+      experience: [
+        ...(prev.experience || []),
+        {
+          id: uuidv4(), // "3eae32f2-79be-4463-8460-dcd15d58a407"
+          company: '',
+          title: '',
+          duration: '',
+          details: [''],
+          role: '',
+        },
+      ],
     }));
   };
 
-  const handleSkillAdd = () => {
-    if (
-      newSkill.trim() &&
-      !(editedData.skills || []).includes(newSkill.trim())
-    ) {
+  const handleSkillAdd = (skillToAdd: string) => {
+    if (skillToAdd.trim() !== '') {
       setEditedData((prev: ParsedResume) => ({
         ...prev,
-        skills: [...(prev.skills || []), newSkill.trim()],
+        skills: [...(prev.skills || []), skillToAdd.trim()],
       }));
-      setNewSkill('');
     }
   };
 
   const handleSkillRemove = (skillToRemove: string) => {
     setEditedData((prev: ParsedResume) => ({
       ...prev,
-      skills: (prev.skills || []).filter(
-        (skill: string) => skill !== skillToRemove
-      ),
+      skills: (prev.skills || []).filter((skill) => skill !== skillToRemove),
     }));
   };
 
@@ -808,30 +843,44 @@ const ResumeEditor = ({
                   <Input
                     type="text"
                     placeholder="Add a new skill (e.g., React, Node.js)"
-                    value={newSkill}
-                    onChange={(e) => setNewSkill(e.target.value)}
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
-                        handleSkillAdd();
+                        const input = e.currentTarget;
+                        const value = input.value;
+                        if (value.trim()) {
+                          handleSkillAdd(value);
+                          input.value = '';
+                        }
                       }
                     }}
                     className={styles.input}
                   />
                   <Button
-                    onClick={handleSkillAdd}
+                    onClick={(e) => {
+                      const input =
+                        e.currentTarget.parentElement?.querySelector('input');
+                      if (input?.value.trim()) {
+                        handleSkillAdd(input.value);
+                        input.value = '';
+                      }
+                    }}
                     className={styles.addSkillButton}
                   >
                     <Plus className={styles.iconMd} />
                   </Button>
                 </div>
                 <div className={`${styles.skillsList} ${styles.mt2}`}>
-                  {editedData.skills?.map((skill) => (
-                    <SkillBadge
-                      key={skill}
-                      skill={skill}
-                      onRemove={handleSkillRemove}
-                    />
-                  ))}
+                  {editedData.skills?.map((skill, index) => {
+                    // Create a stable key that handles duplicate skill names
+                    const skillKey = `${skill.replace(/\s+/g, '-').toLowerCase()}-${index}`;
+                    return (
+                      <SkillBadge
+                        key={skillKey}
+                        onRemove={handleSkillRemove}
+                        skill={skill}
+                      />
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>
@@ -840,7 +889,9 @@ const ResumeEditor = ({
               <CardHeader className={styles.experienceHeader}>
                 <CardTitle className={styles.cardTitle}>Experience</CardTitle>
                 <Button
-                  onClick={addExperience}
+                  onClick={() => {
+                    handleAdExperienceChange();
+                  }}
                   className={styles.addExperienceButton}
                 >
                   <Plus className={styles.iconMd} />
@@ -854,6 +905,7 @@ const ResumeEditor = ({
                 )}
                 {editedData.experience?.map((job, index) => (
                   <ExperienceItem
+                    // @ts-ignore
                     key={job.id}
                     job={job}
                     index={index}
@@ -1014,10 +1066,12 @@ const ResumeEditor = ({
                     <div className={styles.previewSectionTitle}>Skills</div>
                     <div className={styles.previewSkillsList}>
                       {editedData.skills && editedData.skills.length > 0 ? (
-                        editedData.skills.slice(0, 5).map((skill) => (
-                          <span key={skill} className={styles.previewSkill}>
-                            {skill}
-                          </span>
+                        editedData.skills.map((skill) => (
+                          <SkillBadge
+                            key={skill}
+                            skill={skill}
+                            onRemove={() => {}}
+                          />
                         ))
                       ) : (
                         <span className={styles.previewMoreSkills}>
@@ -1036,9 +1090,9 @@ const ResumeEditor = ({
                     <div className={styles.previewSectionTitle}>Experience</div>
                     {editedData.experience &&
                     editedData.experience.length > 0 ? (
-                      editedData.experience.slice(0, 3).map((job) => (
+                      editedData.experience.slice(0, 3).map((job, index) => (
                         <div
-                          key={job.id}
+                          key={`${job.title || ''}-${job.company || ''}-${index}`}
                           className={styles.previewExperienceItem}
                         >
                           <div className={styles.previewExperienceTitle}>

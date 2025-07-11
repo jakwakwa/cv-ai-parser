@@ -7,13 +7,12 @@ export const enhancedResumeSchema = z.object({
   summary: z.string().optional(),
   profileImage: z.string().optional(),
   customColors: z.object({
-    primary: z.string().optional(),
-    secondary: z.string().optional(),
-    accent: z.string().optional(),
-    background: z.string().optional(),
-    text: z.string().optional(),
+      primary: z.string().optional(),
+      secondary: z.string().optional(),
+      accent: z.string().optional(),
+      background: z.string().optional(),
+      text: z.string().optional(),
   }).optional(),
-
   // Enhanced contact information with better structure
   contact: z
     .object({
@@ -44,7 +43,6 @@ export const enhancedResumeSchema = z.object({
         .optional(),
     })
     .optional(),
-
   // Enhanced experience with better structure
   experience: z.array(
     z.object({
@@ -90,7 +88,6 @@ export const enhancedResumeSchema = z.object({
       })
     )
     .optional(),
-
   // Enhanced certifications
   certifications: z
     .array(
@@ -105,24 +102,8 @@ export const enhancedResumeSchema = z.object({
       })
     )
     .optional(),
-
   // Enhanced skills with categorization
   skills: z.array(z.string()).optional(),
-  // Additional sections for comprehensive mapping
-  projects: z
-    .array(
-      z.object({
-        name: z.string(),
-        description: z.string(),
-        technologies: z.array(z.string()).optional(),
-        url: z.string().optional(),
-        githubUrl: z.string().optional(),
-        startDate: z.string().optional(),
-        endDate: z.string().optional(),
-        highlights: z.array(z.string()).optional(),
-      })
-    )
-    .optional(),
   // Metadata for better mapping
   metadata: z
     .object({

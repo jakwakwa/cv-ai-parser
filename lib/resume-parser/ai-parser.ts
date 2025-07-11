@@ -1,7 +1,10 @@
 import { google } from '@ai-sdk/google';
 import { streamObject } from 'ai';
 import { AI_MODEL } from '@/lib/config';
-import { type EnhancedParsedResume, enhancedResumeSchema } from './enhanced-schema';
+import {
+  type EnhancedParsedResume,
+  enhancedResumeSchema,
+} from './enhanced-schema';
 import {
   getResumeParsingPrompt,
   getResumeParsingPromptForPDF,

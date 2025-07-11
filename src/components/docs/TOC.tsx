@@ -1,8 +1,11 @@
-"use client";
+'use client';
 import { useEffect, useState } from 'react';
 import styles from './DocsLayout.module.css';
 
-interface Entry { id: string; text: string }
+interface Entry {
+  id: string;
+  text: string;
+}
 
 export default function TOC() {
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -15,9 +18,9 @@ export default function TOC() {
       if (!n.id) {
         n.id = `heading-${index}`;
       }
-      return { 
-        id: n.id, 
-        text: n.textContent || '' 
+      return {
+        id: n.id,
+        text: n.textContent || '',
       };
     });
     setEntries(items);
@@ -25,7 +28,9 @@ export default function TOC() {
     const io = new IntersectionObserver(
       (obs) => {
         obs.forEach((entry) => {
-          const link = document.querySelector<HTMLAnchorElement>(`a[href="#${entry.target.id}"]`);
+          const link = document.querySelector<HTMLAnchorElement>(
+            `a[href="#${entry.target.id}"]`
+          );
           if (!link) return;
           if (entry.isIntersecting) {
             link.setAttribute('aria-current', 'true');

@@ -15,7 +15,7 @@ export default function TabNavigation({ initialView }: TabNavigationProps) {
 
   const handleTabClick = (view: 'upload' | 'library') => {
     setCurrentView(view);
-    router.push(view === 'upload' ? '/' : '/library');
+    router.push(view === 'upload' ? '/tools/tailor/' : '/library');
   };
 
   return (

@@ -2,10 +2,7 @@ import type { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { ResumeDatabase } from '@/lib/db';
-import {
-  parseWithAI,
-  parseWithAIPDF,
-} from '@/lib/resume-parser/ai-parser';
+import { parseWithAI, parseWithAIPDF } from '@/lib/resume-parser/ai-parser';
 import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema'; // Use EnhancedParsedResume
 import { parseWithRegex } from '@/lib/resume-parser/regex-parser';
 import type { Resume } from '@/lib/types';
@@ -111,7 +108,10 @@ export async function POST(request: NextRequest) {
           { status: 500 }
         );
       }
-      if (error.message.includes('Request too large') || error.message.includes('INVALID_ARGUMENT')) {
+      if (
+        error.message.includes('Request too large') ||
+        error.message.includes('INVALID_ARGUMENT')
+      ) {
         return Response.json(
           {
             error:
