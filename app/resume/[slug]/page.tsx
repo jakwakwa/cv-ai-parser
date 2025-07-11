@@ -19,14 +19,9 @@ import ResumeEditor from '@/src/containers/resume-editor/resume-editor';
 const convertToParsedResume = (
   enhancedResume: EnhancedParsedResume
 ): ParsedResume => {
-  const skillsArray = Array.isArray(enhancedResume.skills) // Check if it's already a simple array
+  const skillsArray = Array.isArray(enhancedResume.skills)
     ? enhancedResume.skills
-    : enhancedResume.skills?.all || [
-        // Prioritize 'all' if it exists
-        ...(enhancedResume.skills?.technical?.map((s) => s.name) || []),
-        ...(enhancedResume.skills?.soft || []),
-        ...(enhancedResume.skills?.languages?.map((l) => l.name) || []), // Assuming language objects have a 'name' property
-      ];
+    : [];
 
   return {
     name: enhancedResume.name,

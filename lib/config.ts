@@ -10,8 +10,8 @@ export const IS_AI_PARSING_ENABLED = true;
  * The specific Google Gemini model to be used for AI parsing.
  * Gemini 2.0 Flash supports direct PDF processing
  */
-// export const AI_MODEL = 'gemini-2.5-pro';
-export const AI_MODEL = 'gemini-2.5-flash-lite-preview-06-17';
+export const AI_MODEL = 'gemini-2.5-pro';
+// export const AI_MODEL = 'gemini-2.5-flash-lite-preview-06-17';
 // export const AI_MODEL = 'gemini-1.5-flash-8b'
 
 
