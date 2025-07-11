@@ -29,6 +29,10 @@ type IncomingExperience = {
   description?: string | string[];
 };
 
+type IncomingSkills = {
+  all: string[];
+};
+
 interface ResumeEditorProps {
   resumeData: ParsedResume;
   onSave: (data: ParsedResume) => void;
@@ -313,6 +317,7 @@ const SkillBadge = memo(function SkillBadge({
   skill,
   onRemove,
 }: SkillBadgeProps) {
+  console.info('skills [resume-editor]:', skill);
   return (
     <Badge className={styles.skillBadge}>
       {skill}

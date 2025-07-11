@@ -37,39 +37,10 @@ export async function generateMetadata({
 
       // If it's an array (legacy format)
       if (Array.isArray(parsedData.skills)) {
-        return parsedData.skills.length;
-      }
-
-      // If it's an object (enhanced format)
-      if (typeof parsedData.skills === 'object') {
         let count = 0;
-
-        // Count skills from 'all' array if it exists
-        if (parsedData.skills.all && Array.isArray(parsedData.skills.all)) {
-          count += parsedData.skills.all.length;
-        }
-
-        // Count technical skills if they exist and 'all' doesn't exist
-        if (
-          !parsedData.skills.all &&
-          parsedData.skills.technical &&
-          Array.isArray(parsedData.skills.technical)
-        ) {
-          count += parsedData.skills.technical.length;
-        }
-
-        // Count soft skills if they exist and 'all' doesn't exist
-        if (
-          !parsedData.skills.all &&
-          parsedData.skills.soft &&
-          Array.isArray(parsedData.skills.soft)
-        ) {
-          count += parsedData.skills.soft.length;
-        }
-
+        count = parsedData.skills.length;
         return count;
       }
-
       return 0;
     })();
 
@@ -82,42 +53,7 @@ export async function generateMetadata({
     // Handle skills for keywords - support both legacy array and enhanced object formats
     const skillsForKeywords = (() => {
       if (!parsedData.skills) return [];
-
-      // If it's an array (legacy format)
-      if (Array.isArray(parsedData.skills)) {
-        return parsedData.skills;
-      }
-
-      // If it's an object (enhanced format)
-      if (typeof parsedData.skills === 'object') {
-        const allSkills = [];
-
-        // Add skills from 'all' array if it exists
-        if (parsedData.skills.all && Array.isArray(parsedData.skills.all)) {
-          allSkills.push(...parsedData.skills.all);
-        }
-
-        // Add technical skills if they exist
-        if (
-          parsedData.skills.technical &&
-          Array.isArray(parsedData.skills.technical)
-        ) {
-          allSkills.push(
-            ...parsedData.skills.technical.map(
-              (skill: { name: string }) => skill.name || skill
-            )
-          );
-        }
-
-        // Add soft skills if they exist
-        if (parsedData.skills.soft && Array.isArray(parsedData.skills.soft)) {
-          allSkills.push(...parsedData.skills.soft);
-        }
-
-        return allSkills;
-      }
-
-      return [];
+      return parsedData.skills;
     })();
 
     return {

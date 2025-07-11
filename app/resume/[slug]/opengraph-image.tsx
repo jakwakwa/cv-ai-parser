@@ -78,43 +78,7 @@ export default async function Image({
     // Handle skills count for both legacy array and enhanced object formats
     const skillsCount = (() => {
       if (!parsedData.skills) return 0;
-
-      // If it's an array (legacy format)
-      if (Array.isArray(parsedData.skills)) {
-        return parsedData.skills.length;
-      }
-
-      // If it's an object (enhanced format)
-      if (typeof parsedData.skills === 'object') {
-        let count = 0;
-
-        // Count skills from 'all' array if it exists
-        if (parsedData.skills.all && Array.isArray(parsedData.skills.all)) {
-          count += parsedData.skills.all.length;
-        }
-
-        // Count technical skills if they exist and 'all' doesn't exist
-        if (
-          !parsedData.skills.all &&
-          parsedData.skills.technical &&
-          Array.isArray(parsedData.skills.technical)
-        ) {
-          count += parsedData.skills.technical.length;
-        }
-
-        // Count soft skills if they exist and 'all' doesn't exist
-        if (
-          !parsedData.skills.all &&
-          parsedData.skills.soft &&
-          Array.isArray(parsedData.skills.soft)
-        ) {
-          count += parsedData.skills.soft.length;
-        }
-
-        return count;
-      }
-
-      return 0;
+      return parsedData.skills.length;
     })();
 
     // Get primary color from custom colors or use default

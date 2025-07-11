@@ -414,10 +414,10 @@ function renderList(items: string[], maxItems: number = 5): string[] {
       )}
 
       {/* Skills Section */}
-      {safeResume.skills?.all && safeResume.skills.all.length > 0 && (
+      {safeResume.skills?.all && safeResume.skills.length > 0 && (
         <section className={styles.skills}>
           <h3 className={styles.sectionTitle}>Skills</h3>
-          ${this.generateSkillsList('safeResume.skills.all', 'skillsList', 'skillItem')}
+          ${this.generateSkillsList('safeResume.skills', 'skillsList', 'skillItem')}
         </section>
       )}
 

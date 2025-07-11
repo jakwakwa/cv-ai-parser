@@ -563,7 +563,7 @@ export function createMappingFromFigmaAnalysis(
       } else if (nodeName.includes('skill')) {
         sectionMappings.skills = {
           figmaContainer: `section.${node.id}`,
-          dataSource: 'skills.all',
+          dataSource: 'skills',
           itemTemplate: 'skill',
           maxItems: 12,
         };

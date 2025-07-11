@@ -107,36 +107,7 @@ export const enhancedResumeSchema = z.object({
     .optional(),
 
   // Enhanced skills with categorization
-  skills: z
-    .object({
-      technical: z
-        .array(
-          z.object({
-            name: z.string(),
-            level: z
-              .enum(['Beginner', 'Intermediate', 'Advanced', 'Expert'])
-              .optional(),
-            category: z.string().optional(),
-            yearsOfExperience: z.number().optional(),
-          })
-        )
-        .optional(),
-      soft: z.array(z.string()).optional(),
-      languages: z
-        .array(
-          z.object({
-            name: z.string(),
-            proficiency: z
-              .enum(['Basic', 'Conversational', 'Fluent', 'Native'])
-              .optional(),
-          })
-        )
-        .optional(),
-      // Legacy field for backward compatibility
-      all: z.array(z.string()).optional(),
-    })
-    .optional(),
-
+  skills: z.array(z.string()).optional(),
   // Additional sections for comprehensive mapping
   projects: z
     .array(
@@ -152,42 +123,6 @@ export const enhancedResumeSchema = z.object({
       })
     )
     .optional(),
-
-  awards: z
-    .array(
-      z.object({
-        name: z.string(),
-        issuer: z.string(),
-        date: z.string().optional(),
-        description: z.string().optional(),
-      })
-    )
-    .optional(),
-
-  publications: z
-    .array(
-      z.object({
-        title: z.string(),
-        publisher: z.string(),
-        date: z.string().optional(),
-        url: z.string().optional(),
-        authors: z.array(z.string()).optional(),
-      })
-    )
-    .optional(),
-
-  volunteering: z
-    .array(
-      z.object({
-        organization: z.string(),
-        role: z.string(),
-        duration: z.string().optional(),
-        description: z.string().optional(),
-        highlights: z.array(z.string()).optional(),
-      })
-    )
-    .optional(),
-
   // Metadata for better mapping
   metadata: z
     .object({
@@ -318,12 +253,6 @@ export const defaultFigmaMappingConfig: FigmaMappingConfig = {
       itemTemplate: 'education.item',
       showIf: 'education.length > 0',
     },
-    skills: {
-      figmaContainer: 'skills.container',
-      dataSource: 'skills.all',
-      itemTemplate: 'skills.item',
-      maxItems: 12,
-    },
     certifications: {
       figmaContainer: 'certifications.container',
       dataSource: 'certifications',
@@ -338,7 +267,7 @@ export const defaultFigmaMappingConfig: FigmaMappingConfig = {
       target: 'experience.container',
     },
     {
-      condition: 'skills.all.length > 10',
+      condition: 'skills.length > 10',
       action: 'modify',
       target: 'skills.container',
       value: 'grid-template-columns: repeat(3, 1fr)',

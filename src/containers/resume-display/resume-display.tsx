@@ -59,7 +59,7 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
             customColors={resumeData.customColors || {}}
           />
           <SkillsSection
-            skills={resumeData.skills?.all || []} // Pass skills.all
+            skills={resumeData.skills || []} // Pass skills
             customColors={resumeData.customColors || {}}
           />
         </div>
