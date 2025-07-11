@@ -18,11 +18,7 @@ import ResumeEditor from '@/src/containers/resume-editor/resume-editor';
 // Helper function to convert EnhancedParsedResume to ParsedResume for the editor
 const convertToParsedResume = (
   enhancedResume: EnhancedParsedResume
-): ParsedResume => {
-  const skillsArray = Array.isArray(enhancedResume.skills)
-    ? enhancedResume.skills
-    : [];
-
+): EnhancedParsedResume => {
   return {
     name: enhancedResume.name,
     title: enhancedResume.title,
@@ -34,7 +30,6 @@ const convertToParsedResume = (
     experience: enhancedResume.experience.map((exp) => ({
       id: exp.id,
       title: exp.title,
-      role: exp.role,
       company: exp.company,
       duration: exp.duration,
       details: exp.details || [], // Ensure details is always an array

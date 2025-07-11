@@ -4,6 +4,7 @@ import { Eye, EyeOff, Plus, Save, Trash2, X } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
+import CertificationItem from '@/src/components/certification-item/certification-item';
 import ColorPicker from '@/src/components/color-picker/color-picker';
 import { Badge } from '@/src/components/ui/badge';
 import {
@@ -27,10 +28,6 @@ type IncomingExperience = {
   duration?: string;
   details?: string | string[];
   description?: string | string[];
-};
-
-type IncomingSkills = {
-  all: string[];
 };
 
 interface ResumeEditorProps {
@@ -224,90 +221,6 @@ const EducationItem = memo(function EducationItem({
   );
 });
 
-// Memoized CertificationItem subcomponent
-interface CertificationItemProps {
-  cert: NonNullable<ParsedResume['certifications']>[number];
-  index: number;
-  onChange: <
-    Field extends keyof NonNullable<ParsedResume['certifications']>[number],
-  >(
-    index: number,
-    field: Field,
-    value: NonNullable<ParsedResume['certifications']>[number][Field]
-  ) => void;
-  onRemove: (index: number) => void;
-}
-const CertificationItem = memo(function CertificationItem({
-  cert,
-  index,
-  onChange,
-  onRemove,
-}: CertificationItemProps) {
-  return (
-    <div className={styles.experienceItem}>
-      <div className={styles.experienceItemHeader}>
-        <h3 className={styles.experienceItemTitle}>
-          Certification #{index + 1}
-        </h3>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onRemove(index)}
-          className={styles.removeExperienceButton}
-        >
-          <Trash2 className={styles.iconMd} />
-        </Button>
-      </div>
-      <div className={styles.formGridFull}>
-        <div className={styles.formField}>
-          <Label htmlFor={`cert-name-${index}`} className={styles.label}>
-            Certification Name
-          </Label>
-          <Input
-            id={`cert-name-${index}`}
-            value={cert.name || ''}
-            onChange={(e) => onChange(index, 'name', e.target.value)}
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.formField}>
-          <Label htmlFor={`cert-issuer-${index}`} className={styles.label}>
-            Issuer
-          </Label>
-          <Input
-            id={`cert-issuer-${index}`}
-            value={cert.issuer || ''}
-            onChange={(e) => onChange(index, 'issuer', e.target.value)}
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.formField}>
-          <Label htmlFor={`cert-date-${index}`} className={styles.label}>
-            Date (Optional)
-          </Label>
-          <Input
-            id={`cert-date-${index}`}
-            value={cert.date || ''}
-            onChange={(e) => onChange(index, 'date', e.target.value)}
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.formField}>
-          <Label htmlFor={`cert-id-${index}`} className={styles.label}>
-            Credential ID (Optional)
-          </Label>
-          <Input
-            id={`cert-id-${index}`}
-            value={cert.id || ''}
-            onChange={(e) => onChange(index, 'id', e.target.value)}
-            className={styles.input}
-          />
-        </div>
-      </div>
-    </div>
-  );
-});
-
 // Memoized SkillBadge subcomponent
 interface SkillBadgeProps {
   skill: string;
@@ -332,32 +245,6 @@ const SkillBadge = memo(function SkillBadge({
     </Badge>
   );
 });
-
-// Move normalizeExperienceData outside component to avoid dependency issues
-const normalizeExperienceData = (
-  experience: IncomingExperience[]
-): ParsedResume['experience'] => {
-  return experience.map((exp) => ({
-    id: exp.id || uuidv4(),
-    company: exp.company || '',
-    title: exp.title || exp.position || '',
-    duration: exp.duration || '',
-    details: (Array.isArray(exp.details)
-      ? exp.details.filter(
-          (detail): detail is string => typeof detail === 'string'
-        )
-      : Array.isArray(exp.description)
-        ? exp.description.filter(
-            (desc): desc is string => typeof desc === 'string'
-          )
-        : exp.details
-          ? [String(exp.details)]
-          : exp.description
-            ? [String(exp.description)]
-            : []) as string[], // Ensure details is string[]
-    role: exp.title || exp.position || '',
-  }));
-};
 
 const ResumeEditor = ({
   resumeData,
@@ -388,7 +275,6 @@ const ResumeEditor = ({
     customColors: resumeData.customColors || {},
   });
 
-  // Only update editedData when resumeData actually changes (not on every render)
   useEffect(() => {
     setEditedData({
       ...resumeData,
