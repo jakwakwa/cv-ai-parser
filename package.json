@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npx prisma generate && next dev",
+    "dev": "npx prisma generate && next dev --turbopack",
     "build": "npx prisma generate --no-engine && next build",
     "lint": "biome lint .",
     "format": "biome format --write .",
