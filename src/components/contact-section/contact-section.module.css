@@ -19,6 +19,13 @@
     color: var(--resume-section-titles);
     font-family: var(--font-family-primary);
 }
+.icon{
+      color: var(--resume-sub-icons);
+      
+}
+svg.mainIcon {
+    fill:  var(--resume-main-icons);
+}
 
 .detail {
     display: flex;

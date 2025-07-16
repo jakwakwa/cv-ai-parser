@@ -1,6 +1,7 @@
-import type React from 'react';
 import { Card, CardContent, CardHeader } from '@/src/components/ui/card';
 import styles from './resume-tailor-commentary.module.css';
+// @ts-ignore - this is expected
+import { Wand } from 'lucide-react';
 
 interface ResumeTailorCommentaryProps {
   aiTailorCommentary: string | null; // Renamed from aiSummary
@@ -16,7 +17,8 @@ const ResumeTailorCommentary: React.FC<ResumeTailorCommentaryProps> = ({
     <Card className={styles.card}>
       <CardHeader className={styles.cardHeader}>
         <div className={styles.cardHeaderContent}>
-          <h2 className={styles.title}>AI Resume Insights</h2>
+          <Wand />
+          <h2 className={styles.title}>AI Insights</h2>
         </div>
       </CardHeader>
       <CardContent className={styles.cardContent}>

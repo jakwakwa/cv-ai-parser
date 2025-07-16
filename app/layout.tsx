@@ -40,7 +40,14 @@ export const metadata: Metadata = {
     siteName: 'CV AI Parser',
     locale: 'en_US',
     type: 'website',
-    // Dynamic Open Graph image will be generated via opengraph-image.tsx
+    images: [
+      {
+        url: '/opengraph-home.png',
+        width: 1200,
+        height: 630,
+        alt: 'AI Resume Generator',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
@@ -49,7 +56,14 @@ export const metadata: Metadata = {
     description:
       'Effortlessly convert your text resumes into stunning online CVs using AI-powered parsing. Customize with beautiful colors, download as PDF, and manage your professional presence.',
     creator: '@your_twitter_handle', // Replace with your actual Twitter handle
-    // Dynamic Twitter image will be generated via twitter-image.tsx
+    images: [
+      {
+        url: '/opengraph-home.png',
+        width: 1200,
+        height: 630,
+        alt: 'AI Resume Generator',
+      },
+    ],
   },
   other: {
     'google-adsense-account': 'ca-pub-7169177467099391',

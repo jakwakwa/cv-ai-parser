@@ -7,8 +7,6 @@ interface SkillsSectionProps {
 }
 
 const SkillsSection = ({ skills, customColors }: SkillsSectionProps) => {
-  // const colors = customColors || {};
-
   return (
     <section className={styles.skillsSection}>
       <h2
@@ -20,9 +18,9 @@ const SkillsSection = ({ skills, customColors }: SkillsSectionProps) => {
       </h2>
       {skills && skills.length > 0 ? (
         <div>
-          {skills.map((skill) => (
+          {skills.map((s) => (
             <span
-              key={skill}
+              key={s}
               className={styles.skill}
               style={{
                 backgroundColor: 'rgba(255, 255,255,0.5)',
@@ -30,7 +28,7 @@ const SkillsSection = ({ skills, customColors }: SkillsSectionProps) => {
                 borderColor: customColors['--resume-skill-border'],
               }}
             >
-              {skill}
+              {s}
             </span>
           ))}
         </div>

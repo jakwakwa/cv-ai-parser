@@ -120,7 +120,7 @@ function validateResumeData(resume: EnhancedParsedResume): EnhancedParsedResume 
       location: resume.contact?.location || 'City, Country',
     },
     experience: resume.experience || [],
-    skills: resume.skills || { all: [] },
+    skills: resume.skills,
   };
 }
 

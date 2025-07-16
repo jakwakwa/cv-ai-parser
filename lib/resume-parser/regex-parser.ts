@@ -197,6 +197,7 @@ function extractExperience(
         company,
         duration,
         details: finalDetails,
+        role: '',
       });
     }
   }

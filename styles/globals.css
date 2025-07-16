@@ -10,7 +10,9 @@
 /* @tailwind base;
 @tailwind components;
 @tailwind utilities; */
-
+svg.mainIcon {
+      fill:  var(--resume-main-icons);
+}
 
 .pageWrapper {
   height: 100%;
@@ -393,6 +395,7 @@ input[type="checkbox"]:checked::after {
   .userFeatures {
     display: none;
   }
+
 }
 
 .feature {
@@ -471,10 +474,27 @@ input[type="checkbox"]:checked::after {
   color: var(--color-text-secondary);
 }
 
-@media (max-width: 768px) {
+  .buttonContainer {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap:0 !important;
+}
+
+.pageWrapper {
+  background-color: var(--color-background-primary);
+}
+
+
+@media (min-width: 768px) {
+  .header {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
   .mainContainer {
     flex-direction: column;
   }
+
 
   .mainUserContainer {
     padding: var(--spacing-sm) var(--spacing-sm) 40px var(--spacing-sm); /* Further reduce side padding */
@@ -539,6 +559,17 @@ input[type="checkbox"]:checked::after {
     grid-column: span 1;
     padding: var(--spacing-lg);
   }
+
+    .buttonContainer {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap:0;
+  margin-top: 0;
+  padding: 0;
+}
+
+
 }
 
 /* Ensure desktop resume layout when printing or downloading to PDF */

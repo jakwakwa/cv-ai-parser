@@ -14,6 +14,11 @@
   grid-template-columns: 1fr;
 }
 
+
+.pageWrapper{
+    background: var(--color-background-primary);
+}
+
 .resumeGrid {
   display: grid;
   grid-template-columns: 1fr;

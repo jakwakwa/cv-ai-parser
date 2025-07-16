@@ -1,4 +1,7 @@
+'use-client';
+
 import styles from './profile-header.module.css';
+import Image from 'next/image';
 
 interface ProfileHeaderProps {
   profileImage: string | undefined;
@@ -20,6 +23,7 @@ const ProfileHeader = ({
 
   // Check if we have a real profile image (not the default placeholder)
   const lowerImg = profileImage ? profileImage.toLowerCase() : '';
+  const omittedProfileImage = profileImage === 'omitted';
   const hasProfileImage =
     profileImage &&
     lowerImg.trim() !== '' &&
@@ -28,17 +32,14 @@ const ProfileHeader = ({
 
   return (
     <div
-      className={`${styles.header} ${!hasProfileImage ? styles.noImage : ''}`}
+      className={`${styles.header} ${!hasProfileImage || omittedProfileImage ? styles.noImage : ''}`}
     >
       {/* Left: Profile Image - only show if image exists */}
-      {hasProfileImage && (
+      {hasProfileImage && !omittedProfileImage && (
         <div className={styles.left}>
-          {/** biome-ignore lint/performance/noImgElement: <> */}
-          <img
-            src={profileImage}
-            alt="Profile"
-            className={styles['profile-image']}
-          />
+          <div className={styles.profileImage}>
+            <Image src={profileImage} alt={''} fill />
+          </div>
         </div>
       )}
 

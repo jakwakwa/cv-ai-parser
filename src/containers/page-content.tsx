@@ -1,19 +1,17 @@
 'use client';
 
-import { Bot } from 'lucide-react';
+import { Bot, FileText, Palette } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import styles from '@/app/page.module.css';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
-import FigmaLinkUploader from '@/src/components/FigmaLinkUploader/FigmaLinkUploader';
-import FigmaPreview from '@/src/components/figma-preview/FigmaPreview';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
 import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import { Button } from '@/src/components/ui/ui-button/button';
 import ResumeDisplay from '@/src/containers/resume-display/resume-display';
 import ResumeEditor from '@/src/containers/resume-editor/resume-editor';
-import ResumeUploader from '@/src/containers/resume-uploader/resume-uploader';
 
 interface ParseInfo {
   resumeId?: string; // Optional for non-auth users
@@ -33,17 +31,10 @@ export default function PageContent() {
   const [resumeData, setResumeData] = useState<ParsedResume | null>(null);
   const [parseInfo, setParseInfo] = useState<ParseInfo | null>(null); // Stores ID and Slug from server
   const [isLoading, setIsLoading] = useState(false); // global operations (saving edits, etc.)
-  const [fileLoading, setFileLoading] = useState(false); // ResumeUploader specific
-  const [figmaLoading, setFigmaLoading] = useState(false); // FigmaLinkUploader specific
   const [error, setError] = useState<string | null>(null);
   const [localCustomColors, setLocalCustomColors] = useState<
     Record<string, string>
   >({});
-  const [figmaInfo, setFigmaInfo] = useState<{
-    componentName: string;
-    jsxCode: string;
-    cssCode: string;
-  } | null>(null);
 
   const handleDownloadPdf = async () => {
     if (resumeData) {
@@ -70,18 +61,6 @@ export default function PageContent() {
         setLocalCustomColors(parsedData.customColors);
       }
     }
-  };
-
-  const handleFigmaGenerated = (info: {
-    componentName: string;
-    jsxCode: string;
-    cssCode: string;
-  }) => {
-    setFigmaInfo(info);
-    toast({
-      title: 'Design Generated',
-      description: `Component ${info.componentName} was created in src/generated-resumes/`,
-    });
   };
 
   const handleReset = () => {
@@ -232,27 +211,37 @@ export default function PageContent() {
             </div>
           </div>
 
+          {/* HOMEPAGE FEATURES */}
+
           <div ref={uploaderRef} style={{ width: '100%' }}>
-            <ResumeUploader
-              onResumeUploaded={handleResumeUploaded}
-              isLoading={fileLoading}
-              setIsLoading={setFileLoading}
-              isAuthenticated={true}
-            />
-
-            <FigmaLinkUploader
-              onResumeGenerated={handleFigmaGenerated}
-              isLoading={figmaLoading}
-              setIsLoading={setFigmaLoading}
-            />
-
-            {figmaInfo && (
-              <FigmaPreview
-                componentName={figmaInfo.componentName}
-                jsxCode={figmaInfo.jsxCode}
-                cssCode={figmaInfo.cssCode}
-              />
-            )}
+            {/* Tool Navigation */}
+            <div className={styles.toolsSection}>
+              <h2 className={styles.toolsTitle}>Specialized Tools</h2>
+              <div className={styles.toolsGrid}>
+                <div className={styles.toolCard}>
+                  <FileText className={styles.toolIcon} />
+                  <h3>AI Resume Tailor</h3>
+                  <p>
+                    Upload your resume and a job description to create a
+                    perfectly tailored resume
+                  </p>
+                  <Button onClick={() => router.push('/tools/tailor')}>
+                    Try AI Tailor
+                  </Button>
+                </div>
+                <div className={styles.toolCard}>
+                  <Palette className={styles.toolIcon} />
+                  <h3>Figma to Resume</h3>
+                  <p>
+                    Transform your Figma design directly into a deployable
+                    resume component
+                  </p>
+                  <Button onClick={() => router.push('/tools/figma-to-resume')}>
+                    Try Figma Tool
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </>
       )}
@@ -275,6 +264,8 @@ export default function PageContent() {
                 !Array.isArray(resumeData.skills)
                   ? resumeData.skills
                   : {
+                      // TODO: -- Find out what skills has to be once and for all
+                      // @ts-ignore
                       all: Array.isArray(resumeData.skills)
                         ? resumeData.skills
                         : [],

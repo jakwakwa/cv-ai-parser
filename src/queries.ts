@@ -1,5 +1,3 @@
-
-
 import { PrismaClient } from '@prisma/client';
 import { withAccelerate } from '@prisma/extension-accelerate';
 
@@ -31,7 +29,10 @@ async function main() {
     },
   });
 
-  console.log('Users and their resumes:', JSON.stringify(usersWithResumes, null, 2));
+  console.log(
+    'Users and their resumes:',
+    JSON.stringify(usersWithResumes, null, 2)
+  );
 }
 
 main()

@@ -31,7 +31,10 @@ export async function POST(request: NextRequest) {
     );
 
     if (!file) {
-      return Response.json({ error: 'Resume file is required' }, { status: 400 });
+      return Response.json(
+        { error: 'Resume file is required' },
+        { status: 400 }
+      );
     }
 
     let additionalContext: UserAdditionalContext | undefined;
@@ -68,7 +71,6 @@ export async function POST(request: NextRequest) {
     const encoder = new TextEncoder();
     const customStream = new ReadableStream({
       async start(controller) {
-      
         const writeUpdate = (update: any) => {
           const chunk = encoder.encode(`data: ${JSON.stringify(update)}\n\n`);
           controller.enqueue(chunk);
@@ -76,13 +78,12 @@ export async function POST(request: NextRequest) {
 
         try {
           // Start streaming partial objects with progress updates
-          writeUpdate({ 
-            status: 'analyzing', 
+          writeUpdate({
+            status: 'analyzing',
             message: 'AI is analyzing your resume structure...',
-            progress: 10 
+            progress: 10,
           });
 
-         
           let _partialData: any = null;
           let progressCount = 0;
           const progressMessages = [
@@ -90,47 +91,51 @@ export async function POST(request: NextRequest) {
             'Processing work experience...',
             'Analyzing skills and qualifications...',
             'Formatting resume sections...',
-            'Finalizing resume structure...'
+            'Finalizing resume structure...',
           ];
 
           // Stream partial objects and show progress
           for await (const partial of stream.partialObjectStream) {
             _partialData = partial;
             progressCount++;
-            const progress = Math.min(20 + (progressCount * 15), 90);
-            const messageIndex = Math.min(Math.floor(progressCount / 2), progressMessages.length - 1);
-            
-            writeUpdate({ 
-              status: 'processing', 
+            const progress = Math.min(20 + progressCount * 15, 90);
+            const messageIndex = Math.min(
+              Math.floor(progressCount / 2),
+              progressMessages.length - 1
+            );
+
+            writeUpdate({
+              status: 'processing',
               message: progressMessages[messageIndex],
               progress,
-              partialData: partial 
+              partialData: partial,
             });
           }
 
           // Get final result
           const parsedResume: EnhancedParsedResume = await stream.object;
-          
+
           // Merge custom colors and profile image
           const finalResume: EnhancedParsedResume = {
             ...parsedResume,
             customColors: customColors || {},
             profileImage: profileImage || parsedResume.profileImage,
           };
-          
-          writeUpdate({ 
-            status: 'saving', 
+
+          writeUpdate({
+            status: 'saving',
             message: 'Saving your tailored resume...',
-            progress: 95 
+            progress: 95,
           });
 
           // Save to database
           const session = await getServerSession(authOptions);
           let savedResume = null;
           if (session?.user?.id) {
-            const resumeTitle = finalResume.name || file.name.split('.')[0] || 'Untitled Resume';
+            const resumeTitle =
+              finalResume.name || file.name.split('.')[0] || 'Untitled Resume';
             const slug = `${createSlug(resumeTitle)}-${Math.floor(1000 + Math.random() * 9000)}`;
-            
+
             savedResume = await ResumeDatabase.saveResume({
               userId: session.user.id,
               title: resumeTitle,
@@ -147,8 +152,8 @@ export async function POST(request: NextRequest) {
           }
 
           // Final completion
-          writeUpdate({ 
-            status: 'completed', 
+          writeUpdate({
+            status: 'completed',
             message: 'Resume successfully created!',
             progress: 100,
             data: finalResume,
@@ -161,31 +166,37 @@ export async function POST(request: NextRequest) {
               resumeId: savedResume?.id,
               resumeSlug: savedResume?.slug,
               aiTailorCommentary: finalResume.metadata?.aiTailorCommentary,
-            }
+            },
           });
 
           controller.close();
         } catch (error) {
           writeUpdate({
             status: 'error',
-            message: error instanceof Error ? error.message : 'Failed to process resume',
-            progress: 0
+            message:
+              error instanceof Error
+                ? error.message
+                : 'Failed to process resume',
+            progress: 0,
           });
           controller.close();
         }
-      }
+      },
     });
 
     return new Response(customStream, {
       headers: {
         'Content-Type': 'text/plain',
         'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
+        Connection: 'keep-alive',
       },
     });
   } catch (error) {
     return Response.json(
-      { error: 'Failed to process resume', details: error instanceof Error ? error.message : String(error) },
+      {
+        error: 'Failed to process resume',
+        details: error instanceof Error ? error.message : String(error),
+      },
       { status: 500 }
     );
   }

@@ -18,6 +18,10 @@
 .cardHeaderContent {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 130px;
+  
+  margin-left: var(--spacing-xl);
   gap: var(--spacing-sm);
 }
 
@@ -29,18 +33,56 @@
   text-align: center;
   width: 100%;
 }
+  .cardContent {
+margin-top: 1rem;
+     /* padding:  20px; */
+  }
 
-.cardContent p {
-  padding: var(--spacing-lg);
-  margin-bottom: 2rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  line-height: 1.5rem;
-}
+
 
 .summaryText {
-  font-size: var(--font-size-md);
+  
+  font-size: var(--font-size-sm);
   color: var(--color-text-primary);
   line-height: var(--line-height-normal);
   margin: 0;
 } 
+  .summaryText  p {
+    
+  font-size: 0.3rem;
+  color: var(--color-text-primary);
+  line-height: var(--line-height-normal);
+  margin: 0;
+} 
+
+
+@media (max-width: 768px) {
+  .header {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* When no image, content spans full width */
+  .header.noImage {
+    grid-template-columns: 1fr;
+  }
+
+  .cardContent {
+
+     padding: 10px 20px;
+     margin-bottom: 10px;
+  }
+
+  .cardHeader {
+
+  padding:5px 0;
+}
+  
+.cardContent p {
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+  font-size: 0.65rem;
+  font-weight: 500;
+  line-height: 1rem;
+}
+
+}

@@ -25,7 +25,7 @@ const CertificationsSection = ({
         className={styles.sectionTitle}
         style={{ color: customColors['--resume-section-titles'] }}
       >
-        <CertificationsIcon fill={customColors['--resume-main-icons']} />
+        <CertificationsIcon className="mainIcon" />
         Certifications
       </h2>
       {certifications && certifications.length > 0 ? (

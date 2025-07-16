@@ -68,12 +68,6 @@ CRITICAL INSTRUCTIONS:
    - Parse dates into standardized formats (YYYY-MM)
    - Extract location information for each position
 
-3. SKILLS CATEGORIZATION:
-   - Categorize skills as technical, soft skills, or languages
-   - Assess skill levels based on context clues
-   - Group technical skills by category (e.g., "Programming Languages", "Frameworks")
-   - Extract years of experience when mentioned
-
 4. EDUCATION ENHANCEMENT:
    - Extract GPA, honors, and relevant coursework
    - Parse dates into start/end format
@@ -134,7 +128,6 @@ ENHANCED EXTRACTION REQUIREMENTS:
 
 5. SKILLS (Categorized Structure):
    - Technical skills with proficiency levels when mentioned
-   - Group by categories (Programming Languages, Frameworks, Tools, etc.)
    - Soft skills and interpersonal abilities
    - Language proficiencies with levels
    - Years of experience for specific skills when mentioned
@@ -243,13 +236,7 @@ export function convertToEnhancedFormat(
       })
     ),
 
-    skills: {
-      all: legacyResume.skills || [],
-      technical: legacyResume.skills?.map((skill: string) => ({
-        name: skill,
-        category: categorizeTechnicalSkill(skill),
-      })),
-    },
+    skills: [''],
 
     metadata: {
       source: 'legacy-conversion',
@@ -474,31 +461,3 @@ function extractMetrics(
   return metrics;
 }
 
-function categorizeTechnicalSkill(skill: string): string {
-  const categories = {
-    'Programming Languages': [
-      'JavaScript',
-      'TypeScript',
-      'Python',
-      'Java',
-      'C++',
-      'C#',
-      'Go',
-      'Rust',
-    ],
-    'Frontend Frameworks': ['React', 'Vue', 'Angular', 'Svelte'],
-    'Backend Frameworks': ['Node.js', 'Express', 'Django', 'Flask', 'Spring'],
-    Databases: ['MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'SQLite'],
-    'Cloud Platforms': ['AWS', 'Azure', 'GCP', 'Heroku'],
-    'DevOps Tools': ['Docker', 'Kubernetes', 'Jenkins', 'Git'],
-    'Design Tools': ['Figma', 'Sketch', 'Adobe', 'Photoshop'],
-  };
-
-  for (const [category, skills] of Object.entries(categories)) {
-    if (skills.some((s) => skill.toLowerCase().includes(s.toLowerCase()))) {
-      return category;
-    }
-  }
-
-  return 'Other';
-}

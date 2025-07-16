@@ -1,0 +1,31 @@
+.card {
+  background-color: var(--color-background-secondary);
+  border-radius: var(--border-radius-medium);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.input {
+  width: 100%;
+}
+
+.iconMd {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.skillsInputGroup {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.addSkillButton {
+  flex-shrink: 0;
+}
+
+.skillsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+} 

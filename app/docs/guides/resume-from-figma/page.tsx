@@ -1,6 +1,6 @@
 import Markdown from '@/src/components/docs/Markdown';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 const md = `# Building a Resume from a Figma Design
 

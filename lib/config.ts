@@ -14,8 +14,6 @@ export const AI_MODEL = 'gemini-2.5-pro';
 // export const AI_MODEL = 'gemini-2.5-flash-lite-preview-06-17';
 // export const AI_MODEL = 'gemini-1.5-flash-8b'
 
-
-
 /**
  * A confidence score threshold. If the regex parser's confidence is below this,
  * we might consider the result unreliable.
