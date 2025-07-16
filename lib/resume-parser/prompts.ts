@@ -422,15 +422,21 @@ ${jobSpec}
 **3. Resume Content to Process:**
 ---
 
-**4. Your Task & Instructions:**
+TAILORING REQUIREMENTS:
+1. Preserve all factual information (dates, company names, education details)
+2. Optimize bullet points to highlight relevant experience for the target role
+3. Incorporate keywords from job specification naturally throughout the resume
+4. Reorder and emphasize experiences that best match the job requirements
+5. Adjust skill descriptions to align with job requirements
+6. Maintain professional formatting and structure
+7. Ensure ATS compatibility with clean, parsed output
+8. Generate a human-readable commentary about the tailoring process in metadata.aiTailorCommentary
 
-*   **Analyze and Extract:** Carefully read the resume content and extract all key information.
-*   **Tailor Content:** Rewrite the 'summary' and 'experience.details' to align with the job specification, using the specified **tone**.
-*   **Generate AI Commentary:** Create a concise commentary on the tailoring process and store it in \`metadata.aiTailorCommentary\`.
-*   **Format Output as JSON:** The final output must be a single JSON object.
+IMPORTANT: 
+- Include a commentary in metadata.aiTailorCommentary explaining how the resume was optimized for this role
+- Highlight key strengths and matches between the candidate and job requirements
+- Note any significant changes or optimizations made
 
-**5. Example JSON Output Structure:**
-\`\`\`json
 {
   "name": "Jane Doe",
   "title": "Software Engineer",
@@ -446,7 +452,8 @@ ${jobSpec}
     "aiTailorCommentary": "The candidate's experience in API optimization is a strong match for the role. The resume was updated to highlight leadership skills and quantify achievements, aligning with the job description's emphasis on team collaboration."
   }
 }
-\`\`\`
 
 **Critical Rule:** Do not include any text or explanations outside of the final JSON object.
 `;
+} 
+
