@@ -29,10 +29,11 @@ export async function extractJobSpecification(
     });
 
     // Calculate confidence based on extracted fields
-    const confidence = calculateExtractionConfidence(object);
+    const extractedData = object as ParsedJobSpec;
+    const confidence = calculateExtractionConfidence(extractedData);
 
     console.log(`Job spec extraction completed with ${confidence}% confidence`);
-    return { data: object, confidence };
+    return { data: extractedData, confidence };
   } catch (error) {
     console.error('Job spec extraction failed:', error);
 

@@ -56,14 +56,15 @@ async function tailorResumeStandard(prompt: string): Promise<ParsedResume> {
   });
 
   // Add back customColors as empty object (will be merged with original later)
+  const tailoredResume = object as ParsedResume;
   return {
-    ...object,
+    ...tailoredResume,
     customColors: {},
   };
 }
 
 async function tailorResumeStreaming(prompt: string): Promise<ParsedResume> {
-  const { object } = await streamObject({
+  const stream = await streamObject({
     model: google(AI_MODEL),
     schema: aiResumeSchema,
     prompt,
@@ -73,8 +74,9 @@ async function tailorResumeStreaming(prompt: string): Promise<ParsedResume> {
   // For streaming, we need to collect the full object
   // Implementation depends on how you want to handle partial updates
   // Add back customColors as empty object
+  const streamedResume = await stream.object as ParsedResume;
   return {
-    ...object,
+    ...streamedResume,
     customColors: {},
   };
 }

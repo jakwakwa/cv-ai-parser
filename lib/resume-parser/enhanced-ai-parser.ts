@@ -5,6 +5,7 @@ import {
   type EnhancedParsedResume,
   enhancedResumeSchema,
 } from './enhanced-schema';
+import { getResumeParsingPrompt } from './prompts';
 
 export async function enhancedParseWithAI(
   resumeContent: string,
@@ -12,14 +13,15 @@ export async function enhancedParseWithAI(
 ): Promise<EnhancedParsedResume> {
   try {
     const result = await generateObject({
-      model: openai('gpt-4o'),
-      prompt: buildEnhancedPrompt(resumeContent, options),
-      schema: enhancedParsedResumeSchema,
+      model: google(AI_MODEL),
+      prompt: getResumeParsingPrompt(resumeContent),
+      schema: enhancedResumeSchema,
     });
 
-    return result.object;
+    return result.object as EnhancedParsedResume;
   } catch (error) {
-    throw new Error(`Enhanced AI parsing failed: ${error}`);
+    console.error('Enhanced AI parsing failed:', error);
+    throw error;
   }
 }
 
@@ -29,29 +31,23 @@ export async function enhancedParseWithAIPDF(
 ): Promise<EnhancedParsedResume> {
   try {
     const result = await generateObject({
-      model: openai('gpt-4o'),
-      prompt: buildEnhancedPDFPrompt(options),
-      schema: enhancedParsedResumeSchema,
-      messages: [
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'text',
-              text: 'Parse this resume PDF and extract the information according to the schema.',
-            },
-            {
-              type: 'file',
-              file,
-            },
-          ],
-        },
-      ],
+      model: google(AI_MODEL),
+      prompt: 'Parse this PDF resume', // Legacy placeholder
+      schema: enhancedResumeSchema,
     });
 
-    return result.object;
+    // Process with file content
+    const fileContent = await file.text();
+    const enhancedResult = await generateObject({
+      model: google(AI_MODEL),
+      prompt: getResumeParsingPrompt(fileContent),
+      schema: enhancedResumeSchema,
+    });
+
+    return enhancedResult.object as EnhancedParsedResume;
   } catch (error) {
-    throw new Error(`Enhanced PDF AI parsing failed: ${error}`);
+    console.error('Enhanced AI PDF parsing failed:', error);
+    throw error;
   }
 }
 

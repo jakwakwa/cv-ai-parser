@@ -1,33 +1,20 @@
 /** biome-ignore-all lint/complexity/noStaticOnlyClass: <> */
 /** biome-ignore-all lint/suspicious/noExplicitAny: <ecperimental feature. when tested it will get typed> */
 
-import { PrismaClient } from '@prisma/client';
-import { withAccelerate } from '@prisma/extension-accelerate';
-// Learn more about instantiating PrismaClient in Next.js here: https://www.prisma.io/docs/data-platform/accelerate/getting-started
-
+import { db, Prisma } from './prisma';
 import type { Resume, UserAdditionalContext } from './types';
 
-const prismaClientSingleton = () => {
-  return new PrismaClient().$extends(withAccelerate());
-};
+// Prisma client is imported from ./prisma
 
-const prismaClient = prismaClientSingleton();
-
-declare global {
-  // Augment the global object with a typed prisma instance
-  // This avoids use of 'any'
-  var prismaGlobal: typeof prismaClient | undefined;
+// Helper to convert Prisma resume to our Resume type
+function convertPrismaResume(resume: any): Resume {
+  if (!resume) return resume;
+  return {
+    ...resume,
+    createdAt: resume.createdAt.toISOString(),
+    updatedAt: resume.updatedAt.toISOString(),
+  };
 }
-
-const prisma = global.prismaGlobal ?? prismaClient;
-
-if (process.env.NODE_ENV !== 'production') {
-  global.prismaGlobal = prisma;
-}
-
-export default prisma;
-
-if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma;
 
 export class ResumeDatabase {
   /**
@@ -54,18 +41,18 @@ export class ResumeDatabase {
           originalFilename: data.originalFilename,
           fileType: data.fileType,
           fileSize: data.fileSize,
-          parsedData: data.parsedData as Prisma.JsonValue,
+          parsedData: data.parsedData,
           parseMethod: data.parseMethod,
           confidenceScore: data.confidenceScore,
           isPublic: data.isPublic,
           slug: data.slug,
-          additionalContext: data.additionalContext as Prisma.JsonValue,
+          additionalContext: data.additionalContext,
           viewCount: 0,
           downloadCount: 0,
         },
       });
 
-      return resume;
+      return convertPrismaResume(resume);
     } catch (error) {
       throw new Error('Error saving resume');
     }
@@ -80,7 +67,7 @@ export class ResumeDatabase {
         where: { userId },
         orderBy: { createdAt: 'desc' },
       });
-      return resumes;
+      return resumes.map(convertPrismaResume);
     } catch (error) {
       throw new Error('Error fetching user resumes');
     }
@@ -94,7 +81,7 @@ export class ResumeDatabase {
       const resume = await db.resume.findUnique({
         where: { id },
       });
-      return resume;
+      return convertPrismaResume(resume);
     } catch (error) {
       throw new Error('Error fetching resume');
     }
@@ -113,7 +100,7 @@ export class ResumeDatabase {
           },
         },
       });
-      return resume;
+      return convertPrismaResume(resume);
     } catch (error) {
       throw new Error('Error fetching resume with context');
     }
@@ -127,7 +114,7 @@ export class ResumeDatabase {
       const resume = await db.resume.findFirst({
         where: { slug, isPublic: true },
       });
-      return resume;
+      return convertPrismaResume(resume);
     } catch (error) {
       throw new Error('Error fetching public resume');
     }
@@ -169,11 +156,11 @@ export class ResumeDatabase {
         data: {
           ...data,
           parsedData: data.parsedData
-            ? (data.parsedData as Prisma.JsonValue)
+            ? data.parsedData
             : undefined,
         },
       });
-      return updatedResume;
+      return convertPrismaResume(updatedResume);
     } catch (error) {
       throw new Error('Error updating resume');
     }
@@ -206,7 +193,7 @@ export class ResumeDatabase {
         data: {
           resumeId: data.resumeId,
           versionNumber: data.versionNumber,
-          parsedData: data.parsedData as Prisma.JsonValue,
+          parsedData: data.parsedData,
           changesSummary: data.changesSummary,
         },
       });

@@ -14,17 +14,7 @@ export const AI_MODEL = 'gemini-2.5-pro';
 // export const AI_MODEL = 'gemini-2.5-flash-lite-preview-06-17';
 // export const AI_MODEL = 'gemini-1.5-flash-8b'
 
-/**
- * A confidence score threshold. If the regex parser's confidence is below this,
- * we might consider the result unreliable.
- */
-export const REGEX_CONFIDENCE_THRESHOLD = 30;
 
-/**
- * The maximum confidence score the regex parser can assign.
- * This ensures that AI-parsed results are always considered more reliable.
- */
-export const MAX_REGEX_CONFIDENCE = 85;
 
 export const IS_JOB_TAILORING_ENABLED = true;
 

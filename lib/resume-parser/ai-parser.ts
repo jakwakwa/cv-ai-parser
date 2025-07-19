@@ -48,7 +48,7 @@ export async function parseWithAI(
   options?: ParseOptions
 ): Promise<EnhancedParsedResume> {
   const stream = await streamableParseWithAI(content, options);
-  return await stream.object;
+  return await stream.object as EnhancedParsedResume;
 }
 
 export async function parseWithAIPDF(
@@ -56,7 +56,7 @@ export async function parseWithAIPDF(
   options?: ParseOptions
 ): Promise<EnhancedParsedResume> {
   const stream = await streamableParseWithAIPDF(file, options);
-  return await stream.object;
+  return await stream.object as EnhancedParsedResume;
 }
 
 export async function streamableParseWithAIPDF(

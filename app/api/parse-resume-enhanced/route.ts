@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
           }
 
           // Get final result
-          const parsedResume: EnhancedParsedResume = await stream.object;
+          const parsedResume = await stream.object as EnhancedParsedResume;
 
           // Merge custom colors and profile image
           const finalResume: EnhancedParsedResume = {

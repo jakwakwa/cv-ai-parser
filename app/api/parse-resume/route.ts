@@ -4,11 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { ResumeDatabase } from '@/lib/db';
 import { parseWithAI, parseWithAIPDF } from '@/lib/resume-parser/ai-parser';
 import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema'; // Use EnhancedParsedResume
-import { parseWithRegex } from '@/lib/resume-parser/regex-parser';
 import type { Resume } from '@/lib/types';
 import { createSlug } from '@/lib/utils';
-
-const MIN_CHARS_FOR_AI = 50;
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -39,18 +36,23 @@ export async function POST(request: NextRequest) {
       confidence = 98; // Higher confidence for direct PDF parsing
     } else {
       resumeContent = await file.text();
-      if (resumeContent.length < MIN_CHARS_FOR_AI) {
-        // Fallback to regex parser if content is too short for AI
-        const regexResult = parseWithRegex(resumeContent); // Get the result object
-        parsedResume = regexResult.data as EnhancedParsedResume; // Extract data and cast
-        parseMethod = 'regex_fallback';
-        confidence = 60; // Lower confidence for regex fallback
-      } else {
-        // Use AI parsing for text files
-        parsedResume = await parseWithAI(resumeContent);
-        parseMethod = 'ai';
-        confidence = 90; // Default confidence for AI parsing
+      
+      // Validate content before AI parsing
+      if (resumeContent.trim().length < 20) {
+        return Response.json(
+          {
+            error: 'Insufficient content detected',
+            details: 'The uploaded file appears to be empty or contains too little text to analyze. Please ensure your resume contains meaningful content with sections like experience, education, or skills.',
+            redirectTo: '/tools/tailor'
+          },
+          { status: 400 }
+        );
       }
+      
+      // Use AI parsing for text files
+      parsedResume = await parseWithAI(resumeContent);
+      parseMethod = 'ai';
+      confidence = 90; // Default confidence for AI parsing
     }
 
     // Merge custom colors and profile image

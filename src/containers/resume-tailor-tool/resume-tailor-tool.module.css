@@ -5,19 +5,18 @@
   gap: 2rem;
 }
 .dropZoneContent {
-    display: flex;
+  display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: center;
   margin: 0 auto;
-    text-align: center !important;
+  text-align: center !important;
 }
 
 .dropZoneContent > svg {
-   width: 20px;
-   font-size: 7px;
+  width: 20px;
+  font-size: 7px;
 }
-
 
 /* Loading State */
 .loadingState {
@@ -104,8 +103,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Tool Grid Layout */
@@ -134,7 +137,6 @@
 }
 
 .panelHeader {
-
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
@@ -164,11 +166,11 @@
   transition: var(--transition-fast);
   position: relative;
   display: flex;
-    justify-content: space-around;
-    align-content: space-around;
-    align-items: stretch;
-    padding: 1rem;
-    flex-direction: row;
+  justify-content: space-around;
+  align-content: space-around;
+  align-items: stretch;
+  padding: 1rem;
+  flex-direction: row;
 }
 
 .dropZone:hover {
@@ -211,7 +213,7 @@
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-medium);
   margin: 0;
-    text-align: center !important;
+  text-align: center !important;
 }
 
 .dropSubtext {
@@ -268,7 +270,7 @@
   gap: var(--spacing-xs);
   padding: var(--spacing-sm) var(--spacing-md);
   background: var(--color-secondary);
-  color:  var(--color-button-default-text);
+  color: var(--color-button-default-text);
   border-radius: var(--border-radius-medium);
   border: 1px solid var(--color-border-medium);
   font-size: var(--font-size-sm);
@@ -306,7 +308,7 @@
   cursor: pointer;
   transition: var(--transition-fast);
 
-    background: var(--color-button-border-borders);
+  background: var(--color-button-border-borders);
   color: var(--color-button-default-text);
   border: 1px solid var(--color-button-default-border);
 }
@@ -317,9 +319,9 @@
 }
 
 .methodButtonActive {
-background: var(--color-info-light);
+  background: var(--color-info-light);
   border-color: var(--color-info);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
 }
 
 .methodButtonDisabled {
@@ -340,7 +342,7 @@ background: var(--color-info-light);
 .textareaContainer {
   padding: var(--spacing-lg);
   flex: 1;
-  color: var( --color-text-input-light);
+  color: var(--color-text-input-light);
   display: flex;
   flex-direction: column;
 }
@@ -510,6 +512,13 @@ background: var(--color-info-light);
   line-height: 1.5;
 }
 
+.errorModalActions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+  margin-top: var(--spacing-md);
+}
+
 .viewResumeButton {
   width: 100%;
   margin-top: var(--spacing-md);
@@ -537,15 +546,15 @@ background: var(--color-info-light);
   margin-top: var(--spacing-md);
   font-size: var(--font-size-md);
   color: var(--color-text-light);
-font-weight: 800;
+  font-weight: 800;
   width: 90%;
   margin-bottom: 1rem;
   padding: var(--spacing-md);
   background: var(--color-button-default-background);
   background: var(--color-button-default-background);
-  color:  var(--color-button-default-text);
+  color: var(--color-button-default-text);
   border-radius: var(--border-radius-medium);
-  border: 1px solid var( --color-button-default-border);
+  border: 1px solid var(--color-button-default-border);
   /* border: 1px solid var(--color-border-button-light); */
   border-radius: var(--border-radius-medium);
   text-align: left;

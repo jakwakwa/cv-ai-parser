@@ -143,6 +143,32 @@ const ResumeTailorTool = ({
     }
   };
 
+  const handleResetToInitialState = () => {
+    // Reset all form states to initial values
+    setUploadedFile(null);
+    setError('');
+    setJobSpecText('');
+    setJobSpecFile(null);
+    setTone('Neutral');
+    setExtraPrompt('');
+    setProfileImage('');
+    setCustomColors({});
+    setLocalResumeData(null);
+    setAiTailorCommentary(null);
+    setCreatedResumeSlug(null);
+    setStreamingProgress(0);
+    setStreamingMessage('');
+    setPartialResumeData(null);
+    
+    // Reset file inputs
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    if (jobSpecFileInputRef.current) {
+      jobSpecFileInputRef.current.value = '';
+    }
+  };
+
   const handleFileSelection = (file: File) => {
     if (file.size > 10 * 1024 * 1024) {
       setError('File size must be less than 10MB');
@@ -246,11 +272,25 @@ const ResumeTailorTool = ({
       if (!response.ok) {
         const errorData = await response.json();
         const errorMsg = errorData?.error || 'Failed to parse resume';
+        
+        // Handle specific error cases with graceful recovery
         if (response.status === 401) {
           throw new Error(
             'Authentication required. Please sign in to continue.'
           );
         }
+        
+        // Handle insufficient content error with reset
+        if (response.status === 400 && errorData?.redirectTo) {
+          setModalErrorMessage(
+            `${errorMsg}\n\n${errorData.details || ''}\n\nPlease try uploading a different file with more content.`
+          );
+          setShowErrorModal(true);
+          // Reset form to initial state
+          handleResetToInitialState();
+          return;
+        }
+        
         throw new Error(errorMsg);
       }
 
@@ -403,7 +443,16 @@ const ResumeTailorTool = ({
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : 'An unknown error occurred.';
-      setModalErrorMessage(errorMessage);
+      
+      // Enhanced error message with guidance
+      const enhancedErrorMessage = `${errorMessage}\n\nDon't worry! You can try again with:
+• A different resume file
+• A simpler job description
+• Checking your internet connection
+
+Your progress has been saved and you can continue from where you left off.`;
+      
+      setModalErrorMessage(enhancedErrorMessage);
       setShowErrorModal(true);
       setError('');
     } finally {
@@ -498,7 +547,22 @@ const ResumeTailorTool = ({
           <DialogDescription className={styles.errorDescription}>
             {modalErrorMessage}
           </DialogDescription>
-          <Button onClick={() => setShowErrorModal(false)}>Close</Button>
+          <div className={styles.errorModalActions}>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowErrorModal(false)}
+            >
+              Close
+            </Button>
+            <Button 
+              onClick={() => {
+                setShowErrorModal(false);
+                handleResetToInitialState();
+              }}
+            >
+              Start Over
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 
