@@ -26,8 +26,8 @@ export default function ResumeTailorPage() {
   const { data: session, status } = useSession();
 
   const handleResumeCreated = async (
-    parsedData: EnhancedParsedResume,
-    info: ParseInfo
+    _parsedData: EnhancedParsedResume,
+    _info: ParseInfo
   ) => {
     // The tailor tool now handles navigation internally
     // This function can be used for any additional logic if needed

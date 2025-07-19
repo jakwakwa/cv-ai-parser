@@ -20,7 +20,7 @@ export default async function LibraryPage() {
 
   try {
     initialResumes = await ResumeDatabase.getUserResumes(userId);
-  } catch (error) {
+  } catch (_error) {
     // Pass an empty array and let the client show an error.
   }
 

@@ -159,7 +159,7 @@ const ResumeTailorTool = ({
     setStreamingProgress(0);
     setStreamingMessage('');
     setPartialResumeData(null);
-    
+
     // Reset file inputs
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -272,14 +272,14 @@ const ResumeTailorTool = ({
       if (!response.ok) {
         const errorData = await response.json();
         const errorMsg = errorData?.error || 'Failed to parse resume';
-        
+
         // Handle specific error cases with graceful recovery
         if (response.status === 401) {
           throw new Error(
             'Authentication required. Please sign in to continue.'
           );
         }
-        
+
         // Handle insufficient content error with reset
         if (response.status === 400 && errorData?.redirectTo) {
           setModalErrorMessage(
@@ -290,7 +290,7 @@ const ResumeTailorTool = ({
           handleResetToInitialState();
           return;
         }
-        
+
         throw new Error(errorMsg);
       }
 
@@ -443,7 +443,7 @@ const ResumeTailorTool = ({
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : 'An unknown error occurred.';
-      
+
       // Enhanced error message with guidance
       const enhancedErrorMessage = `${errorMessage}\n\nDon't worry! You can try again with:
 • A different resume file
@@ -451,7 +451,7 @@ const ResumeTailorTool = ({
 • Checking your internet connection
 
 Your progress has been saved and you can continue from where you left off.`;
-      
+
       setModalErrorMessage(enhancedErrorMessage);
       setShowErrorModal(true);
       setError('');
@@ -548,13 +548,10 @@ Your progress has been saved and you can continue from where you left off.`;
             {modalErrorMessage}
           </DialogDescription>
           <div className={styles.errorModalActions}>
-            <Button 
-              variant="outline" 
-              onClick={() => setShowErrorModal(false)}
-            >
+            <Button variant="outline" onClick={() => setShowErrorModal(false)}>
               Close
             </Button>
-            <Button 
+            <Button
               onClick={() => {
                 setShowErrorModal(false);
                 handleResetToInitialState();

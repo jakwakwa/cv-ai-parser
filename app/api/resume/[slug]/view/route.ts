@@ -19,7 +19,7 @@ export async function POST(
 
     await ResumeDatabase.incrementViewCount(resume.id);
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Failed to increment view count' },
       { status: 500 }

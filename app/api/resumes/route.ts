@@ -32,7 +32,7 @@ export async function GET(_request: NextRequest) {
   try {
     const resumes = await ResumeDatabase.getUserResumes(session.user.id);
     return NextResponse.json(resumes);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Failed to fetch resumes' },
       { status: 500 }

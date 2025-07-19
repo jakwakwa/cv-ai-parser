@@ -6,13 +6,15 @@ export const enhancedResumeSchema = z.object({
   title: z.string().describe('Current or most recent job title.'),
   summary: z.string().optional(),
   profileImage: z.string().optional(),
-  customColors: z.object({
+  customColors: z
+    .object({
       primary: z.string().optional(),
       secondary: z.string().optional(),
       accent: z.string().optional(),
       background: z.string().optional(),
       text: z.string().optional(),
-  }).optional(),
+    })
+    .optional(),
   // Enhanced contact information with better structure
   contact: z
     .object({

@@ -14,15 +14,13 @@ export const AI_MODEL = 'gemini-2.5-pro';
 // export const AI_MODEL = 'gemini-2.5-flash-lite-preview-06-17';
 // export const AI_MODEL = 'gemini-1.5-flash-8b'
 
-
-
 export const IS_JOB_TAILORING_ENABLED = true;
 
 /**
  * Development helper: Keep temp resumes persistent for testing.
  * When true, temp resumes won't be auto-cleaned up, making development easier.
  * Set to false to test production-like cleanup behavior.
- * 
+ *
  * Usage:
  * - true: Resume data persists across browser refreshes, navigation, etc. (great for testing)
  * - false: Resume data gets cleaned up like in production (auto-cleanup on page unload, etc.)

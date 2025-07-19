@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/complexity/noStaticOnlyClass: <> */
 /** biome-ignore-all lint/suspicious/noExplicitAny: <ecperimental feature. when tested it will get typed> */
 
-import { db, Prisma } from './prisma';
+import { db } from './prisma';
 import type { Resume, UserAdditionalContext } from './types';
 
 // Prisma client is imported from ./prisma
@@ -53,7 +53,7 @@ export class ResumeDatabase {
       });
 
       return convertPrismaResume(resume);
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Error saving resume');
     }
   }
@@ -68,7 +68,7 @@ export class ResumeDatabase {
         orderBy: { createdAt: 'desc' },
       });
       return resumes.map(convertPrismaResume);
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Error fetching user resumes');
     }
   }
@@ -82,7 +82,7 @@ export class ResumeDatabase {
         where: { id },
       });
       return convertPrismaResume(resume);
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Error fetching resume');
     }
   }
@@ -101,7 +101,7 @@ export class ResumeDatabase {
         },
       });
       return convertPrismaResume(resume);
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Error fetching resume with context');
     }
   }
@@ -115,7 +115,7 @@ export class ResumeDatabase {
         where: { slug, isPublic: true },
       });
       return convertPrismaResume(resume);
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Error fetching public resume');
     }
   }
@@ -133,7 +133,7 @@ export class ResumeDatabase {
         orderBy: { updatedAt: 'desc' },
       });
       return resumes;
-    } catch (error) {
+    } catch (_error) {
       return [];
     }
   }
@@ -155,13 +155,11 @@ export class ResumeDatabase {
         where: { id },
         data: {
           ...data,
-          parsedData: data.parsedData
-            ? data.parsedData
-            : undefined,
+          parsedData: data.parsedData ? data.parsedData : undefined,
         },
       });
       return convertPrismaResume(updatedResume);
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Error updating resume');
     }
   }
@@ -174,7 +172,7 @@ export class ResumeDatabase {
       await db.resume.delete({
         where: { id },
       });
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Error deleting resume');
     }
   }
@@ -198,7 +196,7 @@ export class ResumeDatabase {
         },
       });
       return version;
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Error saving resume version');
     }
   }
@@ -213,7 +211,7 @@ export class ResumeDatabase {
         orderBy: { versionNumber: 'desc' },
       });
       return versions;
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Error fetching resume versions');
     }
   }
@@ -227,7 +225,7 @@ export class ResumeDatabase {
         where: { id },
         data: { viewCount: { increment: 1 } },
       });
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Error incrementing view count');
     }
   }

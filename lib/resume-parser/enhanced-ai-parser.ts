@@ -462,4 +462,3 @@ function extractMetrics(
 
   return metrics;
 }
-

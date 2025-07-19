@@ -259,7 +259,7 @@ export default async function Image({
         ...size,
       }
     );
-  } catch (error) {
+  } catch (_error) {
     return generateDefaultImage();
   }
 }

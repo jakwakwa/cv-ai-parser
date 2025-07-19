@@ -36,19 +36,20 @@ export async function POST(request: NextRequest) {
       confidence = 98; // Higher confidence for direct PDF parsing
     } else {
       resumeContent = await file.text();
-      
+
       // Validate content before AI parsing
       if (resumeContent.trim().length < 20) {
         return Response.json(
           {
             error: 'Insufficient content detected',
-            details: 'The uploaded file appears to be empty or contains too little text to analyze. Please ensure your resume contains meaningful content with sections like experience, education, or skills.',
-            redirectTo: '/tools/tailor'
+            details:
+              'The uploaded file appears to be empty or contains too little text to analyze. Please ensure your resume contains meaningful content with sections like experience, education, or skills.',
+            redirectTo: '/tools/tailor',
           },
           { status: 400 }
         );
       }
-      
+
       // Use AI parsing for text files
       parsedResume = await parseWithAI(resumeContent);
       parseMethod = 'ai';

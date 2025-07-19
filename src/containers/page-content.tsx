@@ -1,6 +1,6 @@
 'use client';
 
-import { Bot, FileText, Palette } from 'lucide-react';
+import { Bot, FileText } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import styles from '@/app/page.module.css';
@@ -229,17 +229,7 @@ export default function PageContent() {
                     Try AI Tailor
                   </Button>
                 </div>
-                <div className={styles.toolCard}>
-                  <Palette className={styles.toolIcon} />
-                  <h3>Figma to Resume</h3>
-                  <p>
-                    Transform your Figma design directly into a deployable
-                    resume component
-                  </p>
-                  <Button onClick={() => router.push('/library')}>
-                    Try Figma Tool
-                  </Button>
-                </div>
+
               </div>
             </div>
           </div>
