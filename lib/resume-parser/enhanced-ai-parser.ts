@@ -6,47 +6,53 @@ import {
   enhancedResumeSchema,
 } from './enhanced-schema';
 
-export async function parseWithEnhancedAI(
-  content: string
+export async function enhancedParseWithAI(
+  resumeContent: string,
+  options?: { jobSpec?: string; tone?: string }
 ): Promise<EnhancedParsedResume> {
-  const { object } = await generateObject({
-    model: google(AI_MODEL),
-    schema: enhancedResumeSchema,
-    prompt: getEnhancedResumeParsingPrompt(content),
-  });
+  try {
+    const result = await generateObject({
+      model: openai('gpt-4o'),
+      prompt: buildEnhancedPrompt(resumeContent, options),
+      schema: enhancedParsedResumeSchema,
+    });
 
-  console.log('Enhanced AI parsing completed successfully.');
-  return object;
+    return result.object;
+  } catch (error) {
+    throw new Error(`Enhanced AI parsing failed: ${error}`);
+  }
 }
 
-export async function parseWithEnhancedAIPDF(
-  file: File
+export async function enhancedParseWithAIPDF(
+  file: File,
+  options?: { jobSpec?: string; tone?: string }
 ): Promise<EnhancedParsedResume> {
-  console.log(`Starting enhanced PDF AI parsing with model: ${AI_MODEL}`);
+  try {
+    const result = await generateObject({
+      model: openai('gpt-4o'),
+      prompt: buildEnhancedPDFPrompt(options),
+      schema: enhancedParsedResumeSchema,
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: 'Parse this resume PDF and extract the information according to the schema.',
+            },
+            {
+              type: 'file',
+              file,
+            },
+          ],
+        },
+      ],
+    });
 
-  const { object } = await generateObject({
-    model: google(AI_MODEL),
-    schema: enhancedResumeSchema,
-    messages: [
-      {
-        role: 'user',
-        content: [
-          {
-            type: 'text',
-            text: getEnhancedResumeParsingPromptForPDF(),
-          },
-          {
-            type: 'file',
-            data: await file.arrayBuffer(),
-            mimeType: file.type,
-          },
-        ],
-      },
-    ],
-  });
-
-  console.log('Enhanced PDF AI parsing completed successfully.');
-  return object;
+    return result.object;
+  } catch (error) {
+    throw new Error(`Enhanced PDF AI parsing failed: ${error}`);
+  }
 }
 
 const getEnhancedResumeParsingPrompt = (content: string): string => `

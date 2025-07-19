@@ -8,9 +8,14 @@ import styles from './mobile-drawer.module.css';
 interface MobileDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  isAuthenticated?: boolean;
 }
 
-export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
+export function MobileDrawer({
+  isOpen,
+  onClose,
+  isAuthenticated = false,
+}: MobileDrawerProps) {
   // Close drawer when clicking on a link
   const handleLinkClick = () => {
     onClose();
@@ -73,13 +78,16 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                 >
                   Resume Tailor
                 </Link>
-                <Link
-                  href="/tools/figma-to-resume"
-                  className={styles.navLink}
-                  onClick={handleLinkClick}
-                >
-                  Figma to Resume
-                </Link>
+                {/* Only show library link for authenticated users */}
+                {isAuthenticated && (
+                  <Link
+                    href="/library"
+                    className={styles.navLink}
+                    onClick={handleLinkClick}
+                  >
+                    My Resumes
+                  </Link>
+                )}
                 <Link
                   href="/docs"
                   className={styles.navLink}

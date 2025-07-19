@@ -58,27 +58,18 @@ const figmaContentStore: {
 } = {};
 
 function extractAllTextFromNode(node: FigmaNode, depth = 0): void {
-  const indent = '  '.repeat(depth);
-  console.log(`${indent}Processing node: "${node.name}" (type: ${node.type})`);
-
   // Extract text from current node if it's a TEXT node
   if (node.type === 'TEXT') {
-    console.log(`${indent}Found TEXT node with characters:`, node.characters);
     if (node.characters?.trim()) {
       extractAndStoreContent(node.characters, node.name);
-    } else {
-      console.log(`${indent}TEXT node has no characters or empty text`);
     }
   }
 
   // Recursively extract from children
   if (node.children && node.children.length > 0) {
-    console.log(`${indent}Node has ${node.children.length} children`);
     for (const child of node.children) {
       extractAllTextFromNode(child, depth + 1);
     }
-  } else {
-    console.log(`${indent}Node has no children`);
   }
 }
 
@@ -88,8 +79,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
   const cleanText = text.trim();
 
   if (!cleanText) return;
-
-  console.log(`Extracting from layer "${layerName}": "${cleanText}"`); // Debug log
 
   // Store all text content for debugging and fallback
   if (!figmaContentStore.allTexts) {
@@ -119,28 +108,22 @@ function extractAndStoreContent(text: string, layerName: string): void {
       .filter((line) => line);
     if (lines.length > 1) {
       figmaContentStore.name = lines[1]; // Second line should be the name
-      console.log(`Extracted name from CV: ${figmaContentStore.name}`);
     }
   } else if (
     !figmaContentStore.name &&
     namePatterns.some((pattern) => pattern.test(cleanText))
   ) {
     figmaContentStore.name = cleanText;
-    console.log(`Extracted name from pattern: ${cleanText}`);
   } else if (
     !figmaContentStore.name &&
     (layerLower.includes('name') || layerLower.includes('title'))
   ) {
     figmaContentStore.name = cleanText;
-    console.log(`Extracted name from layer name: ${cleanText}`);
   }
 
   // Extract summary content - be more flexible
   if (layerLower.includes('summary-content') && cleanText.length > 50) {
     figmaContentStore.summary = cleanText;
-    console.log(
-      `Extracted summary from specific layer: ${cleanText.substring(0, 100)}...`
-    );
   } else if (
     !figmaContentStore.summary &&
     cleanText.length > 100 &&
@@ -152,9 +135,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
       cleanText.includes('dedicated'))
   ) {
     figmaContentStore.summary = cleanText;
-    console.log(
-      `Extracted summary from content pattern: ${cleanText.substring(0, 100)}...`
-    );
   }
 
   // Extract contact information with better patterns
@@ -166,12 +146,10 @@ function extractAndStoreContent(text: string, layerName: string): void {
     if (!figmaContentStore.contact) figmaContentStore.contact = {};
     figmaContentStore.contact.email =
       cleanText.match(emailPattern)?.[0] || cleanText;
-    console.log(`Extracted email: ${figmaContentStore.contact.email}`);
   } else if (cleanText.match(phonePattern)) {
     if (!figmaContentStore.contact) figmaContentStore.contact = {};
     figmaContentStore.contact.phone =
       cleanText.match(phonePattern)?.[0] || cleanText;
-    console.log(`Extracted phone: ${figmaContentStore.contact.phone}`);
   } else if (
     layerLower.includes('contact') &&
     !cleanText.includes('@') &&
@@ -180,7 +158,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
   ) {
     if (!figmaContentStore.contact) figmaContentStore.contact = {};
     figmaContentStore.contact.location = cleanText;
-    console.log(`Extracted location: ${cleanText}`);
   }
 
   // Extract experience information - matching actual Figma layer names
@@ -196,7 +173,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
     } else {
       figmaContentStore.experience[0].position = cleanText;
     }
-    console.log(`Extracted job title: ${cleanText}`);
   } else if (
     layerLower.includes('exp-company') ||
     layerLower.includes('company')
@@ -207,7 +183,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
     } else {
       figmaContentStore.experience[0].company = cleanText;
     }
-    console.log(`Extracted company: ${cleanText}`);
   } else if (
     layerLower.includes('exp-year') ||
     layerLower.includes('exp-period') ||
@@ -220,7 +195,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
     } else {
       figmaContentStore.experience[0].period = cleanText;
     }
-    console.log(`Extracted period: ${cleanText}`);
   } else if (
     layerLower.includes('exp-detail') ||
     layerLower.includes('exp-desc') ||
@@ -232,7 +206,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
     } else {
       figmaContentStore.experience[0].description = cleanText;
     }
-    console.log(`Extracted job description: ${cleanText.substring(0, 100)}...`);
   }
 
   // Extract education information - matching actual Figma layer names
@@ -248,7 +221,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
         figmaContentStore.education.length - 1
       ].degree = cleanText;
     }
-    console.log(`Extracted education degree: ${cleanText}`);
   } else if (
     layerLower.includes('education-school') ||
     layerLower.includes('school') ||
@@ -262,7 +234,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
         figmaContentStore.education.length - 1
       ].school = cleanText;
     }
-    console.log(`Extracted education school: ${cleanText}`);
   } else if (
     layerLower.includes('education-year') ||
     layerLower.includes('year')
@@ -274,7 +245,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
       figmaContentStore.education[figmaContentStore.education.length - 1].year =
         cleanText;
     }
-    console.log(`Extracted education year: ${cleanText}`);
   }
 
   // Extract skills - matching actual Figma layer names
@@ -286,7 +256,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
     // For individual skill items, add directly
     if (layerLower === 'skill') {
       figmaContentStore.skills.push(cleanText);
-      console.log(`Extracted individual skill: ${cleanText}`);
     } else {
       // For skill lists, split by common separators
       const skills = cleanText
@@ -294,7 +263,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
         .map((s) => s.trim())
         .filter((s) => s);
       figmaContentStore.skills.push(...skills);
-      console.log(`Extracted skills: ${skills.join(', ')}`);
     }
   }
 
@@ -307,7 +275,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
       figmaContentStore.certifications = [];
     // Start a new certification item
     figmaContentStore.certifications.push({ name: cleanText });
-    console.log(`Extracted certification degree (new item): ${cleanText}`);
   } else if (
     layerLower.includes('certification-school') ||
     layerLower.includes('certificate-school')
@@ -325,7 +292,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
         ];
       last.issuer = cleanText;
     }
-    console.log(`Extracted certification school: ${cleanText}`);
   } else if (
     layerLower.includes('certification-year') ||
     layerLower.includes('certificate-year')
@@ -341,7 +307,6 @@ function extractAndStoreContent(text: string, layerName: string): void {
         ];
       last.year = cleanText;
     }
-    console.log(`Extracted certification year: ${cleanText}`);
   }
 }
 
@@ -1131,9 +1096,18 @@ export async function POST(req: Request) {
 
     const { fileKey, nodeId } = ids;
 
-    // If no API key, return a mock response for development/demo
+    // Conditionally return mock response based on environment and API key presence
     if (!FIGMA_API_KEY) {
-      console.warn('FIGMA_API_KEY not configured - returning mock response');
+      const isProduction = process.env.NODE_ENV === 'production';
+      if (isProduction) {
+        return new Response(
+          JSON.stringify({
+            error: 'Figma integration is not configured in production.',
+            details: 'FIGMA_API_KEY is missing.',
+          }),
+          { status: 503 } // Service Unavailable
+        );
+      }
       const mockComponentName = 'FigmaResumeDemo';
       const mockJsxCode = `import React from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
@@ -1251,7 +1225,6 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
       }
 
       if (!figmaResponse.ok) {
-        // For any API failure, log the specific error but return fallback
         const errorText = await figmaResponse.text();
         let errorData: { err?: string };
         try {
@@ -1260,18 +1233,35 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
           errorData = { err: errorText };
         }
 
-        console.warn(
-          `Figma API error (${figmaResponse.status}): ${errorData.err || errorText} - using fallback`
-        );
+        const isProduction = process.env.NODE_ENV === 'production';
+        if (isProduction) {
+          return new Response(
+            JSON.stringify({
+              error: 'Figma API failed in production.',
+              details: errorData.err || errorText,
+            }),
+            { status: 500 }
+          );
+        }
         throw new Error(`Figma API failed: ${errorData.err || errorText}`);
       }
 
       nodeResponseJson = await figmaResponse.json();
     } catch (fetchError) {
-      console.error('Figma API fetch error:', fetchError);
-
-      // Return mock response if API fails
-      console.warn('Figma API failed - returning mock response');
+      const isProduction = process.env.NODE_ENV === 'production';
+      if (isProduction) {
+        return new Response(
+          JSON.stringify({
+            error: 'Figma API is unavailable in production.',
+            details:
+              fetchError instanceof Error
+                ? fetchError.message
+                : 'Unknown error',
+          }),
+          { status: 503 }
+        );
+      }
+      // Continue with mock response for development
       const mockComponentName = 'FigmaResumeDemo';
       const mockJsxCode = `import React from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
@@ -1407,43 +1397,7 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
     );
 
     // First pass: Extract all text content from the Figma tree
-    console.log('Starting text extraction from Figma node tree...');
     extractAllTextFromNode(firstNode);
-
-    console.log('=== FIGMA CONTENT EXTRACTION SUMMARY ===');
-    console.log('Extracted Name:', figmaContentStore.name || 'NOT FOUND');
-    console.log(
-      'Extracted Summary:',
-      figmaContentStore.summary
-        ? `${figmaContentStore.summary.substring(0, 100)}...`
-        : 'NOT FOUND'
-    );
-    console.log('Extracted Contact:', figmaContentStore.contact || 'NOT FOUND');
-    console.log(
-      'Extracted Experience:',
-      figmaContentStore.experience || 'NOT FOUND'
-    );
-    console.log(
-      'Extracted Education:',
-      figmaContentStore.education || 'NOT FOUND'
-    );
-    console.log('Extracted Skills:', figmaContentStore.skills || 'NOT FOUND');
-    console.log(
-      'Extracted Certifications:',
-      figmaContentStore.certifications || 'NOT FOUND'
-    );
-    console.log(
-      'Total text nodes found:',
-      figmaContentStore.allTexts?.length || 0
-    );
-    console.log('=== END EXTRACTION SUMMARY ===');
-
-    console.log(
-      'Full extracted content store:',
-      JSON.stringify(figmaContentStore, null, 2)
-    );
-
-    const jsxBody = nodeToJsx(firstNode, undefined);
 
     // Extract colors from the Figma node
     const extractedColors = new Set<string>();
@@ -1456,7 +1410,6 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
     const accentColor = colorsArray[2] || 'var(--color-accent-teal-bright)';
 
     // Generate default resume object with extracted Figma content
-    console.log('Generating default resume with extracted content...');
     const defaultResumeObject = {
       name: figmaContentStore.name || 'John Doe',
       summary:
@@ -1525,8 +1478,6 @@ export const ${mockComponentName}: React.FC<{ resume: ParsedResume }> = ({ resum
           : ['JavaScript', 'TypeScript', 'React', 'UI/UX Design'],
     };
 
-    console.log('Default resume object:', defaultResumeObject);
-
     const jsxCode = `import React from 'react';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import styles from './${componentName}.module.css';
@@ -1536,21 +1487,12 @@ const defaultResume: ParsedResume = ${JSON.stringify(defaultResumeObject, null, 
 
 export const ${componentName}: React.FC<{ resume?: ParsedResume }> = ({ resume = defaultResume }) => {
   return (
-    ${jsxBody}
+    ${nodeToJsx(firstNode, undefined)}
   );
 };
 
 // Export the extracted Figma content for reference
 export const figmaExtractedContent = ${JSON.stringify(figmaContentStore, null, 2)};
-
-// Debug: All extracted text from Figma layers
-export const figmaDebugInfo = {
-  extractedTexts: figmaExtractedContent.allTexts || [],
-  totalTextsFound: ${figmaContentStore.allTexts?.length || 0},
-  hasName: ${!!figmaContentStore.name},
-  hasSummary: ${!!figmaContentStore.summary},
-  hasContact: ${!!figmaContentStore.contact}
-};
 `;
 
     // Generate CSS based on actual Figma structure
@@ -1577,7 +1519,7 @@ export const figmaDebugInfo = {
         'utf8'
       );
     } catch (writeErr) {
-      console.warn('Failed to persist generated files', writeErr);
+      // Silently fail file writing in production environments
     }
 
     // Return generated code so the client can write it locally (or further refine).
@@ -1603,7 +1545,6 @@ export const figmaDebugInfo = {
       }
     );
   } catch (err: unknown) {
-    console.error('Unexpected error:', err);
     const msg = err instanceof Error ? err.message : 'Unknown error';
     return new Response(
       JSON.stringify({

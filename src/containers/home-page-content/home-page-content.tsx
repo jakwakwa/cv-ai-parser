@@ -9,6 +9,7 @@ import {
   Upload,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { ContentAd } from '@/src/components/adsense/AdBanner';
 import { Button } from '@/src/components/ui/ui-button/button';
 import styles from './home-page-content.module.css';
 
@@ -70,7 +71,8 @@ export default function HomePageContent() {
           </div>
 
           {/* Figma to Resume Card */}
-          <div className={styles.featureCard}>
+          <ContentAd />
+          {/* <div className={styles.featureCard}>
             <h3 className={styles.featureTitle}>Figma to Resume</h3>
             <p className={styles.featureDescription}>
               Have a resume design in Figma? Convert it directly into a
@@ -99,12 +101,12 @@ export default function HomePageContent() {
             <Button
               variant="primary"
               className={styles.featureButton}
-              onClick={() => router.push('/tools/figma-to-resume')}
+              onClick={() => router.push('/library')}
             >
               Convert Design
               <ArrowRight size={16} />
             </Button>
-          </div>
+          </div> */}
         </div>
       </section>
 

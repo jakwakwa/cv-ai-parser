@@ -30,6 +30,7 @@ import { Textarea } from '@/src/components/ui/textarea';
 import { Button } from '@/src/components/ui/ui-button/button';
 import ProfileImageUploader from '@/src/containers/profile-image-uploader/profile-image-uploader';
 import ResumeDisplay from '@/src/containers/resume-display/resume-display';
+import { useTempResumeStore } from '@/src/hooks/use-temp-resume-store';
 import styles from './resume-tailor-tool.module.css';
 
 // Add proper typing for partial data
@@ -82,6 +83,7 @@ const ResumeTailorTool = ({
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const jobSpecFileInputRef = useRef<HTMLInputElement>(null);
+  const { addTempResume, generateTempSlug } = useTempResumeStore();
 
   // File upload states
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -127,9 +129,6 @@ const ResumeTailorTool = ({
       null
     );
   const [viewLocalResume, setViewLocalResume] = useState(false);
-
-  //  usePdfDownloader hook
-  const { downloadPdf } = usePdfDownloader();
 
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -332,9 +331,16 @@ const ResumeTailorTool = ({
                       }
                     } else {
                       console.log(
-                        '[TailorTool] No resumeSlug returned, showing local preview'
+                        '[TailorTool] No resumeSlug returned, creating temp resume'
                       );
-                      setViewLocalResume(true);
+                      // Generate temporary slug and store data
+                      const tempSlug = generateTempSlug();
+                      addTempResume(
+                        tempSlug,
+                        parsedData,
+                        uploadInfo.aiTailorCommentary
+                      );
+                      router.push(`/resume/temp-resume/${tempSlug}`);
                     }
                     return;
                   }
@@ -381,20 +387,15 @@ const ResumeTailorTool = ({
         onResumeCreated(parsedData, uploadInfo);
         setLocalResumeData(parsedData);
         setAiTailorCommentary(uploadInfo.aiTailorCommentary || null);
-        if (uploadInfo.resumeSlug) {
+        if (uploadInfo.resumeSlug && isAuthenticated) {
           setCreatedResumeSlug(uploadInfo.resumeSlug);
-          if (isAuthenticated) {
-            console.log('[TailorTool] Authenticated user: Routing to /library');
-            router.push('/library');
-          } else {
-            console.log(
-              '[TailorTool] Routing to:',
-              `/resume/${uploadInfo.resumeSlug}`
-            );
-            router.push(`/resume/${uploadInfo.resumeSlug}`);
-          }
+          router.push(`/resume/${uploadInfo.resumeSlug}`);
         } else {
-          setViewLocalResume(true);
+          console.log('[TailorTool] normal user: Creating temp resume');
+          // Generate temporary slug and store data
+          const tempSlug = generateTempSlug();
+          addTempResume(tempSlug, parsedData, uploadInfo.aiTailorCommentary);
+          router.push(`/resume/temp-resume/${tempSlug}`);
         }
       }
 
@@ -483,27 +484,6 @@ const ResumeTailorTool = ({
             </div>
           )}
         </div>
-      </div>
-    );
-  }
-
-  if (viewLocalResume && localResumeData) {
-    return (
-      <div className={styles.container}>
-        <ResumeDisplayButtons
-          onDownloadPdf={() => {
-            // Use the usePdfDownloader hook instead of window.print()
-            downloadPdf(
-              document.getElementById('resume-content') as HTMLElement,
-              `${localResumeData.name?.replace(/ /g, '_') || 'resume'}.pdf`
-            );
-          }}
-          onEditResume={() => setViewLocalResume(false)}
-          onUploadNew={() => setViewLocalResume(false)}
-        />
-        <ResumeTailorCommentary aiTailorCommentary={aiTailorCommentary} />{' '}
-        {/* Render AI tailoring commentary */}
-        <ResumeDisplay resumeData={localResumeData} isAuth={false} />
       </div>
     );
   }

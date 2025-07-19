@@ -260,7 +260,6 @@ export default async function Image({
       }
     );
   } catch (error) {
-    console.error('Error generating Open Graph image:', error);
     return generateDefaultImage();
   }
 }

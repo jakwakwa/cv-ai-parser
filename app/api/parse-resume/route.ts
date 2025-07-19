@@ -95,8 +95,6 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Resume parsing failed:', error);
-
     // Handle specific AI-related errors
     if (error instanceof Error) {
       if (error.message.includes('quota')) {

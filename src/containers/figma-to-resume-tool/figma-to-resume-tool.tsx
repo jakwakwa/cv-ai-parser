@@ -10,11 +10,11 @@ import {
   Eye,
 } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import { resumeColors } from '@/src/utils/colors';
 import ColorPickerDialog from '@/src/components/color-picker/color-picker-dialog/color-picker-dialog';
 import FigmaPreview from '@/src/components/figma-preview/FigmaPreview';
 import { Button } from '@/src/components/ui/ui-button/button';
-import styles from './figma-to-resume-tool.module.css';
+import { resumeColors } from '@/src/utils/colors';
+import styles from './library-tool.module.css';
 
 interface FigmaApiResponse {
   jsx: string;

@@ -33,7 +33,6 @@ export async function GET(_request: NextRequest) {
     const resumes = await ResumeDatabase.getUserResumes(session.user.id);
     return NextResponse.json(resumes);
   } catch (error) {
-    console.error('Error fetching resumes:', error);
     return NextResponse.json(
       { error: 'Failed to fetch resumes' },
       { status: 500 }

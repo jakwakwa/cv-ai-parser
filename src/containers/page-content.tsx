@@ -8,7 +8,7 @@ import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import type { ParsedResume } from '@/lib/resume-parser/schema';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
-import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
+// import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import { Button } from '@/src/components/ui/ui-button/button';
 import ResumeDisplay from '@/src/containers/resume-display/resume-display';
 import ResumeEditor from '@/src/containers/resume-editor/resume-editor';
@@ -169,7 +169,7 @@ export default function PageContent() {
 
   return (
     <main className="mainUserContainer">
-      <TabNavigation initialView="upload" />
+      {/* <TabNavigation initialView="upload" /> */}
 
       {currentView === 'upload' && (
         <>
@@ -236,7 +236,7 @@ export default function PageContent() {
                     Transform your Figma design directly into a deployable
                     resume component
                   </p>
-                  <Button onClick={() => router.push('/tools/figma-to-resume')}>
+                  <Button onClick={() => router.push('/library')}>
                     Try Figma Tool
                   </Button>
                 </div>
@@ -253,6 +253,12 @@ export default function PageContent() {
             onDownloadPdf={handleDownloadPdf}
             onEditResume={handleEditResume}
             onUploadNew={handleReset}
+            showDownload={true}
+            showEdit={true}
+            showLibrary={false}
+            showUploadNew={true}
+            isAuthenticated={false}
+            maxMobileButtons={2}
           />
           <ResumeDisplay
             resumeData={{

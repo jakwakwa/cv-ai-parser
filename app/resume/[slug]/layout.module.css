@@ -7,12 +7,13 @@
 .mainUserContainer {
   flex-grow: 1;
   padding: var(--spacing-md);
+  background: var(--color-page-background-fallback);
+  background-image: var(--color-page-background-gradient);
 }
 
 @media (min-width: 768px) {
   .mainUserContainer {
     padding: var(--spacing-lg);
-    background: var(--color-background-dark);
   }
 }
 

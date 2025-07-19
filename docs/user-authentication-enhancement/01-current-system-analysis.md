@@ -3,6 +3,7 @@
 ## Authentication Infrastructure
 
 ### Supabase Integration
+
 - **Provider**: Supabase Auth for authentication services
 - **Client Configuration**: Browser and server-side clients configured
 - **Session Management**: Middleware-based session handling
@@ -11,6 +12,7 @@
 ### Current Authentication Flow
 
 #### 1. User Registration
+
 ```typescript
 // Location: src/components/auth-provider/auth-provider.tsx
 const signUp = async (email: string, password: string, fullName: string) => {
@@ -28,6 +30,7 @@ const signUp = async (email: string, password: string, fullName: string) => {
 ```
 
 #### 2. User Login
+
 ```typescript
 // Location: src/components/auth-provider/auth-provider.tsx
 const signIn = async (email: string, password: string) => {
@@ -40,6 +43,7 @@ const signIn = async (email: string, password: string) => {
 ```
 
 #### 3. Session Management
+
 - **Middleware**: `middleware.ts` handles session refresh
 - **Client-side**: `AuthProvider` manages authentication state
 - **Server-side**: `lib/supabase/server.ts` for SSR authentication
@@ -47,6 +51,7 @@ const signIn = async (email: string, password: string) => {
 ### User Data Structure
 
 #### Current User Profile (from Supabase Auth)
+
 ```typescript
 // From lib/types.ts
 interface Profile {
@@ -60,6 +65,7 @@ interface Profile {
 ```
 
 #### User Metadata Storage
+
 - **Location**: `user.user_metadata` in Supabase Auth
 - **Fields**: `full_name`, `avatar_url`
 - **Limitations**: No custom profile fields, limited metadata
@@ -67,6 +73,7 @@ interface Profile {
 ### Resume Management System
 
 #### Current Resume Features
+
 ```typescript
 // From lib/database.ts - ResumeDatabase class
 ✅ Save resume with user association
@@ -81,6 +88,7 @@ interface Profile {
 ```
 
 #### Resume Data Structure
+
 ```typescript
 interface Resume {
   id: string;
@@ -106,12 +114,14 @@ interface Resume {
 ### Current UI Components
 
 #### Authentication Components
+
 - **AuthComponent**: Main sign-in/sign-up form
 - **AuthModal**: Modal wrapper for authentication
 - **AuthModalContext**: Modal state management
 - **AuthProvider**: Authentication context provider
 
 #### User Management Components
+
 - **UserNav**: User navigation dropdown
   - Shows user avatar and name
   - "My Library" link
@@ -119,6 +129,7 @@ interface Resume {
 - **SiteHeader**: Main navigation with authentication state
 
 #### User Features Pages
+
 - **Library Page**: `/library` - Resume management dashboard
 - **Resume View**: `/resume/[slug]` - Individual resume viewing
 
@@ -129,7 +140,7 @@ interface Resume {
 ├── /library (User's resume library - authenticated)
 ├── /resume/[slug] (Public resume view)
 ├── /tools/tailor (AI Resume Tailor)
-├── /tools/figma-to-resume (Figma to Resume)
+├── /library (Figma to Resume)
 ├── /terms-and-conditions
 └── /privacy-policy
 ```
@@ -137,6 +148,7 @@ interface Resume {
 ### Current User Journey
 
 1. **Unauthenticated User**:
+
    - Land on homepage
    - Use tools without account
    - Sign up/in when wanting to save resumes
@@ -152,6 +164,7 @@ interface Resume {
 ## Current Limitations
 
 ### User Profile Management
+
 ❌ No user profile editing page
 ❌ Cannot update email address
 ❌ No avatar upload functionality
@@ -159,6 +172,7 @@ interface Resume {
 ❌ No account deletion option
 
 ### Security Features
+
 ❌ No password reset functionality
 ❌ No active session management
 ❌ No login activity tracking
@@ -166,18 +180,21 @@ interface Resume {
 ❌ No security dashboard
 
 ### User Preferences
+
 ❌ No user preferences/settings
 ❌ No default resume settings
 ❌ No theme customization
 ❌ No notification preferences
 
 ### Account Management
+
 ❌ No account deletion workflow
 ❌ No data export functionality
 ❌ No privacy settings
 ❌ No GDPR compliance features
 
 ### Modern SaaS Standards
+
 ❌ No user onboarding flow
 ❌ No usage analytics for users
 ❌ No subscription management (if applicable)
@@ -186,24 +203,28 @@ interface Resume {
 ## Technical Debt & Improvements Needed
 
 ### Database Schema
+
 - No dedicated `profiles` table for extended user information
 - Limited user metadata storage
 - No user preferences table
 - No user activity tracking tables
 
 ### API Endpoints
+
 - No user profile management endpoints
 - No password reset endpoints
 - No account deletion endpoints
 - No user preferences endpoints
 
 ### Security Considerations
+
 - Need stronger password policies
 - Need rate limiting for authentication
 - Need audit logging for sensitive operations
 - Need GDPR compliance measures
 
 ### UX/UI Improvements
+
 - Need comprehensive settings page
 - Need better user onboarding
 - Need account security dashboard

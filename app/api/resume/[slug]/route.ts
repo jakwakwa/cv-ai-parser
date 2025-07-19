@@ -20,7 +20,6 @@ export async function GET(
 
     return NextResponse.json({ data: resume });
   } catch (error) {
-    console.error('Error fetching resume by slug:', error);
     const errorMessage =
       error instanceof Error ? error.message : 'An unknown error occurred.';
     return NextResponse.json(

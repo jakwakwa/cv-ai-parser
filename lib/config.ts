@@ -27,3 +27,14 @@ export const REGEX_CONFIDENCE_THRESHOLD = 30;
 export const MAX_REGEX_CONFIDENCE = 85;
 
 export const IS_JOB_TAILORING_ENABLED = true;
+
+/**
+ * Development helper: Keep temp resumes persistent for testing.
+ * When true, temp resumes won't be auto-cleaned up, making development easier.
+ * Set to false to test production-like cleanup behavior.
+ * 
+ * Usage:
+ * - true: Resume data persists across browser refreshes, navigation, etc. (great for testing)
+ * - false: Resume data gets cleaned up like in production (auto-cleanup on page unload, etc.)
+ */
+export const KEEP_TEMP_RESUMES_FOR_TESTING = false;

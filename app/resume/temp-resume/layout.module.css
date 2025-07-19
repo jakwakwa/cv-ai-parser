@@ -1,0 +1,206 @@
+.pageWrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.mainUserContainer {
+  flex-grow: 1;
+  padding: var(--spacing-md);
+  background-color: var(--color-background-dark);
+  /* background-image: linear-gradient(
+    to right top,
+    #7f6355,
+    #83745d,
+    #84856c,
+    #849681,
+    #87a69a,
+    #88a89c,
+    #88aa9f,
+    #89aca1,
+    #87a18c,
+    #889479,
+    #8a876a,
+    #8c795f
+  ); */
+  /* background-image: linear-gradient(
+    to right top,
+    #3b2e27,
+    #473c30,
+    #524b3a,
+    #5a5a45,
+    #616b54,
+    #6c795f,
+    #76876a,
+    #819576,
+    #97a47e,
+    #b0b286,
+    #cbc08f,
+    #e7cd9b
+  ); */
+  /* background-image: linear-gradient(
+    to left top,
+    #4a3c29,
+    #534431,
+    #5c4c39,
+    #655541,
+    #6e5d49,
+    #776651,
+    #7f705a,
+    #887963,
+    #91856f,
+    #9b917b,
+    #a59d88,
+    #afa995
+  ); */
+  /* background-image: linear-gradient(
+    to left top,
+    #322f2c,
+    #3b3936,
+    #45433f,
+    #4f4d4a,
+    #595754,
+    #615f5b,
+    #696762,
+    #717069,
+    #77786f,
+    #7d8175,
+    #818a7c,
+    #859384
+  ); */
+  /* background-image: linear-gradient(
+    to left bottom,
+    #101e20,
+    #162123,
+    #1b2526,
+    #212829,
+    #262c2c,
+    #2b3030,
+    #2f3333,
+    #343737,
+    #393b3c,
+    #3e3f40,
+    #434444,
+    #484848
+  ); */
+  /* background-image: radial-gradient(
+    circle,
+    #0f8f86,
+    #1f7d77,
+    #276b67,
+    #2b5a58,
+    #2c4948,
+    #2b4142,
+    #29393b,
+    #283133,
+    #272f33,
+    #272e33,
+    #282c32,
+    #292a31
+  ); */
+  background-image: linear-gradient(
+    to bottom,
+    #285955,
+    #295553,
+    #2a5250,
+    #2b4e4e,
+    #2c4b4b,
+    #2b4749,
+    #2a4447,
+    #2a4045,
+    #2a3a42,
+    #2a353d,
+    #2a2f37,
+    #292a31
+  );
+  /* 
+  background-image: linear-gradient(
+    to bottom,
+    #d2ecea,
+    #c9e3e1,
+    #bfdad9,
+    #b6d2d0,
+    #adc9c8,
+    #a4c0c0,
+    #9bb6b8,
+    #93adb0,
+    #89a1a6,
+    #80969c,
+    #788a92,
+    #6f7f87
+  );
+  background-image: linear-gradient(
+    to right bottom,
+    #ecfaf9,
+    #e9f7f3,
+    #e7f4ec,
+    #e7f1e6,
+    #e8eddf,
+    #dce3d5,
+    #d1d8ca,
+    #c5cec0,
+    #aabbb1,
+    #93a7a4,
+    #7f9396,
+    #6f7f87
+  ); */
+  /* background-image: linear-gradient(
+    to left top,
+    #eff3f3,
+    #eef2f2,
+    #edf2f2,
+    #ecf1f1,
+    #ebf0f0,
+    #eaf0f0,
+    #e8f1f1,
+    #e7f1f1,
+    #e6f3f2,
+    #e5f5f3,
+    #e4f6f3,
+    #e3f8f3
+  );
+  background-image: linear-gradient(
+    to left top,
+    #656969,
+    #6c7575,
+    #738181,
+    #7a8d8d,
+    #819999,
+    #89a2a2,
+    #90aaaa,
+    #98b3b3,
+    #a2b9b9,
+    #acc0c0,
+    #b7c6c6,
+    #c1cdcd
+  ); */
+  background-image: linear-gradient(
+    to left top,
+    #656969,
+    #6f7373,
+    #787d7d,
+    #828888,
+    #8c9292,
+    #8a9090,
+    #878f8f,
+    #858d8d,
+    #777f7f,
+    #687171,
+    #5b6464,
+    #4d5757
+  );
+}
+
+@media (min-width: 768px) {
+  .mainUserContainer {
+    padding: var(--spacing-lg);
+  }
+}
+
+.resumeContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}

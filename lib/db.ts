@@ -30,251 +30,218 @@ export default prisma;
 if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma;
 
 export class ResumeDatabase {
-  // Save a new resume
-  static async saveResume({
-    title,
-    originalFilename,
-    fileType,
-    fileSize,
-    parsedData,
-    parseMethod,
-    confidenceScore,
-    isPublic = false,
-    userId,
-    slug,
-    customColors,
-    additionalContext,
-  }: {
-    title: string;
-    originalFilename?: string;
-    fileType?: string;
-    fileSize?: number;
-    parsedData: unknown;
-    parseMethod?: string;
-    confidenceScore?: number;
-    isPublic?: boolean;
+  /**
+   * Save a new resume to the database
+   */
+  static async saveResume(data: {
     userId: string;
+    title: string;
+    originalFilename: string;
+    fileType: string;
+    fileSize: number;
+    parsedData: any; // EnhancedParsedResume
+    parseMethod: string;
+    confidenceScore: number;
+    isPublic: boolean;
     slug: string;
-    customColors?: Record<string, string>;
     additionalContext?: UserAdditionalContext;
-  }) {
+  }): Promise<Resume> {
     try {
-      // --- LOGGING: Log data before saving ---
-      console.log('[DB] Saving resume:', {
-        userId,
-        title,
-        originalFilename,
-        fileType,
-        fileSize,
-        parsedData,
-        parseMethod,
-        confidenceScore,
-        isPublic,
-        slug,
-        customColors,
-        additionalContext,
-      });
-      const resume = await prisma.resume.create({
+      const resume = await db.resume.create({
         data: {
-          title,
-          originalFilename,
-          fileType,
-          fileSize,
-          parsedData: parsedData as string,
-          parseMethod,
-          confidenceScore,
-          isPublic,
-          slug,
-
-          customColors: customColors as any,
-
-          additionalContext: additionalContext as any,
-          user: {
-            connect: { id: userId },
-          },
+          userId: data.userId,
+          title: data.title,
+          originalFilename: data.originalFilename,
+          fileType: data.fileType,
+          fileSize: data.fileSize,
+          parsedData: data.parsedData as Prisma.JsonValue,
+          parseMethod: data.parseMethod,
+          confidenceScore: data.confidenceScore,
+          isPublic: data.isPublic,
+          slug: data.slug,
+          additionalContext: data.additionalContext as Prisma.JsonValue,
+          viewCount: 0,
+          downloadCount: 0,
         },
       });
-      // --- LOGGING: Log result after saving ---
-      console.log('[DB] Resume saved:', resume);
-      return resume as unknown as Resume;
+
+      return resume;
     } catch (error) {
-      console.error('Error saving resume:', error);
-      throw new Error('Failed to save resume.');
+      throw new Error('Error saving resume');
     }
   }
 
-  // Get user's resumes
+  /**
+   * Get all resumes for a specific user
+   */
   static async getUserResumes(userId: string): Promise<Resume[]> {
     try {
-      const resumes = await prisma.resume.findMany({
+      const resumes = await db.resume.findMany({
         where: { userId },
         orderBy: { createdAt: 'desc' },
       });
-      return resumes as unknown as Resume[];
+      return resumes;
     } catch (error) {
-      console.error('Error fetching user resumes:', error);
-      throw new Error('Failed to fetch user resumes.');
+      throw new Error('Error fetching user resumes');
     }
   }
 
-  // Get a specific resume
+  /**
+   * Get a specific resume by ID
+   */
   static async getResume(id: string): Promise<Resume | null> {
     try {
-      const resume = await prisma.resume.findUnique({
+      const resume = await db.resume.findUnique({
         where: { id },
       });
-      return resume as unknown as Resume | null;
+      return resume;
     } catch (error) {
-      console.error('Error fetching resume:', error);
-      throw new Error('Failed to fetch resume.');
+      throw new Error('Error fetching resume');
     }
   }
 
-  // New method for retrieving context
+  /**
+   * Get a resume with additional context
+   */
   static async getResumeWithContext(id: string): Promise<Resume | null> {
     try {
-      const resume = await prisma.resume.findUnique({
+      const resume = await db.resume.findUnique({
         where: { id },
-      });
-      return resume as unknown as Resume | null;
-    } catch (error) {
-      console.error('Error fetching resume with context:', error);
-      throw new Error('Failed to fetch resume with context.');
-    }
-  }
-
-  // Get public resume by slug
-  static async getPublicResume(slug: string): Promise<Resume | null> {
-    try {
-      const resume = await prisma.resume.findUnique({
-        where: { slug, isPublic: true },
-      });
-      return resume as unknown as Resume | null;
-    } catch (error) {
-      console.error('Error fetching public resume:', error);
-      throw new Error('Failed to fetch public resume.');
-    }
-  }
-
-  // Get all public resumes for sitemap
-  static async getAllPublicResumes(): Promise<
-    { slug: string; updatedAt: string }[]
-  > {
-    try {
-      const resumes = await prisma.resume.findMany({
-        where: { isPublic: true },
-        select: { slug: true, updatedAt: true },
-      });
-      return resumes.map((r: { slug: string; updatedAt: Date }) => ({
-        ...r,
-        updatedAt: r.updatedAt.toISOString(),
-      }));
-    } catch (error) {
-      console.error('Error fetching public resumes:', error);
-      throw new Error('Failed to fetch public resumes.');
-    }
-  }
-
-  // Update resume
-  static async updateResume(
-    id: string,
-    updates: Partial<Resume> & { customColors?: Record<string, string> }
-  ): Promise<Resume> {
-    try {
-      // biome-ignore lint/correctness/noUnusedVariables: <any>
-      const { slug, additionalContext, ...restOfUpdates } = updates;
-      const resume = await prisma.resume.update({
-        where: { id },
-        data: {
-          ...restOfUpdates,
-          customColors: updates.customColors as any,
-
-          parsedData: updates.parsedData as any,
+        include: {
+          user: {
+            select: { id: true, name: true, email: true },
+          },
         },
       });
-
-      // Convert Date fields to ISO string to match Resume type expectations
-      if (resume && typeof resume.createdAt === 'object' && resume.createdAt instanceof Date) {
-        (resume as any).createdAt = resume.createdAt.toISOString();
-      }
-      if (resume && typeof resume.updatedAt === 'object' && resume.updatedAt instanceof Date) {
-        (resume as any).updatedAt = resume.updatedAt.toISOString();
-      }
-
-      return resume as unknown as Resume;
+      return resume;
     } catch (error) {
-      console.error(`Error updating resume ${id}:`, error);
-      throw new Error('Failed to update resume.');
+      throw new Error('Error fetching resume with context');
     }
   }
 
-  // Delete resume
-  static async deleteResume(id: string) {
+  /**
+   * Get a public resume by slug
+   */
+  static async getPublicResume(slug: string): Promise<Resume | null> {
     try {
-      await prisma.resume.delete({
+      const resume = await db.resume.findFirst({
+        where: { slug, isPublic: true },
+      });
+      return resume;
+    } catch (error) {
+      throw new Error('Error fetching public resume');
+    }
+  }
+
+  /**
+   * Get all public resumes (for sitemap generation)
+   */
+  static async getAllPublicResumes(): Promise<
+    Array<{ slug: string; updatedAt: Date }>
+  > {
+    try {
+      const resumes = await db.resume.findMany({
+        where: { isPublic: true },
+        select: { slug: true, updatedAt: true },
+        orderBy: { updatedAt: 'desc' },
+      });
+      return resumes;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  /**
+   * Update a resume
+   */
+  static async updateResume(
+    id: string,
+    data: Partial<{
+      title: string;
+      parsedData: any;
+      isPublic: boolean;
+      slug: string;
+    }>
+  ): Promise<Resume> {
+    try {
+      const updatedResume = await db.resume.update({
+        where: { id },
+        data: {
+          ...data,
+          parsedData: data.parsedData
+            ? (data.parsedData as Prisma.JsonValue)
+            : undefined,
+        },
+      });
+      return updatedResume;
+    } catch (error) {
+      throw new Error('Error updating resume');
+    }
+  }
+
+  /**
+   * Delete a resume
+   */
+  static async deleteResume(id: string): Promise<void> {
+    try {
+      await db.resume.delete({
         where: { id },
       });
     } catch (error) {
-      console.error('Error deleting resume:', error);
-      throw new Error('Failed to delete resume.');
+      throw new Error('Error deleting resume');
     }
   }
 
-  // Save resume version
-  static async saveResumeVersion(
-    resumeId: string,
-
-    parsedData: any,
-    changesSummary?: string
-  ) {
+  /**
+   * Save a resume version for tracking
+   */
+  static async saveResumeVersion(data: {
+    resumeId: string;
+    versionNumber: number;
+    parsedData: any;
+    changesSummary: string;
+  }): Promise<any> {
     try {
-      const latestVersion = await prisma.resumeVersion.findFirst({
-        where: { resumeId },
-        orderBy: { versionNumber: 'desc' },
-      });
-
-      const nextVersion = latestVersion ? latestVersion.versionNumber + 1 : 1;
-
-      const version = await prisma.resumeVersion.create({
+      const version = await db.resumeVersion.create({
         data: {
-          resumeId,
-          versionNumber: nextVersion,
-
-          parsedData: parsedData as any,
-          changesSummary: changesSummary,
+          resumeId: data.resumeId,
+          versionNumber: data.versionNumber,
+          parsedData: data.parsedData as Prisma.JsonValue,
+          changesSummary: data.changesSummary,
         },
       });
       return version;
     } catch (error) {
-      console.error('Error saving resume version:', error);
-      throw new Error('Failed to save resume version.');
+      throw new Error('Error saving resume version');
     }
   }
 
-  // Get resume versions
-  static async getResumeVersions(resumeId: string) {
+  /**
+   * Get all versions for a resume
+   */
+  static async getResumeVersions(resumeId: string): Promise<any[]> {
     try {
-      const versions = await prisma.resumeVersion.findMany({
+      const versions = await db.resumeVersion.findMany({
         where: { resumeId },
         orderBy: { versionNumber: 'desc' },
       });
       return versions;
     } catch (error) {
-      console.error('Error fetching resume versions:', error);
-      throw new Error('Failed to fetch resume versions.');
+      throw new Error('Error fetching resume versions');
     }
   }
 
-  // Increment view count
-  static async incrementViewCount(id: string) {
+  /**
+   * Increment view count for a resume
+   */
+  static async incrementViewCount(id: string): Promise<void> {
     try {
-      await prisma.resume.update({
+      await db.resume.update({
         where: { id },
         data: { viewCount: { increment: 1 } },
       });
     } catch (error) {
-      console.error('Error incrementing view count:', error);
-      throw new Error('Error incrementing view count.');
+      throw new Error('Error incrementing view count');
     }
   }
 }

@@ -2,6 +2,7 @@
 
 import { ArrowLeft } from 'lucide-react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
@@ -39,6 +40,7 @@ export default function ViewResumePage() {
   const { slug } = params;
   const { isDownloading, downloadPdf } = usePdfDownloader();
   const { toast } = useToast();
+  const { data: session } = useSession();
 
   const [viewMode, setViewMode] = useState<'view' | 'edit'>('view');
   const [resume, setResume] = useState<Resume | null>(null);
@@ -270,9 +272,17 @@ export default function ViewResumePage() {
       <ResumeDisplayButtons
         onDownloadPdf={handleDownloadPdf}
         onEditResume={handleEdit}
+        onMyLibrary={() => router.push('/library')}
+        onUploadNew={() => router.push('/tools/tailor')}
+        showDownload={true}
+        showEdit={true}
+        showLibrary={true}
+        showUploadNew={true}
+        isAuthenticated={!!session}
         isOnResumePage={true}
+        maxMobileButtons={2}
       />
-      <ResumeTailorCommentary aiTailorCommentary={aiTailorCommentary} />{' '}
+      <ResumeTailorCommentary aiTailorCommentary={aiTailorCommentary} />
       <ResumeDisplay resumeData={resume.parsedData} isAuth={true} />
     </div>
   );

@@ -1,13 +1,13 @@
 'use client';
 
 import clsx from 'clsx';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 import styles from './DocsLayout.module.css';
 
-const TOC = dynamic(() => import('./TOC'), { ssr: false });
+// const TOC = dynamic(() => import('./TOC'), { ssr: false });
 
 interface DocsLayoutProps {
   children: ReactNode;
@@ -25,18 +25,18 @@ export default function DocsLayout({ children }: DocsLayoutProps) {
           <ul className={styles.sidebarNav}>
             <li>
               <Link
-                href="/docs"
+                href="/docs/"
                 className={clsx(
                   styles.navLink,
                   pathname === '/docs' && styles.navLinkActive
                 )}
               >
-                Getting Started
+                Docs
               </Link>
             </li>
             <li>
               <Link
-                href="/docs/guides"
+                href="/docs"
                 className={clsx(
                   styles.navLink,
                   pathname.startsWith('/docs/guides') && styles.navLinkActive
@@ -51,11 +51,6 @@ export default function DocsLayout({ children }: DocsLayoutProps) {
 
       {/* Main content */}
       <main className={styles.content}>{children}</main>
-
-      {/* Right sidebar – Table of contents */}
-      <aside className={styles.toc}>
-        <TOC />
-      </aside>
     </div>
   );
 }

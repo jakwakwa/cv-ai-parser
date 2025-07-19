@@ -45,7 +45,7 @@ export function UserNav() {
         </div>
 
         <DropdownMenuItem className={styles.dropdownMenuItem} asChild>
-          <Link href="/library">My Library</Link>
+          <Link href={'/library'}>My Library</Link>
         </DropdownMenuItem>
 
         <DropdownMenuItem

@@ -353,81 +353,180 @@ function extractCertifications(
 export function parseWithRegex(content: string): {
   data: ParsedResume;
   confidence: number;
+  method: string;
 } {
-  console.log('Starting fallback regex parsing...');
-  const lines = content
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean);
+  const lines = content.split('\n').map((line) => line.trim());
+  const normalizedContent = content.toLowerCase();
 
-  const { name, title } = extractNameAndTitle(lines);
-  const contact = extractContactInfo(content);
-
-  const summaryEndKeywords = ALL_SECTION_KEYWORDS.filter(
-    (k) => !SECTIONS.SUMMARY.includes(k)
-  );
-  const summary = extractSectionContent(
-    content,
-    SECTIONS.SUMMARY,
-    summaryEndKeywords
-  );
-
-  const experienceEndKeywords = ALL_SECTION_KEYWORDS.filter(
-    (k) => !SECTIONS.EXPERIENCE.includes(k)
-  );
-  const experience = extractExperience(content, experienceEndKeywords);
-
-  const educationEndKeywords = ALL_SECTION_KEYWORDS.filter(
-    (k) => !SECTIONS.EDUCATION.includes(k)
-  );
-  const education = extractEducation(content, educationEndKeywords);
-
-  const certificationsEndKeywords = ALL_SECTION_KEYWORDS.filter(
-    (k) => !SECTIONS.CERTIFICATIONS.includes(k)
-  );
-  const certifications = extractCertifications(
-    content,
-    certificationsEndKeywords
-  );
-
-  const skillsEndKeywords = ALL_SECTION_KEYWORDS.filter(
-    (k) => !SECTIONS.SKILLS.includes(k)
-  );
-  const skillsText = extractSectionContent(
-    content,
-    SECTIONS.SKILLS,
-    skillsEndKeywords
-  );
-  const skills = skillsText
-    .split(/[,•\n|]/)
-    .map((s) => s.trim())
-    .filter(Boolean);
-
-  let confidence = 0;
-  if (name !== 'Unknown Name') confidence += 20;
-  if (title !== 'Professional') confidence += 15;
-  if (contact && Object.keys(contact).length > 0) confidence += 20;
-  if (summary.length > 20) confidence += 10;
-  if (experience.length > 0) confidence += 20;
-  if (education && education.length > 0) confidence += 10;
-  if (certifications && certifications.length > 0) confidence += 5;
-  if (skills.length > 0) confidence += 10;
-
-  const parsedData: ParsedResume = {
-    name,
-    title,
-    summary: summary || 'Summary not found.',
-    contact,
-    experience: experience.length > 0 ? experience : [],
-    education: education && education.length > 0 ? education : [],
-    certifications:
-      certifications && certifications.length > 0 ? certifications : [],
-    skills: skills.length > 0 ? skills : ['Skills not found.'],
+  // Initialize resume data
+  const resume: ParsedResume = {
+    name: '',
+    title: '',
+    contact: {},
+    summary: '',
+    experience: [],
+    education: [],
+    skills: [],
+    certifications: [],
   };
 
-  console.log(`Regex parsing completed with ${confidence}% confidence.`);
+  // Confidence tracking
+  let foundFields = 0;
+  const totalFields = 7; // name, title, contact, summary, experience, education, skills
+
+  // Name extraction
+  const namePatterns = [
+    /^([A-Z][a-z]+ [A-Z][a-z]+(?:\s[A-Z][a-z]+)?)\s*$/,
+    /name[:\s]+([A-Z][a-z]+ [A-Z][a-z]+(?:\s[A-Z][a-z]+)?)/i,
+  ];
+
+  for (const line of lines.slice(0, 10)) {
+    if (line.length > 5 && line.length < 50) {
+      for (const pattern of namePatterns) {
+        const match = line.match(pattern);
+        if (match) {
+          resume.name = match[1] || match[0];
+          foundFields++;
+          break;
+        }
+      }
+      if (resume.name) break;
+    }
+  }
+
+  // Email extraction
+  const emailMatch = content.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/);
+  if (emailMatch) {
+    resume.contact.email = emailMatch[0];
+    foundFields++;
+  }
+
+  // Phone extraction
+  const phoneMatch = content.match(/(\+?1?\s?[-.]?\(?\d{3}\)?[-.]?\s?\d{3}[-.]?\d{4})/);
+  if (phoneMatch) {
+    resume.contact.phone = phoneMatch[0];
+    foundFields++;
+  }
+
+  // Title extraction (job title or professional summary title)
+  const titlePatterns = [
+    /^(software engineer|developer|analyst|manager|consultant|director|senior|junior|lead)/i,
+    /(frontend|backend|full.?stack|web|mobile)\s+(developer|engineer)/i,
+  ];
+
+  for (const line of lines.slice(0, 15)) {
+    for (const pattern of titlePatterns) {
+      if (pattern.test(line)) {
+        resume.title = line;
+        foundFields++;
+        break;
+      }
+    }
+    if (resume.title) break;
+  }
+
+  // Summary extraction
+  const summaryKeywords = ['summary', 'profile', 'objective', 'about'];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].toLowerCase();
+    if (summaryKeywords.some((keyword) => line.includes(keyword))) {
+      const summaryLines = [];
+      for (let j = i + 1; j < Math.min(i + 5, lines.length); j++) {
+        if (lines[j].length > 20) {
+          summaryLines.push(lines[j]);
+        }
+      }
+      if (summaryLines.length > 0) {
+        resume.summary = summaryLines.join(' ');
+        foundFields++;
+        break;
+      }
+    }
+  }
+
+  // Experience extraction
+  const experienceKeywords = ['experience', 'work history', 'employment', 'career'];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].toLowerCase();
+    if (experienceKeywords.some((keyword) => line.includes(keyword))) {
+      // Look for experience entries in the following lines
+      for (let j = i + 1; j < Math.min(i + 20, lines.length); j++) {
+        const expLine = lines[j];
+        if (expLine.length > 15 && expLine.includes('-')) {
+          // Basic experience entry pattern
+          const parts = expLine.split('-');
+          if (parts.length >= 2) {
+            resume.experience.push({
+              position: parts[0].trim(),
+              company: parts[1].trim(),
+              startDate: '',
+              endDate: '',
+              details: [],
+            });
+          }
+        }
+      }
+      if (resume.experience.length > 0) {
+        foundFields++;
+      }
+      break;
+    }
+  }
+
+  // Education extraction
+  const educationKeywords = ['education', 'academic', 'degree', 'university', 'college'];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].toLowerCase();
+    if (educationKeywords.some((keyword) => line.includes(keyword))) {
+      for (let j = i + 1; j < Math.min(i + 10, lines.length); j++) {
+        const eduLine = lines[j];
+        if (eduLine.length > 10) {
+          resume.education.push({
+            degree: eduLine,
+            institution: '',
+            graduationDate: '',
+          });
+          foundFields++;
+          break;
+        }
+      }
+      break;
+    }
+  }
+
+  // Skills extraction
+  const skillsKeywords = ['skills', 'technologies', 'technical skills', 'competencies'];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].toLowerCase();
+    if (skillsKeywords.some((keyword) => line.includes(keyword))) {
+      for (let j = i + 1; j < Math.min(i + 10, lines.length); j++) {
+        const skillLine = lines[j];
+        if (skillLine.includes(',')) {
+          const skills = skillLine.split(',').map((s) => s.trim()).filter((s) => s.length > 0);
+          resume.skills.push(...skills);
+          foundFields++;
+          break;
+        }
+      }
+      break;
+    }
+  }
+
+  // Calculate confidence
+  const baseConfidence = (foundFields / totalFields) * 100;
+  
+  // Adjust confidence based on content quality
+  let confidence = Math.round(baseConfidence);
+  
+  if (normalizedContent.length < 100) {
+    confidence = Math.max(confidence - 30, 10);
+  } else if (normalizedContent.length > 2000) {
+    confidence = Math.min(confidence + 10, 85);
+  }
+
   return {
-    data: parsedData,
-    confidence: Math.min(confidence, MAX_REGEX_CONFIDENCE),
+    data: resume,
+    confidence: Math.max(confidence, 15), // Minimum confidence for regex parsing
+    method: 'regex',
   };
 }

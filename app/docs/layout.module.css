@@ -1,12 +1,7 @@
-/**
- * Layout: Docs
- * Refactored to use design tokens following ITCSS architecture
- */
-
 .docsRoot {
   background: var(--color-background-primary);
   flex: 1;
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
   display: flex;
   flex-direction: column;
 }

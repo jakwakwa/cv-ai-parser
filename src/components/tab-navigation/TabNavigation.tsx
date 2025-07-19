@@ -7,9 +7,13 @@ import styles from './TabNavigation.module.css';
 
 interface TabNavigationProps {
   initialView: 'upload' | 'library';
+  adSpace?: any;
 }
 
-export default function TabNavigation({ initialView }: TabNavigationProps) {
+export default function TabNavigation({
+  initialView,
+  adSpace,
+}: TabNavigationProps) {
   const router = useRouter();
   const [currentView, setCurrentView] = useState(initialView);
 
@@ -26,17 +30,19 @@ export default function TabNavigation({ initialView }: TabNavigationProps) {
         variant="default"
         onClick={() => handleTabClick('upload')}
         className={`${styles.tabButton} ${currentView === 'upload' ? styles.activeTab : styles.inactiveTab}`}
+        style={{ marginBottom: '0.2rem' }}
       >
         Tailor New Resume
       </Button>
-      <Button
-        type="button"
-        variant="primary"
-        onClick={() => handleTabClick('library')}
-        className={`${styles.tabButton} ${currentView === 'library' ? styles.activeTab : styles.inactiveTab}`}
-      >
-        My Library
-      </Button>
+      <hr
+        style={{
+          borderTop: '1px solid var(--color-border-light)',
+          height: '1px',
+          width: '100%',
+          marginBottom: '0.5rem',
+        }}
+      />
+      {adSpace}
     </div>
   );
 }

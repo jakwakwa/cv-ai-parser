@@ -1,47 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import FigmaToResumeTool from '@/src/containers/figma-to-resume-tool/figma-to-resume-tool';
+import adBannerStyles from '@/src/components/adsense/AdBanner.module.css'; // Import AdBanner styles
 import styles from './page.module.css';
 
-interface FigmaGenerationInfo {
-  componentName: string;
-  jsxCode: string;
-  cssCode: string;
-  rawFigma?: Record<string, unknown>;
-  customColors?: Record<string, string>;
-  extractedColors?: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    all: string[];
-  };
-}
+// No need for FigmaGenerationInfo or state hooks as functionality is disabled
 
 export default function FigmaToResumePage() {
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleResumeGenerated = (info: FigmaGenerationInfo) => {
-    // Enhanced handler with more detailed feedback
-    const successMessage = info.extractedColors
-      ? `Component ${info.componentName} was created with ${info.extractedColors.all.length} extracted colors.`
-      : `Component ${info.componentName} was created successfully from your Figma design.`;
-
-    toast({
-      title: 'Resume Generated',
-      description: successMessage,
-    });
-
-    // Log generation details for debugging
-    console.log('Figma component generated:', {
-      name: info.componentName,
-      colors: info.extractedColors?.all.length || 0,
-      hasCustomColors: !!info.customColors,
-    });
-  };
-
   return (
     <div className={styles.pageContainer}>
       <div className={styles.headerSection}>
@@ -52,11 +16,17 @@ export default function FigmaToResumePage() {
         </p>
       </div>
 
-      <FigmaToResumeTool
-        onResumeGenerated={handleResumeGenerated}
-        isLoading={isLoading}
-        setIsLoading={setIsLoading}
-      />
+      {/* Placeholder for coming soon content */}
+      <div
+        className={adBannerStyles.fallbackContainer}
+        style={{ minHeight: '200px' }}
+      >
+        <div className={adBannerStyles.fallbackContent}>
+          <span className={adBannerStyles.fallbackText}>
+            Coming Soon: Figma to Resume is under development.
+          </span>
+        </div>
+      </div>
     </div>
   );
 }
