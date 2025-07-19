@@ -2,10 +2,10 @@
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { FooterAd, HeaderAd } from '@/src/components/adsense/AdBanner';
-import ResumeTailorTool from '@/src/containers/resume-tailor-tool/resume-tailor-tool';
+import ResumeGeneratorTool from '@/src/containers/tool-containers/resume-generator-tool/resume-generator-tool';
 import styles from './page.module.css';
 
-export default function ResumeTailorPage() {
+export default function AiResumeTailorPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { data: session, status } = useSession();
 
@@ -17,14 +17,14 @@ export default function ResumeTailorPage() {
     <div className={styles.pageContainer}>
       {shouldShowAds && <HeaderAd />}
       <div className={styles.headerSection}>
-        <h1 className={styles.title}>AI Resume Tailor</h1>
+        <h1 className={styles.title}>AI Resume Generator</h1>
         <p className={styles.subtitle}>
-          Upload your resume and a job description to create a perfectly
-          tailored resume
+          Upload your resume and a job description to generate a beautifully
+          customised version from the original file
         </p>
       </div>
 
-      <ResumeTailorTool
+      <ResumeGeneratorTool
         isLoading={isLoading}
         setIsLoading={setIsLoading}
         isAuthenticated={!!session}

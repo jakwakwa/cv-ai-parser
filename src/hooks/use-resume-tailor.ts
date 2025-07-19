@@ -1,17 +1,16 @@
-import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTempResumeStore } from './use-temp-resume-store';
-import { ResumeParsingService } from '@/src/containers/resume-tailor-tool/api-service';
-import { FILE_UPLOAD_LIMITS, CHARACTER_LIMITS, ERROR_MESSAGES } from '@/src/containers/resume-tailor-tool/constants';
+import { useRef, useState } from 'react';
+import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
+import { createFormData, parseResume } from '@/src/containers/tool-containers/api-service';
+import { CHARACTER_LIMITS, ERROR_MESSAGES, FILE_UPLOAD_LIMITS } from '@/src/containers/tool-containers/resume-tailor-tool/constants';
 import type {
-  ResumeTailorState,
-  PartialResumeData,
-  StreamUpdate,
   JobSpecMethod,
-  ToneOption,
   ParseInfo,
-} from '@/src/containers/resume-tailor-tool/types';
-import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
+  ResumeTailorState,
+  StreamUpdate,
+  ToneOption,
+} from '@/src/containers/tool-containers/types';
+import { useTempResumeStore } from './use-temp-resume-store';
 
 const initialState: ResumeTailorState = {
   uploadedFile: null,
@@ -21,7 +20,6 @@ const initialState: ResumeTailorState = {
   jobSpecFile: null,
   tone: 'Neutral',
   extraPrompt: '',
-  tailorEnabled: false,
   showErrorModal: false,
   modalErrorMessage: '',
   showColorDialog: false,
@@ -32,6 +30,7 @@ const initialState: ResumeTailorState = {
   profileImage: '',
   customColors: {},
   localResumeData: null,
+  isProcessing: false, // Add this field
 };
 
 export function useResumeTailor(isAuthenticated: boolean) {
@@ -68,8 +67,7 @@ export function useResumeTailor(isAuthenticated: boolean) {
     if (!state.uploadedFile) {
       return ERROR_MESSAGES.NO_FILE;
     }
-
-    if (state.tailorEnabled) {
+   
       if (state.jobSpecMethod === 'paste' && !state.jobSpecText.trim()) {
         return ERROR_MESSAGES.NO_JOB_DESCRIPTION;
       }
@@ -79,7 +77,8 @@ export function useResumeTailor(isAuthenticated: boolean) {
       if (state.jobSpecText.length > CHARACTER_LIMITS.JOB_SPEC) {
         return ERROR_MESSAGES.JOB_SPEC_TOO_LONG(state.jobSpecText.length);
       }
-    }
+  
+
 
     return null;
   };
@@ -116,7 +115,7 @@ export function useResumeTailor(isAuthenticated: boolean) {
   const setJobSpecText = (text: string) => updateState({ jobSpecText: text });
   const setTone = (tone: ToneOption) => updateState({ tone });
   const setExtraPrompt = (prompt: string) => updateState({ extraPrompt: prompt });
-  const setTailorEnabled = (enabled: boolean) => updateState({ tailorEnabled: enabled });
+
   const setProfileImage = (image: string) => updateState({ profileImage: image });
   const setCustomColors = (colors: Record<string, string>) => updateState({ customColors: colors });
   const setShowColorDialog = (show: boolean) => updateState({ showColorDialog: show });
@@ -150,7 +149,7 @@ export function useResumeTailor(isAuthenticated: boolean) {
   };
 
   // Success handling
-  const handleSuccessfulParse = (parsedData: EnhancedParsedResume, uploadInfo?: ParseInfo) => {
+  const handleSuccessfulParse = (parsedData: ParsedResumeSchema, uploadInfo?: ParseInfo) => {
     updateState({
       localResumeData: parsedData,
       aiTailorCommentary: uploadInfo?.aiTailorCommentary || null,
@@ -180,10 +179,15 @@ export function useResumeTailor(isAuthenticated: boolean) {
       return;
     }
 
-    updateState({ error: '' });
+    updateState({ 
+      error: '', 
+      isProcessing: true, // Set processing to true when starting
+      streamingProgress: 0,
+      streamingMessage: 'Preparing your resume...'
+    });
 
     try {
-      const formData = ResumeParsingService.createFormData(state, isAuthenticated);
+      const formData = createFormData(state, isAuthenticated);
 
       // Log form data for debugging
       const formDataLog: Record<string, string | File> = {};
@@ -194,7 +198,7 @@ export function useResumeTailor(isAuthenticated: boolean) {
       });
       console.log('[TailorTool] Submitting resume:', formDataLog);
 
-      const result = await ResumeParsingService.parseResume(formData, handleStreamUpdate);
+      const result = await parseResume(formData, handleStreamUpdate);
       
       if (result.status === 'completed' && result.data) {
         handleSuccessfulParse(result.data, result.meta);
@@ -219,6 +223,7 @@ Your progress has been saved and you can continue from where you left off.`;
         streamingProgress: 0,
         streamingMessage: '',
         partialResumeData: null,
+        isProcessing: false, // Reset processing when done
       });
     }
   };
@@ -245,7 +250,6 @@ Your progress has been saved and you can continue from where you left off.`;
     setJobSpecText,
     setTone,
     setExtraPrompt,
-    setTailorEnabled,
     setProfileImage,
     setCustomColors,
     setShowColorDialog,

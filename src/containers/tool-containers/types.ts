@@ -1,4 +1,4 @@
-import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
+import type { ParsedResumeSchema } from "@/lib/tools-lib/shared-parsed-resume-schema";
 
 export interface PartialResumeData {
   name?: string;
@@ -25,11 +25,11 @@ export interface ParseInfo {
 }
 
 export interface StreamUpdate {
-  status?: 'analyzing' | 'processing' | 'saving' | 'completed' | 'error';
+  status: 'analyzing' | 'processing' | 'saving' | 'completed' | 'error';
   message?: string;
   progress?: number;
   partialData?: PartialResumeData;
-  data?: EnhancedParsedResume;
+  data?: ParsedResumeSchema;
   meta?: ParseInfo;
 }
 
@@ -47,7 +47,6 @@ export interface ResumeTailorState {
   jobSpecFile: File | null;
   tone: ToneOption;
   extraPrompt: string;
-  tailorEnabled: boolean;
   
   // UI states
   showErrorModal: boolean;
@@ -60,14 +59,46 @@ export interface ResumeTailorState {
   streamingMessage: string;
   partialResumeData: PartialResumeData | null;
   
-  // Customization states
-  profileImage: string;
+  // Profile customization states
+  profileImage?: string | null;
   customColors: Record<string, string>;
-  localResumeData: EnhancedParsedResume | null;
+  
+  // Result state
+  localResumeData: ParsedResumeSchema | null;
+  
+  // Processing state
+  isProcessing: boolean;
+}
+
+
+export interface ResumeGeneratorState {
+  // File upload states
+  uploadedFile: File | null;
+  error: string;
+  
+  // UI states
+  showErrorModal: boolean;
+  modalErrorMessage: string;
+  showColorDialog: boolean;
+  
+  // Streaming states
+  streamingProgress: number;
+  streamingMessage: string;
+  partialResumeData: PartialResumeData | null;
+  
+  // Profile customization states
+  profileImage: string | null;
+  customColors: Record<string, string>;
+  
+  // Result state
+  localResumeData: ParsedResumeSchema | null;
+  
+  // Processing state
+  isProcessing: boolean;
 }
 
 export interface ResumeTailorToolProps {
   isLoading: boolean;
-  setIsLoading: (isLoading: boolean) => void;
-  isAuthenticated?: boolean;
+  setIsLoading: (loading: boolean) => void;
+  isAuthenticated: boolean;
 }

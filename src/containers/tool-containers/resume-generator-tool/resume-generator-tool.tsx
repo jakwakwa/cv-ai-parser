@@ -1,44 +1,41 @@
 'use client';
 
+import { ErrorModal } from '@/src/components/error-modal';
+import { LoadingState } from '@/src/components/loading-state';
+import { ResumeUploadPanel } from '@/src/components/resume-upload-panel';
 import { useResumeTailor } from '@/src/hooks/use-resume-tailor';
-import { LoadingState } from './components/loading-state';
-import { ErrorModal } from './components/error-modal';
-import { ResumeUploadPanel } from './components/resume-upload-panel';
-import { JobDescriptionPanel } from './components/job-description-panel';
-import styles from './resume-tailor-tool.module.css';
-import type { ResumeTailorToolProps } from './types';
+import styles from '../shared-tool.module.css';
 
-const ResumeTailorTool = ({
-  isLoading,
-  setIsLoading,
+const ResumeGeneratorTool = ({
+  isLoading = false,
   isAuthenticated = false,
-}: ResumeTailorToolProps) => {
+}) => {
   const {
     state,
     fileInputRef,
-    jobSpecFileInputRef,
     handleFileChange,
-    handleJobSpecFileChange,
     handleRemoveFile,
     handleDrag,
     handleDrop,
     handleCreateResume,
     resetToInitialState,
-    setJobSpecMethod,
-    setJobSpecText,
-    setTone,
-    setExtraPrompt,
-    setTailorEnabled,
     setProfileImage,
     setCustomColors,
     setShowColorDialog,
     setShowErrorModal,
   } = useResumeTailor(isAuthenticated);
 
-  if (isLoading) {
+  // Show loading state if we have streaming progress, isLoading is true, or processing
+  const shouldShowLoading =
+    isLoading ||
+    state.isProcessing ||
+    state.streamingProgress > 0 ||
+    state.streamingMessage !== '';
+
+  if (shouldShowLoading) {
     return (
       <LoadingState
-        streamingMessage={state.streamingMessage}
+        streamingMessage={state.streamingMessage || 'Processing your resume...'}
         streamingProgress={state.streamingProgress}
         partialResumeData={state.partialResumeData}
       />
@@ -57,7 +54,7 @@ const ResumeTailorTool = ({
         }}
       />
 
-      <div className={styles.toolGrid}>
+      <div className={styles.toolGenerator}>
         <ResumeUploadPanel
           state={state}
           fileInputRef={fileInputRef}
@@ -65,23 +62,10 @@ const ResumeTailorTool = ({
           onRemoveFile={handleRemoveFile}
           onDrag={handleDrag}
           onDrop={handleDrop}
-          onTailorToggle={() => setTailorEnabled(!state.tailorEnabled)}
           onProfileImageChange={setProfileImage}
           onColorsChange={setCustomColors}
           onShowColorDialog={() => setShowColorDialog(true)}
           onHideColorDialog={() => setShowColorDialog(false)}
-          onCreateResume={handleCreateResume}
-          isLoading={isLoading}
-        />
-
-        <JobDescriptionPanel
-          state={state}
-          jobSpecFileInputRef={jobSpecFileInputRef}
-          onJobSpecMethodChange={setJobSpecMethod}
-          onJobSpecTextChange={setJobSpecText}
-          onJobSpecFileChange={handleJobSpecFileChange}
-          onToneChange={setTone}
-          onExtraPromptChange={setExtraPrompt}
           onCreateResume={handleCreateResume}
           isLoading={isLoading}
         />
@@ -90,4 +74,4 @@ const ResumeTailorTool = ({
   );
 };
 
-export default ResumeTailorTool;
+export default ResumeGeneratorTool;

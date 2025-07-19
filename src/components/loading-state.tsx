@@ -1,5 +1,5 @@
-import type { PartialResumeData } from '../types';
-import styles from '../resume-tailor-tool.module.css';
+import styles from '../containers/tool-containers/shared-tool.module.css';
+import type { PartialResumeData } from '../containers/tool-containers/types';
 
 interface LoadingStateProps {
   streamingMessage: string;
@@ -24,7 +24,7 @@ export function LoadingState({
             ? `Progress: ${streamingProgress}%`
             : 'AI is analyzing the job specifications and tailoring your resume...'}
         </p>
-        
+
         {streamingProgress > 0 && (
           <div className={styles.progressBar}>
             <div
@@ -33,24 +33,34 @@ export function LoadingState({
             />
           </div>
         )}
-        
+
         {partialResumeData && (
           <div className={styles.partialPreview}>
             <p className={styles.previewTitle}>Partial Resume Data:</p>
             <div className={styles.previewContent}>
               {partialResumeData.name && (
-                <p><strong>Name:</strong> {partialResumeData.name}</p>
+                <p>
+                  <strong>Name:</strong> {partialResumeData.name}
+                </p>
               )}
               {partialResumeData.title && (
-                <p><strong>Title:</strong> {partialResumeData.title}</p>
+                <p>
+                  <strong>Title:</strong> {partialResumeData.title}
+                </p>
               )}
               {Array.isArray(partialResumeData.experience) &&
                 partialResumeData.experience.length > 0 && (
-                  <p><strong>Experience sections:</strong> {partialResumeData.experience.length}</p>
+                  <p>
+                    <strong>Experience sections:</strong>{' '}
+                    {partialResumeData.experience.length}
+                  </p>
                 )}
               {Array.isArray(partialResumeData.skills) &&
                 partialResumeData.skills.length > 0 && (
-                  <p><strong>Skills found:</strong> {partialResumeData.skills.length}</p>
+                  <p>
+                    <strong>Skills found:</strong>{' '}
+                    {partialResumeData.skills.length}
+                  </p>
                 )}
             </div>
           </div>
@@ -58,4 +68,4 @@ export function LoadingState({
       </div>
     </div>
   );
-} 
+}

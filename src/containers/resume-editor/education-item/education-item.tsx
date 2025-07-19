@@ -2,7 +2,7 @@
 
 import { Trash2 } from 'lucide-react';
 import { memo } from 'react';
-import type { ParsedResume } from '@/lib/resume-parser/schema';
+import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
 import { Input } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
 import { Textarea } from '@/src/components/ui/textarea';
@@ -10,14 +10,14 @@ import { Button } from '@/src/components/ui/ui-button/button';
 import styles from './education-item.module.css';
 
 interface EducationItemProps {
-  edu: NonNullable<ParsedResume['education']>[number];
+  edu: NonNullable<EnhancedParsedResume['education']>[number];
   index: number;
   onChange: <
-    Field extends keyof NonNullable<ParsedResume['education']>[number],
+    Field extends keyof NonNullable<EnhancedParsedResume['education']>[number],
   >(
     index: number,
     field: Field,
-    value: NonNullable<ParsedResume['education']>[number][Field]
+    value: NonNullable<EnhancedParsedResume['education']>[number][Field]
   ) => void;
   onRemove: (index: number) => void;
 }

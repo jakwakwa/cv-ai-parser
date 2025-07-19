@@ -2,21 +2,21 @@
 
 import { Trash2 } from 'lucide-react';
 import { memo } from 'react';
-import type { ParsedResume } from '@/lib/resume-parser/schema';
+import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
 import { Input } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
 import { Button } from '@/src/components/ui/ui-button/button';
 import styles from './certification-item.module.css';
 
 interface CertificationItemProps {
-  cert: NonNullable<ParsedResume['certifications']>[number];
+  cert: NonNullable<EnhancedParsedResume['certifications']>[number];
   index: number;
   onChange: <
-    Field extends keyof NonNullable<ParsedResume['certifications']>[number],
+    Field extends keyof NonNullable<EnhancedParsedResume['certifications']>[number],
   >(
     index: number,
     field: Field,
-    value: NonNullable<ParsedResume['certifications']>[number][Field]
+    value: NonNullable<EnhancedParsedResume['certifications']>[number][Field]
   ) => void;
   onRemove: (index: number) => void;
 }

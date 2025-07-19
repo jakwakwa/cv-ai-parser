@@ -1,7 +1,6 @@
 import type React from 'react';
 import { useEffect, useRef } from 'react';
-import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema'; // Import EnhancedParsedResume
-// import type { ParsedResume } from '@/lib/resume-parser/schema'; // No longer needed
+import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
 import CertificationsSection from '@/src/components/certification-section/certification-section';
 import ContactSection from '@/src/components/contact-section/contact-section';
 import EducationSection from '@/src/components/education-section/education-section';
@@ -12,7 +11,7 @@ import { resumeColors } from '@/src/utils/colors';
 import styles from './resume-display.module.css';
 
 interface ResumeDisplayProps {
-  resumeData: EnhancedParsedResume; // Change to EnhancedParsedResume
+  resumeData: ParsedResumeSchema;
   isAuth: boolean;
 }
 
@@ -65,7 +64,7 @@ const ResumeDisplay: React.FC<ResumeDisplayProps> = ({ resumeData }) => {
         </div>
         <div className={styles.resumeMainContent}>
           <ExperienceSection
-            experience={resumeData.experience}
+            experience={resumeData?.experience ? resumeData?.experience : null}
             customColors={resumeData.customColors || {}}
           />
         </div>

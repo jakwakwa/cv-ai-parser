@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const resumeSchema = z.object({
+export const parsedResumeSchema = z.object({
   name: z.string().describe('Full name of the individual.'),
   title: z.string().describe('Current or most recent job title.'),
   summary: z.string().optional(),
@@ -53,23 +53,9 @@ export const resumeSchema = z.object({
       lastUpdated: z.string().optional(),
       version: z.string().optional(),
       source: z.string().optional(),
-      // Figma mapping hints
-      figmaMapping: z
-        .object({
-          primarySections: z.array(z.string()).optional(),
-          contentPriority: z.array(z.string()).optional(),
-          visualEmphasis: z.array(z.string()).optional(),
-        })
-        .optional(),
       aiTailorCommentary: z.string().optional(), // AI-generated summary/commentary for UI
     })
     .optional(),
 });
 
-export const aiResumeSchema = resumeSchema.omit({
-  customColors: true,
-});
-
-// Infer the TypeScript type from the Zod schema
-export type ParsedResume = z.infer<typeof resumeSchema>;
-export type AIParsedResume = z.infer<typeof aiResumeSchema>;
+export type ParsedResumeSchema = z.infer<typeof parsedResumeSchema>;

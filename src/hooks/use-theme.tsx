@@ -60,14 +60,23 @@ export function ThemeProvider({
     getSnapshot,
     getServerSnapshot
   );
-  const [theme, setThemeState] = useState<Theme>(
-    (storedTheme as Theme) || defaultTheme
-  );
+  
+  // Initialize with default theme, then sync with stored theme
+  const [theme, setThemeState] = useState<Theme>(defaultTheme);
   const [resolvedTheme, setResolvedTheme] = useState<
     'light' | 'dark' | undefined
   >();
 
+  // Sync theme state with stored theme when it changes
   useEffect(() => {
+    if (storedTheme) {
+      setThemeState(storedTheme as Theme);
+    }
+  }, [storedTheme]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const newResolvedTheme =
       theme === 'system'
         ? window.matchMedia('(prefers-color-scheme: dark)').matches

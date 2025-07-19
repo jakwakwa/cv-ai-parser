@@ -19,7 +19,7 @@ export default function TabNavigation({
 
   const handleTabClick = (view: 'upload' | 'library') => {
     setCurrentView(view);
-    router.push(view === 'upload' ? '/tools/tailor/' : '/library');
+    router.push(view === 'upload' ? '/tools/ai-resume-tailor/' : '/library');
   };
 
   return (

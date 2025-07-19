@@ -2,7 +2,7 @@
 
 import { Eye, EyeOff, Save, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import type { ParsedResume } from '@/lib/resume-parser/schema';
+import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
 import CertificationItem from '@/src/components/certification-item/certification-item';
 import { Card, CardContent } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/ui-button/button';
@@ -16,8 +16,8 @@ import SectionHeader from './section-header/section-header';
 import SkillsEditorSection from './skills-section/skills-editor-section';
 
 interface ResumeEditorProps {
-  resumeData: ParsedResume;
-  onSave: (data: ParsedResume) => void;
+  resumeData: EnhancedParsedResume;
+  onSave: (data: EnhancedParsedResume) => void;
   onCancel: () => void;
   onCustomColorsChange?: (colors: Record<string, string>) => void;
 }
@@ -48,9 +48,9 @@ const ResumeEditor = ({
   } = useResumeEditor(resumeData, onCustomColorsChange);
 
   const handleContactChange = useCallback(
-    <K extends keyof NonNullable<ParsedResume['contact']>>(
+    <K extends keyof NonNullable<EnhancedParsedResume['contact']>>(
       field: K,
-      value: NonNullable<ParsedResume['contact']>[K]
+      value: NonNullable<EnhancedParsedResume['contact']>[K]
     ) => {
       handleNestedInputChange('contact', field, value);
     },

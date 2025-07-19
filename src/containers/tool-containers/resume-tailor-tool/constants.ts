@@ -1,4 +1,4 @@
-import type { ToneOption } from './types';
+import type { ToneOption } from '../types';
 
 export const FILE_UPLOAD_LIMITS = {
   MAX_SIZE: 10 * 1024 * 1024, // 10MB

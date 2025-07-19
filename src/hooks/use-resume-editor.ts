@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import type { ParsedResume } from '@/lib/resume-parser/schema';
+import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
 
 type IncomingExperience = {
   id: string;
@@ -16,7 +16,7 @@ type IncomingExperience = {
 
 function normalizeExperienceData(
   experience: IncomingExperience[]
-): NonNullable<ParsedResume['experience']> {
+): NonNullable<EnhancedParsedResume['experience']> {
   return (experience || []).map((exp) => {
     const details = Array.isArray(exp.details)
       ? exp.details
@@ -42,10 +42,10 @@ function normalizeExperienceData(
 }
 
 export const useResumeEditor = (
-  resumeData: ParsedResume,
+  resumeData: EnhancedParsedResume,
   onCustomColorsChange?: (colors: Record<string, string>) => void
 ) => {
-  const [editedData, setEditedData] = useState<ParsedResume>({
+  const [editedData, setEditedData] = useState<EnhancedParsedResume>({
     ...resumeData,
     experience: normalizeExperienceData(
       (resumeData.experience || []) as unknown as IncomingExperience[]
@@ -90,11 +90,11 @@ export const useResumeEditor = (
   }, [resumeData]);
 
   const handleInputChange = useCallback(
-    <Field extends keyof ParsedResume>(
+    <Field extends keyof EnhancedParsedResume>(
       field: Field,
-      value: ParsedResume[Field]
+      value: EnhancedParsedResume[Field]
     ) => {
-      setEditedData((prev: ParsedResume) => ({
+      setEditedData((prev: EnhancedParsedResume) => ({
         ...prev,
         [field]: value,
       }));
@@ -104,16 +104,16 @@ export const useResumeEditor = (
 
   const handleNestedInputChange = useCallback(
     <
-      Section extends keyof ParsedResume,
-      Field extends keyof NonNullable<ParsedResume[Section]>,
+      Section extends keyof EnhancedParsedResume,
+      Field extends keyof NonNullable<EnhancedParsedResume[Section]>,
     >(
       section: Section,
       field: Field,
-      value: NonNullable<ParsedResume[Section]>[Field]
+      value: NonNullable<EnhancedParsedResume[Section]>[Field]
     ) => {
-      setEditedData((prev: ParsedResume) => {
+      setEditedData((prev: EnhancedParsedResume) => {
         const prevSectionData = prev[section];
-        let currentSectionData: NonNullable<ParsedResume[Section]>;
+        let currentSectionData: NonNullable<EnhancedParsedResume[Section]>;
 
         if (
           typeof prevSectionData === 'object' &&
@@ -121,10 +121,10 @@ export const useResumeEditor = (
           !Array.isArray(prevSectionData)
         ) {
           currentSectionData = prevSectionData as NonNullable<
-            ParsedResume[Section]
+            EnhancedParsedResume[Section]
           >;
         } else {
-          currentSectionData = {} as NonNullable<ParsedResume[Section]>;
+          currentSectionData = {} as NonNullable<EnhancedParsedResume[Section]>;
         }
 
         const updatedSection = Object.assign({}, currentSectionData, {
@@ -150,7 +150,7 @@ export const useResumeEditor = (
         ...updatedExperience[index],
         [field]: value,
       };
-      setEditedData((prev: ParsedResume) => ({
+      setEditedData((prev: EnhancedParsedResume) => ({
         ...prev,
         experience: updatedExperience,
       }));
@@ -163,7 +163,7 @@ export const useResumeEditor = (
       const updatedExperience = (editedData.experience || []).filter(
         (__, i: number) => i !== index
       );
-      setEditedData((prev: ParsedResume) => ({
+      setEditedData((prev: EnhancedParsedResume) => ({
         ...prev,
         experience: updatedExperience,
       }));
@@ -172,7 +172,7 @@ export const useResumeEditor = (
   );
 
   const addExperience = useCallback(() => {
-    setEditedData((prev: ParsedResume) => ({
+    setEditedData((prev: EnhancedParsedResume) => ({
       ...prev,
       experience: [
         ...(prev.experience || []),
@@ -190,7 +190,7 @@ export const useResumeEditor = (
 
   const handleSkillAdd = useCallback((skillToAdd: string) => {
     if (skillToAdd.trim() !== '') {
-      setEditedData((prev: ParsedResume) => ({
+      setEditedData((prev: EnhancedParsedResume) => ({
         ...prev,
         skills: [...(prev.skills || []), skillToAdd.trim()],
       }));
@@ -198,14 +198,14 @@ export const useResumeEditor = (
   }, []);
 
   const handleSkillRemove = useCallback((skillToRemove: string) => {
-    setEditedData((prev: ParsedResume) => ({
+    setEditedData((prev: EnhancedParsedResume) => ({
       ...prev,
       skills: (prev.skills || []).filter((skill) => skill !== skillToRemove),
     }));
   }, []);
 
   const handleProfileImageChange = useCallback((imageUrl: string) => {
-    setEditedData((prev: ParsedResume) => ({
+    setEditedData((prev: EnhancedParsedResume) => ({
       ...prev,
       profileImage: imageUrl,
     }));
@@ -213,7 +213,7 @@ export const useResumeEditor = (
 
   const handleColorsChange = useCallback(
     (colors: Record<string, string>) => {
-      setEditedData((prev: ParsedResume) => ({
+      setEditedData((prev: EnhancedParsedResume) => ({
         ...prev,
         customColors: colors,
       }));
@@ -225,10 +225,10 @@ export const useResumeEditor = (
   );
 
   const handleEducationChange = useCallback(
-    <Field extends keyof NonNullable<ParsedResume['education']>[number]>(
+    <Field extends keyof NonNullable<EnhancedParsedResume['education']>[number]>(
       index: number,
       field: Field,
-      value: NonNullable<ParsedResume['education']>[number][Field]
+      value: NonNullable<EnhancedParsedResume['education']>[number][Field]
     ) => {
       const updatedEducation = [...(editedData.education || [])];
       updatedEducation[index] = {
@@ -272,10 +272,10 @@ export const useResumeEditor = (
   }, []);
 
   const handleCertificationChange = useCallback(
-    <Field extends keyof NonNullable<ParsedResume['certifications']>[number]>(
+    <Field extends keyof NonNullable<EnhancedParsedResume['certifications']>[number]>(
       index: number,
       field: Field,
-      value: NonNullable<ParsedResume['certifications']>[number][Field]
+      value: NonNullable<EnhancedParsedResume['certifications']>[number][Field]
     ) => {
       const updatedCerts = [...(editedData.certifications || [])];
       updatedCerts[index] = {

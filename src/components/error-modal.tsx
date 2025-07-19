@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from '@/src/components/ui/dialog';
 import { Button } from '@/src/components/ui/ui-button/button';
-import styles from '../resume-tailor-tool.module.css';
+import styles from '../containers/tool-containers/shared-tool.module.css';
 
 interface ErrorModalProps {
   isOpen: boolean;
@@ -15,7 +15,12 @@ interface ErrorModalProps {
   onStartOver: () => void;
 }
 
-export function ErrorModal({ isOpen, message, onClose, onStartOver }: ErrorModalProps) {
+export function ErrorModal({
+  isOpen,
+  message,
+  onClose,
+  onStartOver,
+}: ErrorModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
@@ -29,11 +34,9 @@ export function ErrorModal({ isOpen, message, onClose, onStartOver }: ErrorModal
           <Button variant="outline" onClick={onClose}>
             Close
           </Button>
-          <Button onClick={onStartOver}>
-            Start Over
-          </Button>
+          <Button onClick={onStartOver}>Start Over</Button>
         </div>
       </DialogContent>
     </Dialog>
   );
-} 
+}

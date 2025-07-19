@@ -72,7 +72,7 @@ export function MobileDrawer({
             <div className={styles.content}>
               <nav className={styles.navigation}>
                 <Link
-                  href="/tools/tailor"
+                  href="/tools/ai-resume-tailor"
                   className={styles.navLink}
                   onClick={handleLinkClick}
                 >

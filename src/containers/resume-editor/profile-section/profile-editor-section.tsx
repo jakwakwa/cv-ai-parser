@@ -1,4 +1,4 @@
-import type { ParsedResume } from '@/lib/resume-parser/schema';
+import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
 import { Card, CardContent } from '@/src/components/ui/card';
 import { Input } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
@@ -8,11 +8,11 @@ import styles from './profile-editor-section.module.css';
 
 interface ProfileEditorSectionProps {
   profileImage: string | undefined;
-  contact: ParsedResume['contact'];
+  contact: EnhancedParsedResume['contact'];
   onProfileImageChange: (url: string) => void;
-  onContactChange: <K extends keyof NonNullable<ParsedResume['contact']>>(
+  onContactChange: <K extends keyof NonNullable<EnhancedParsedResume['contact']>>(
     field: K,
-    value: NonNullable<ParsedResume['contact']>[K]
+    value: NonNullable<EnhancedParsedResume['contact']>[K]
   ) => void;
 }
 

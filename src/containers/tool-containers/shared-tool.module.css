@@ -112,10 +112,17 @@
 }
 
 /* Tool Grid Layout */
+
 .toolGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-xl);
+  width: 100%;
+}
+
+.toolGenerator {
+  margin: 0 auto;
+  max-width: 600px;
   width: 100%;
 }
 
@@ -324,20 +331,6 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
 }
 
-.methodButtonDisabled {
-  background-color: var(--color-background-secondary);
-  color: var(--color-text-muted);
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.methodButton:disabled,
-.methodButtonActive:disabled {
-  background: var(--color-disabled) !important;
-  color: var(--color-text-secondary) !important;
-  border-color: var(--color-disabled) !important;
-}
-
 /* Textarea Container */
 .textareaContainer {
   padding: var(--spacing-lg);
@@ -457,19 +450,6 @@
   gap: var(--spacing-md);
   margin-top: var(--spacing-xl);
   margin-bottom: var(--spacing-lg);
-  /* background-color: var(--color-background-tertiary); */
-  /* position: fixed; */
-  /* width: 300px;   */
-  /* height: 50px;
-  z-index: 99999;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  top: 50px;
-  padding: 5px;
-  border-bottom-right-radius: 10px;
-  border-top-right-radius: 10px;
-  left: 0px; */
 }
 
 .errorMessage {
@@ -524,116 +504,12 @@
   margin-top: var(--spacing-md);
 }
 
-/* Disabled state for job tailoring panel */
-.disabledPanel {
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-.disabledPanel button {
-  background-color: var(--color-disabled) !important;
-  border-color: var(--color-disabled) !important;
-  color: var(--color-text-secondary) !important;
-}
-
-/* Tailor toggle styling */
-.tailorToggle {
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  gap: var(--spacing-sm);
-  margin-top: var(--spacing-md);
-  font-size: var(--font-size-md);
-  color: var(--color-text-light);
-  font-weight: 800;
-  width: 90%;
-  margin-bottom: 1rem;
-  padding: var(--spacing-md);
-  background: var(--color-button-default-background);
-  background: var(--color-button-default-background);
-  color: var(--color-button-default-text);
-  border-radius: var(--border-radius-medium);
-  border: 1px solid var(--color-button-default-border);
-  /* border: 1px solid var(--color-border-button-light); */
-  border-radius: var(--border-radius-medium);
-  text-align: left;
-  cursor: pointer;
-  transition: var(--transition-fast);
-  display: flex;
-}
-
-.tailorToggle input {
-  width: var(--spacing-mdlg);
-  height: var(--spacing-mdlg);
-  accent-color: #0d9488;
-  /* padding:12px; */
-}
-
-/* Disabled state styles for method buttons inside a disabled panel */
-.disabledPanel .methodButton,
-.disabledPanel .methodButtonActive {
-  background: var(--color-disabled) !important;
-  border-color: var(--color-disabled) !important;
-  color: var(--color-text-secondary) !important;
-}
-
-.disabledPanel .methodButton:hover,
-.disabledPanel .methodButtonActive:hover,
-.disabledPanel .methodButton:focus,
-.disabledPanel .methodButtonActive:focus {
-  background: var(--color-disabled) !important;
-  border-color: var(--color-disabled) !important;
-  color: var(--color-text-secondary) !important;
-  outline: none !important;
-}
-
-.methodButton[disabled],
-.methodButtonActive[disabled] {
-  background: var(--color-disabled) !important;
-  color: var(--color-text-secondary) !important;
-  border-color: var(--color-disabled) !important;
-}
-
-.methodButtonDisabled {
-  background: var(--color-disabled) !important;
-  color: var(--color-text-secondary) !important;
-  border-color: var(--color-disabled) !important;
-}
-
-.disabledPanel > .inputMethodToggle > button[disabled] {
-  background: var(--color-disabled) !important;
-  border-color: var(--color-disabled) !important;
-  color: var(--color-text-secondary) !important;
-}
-
-/* Override active tone button text color when panel disabled */
-.disabledPanel .toneButtonActive,
-.disabledPanel .toneButton {
-  background: var(--color-disabled) !important;
-  border-color: var(--color-disabled) !important;
-  color: var(--color-text-secondary) !important;
-}
-
-.disabledPanel .toneButtonActive .toneName,
-.disabledPanel .toneButton .toneName {
-  color: var(--color-text-secondary) !important;
-}
-
-/* Mobile: hide disabled job-spec panel entirely */
-@media (max-width: 767px) {
-  .disabledPanel {
-    display: none !important;
-  }
-}
-
 /* Responsive dialog content sizing for color picker */
 .colorDialogContent {
   width: 90vw !important;
   max-width: 850px;
   max-height: 90vh;
   overflow-y: auto;
-  /* padding: var(--spacing-md) !important; */
 }
 
 @media (min-width: 768px) {

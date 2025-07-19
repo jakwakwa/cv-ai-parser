@@ -25,8 +25,12 @@ export function MainNav({
 
       <nav className={styles.navigation}>
         {/* Tools dropdown or links */}
-        <Link href="/tools/tailor" className={styles.navLink}>
-          Ai Resume Generator Tool
+        <Link href="/tools/ai-resume-tailor" className={styles.navLink}>
+          Ai Resume Job Tailor
+        </Link>
+
+        <Link href="/tools/ai-resume-tailor" className={styles.navLink}>
+          Ai Resume Parser
         </Link>
         {/* Only show library link for authenticated users */}
         {isAuthenticated && (

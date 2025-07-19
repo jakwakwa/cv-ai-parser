@@ -40,8 +40,6 @@ export const ResumeDisplayButtons: React.FC<ResumeDisplayButtonsProps> = ({
   showUploadNew = true,
   showDownload = true,
   isAuthenticated = false,
-  isOnResumePage = false,
-  maxMobileButtons = 2,
 }) => {
   const router = useRouter();
 
@@ -49,7 +47,7 @@ export const ResumeDisplayButtons: React.FC<ResumeDisplayButtonsProps> = ({
     if (onUploadNew) {
       onUploadNew();
     } else {
-      router.push('/tools/tailor');
+      router.push('/tools/ai-resume-tailor');
     }
   };
 
@@ -104,9 +102,7 @@ export const ResumeDisplayButtons: React.FC<ResumeDisplayButtonsProps> = ({
   ];
 
   // Filter visible buttons and sort by priority
-  const visibleButtons = buttons
-    .filter((button) => button.show)
-    .sort((a, b) => a.priority! - b.priority!);
+  const visibleButtons = buttons.filter((button) => button.show);
 
   return (
     <div className={styles.buttonContainer}>

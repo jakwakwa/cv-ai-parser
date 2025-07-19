@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import styles from '@/app/page.module.css';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
-import type { ParsedResume } from '@/lib/resume-parser/schema';
+import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
 // import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import { Button } from '@/src/components/ui/ui-button/button';
@@ -28,7 +28,7 @@ export default function PageContent() {
   const { toast } = useToast();
 
   const [currentView, setCurrentView] = useState('upload'); // "upload" | "view" | "edit"
-  const [resumeData, setResumeData] = useState<ParsedResume | null>(null);
+  const [resumeData, setResumeData] = useState<ParsedResumeSchema | null>(null);
   const [parseInfo, setParseInfo] = useState<ParseInfo | null>(null); // Stores ID and Slug from server
   const [isLoading, setIsLoading] = useState(false); // global operations (saving edits, etc.)
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +46,7 @@ export default function PageContent() {
   };
 
   const handleResumeUploaded = async (
-    parsedData: ParsedResume,
+    parsedData: ParsedResumeSchema,
     info: ParseInfo
   ) => {
     setResumeData(parsedData);
@@ -74,7 +74,7 @@ export default function PageContent() {
     setCurrentView('edit');
   };
 
-  const handleSaveEdits = async (updatedData: ParsedResume) => {
+  const handleSaveEdits = async (updatedData: ParsedResumeSchema) => {
     setIsLoading(true);
     setError(null);
 
@@ -225,11 +225,35 @@ export default function PageContent() {
                     Upload your resume and a job description to create a
                     perfectly tailored resume
                   </p>
-                  <Button onClick={() => router.push('/tools/tailor')}>
+                  <Button
+                    onClick={() => router.push('/tools/ai-resume-tailor')}
+                  >
                     Try AI Tailor
                   </Button>
                 </div>
-
+              </div>
+            </div>
+          </div>
+          <div ref={uploaderRef} style={{ width: '100%' }}>
+            {/* Tool Navigation */}
+            <div className={styles.toolsSection}>
+              <h2 className={styles.toolsTitle}>Specialized Tools</h2>
+              <div className={styles.toolsGrid}>
+                <div className={styles.toolCard}>
+                  <FileText className={styles.toolIcon} />
+                  <h3>AI Resume Tailor</h3>
+                  <p>
+                    Upload your resume and a job description to create a new
+                    beautiful, customizable onliine resume that you can adjust
+                    with colours, profile image and edit the content right in
+                    the browser
+                  </p>
+                  <Button
+                    onClick={() => router.push('/tools/ai-resume-tailor')}
+                  >
+                    Try AI Resume Generator
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

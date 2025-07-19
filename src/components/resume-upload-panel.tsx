@@ -1,22 +1,32 @@
+/** biome-ignore-all lint/a11y/noStaticElementInteractions: <a11y is okay for this button> */
+/** biome-ignore-all lint/a11y/useKeyWithClickEvents: <a11y is okay for this> */
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { AlertTriangle, FileText, Upload as FileUpIcon, Palette, Upload, 
-    //@ts-ignore
-    Wand } from 'lucide-react';
+import {
+  AlertTriangle,
+  FileText,
+  Upload as FileUpIcon,
+  Palette,
+  Upload,
+  //@ts-ignore
+  Wand,
+} from 'lucide-react';
 import ColorPicker from '@/src/components/color-picker/color-picker';
 import { Dialog, DialogContent, DialogTitle } from '@/src/components/ui/dialog';
 import { Button } from '@/src/components/ui/ui-button/button';
 import ProfileImageUploader from '@/src/containers/profile-image-uploader/profile-image-uploader';
-import type { ResumeTailorState } from '../types';
-import styles from '../resume-tailor-tool.module.css';
+import styles from '../containers/tool-containers/shared-tool.module.css';
+import type {
+  ResumeGeneratorState,
+  ResumeTailorState,
+} from '../containers/tool-containers/types';
 
 interface ResumeUploadPanelProps {
-  state: ResumeTailorState;
+  state: ResumeTailorState | ResumeGeneratorState;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveFile: () => void;
   onDrag: (e: React.DragEvent<HTMLDivElement>) => void;
   onDrop: (e: React.DragEvent<HTMLDivElement>) => void;
-  onTailorToggle: () => void;
   onProfileImageChange: (imageUrl: string) => void;
   onColorsChange: (colors: Record<string, string>) => void;
   onShowColorDialog: () => void;
@@ -32,7 +42,6 @@ export function ResumeUploadPanel({
   onRemoveFile,
   onDrag,
   onDrop,
-  onTailorToggle,
   onProfileImageChange,
   onColorsChange,
   onShowColorDialog,
@@ -46,7 +55,7 @@ export function ResumeUploadPanel({
         <FileText className={styles.panelIcon} />
         <h2 className={styles.panelTitle}>Your Resume</h2>
       </div>
-      
+
       <div
         className={styles.dropZone}
         onDrag={onDrag}
@@ -95,16 +104,6 @@ export function ResumeUploadPanel({
         )}
       </div>
 
-      <label className={styles.tailorToggle} htmlFor="tailor-toggle">
-        <input
-          id="tailor-toggle"
-          type="checkbox"
-          checked={state.tailorEnabled}
-          onChange={onTailorToggle}
-        />
-        <span>Tailor to job spec.</span>
-      </label>
-
       <div className={styles.customizationSection}>
         <h3 className={styles.sectionTitle}>Profile Picture (Optional)</h3>
         <ProfileImageUploader
@@ -134,28 +133,26 @@ export function ResumeUploadPanel({
           </DialogContent>
         </Dialog>
 
-        {!state.tailorEnabled && (
-          <div className={styles.actionSection}>
-            {state.error && (
-              <div className={styles.errorMessage}>
-                <AlertTriangle size={16} />
-                {state.error}
-              </div>
-            )}
+        <div className={styles.actionSection}>
+          {state.error && (
+            <div className={styles.errorMessage}>
+              <AlertTriangle size={16} />
+              {state.error}
+            </div>
+          )}
 
-            <Button
-              onClick={onCreateResume}
-              disabled={isLoading || !state.uploadedFile}
-              className={styles.createButton}
-              variant="primary"
-              size="lg"
-            >
-              <Wand size={20} />
-              Create Resume
-            </Button>
-          </div>
-        )}
+          <Button
+            onClick={onCreateResume}
+            disabled={isLoading || !state.uploadedFile}
+            className={styles.createButton}
+            variant="primary"
+            size="lg"
+          >
+            <Wand size={20} />
+            Create Resume
+          </Button>
+        </div>
       </div>
     </div>
   );
-} 
+}

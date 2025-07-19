@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import { KEEP_TEMP_RESUMES_FOR_TESTING } from '@/lib/config';
-import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
+import type { ParsedResume } from '@/lib/tools-lib/shared-parsed-resume-schema';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
 import ResumeTailorCommentary from '@/src/components/resume-tailor-commentary/resume-tailor-commentary';
 import { Button } from '@/src/components/ui/ui-button/button';
@@ -23,8 +23,7 @@ export default function TempResumePage() {
   const { getTempResume, removeTempResume } = useTempResumeStore();
 
   const [loading, setLoading] = useState(true);
-  const [tempResumeData, setTempResumeData] =
-    useState<EnhancedParsedResume | null>(null);
+  const [resumeData, setResumeData] = useState<ParsedResume | null>(null);
   const [aiTailorCommentary, setAiTailorCommentary] = useState<string | null>(
     null
   );
@@ -66,10 +65,10 @@ export default function TempResumePage() {
       const tempResume = getTempResume(slug);
 
       if (tempResume) {
-        setTempResumeData(tempResume.resumeData);
+        setResumeData(tempResume.resumeData);
         setAiTailorCommentary(tempResume.aiTailorCommentary || null);
       } else {
-        setTempResumeData(null);
+        setResumeData(null);
         setAiTailorCommentary(null);
       }
     }
@@ -100,10 +99,10 @@ export default function TempResumePage() {
   }, [slug, removeTempResume]);
 
   const handleDownloadPdf = () => {
-    if (tempResumeData) {
+    if (resumeData) {
       downloadPdf(
         document.getElementById('resume-content') as HTMLElement,
-        `${tempResumeData.name?.replace(/ /g, '_') || 'resume'}.pdf`
+        `${resumeData.name?.replace(/ /g, '_') || 'resume'}.pdf`
       );
     }
   };
@@ -126,7 +125,7 @@ export default function TempResumePage() {
     );
   }
 
-  if (!tempResumeData) {
+  if (!resumeData) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
@@ -141,7 +140,7 @@ export default function TempResumePage() {
             if (!KEEP_TEMP_RESUMES_FOR_TESTING && typeof slug === 'string') {
               removeTempResume(slug);
             }
-            router.push('/tools/tailor');
+            router.push('/tools/ai-resume-tailor');
           }}
         >
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Tailor Tool
@@ -178,7 +177,7 @@ export default function TempResumePage() {
               onClick={() => {
                 if (typeof slug === 'string') {
                   removeTempResume(slug);
-                  router.push('/tools/tailor');
+                  router.push('/tools/ai-resume-tailor');
                 }
               }}
               style={{ fontSize: '11px', padding: '4px 8px' }}
@@ -195,7 +194,7 @@ export default function TempResumePage() {
             if (!KEEP_TEMP_RESUMES_FOR_TESTING && typeof slug === 'string') {
               removeTempResume(slug);
             }
-            router.push('/tools/tailor');
+            router.push('/tools/ai-resume-tailor');
           }}
           showDownload={true}
           showUploadNew={true}
@@ -205,7 +204,7 @@ export default function TempResumePage() {
           maxMobileButtons={2}
         />
         <ResumeTailorCommentary aiTailorCommentary={aiTailorCommentary} />
-        <ResumeDisplay resumeData={tempResumeData} isAuth={false} />
+        <ResumeDisplay resumeData={resumeData} isAuth={false} />
       </div>
     </div>
   );

@@ -36,7 +36,7 @@ export function UserNav() {
           {getInitials(session.user.name)}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className={styles.dropdownContent} forceMount>
+      <DropdownMenuContent className={styles.dropdownContent}>
         <div className={styles.dropdownLabel}>
           <div className={styles.labelContainer}>
             <p className={styles.userName}>{session.user.name}</p>
