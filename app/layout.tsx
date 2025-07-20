@@ -9,6 +9,7 @@ import { AuthModalProvider } from '@/src/components/auth-component/AuthModalCont
 import AuthProvider from '@/src/components/auth-provider/auth-provider';
 import { SiteFooter } from '@/src/components/site-footer/SiteFooter';
 import { Toaster } from '@/src/components/ui/toaster';
+import { TempResumeProvider } from '@/src/hooks/use-temp-resume-store';
 import { ThemeProvider } from '@/src/hooks/use-theme';
 
 export const metadata: Metadata = {
@@ -95,20 +96,22 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthProvider>
             <AuthModalProvider>
-              <ToastProvider>
-                <div
-                  style={{
-                    minHeight: '100vh',
-                    minWidth: '100vw',
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}
-                >
-                  {children}
-                  <SiteFooter />
-                </div>
-                <Toaster />
-              </ToastProvider>
+              <TempResumeProvider>
+                <ToastProvider>
+                  <div
+                    style={{
+                      minHeight: '100vh',
+                      minWidth: '100vw',
+                      display: 'flex',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    {children}
+                    <SiteFooter />
+                  </div>
+                  <Toaster />
+                </ToastProvider>
+              </TempResumeProvider>
             </AuthModalProvider>
           </AuthProvider>
         </ThemeProvider>

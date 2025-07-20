@@ -1,14 +1,13 @@
-import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
-import type { ParsedResume } from '@/lib/resume-parser/schema';
+import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
 import ResumeDisplay from '../../resume-display/resume-display';
 import styles from './resume-preview.module.css';
 
 interface ResumePreviewProps {
-  resumeData: ParsedResume;
+  resumeData: ParsedResumeSchema;
 }
 
 const ResumePreview = ({ resumeData }: ResumePreviewProps) => {
-  const enhancedData: EnhancedParsedResume = {
+  const enhancedData: ParsedResumeSchema = {
     ...resumeData,
     experience: (resumeData.experience || []).map((exp) => ({
       ...exp,

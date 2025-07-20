@@ -31,7 +31,7 @@ export function SiteHeader({ onLogoClick }: SiteHeaderProps) {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <MainNav onLogoClick={onLogoClick} />
+        <MainNav onLogoClick={onLogoClick} isAuthenticated={!!session?.user} />
 
         <div className={styles.headerActions}>
           {/* Mobile menu button - only visible on mobile */}
@@ -65,7 +65,11 @@ export function SiteHeader({ onLogoClick }: SiteHeaderProps) {
         </div>
 
         <AuthModal />
-        <MobileDrawer isOpen={isMobileDrawerOpen} onClose={closeMobileDrawer} />
+        <MobileDrawer
+          isOpen={isMobileDrawerOpen}
+          onClose={closeMobileDrawer}
+          isAuthenticated={!!session?.user}
+        />
       </div>
     </header>
   );

@@ -4,10 +4,11 @@
  */
 
 .layout {
-  display: grid;
-  grid-template-columns: 16rem minmax(0, 1fr) 13rem;
+  display: flex;
   gap: var(--spacing-xl);
-  max-width: 1200px;
+  flex-direction: row;
+  /* max-width: 1200px; */
+  width: 100%;
   margin: 0 auto;
   padding: var(--spacing-lg) var(--spacing-md);
 }
@@ -16,6 +17,8 @@
   position: sticky;
   top: var(--spacing-lg);
   align-self: start;
+  width: 10%;
+  min-width: 100px;
 }
 
 .sidebarNav {
@@ -25,6 +28,7 @@
   font-size: var(--font-size-sm);
   display: flex;
   flex-direction: column;
+  min-width: 0px;
   gap: var(--spacing-xs);
 }
 
@@ -44,39 +48,22 @@
 }
 
 .content {
-  min-width: 0; /* allow shrink */
+  min-width: 350px;
 }
 
-.toc {
-  position: sticky;
-  top: var(--spacing-lg);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-  border-left: 1px dotted var(--color-border-light);
-  padding-left: var(--spacing-md);
-}
+/* Responsive design */
+@media (max-width: 768px) {
+  .layout {
+    display: flex;
+    gap: var(--spacing-xl);
+    flex-direction: column;
+    /* max-width: 1200px; */
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
 
-.toc ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
-
-.tocLink {
-  text-decoration: none;
-  color: inherit;
-  transition: var(--transition-fast);
-}
-
-.tocLink:hover {
-  text-decoration: underline;
-  color: var(--color-accent-teal);
-}
-
-.tocLink[aria-current='true'] {
-  color: var(--color-accent-teal);
-  font-weight: var(--font-weight-semibold);
+  .content {
+    width: 100%;
+  }
 }

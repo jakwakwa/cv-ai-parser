@@ -1,94 +1,179 @@
-.signInToolsPage {
+/* Container */
+.buttonContainer {
+  width: 100%;
+  margin-bottom: var(--spacing-md);
+}
+
+/* Authentication message */
+.authMessage {
   display: flex;
-  font-size: 0.8rem;
-  margin-bottom: var(--spacing-lg);
-  justify-content: flex-start;
   align-items: center;
-  height: 40px;
-  flex-wrap: wrap;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  /* background-color: var(--color-background-secondary); */
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-medium);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
 }
 
-.signInToolsPage span {
-  font-weight: 600;
-  margin: 0 4px;
-  color: var(--color-secondary);
-  font-size: 0.8rem;
+.authMessage span {
+  font-weight: 500;
 }
 
+/* Desktop buttons */
+.desktopButtons {
+  display: none;
+}
 
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  height: auto;
 
-  .buttonContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    max-width: 100%;
-    margin: 0rem auto;
-    padding: 3px;
-    margin-bottom: 0;
-    width: 100%;
-    /* margin-left: 1rem; */
-    align-items: flex-start;
-    justify-content: space-between;
+  min-height: 2.5rem;
+}
+
+.actionButton span {
+  white-space: nowrap;
+}
+
+/* Mobile buttons */
+.mobileButtons {
+  display: flex;
+  font-size: var(--font-size-xs);
+  flex-direction: row; /* Changed to row */
+  gap: var(--spacing-sm);
+  width: 100%;
+  justify-content: flex-end; /* Distribute buttons evenly */
+}
+.mobileActionButton {
+  height: 40px !important;
+  padding: 1px;
+  gap: 2px;
+  border: 1px solid var(--color-border-teal) !important;
+  min-width: 80px;
+}
+.mobileDisplayButtonWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0rem;
+}
+.mobileDisplayButtonWrapper > span {
+  width: 100%;
+  padding: 0;
+
+  margin: 0;
+  text-align: center;
+  display: inline-block;
+}
+.mobileDisplayButtonWrapper svg {
+  display: inline-block;
+  transform: scale(0.8);
+}
+
+.mobileActionButton {
+  /* display: flex; */
+  flex-direction: column; /* Icon on top of label */
+  /* align-items: center; */
+  padding: 1rem;
+  /* justify-content: center; */
+  gap: var(--spacing-xxs); /* Smaller gap between icon and label */
+  font-size: var(--font-size-xs); /* Smaller font size */
+
+  min-width: 60px; /* Minimum width for touch target */
+}
+
+.buttonLabel {
+  font-weight: 500;
+  font-size: 0.35rem;
+  display: block; /* Ensure label is on its own line */
+}
+
+/* Overflow menu for additional buttons on mobile */
+.overflowMenu {
+  display: flex;
+
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--color-border-secondary);
+}
+
+.overflowButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  height: 2rem;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Tablet and up */
+@media (min-width: 640px) {
+  .mobileButtons {
     flex-direction: row;
-    width: 80% !important;
-    flex-wrap: wrap;
-    margin: 0 !important;
-    margin: 0 !important;
-    gap: 0rem !important;
+    justify-content: center; /* Center buttons on larger screens */
   }
 
-  .buttonContainer button {
-    font-size: 0.6rem;
-      /* width: 90px; */
-    padding: 0px 10px !important;
-   margin: 0 !important;
-    margin: 0 !important;
-    gap: 0rem !important;
-        height: 30px !important;
+  .mobileActionButton {
+    flex-direction: row; /* Icon and label back in a row */
+    font-size: var(--font-size-sm);
+    width: auto;
+    gap: var(--spacing-md);
+
+    /* padding: var(--spacing-sm) var(--spacing-md); */
   }
 
+  .overflowMenu {
+    flex-direction: row;
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+  }
 
+  .overflowButton {
+    flex: 1;
+  }
+}
+
+/* Desktop */
 @media (min-width: 768px) {
-  .header {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-
-  .buttonContainer {
+  .desktopButtons {
     display: flex;
     flex-direction: row;
-    gap: 2rem;
-    /* max-width: 100%; */
-          width: 100% !important;
-
-    margin-top: 0px !important;
-    margin-bottom: 0 !important;
+    align-items: center;
     justify-content: center;
+    gap: var(--spacing-md);
     flex-wrap: wrap;
-    gap: 1rem !important;
-    width: 100% !important;
   }
 
-
-    .buttonContainer  button {
-          /* width: 100% !important; */
-          font-size: 0.78rem;
-    flex-wrap: wrap;
-  display: flex;
-  align-items: center;
-         margin: 0 !important;
-      height: 3rem !important;
-    padding:10px 20px !important;
+  .mobileButtons {
+    display: none;
   }
 
+  .actionButton {
+    flex: 0 0 auto;
+    min-width: 8rem;
+  }
+}
 
-  .default {
-    width: 10px;
+/* Large desktop */
+@media (min-width: 1024px) {
+  .desktopButtons {
+    gap: var(--spacing-lg);
   }
 
-  .mainContainer {
-    flex-direction: column;
+  .actionButton {
+    min-width: 9rem;
+    padding: var(--spacing-md) var(--spacing-lg);
   }
-
-
 }

@@ -27,8 +27,7 @@ export async function PUT(
   try {
     const updatedResume = await ResumeDatabase.updateResume(id, body);
     return NextResponse.json(updatedResume);
-  } catch (error) {
-    console.error(`Error updating resume ${id}:`, error);
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Failed to update resume' },
       { status: 500 }
@@ -59,8 +58,7 @@ export async function DELETE(
   try {
     await ResumeDatabase.deleteResume(id);
     return NextResponse.json({ message: 'Resume deleted successfully' });
-  } catch (error) {
-    console.error(`Error deleting resume ${id}:`, error);
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Failed to delete resume' },
       { status: 500 }

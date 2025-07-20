@@ -2,11 +2,11 @@
 
 import { ArrowLeft } from 'lucide-react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
-import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
-import type { ParsedResume } from '@/lib/resume-parser/schema'; // Import ParsedResume
+import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
 import type { Resume } from '@/lib/types';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
 import ResumeTailorCommentary from '@/src/components/resume-tailor-commentary/resume-tailor-commentary';
@@ -15,30 +15,13 @@ import ResumeDisplay from '@/src/containers/resume-display/resume-display';
 import ResumeEditor from '@/src/containers/resume-editor/resume-editor';
 import styles from './layout.module.css';
 
-// Helper function to convert EnhancedParsedResume to ParsedResume for the editor
-const convertToParsedResume = (
-  enhancedResume: EnhancedParsedResume
-): ParsedResume => {
-  return {
-    ...enhancedResume,
-    skills: enhancedResume.skills || [],
-    experience: (enhancedResume.experience || []).map((exp) => ({
-      ...exp,
-      title: exp.title || '', // Ensure 'title' is always present
-      role: exp.title || '', // Ensure 'role' is always present
-      details: exp.details || [],
-    })),
-    education: enhancedResume.education || [],
-    certifications: enhancedResume.certifications || [],
-  };
-};
-
 export default function ViewResumePage() {
   const router = useRouter();
   const params = useParams();
   const { slug } = params;
   const { isDownloading, downloadPdf } = usePdfDownloader();
   const { toast } = useToast();
+  const { data: session } = useSession();
 
   const [viewMode, setViewMode] = useState<'view' | 'edit'>('view');
   const [resume, setResume] = useState<Resume | null>(null);
@@ -130,7 +113,7 @@ export default function ViewResumePage() {
     }
   }, [slug]); // Fire only once when slug is available
 
-  const handleSaveEdits = async (updatedData: ParsedResume) => {
+  const handleSaveEdits = async (updatedData: ParsedResumeSchema) => {
     if (!resume || !resume.id) {
       setError('Cannot save: Resume ID is missing.');
       return;
@@ -241,12 +224,9 @@ export default function ViewResumePage() {
   }
 
   if (viewMode === 'edit') {
-    //  FINAL  PARSED RESUME DATA CONVERSION TO ...
-    const resumeDataForEditor = convertToParsedResume(resume.parsedData);
-
     return (
       <ResumeEditor
-        resumeData={resumeDataForEditor}
+        resumeData={resume.parsedData}
         onSave={handleSaveEdits}
         onCancel={handleCancelEdit}
         onCustomColorsChange={(colors) =>
@@ -270,9 +250,17 @@ export default function ViewResumePage() {
       <ResumeDisplayButtons
         onDownloadPdf={handleDownloadPdf}
         onEditResume={handleEdit}
+        onMyLibrary={() => router.push('/library')}
+        onUploadNew={() => router.push('/tools/ai-resume-tailor')}
+        showDownload={true}
+        showEdit={true}
+        showLibrary={true}
+        showUploadNew={true}
+        isAuthenticated={!!session}
         isOnResumePage={true}
+        maxMobileButtons={2}
       />
-      <ResumeTailorCommentary aiTailorCommentary={aiTailorCommentary} />{' '}
+      <ResumeTailorCommentary aiTailorCommentary={aiTailorCommentary} />
       <ResumeDisplay resumeData={resume.parsedData} isAuth={true} />
     </div>
   );

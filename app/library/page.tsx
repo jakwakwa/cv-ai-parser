@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth/next';
 import { Suspense } from 'react';
 import { authOptions } from '@/lib/auth';
@@ -8,17 +9,19 @@ import LibraryPageContent from './page-content';
 
 export default async function LibraryPage() {
   const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
 
+  // Server-side authentication protection
+  if (!session?.user?.id) {
+    redirect('/?auth=required');
+  }
+
+  const userId = session.user.id;
   let initialResumes: Resume[] = [];
 
-  if (userId) {
-    try {
-      initialResumes = await ResumeDatabase.getUserResumes(userId);
-    } catch (error) {
-      console.error('Failed to fetch resumes on server:', error);
-      // Pass an empty array and let the client show an error.
-    }
+  try {
+    initialResumes = await ResumeDatabase.getUserResumes(userId);
+  } catch (_error) {
+    // Pass an empty array and let the client show an error.
   }
 
   return (

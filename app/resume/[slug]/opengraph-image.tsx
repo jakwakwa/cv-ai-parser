@@ -259,8 +259,7 @@ export default async function Image({
         ...size,
       }
     );
-  } catch (error) {
-    console.error('Error generating Open Graph image:', error);
+  } catch (_error) {
     return generateDefaultImage();
   }
 }

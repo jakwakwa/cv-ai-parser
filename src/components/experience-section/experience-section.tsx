@@ -8,7 +8,7 @@ interface ExperienceItem {
 }
 
 interface ExperienceSectionProps {
-  experience: ExperienceItem[];
+  experience: ExperienceItem[] | null;
   customColors: Record<string, string>;
 }
 
@@ -26,7 +26,7 @@ const ExperienceSection = ({
       >
         Experience
       </h2>
-      {experience.length > 0 ? (
+      {experience && experience.length > 0 ? (
         experience.map((job, index) => (
           <div
             key={`${job.company}-${job.title}-${index}`}

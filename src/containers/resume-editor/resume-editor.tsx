@@ -2,7 +2,7 @@
 
 import { Eye, EyeOff, Save, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import type { ParsedResume } from '@/lib/resume-parser/schema';
+import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
 import CertificationItem from '@/src/components/certification-item/certification-item';
 import { Card, CardContent } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/ui-button/button';
@@ -16,8 +16,8 @@ import SectionHeader from './section-header/section-header';
 import SkillsEditorSection from './skills-section/skills-editor-section';
 
 interface ResumeEditorProps {
-  resumeData: ParsedResume;
-  onSave: (data: ParsedResume) => void;
+  resumeData: ParsedResumeSchema;
+  onSave: (data: ParsedResumeSchema) => void;
   onCancel: () => void;
   onCustomColorsChange?: (colors: Record<string, string>) => void;
 }
@@ -48,9 +48,9 @@ const ResumeEditor = ({
   } = useResumeEditor(resumeData, onCustomColorsChange);
 
   const handleContactChange = useCallback(
-    <K extends keyof NonNullable<ParsedResume['contact']>>(
+    <K extends keyof NonNullable<ParsedResumeSchema['contact']>>(
       field: K,
-      value: NonNullable<ParsedResume['contact']>[K]
+      value: NonNullable<ParsedResumeSchema['contact']>[K]
     ) => {
       handleNestedInputChange('contact', field, value);
     },
@@ -73,7 +73,7 @@ const ResumeEditor = ({
               </p>
             </div>
             <div className={styles.headerActions}>
-              <Button
+              {/* <Button
                 variant="default"
                 onClick={() => setShowPreview(!showPreview)}
                 className={styles.previewButton}
@@ -84,7 +84,7 @@ const ResumeEditor = ({
                   <Eye className={styles.iconMd} />
                 )}
                 {showPreview ? 'Hide Preview' : 'Show Preview'}
-              </Button>
+              </Button> */}
               <Button variant="default" onClick={onCancel}>
                 <X className={`${styles.iconMd} ${styles.gap2}`} />
                 Cancel
@@ -181,7 +181,7 @@ const ResumeEditor = ({
             </Card>
           </div>
           {/* PREVIEW CHANGES */}
-          {showPreview && <ResumePreview resumeData={editedData} />}
+          {/* {showPreview && <ResumePreview resumeData={editedData} />} */}
         </div>
       </div>
     </div>

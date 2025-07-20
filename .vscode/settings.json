@@ -77,5 +77,6 @@
   "workbench.panel.showLabels": false,
   "workbench.view.showQuietly": {
     "workbench.panel.output": true
-  }
+  },
+  "yaml.maxItemsComputed": 50
 }

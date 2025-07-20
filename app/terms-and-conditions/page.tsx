@@ -10,18 +10,16 @@ const TermsAndConditionsPage: React.FC = () => {
     <div className={styles.pageWrapper}>
       <SiteHeader />
       <div className="container mx-auto p-4 max-w-4xl flex-1">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+        <div className=" rounded-lg shadow-sm border border-gray-200 p-8">
           <BackButton />
-          <h1 className="text-3xl font-bold mb-4 text-gray-800">
-            Terms and Conditions
-          </h1>
+          <h1 className="text-3xl font-bold mb-4 ">Terms and Conditions</h1>
           <p className="mb-2">
             Welcome to airesumegen.com. These terms and conditions outline the
             rules and regulations for the use of airesumegen.com's Website,
             located at airesumegen.com.
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">
             Intellectual Property Rights
           </h2>
           <p className="mb-2">
@@ -31,9 +29,7 @@ const TermsAndConditionsPage: React.FC = () => {
             contained in this Website, and all such rights are reserved.
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
-            Restrictions
-          </h2>
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">Restrictions</h2>
           <p className="mb-2">
             You are expressly and emphatically restricted from all of the
             following:
@@ -75,9 +71,7 @@ const TermsAndConditionsPage: React.FC = () => {
             and you must maintain confidentiality as well.
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
-            No warranties
-          </h2>
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">No warranties</h2>
           <p className="mb-2">
             This Website is provided "as is," with all faults, and
             airesumegen.com makes no express or implied representations or
@@ -86,7 +80,7 @@ const TermsAndConditionsPage: React.FC = () => {
             Website shall be construed as providing consult or advice to you.
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">
             Limitation of liability
           </h2>
           <p className="mb-2">
@@ -100,9 +94,7 @@ const TermsAndConditionsPage: React.FC = () => {
             of this Website.
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
-            Indemnification
-          </h2>
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">Indemnification</h2>
           <p className="mb-2">
             You hereby indemnify to the fullest extent airesumegen.com from and
             against any and/or all liabilities, costs, demands, causes of
@@ -110,9 +102,7 @@ const TermsAndConditionsPage: React.FC = () => {
             breach of any of the provisions of these Terms.
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
-            Severability
-          </h2>
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">Severability</h2>
           <p className="mb-2">
             If any provision of these Terms is found to be unenforceable or
             invalid under any applicable law, such unenforceability or
@@ -121,7 +111,7 @@ const TermsAndConditionsPage: React.FC = () => {
             remaining provisions herein.
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">
             Variation of Terms
           </h2>
           <p className="mb-2">
@@ -131,9 +121,7 @@ const TermsAndConditionsPage: React.FC = () => {
             conditions governing use of this Website.
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
-            Assignment
-          </h2>
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">Assignment</h2>
           <p className="mb-2">
             airesumegen.com shall be permitted to assign, transfer, and
             subcontract its rights and/or obligations under these Terms without
@@ -142,7 +130,7 @@ const TermsAndConditionsPage: React.FC = () => {
             and/or obligations under these Terms.
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">
             Entire Agreement
           </h2>
           <p className="mb-2">
@@ -153,7 +141,7 @@ const TermsAndConditionsPage: React.FC = () => {
             the same.
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">
             Governing Law & Jurisdiction
           </h2>
           <p className="mb-2">

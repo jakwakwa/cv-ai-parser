@@ -55,4 +55,46 @@
   background-color: var(--color-disabled);
   height: var(--spacing-lg);
   border-radius: var(--border-radius-small);
-} 
+}
+
+/* Fallback styles for when ads are blocked or fail to load */
+.fallbackContainer {
+  width: 100%;
+  min-height: 90px;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-small);
+  background-color: var(--color-background-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: var(--spacing-md) 0;
+}
+
+.fallbackContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+}
+
+.fallbackText {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  text-align: center;
+  user-select: none;
+}
+
+.adPlaceholder {
+  background-color: var(--color-background-tertiary);
+  border: 1px dashed var(--color-accent-teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--color-accent-teal-dark);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  padding: var(--spacing-sm);
+  box-sizing: border-box;
+}

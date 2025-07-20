@@ -1,235 +1,235 @@
 /* ProfileImageUploader.module.css */
 
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
 }
 
 .card {
-    width: 100%;
-    max-width: var(--max-width-sm);
-    margin: 0 auto;
-    background-color: var(--color-background-primary);
-    box-shadow: var(--color-shadow-medium);
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--border-radius-medium);
+  width: 100%;
+  max-width: var(--max-width-sm);
+  margin: 0 auto;
+  background-color: var(--color-background-primary);
+  box-shadow: var(--color-shadow-medium);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-medium);
 }
 
 .cardHeader {
-    text-align: center;
-    padding-bottom: var(--spacing-md);
+  text-align: center;
+  padding-bottom: var(--spacing-md);
 }
 
 .iconContainer {
-    margin: 0 auto var(--spacing-md);
-    display: flex;
-    height: var(--spacing-xl);
-    width: var(--spacing-xl);
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--border-radius-full);
-    background-color: var(--color-background-success);
+  margin: 0 auto var(--spacing-md);
+  display: flex;
+  height: var(--spacing-xl);
+  width: var(--spacing-xl);
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-full);
+  background-color: var(--color-background-success);
 }
 
 .icon {
-    height: var(--spacing-lg);
-    width: var(--spacing-lg);
-    color: var(--color-accent-teal);
+  height: var(--spacing-lg);
+  width: var(--spacing-lg);
+  color: var(--color-accent-teal);
 }
 
 .cardTitle {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
 }
 
 .cardDescription {
-    color: var(--color-text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .cardContent {
-    padding: 0 var(--spacing-lg) var(--spacing-lg);
+  padding: 0 var(--spacing-lg) var(--spacing-lg);
 }
 
 .uploadArea {
-    position: relative;
-    border: 2px dashed var(--color-border-light);
-    border-radius: var(--border-radius-medium);
-    padding: var(--spacing-lg);
-    text-align: center;
-    transition: var(--transition-fast);
-    cursor: pointer;
+  position: relative;
+  border: 2px dashed var(--color-border-light);
+  border-radius: var(--border-radius-medium);
+  padding: var(--spacing-lg);
+  text-align: center;
+  transition: var(--transition-fast);
+  cursor: pointer;
 }
 
 .uploadAreaDragActive {
-    border-color: var(--color-accent-teal);
-    background-color: var(--color-accent-teal-light);
-    transform: scale(1.05);
+  border-color: var(--color-accent-teal);
+  background-color: var(--color-accent-teal-light);
+  transform: scale(1.05);
 }
 
 .uploadAreaWithImage {
-    border-style: solid;
-    border-color: var(--color-accent-teal);
-    background-color: var(--color-background-primary);
+  border-style: solid;
+  border-color: var(--color-accent-teal);
+  background-color: var(--color-background-primary);
 }
 
 .uploadAreaDefault {
-    border-color: var(--color-border-light);
-    background-color: var(--color-background-primary);
+  border-color: var(--color-border-light);
+  background-color: var(--color-background-primary);
 }
 
 .uploadAreaDefault:hover {
-    border-color: var(--color-accent-teal);
+  border-color: var(--color-accent-teal);
 }
 
 .fileInput {
-    display: none;
+  display: none;
 }
 
 .loadingContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: var(--spacing-xxl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: var(--spacing-xxl);
 }
 
 .spinner {
-    animation: spin var(--animation-spin);
-    border-radius: var(--border-radius-full);
-    height: var(--spacing-lg);
-    width: var(--spacing-lg);
-    border-bottom: 2px solid var(--color-accent-teal);
-    margin-bottom: var(--spacing-sm);
+  animation: spin var(--animation-spin);
+  border-radius: var(--border-radius-full);
+  height: var(--spacing-lg);
+  width: var(--spacing-lg);
+  border-bottom: 2px solid var(--color-accent-teal);
+  margin-bottom: var(--spacing-sm);
 }
 
 @keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .loadingText {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
 }
 
 .previewContainer {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
 }
 
 .imageWrapper {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
 }
 
 .imageWrapper:hover .removeButton {
-    opacity: 1;
+  opacity: 1;
 }
 
 .previewImage {
-    width: var(--spacing-xxl);
-    height: var(--spacing-xxl);
-    border-radius: var(--border-radius-full);
-    margin: 0 auto;
-    object-fit: cover;
-    box-shadow: var(--color-shadow-medium);
-    border: 4px solid var(--color-background-primary);
+  width: var(--spacing-xxl);
+  height: var(--spacing-xxl);
+  border-radius: var(--border-radius-full);
+  margin: 0 auto;
+  object-fit: cover;
+  box-shadow: var(--color-shadow-medium);
+  border: 4px solid var(--color-background-primary);
 }
 
 .removeButton {
-    position: absolute;
-    top: var(--spacing-xs-negative);
-    right: var(--spacing-xs-negative);
-    background-color: var(--color-error-button);
-    color: var(--color-text-inverse);
-    border-radius: var(--border-radius-full);
-    padding: var(--spacing-xs);
-    opacity: 0;
-    transition: var(--transition-fast);
-    box-shadow: var(--color-shadow-medium);
+  position: absolute;
+  top: var(--spacing-xs-negative);
+  right: var(--spacing-xs-negative);
+  background-color: var(--color-error-button);
+  color: var(--color-text-inverse);
+  border-radius: var(--border-radius-full);
+  padding: var(--spacing-xs);
+  opacity: 0;
+  transition: var(--transition-fast);
+  box-shadow: var(--color-shadow-medium);
 }
 
 .removeIcon {
-    height: var(--spacing-sm);
-    width: var(--spacing-sm);
+  height: var(--spacing-sm);
+  width: var(--spacing-sm);
 }
 
 .successContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-accent-teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent-teal);
 }
 
 .checkIcon {
-    height: var(--spacing-md);
-    width: var(--spacing-md);
-    margin-right: var(--spacing-xs);
+  height: var(--spacing-md);
+  width: var(--spacing-md);
+  margin-right: var(--spacing-xs);
 }
 
 .successText {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
 }
 
 .instructionText {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
 }
 
 .uploadPromptContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: var(--spacing-xxl);
-    gap: var(--spacing-xs);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: var(--spacing-xxl);
+  gap: var(--spacing-xs);
 }
 
 .uploadIcon {
-    height: var(--spacing-xl);
-    width: var(--spacing-xl);
-    color: var(--color-disabled);
-    margin-bottom: var(--spacing-xs);
+  height: var(--spacing-xl);
+  width: var(--spacing-xl);
+  color: var(--color-disabled);
+  margin-bottom: var(--spacing-xs);
 }
 
 .uploadText {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
 }
 
 .errorContainer {
-    margin-top: var(--spacing-sm);
-    padding: var(--spacing-sm);
-    background-color: var(--color-error-bg);
-    border: 1px solid var(--color-error-border);
-    border-radius: var(--border-radius-xs);
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  border-radius: var(--border-radius-xs);
 }
 
 .errorText {
-    font-size: var(--font-size-sm);
-    color: var(--color-error-text);
-    text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-error-text);
+  text-align: center;
 }
 
 .cardFooter {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-lg);
-    background-color: var(--color-background-primary);
-    border-top: 1px solid var(--color-border-light);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg);
+  background-color: var(--color-background-primary);
+  border-top: 1px solid var(--color-border-light);
 }
 
 @media (min-width: 640px) {
-    .cardFooter {
-        flex-direction: row;
-    }
+  .cardFooter {
+    flex-direction: row;
+  }
 }
 
 @media (max-width: 767px) {
@@ -254,143 +254,143 @@
 }
 
 .skipButton {
-    flex: 1;
+  flex: 1;
 }
 
 .completeButton {
-    flex: 1;
-    background-color: var(--color-accent-teal);
-    color: var(--color-text-inverse);
-    border: none;
-    border-radius: var(--border-radius-xs);
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    cursor: pointer;
-    transition: var(--transition-fast);
+  flex: 1;
+  background-color: var(--color-accent-teal);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--border-radius-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-fast);
 }
 
 .completeButton:hover {
-    background-color: var(--color-accent-teal-dark);
+  background-color: var(--color-accent-teal-dark);
 }
 
 .completeButton:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Editor mode styles */
 .editorContainer {
-    background-color: var(--color-background-primary);
-    border-radius: var(--border-radius-medium);
-    border: 1px solid var(--color-border-light);
-    padding: var(--spacing-md);
+  background-color: var(--color-background-tertiary);
+  border-radius: var(--border-radius-medium);
+  border: 1px solid var(--color-border-light);
+  padding: var(--spacing-md);
 }
 
 .editorContent {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
 }
 
 .editorImageWrapper {
-    position: relative;
+  position: relative;
 }
 
 .editorImageWrapper:hover .editorRemoveButton {
-    opacity: 1;
+  opacity: 1;
 }
 
 .editorImage {
-    width: var(--spacing-xxl);
-    height: var(--spacing-xxl);
-    border-radius: var(--border-radius-full);
-    object-fit: cover;
-    box-shadow: var(--color-shadow-medium);
-    border: 2px solid var(--color-border-light);
+  width: var(--spacing-xxl);
+  height: var(--spacing-xxl);
+  border-radius: var(--border-radius-full);
+  object-fit: cover;
+  box-shadow: var(--color-shadow-medium);
+  border: 2px solid var(--color-border-light);
 }
 
 .editorRemoveButton {
-    position: absolute;
-    top: var(--spacing-xs-negative);
-    right: var(--spacing-xs-negative);
-    background-color: var(--color-error-button);
-    color: var(--color-text-inverse);
-    border-radius: var(--border-radius-full);
-    padding: var(--spacing-xs);
-    opacity: 0;
-    transition: var(--transition-fast);
-    box-shadow: var(--color-shadow-medium);
-    border: none;
-    cursor: pointer;
+  position: absolute;
+  top: var(--spacing-xs-negative);
+  right: var(--spacing-xs-negative);
+  background-color: var(--color-error-button);
+  color: var(--color-text-inverse);
+  border-radius: var(--border-radius-full);
+  padding: var(--spacing-xs);
+  opacity: 0;
+  transition: var(--transition-fast);
+  box-shadow: var(--color-shadow-medium);
+  border: none;
+  cursor: pointer;
 }
 
 .editorRemoveIcon {
-    height: var(--spacing-sm);
-    width: var(--spacing-sm);
+  height: var(--spacing-sm);
+  width: var(--spacing-sm);
 }
 
 .editorButtonContainer {
-    flex: 1;
+  flex: 1;
 }
 
 .uploadButton {
-    width: 100%;
+  width: 100%;
 }
 
 .uploadButtonIcon {
-    height: var(--spacing-md);
-    width: var(--spacing-md);
-    margin-right: var(--spacing-xs);
+  height: var(--spacing-md);
+  width: var(--spacing-md);
+  margin-right: var(--spacing-xs);
 }
 
 .editorInstructionText {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-    margin-top: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-xs);
 }
 
 .editorUploadArea {
-    margin-top: var(--spacing-md);
-    border: 2px dashed var(--color-border-light);
-    border-radius: var(--border-radius-medium);
-    padding: var(--spacing-md);
-    text-align: center;
-    transition: var(--transition-fast);
+  margin-top: var(--spacing-md);
+  border: 2px dashed var(--color-border-light);
+  border-radius: var(--border-radius-medium);
+  padding: var(--spacing-md);
+  text-align: center;
+  transition: var(--transition-fast);
 }
 
 .editorUploadAreaDragActive {
-    border-color: var(--color-accent-teal);
-    background-color: var(--color-accent-teal-light);
+  border-color: var(--color-accent-teal);
+  background-color: var(--color-accent-teal-light);
 }
 
 .editorUploadAreaDefault {
-    border-color: var(--color-border-light);
-    background-color: var(--color-background-primary);
+  border-color: var(--color-border-light);
+  background-color: var(--color-background-primary);
 }
 
 .editorUploadText {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
 }
 
 .editorLoadingContainer {
-    margin-top: var(--spacing-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  margin-top: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .editorSpinner {
-    animation: spin var(--animation-spin);
-    border-radius: var(--border-radius-full);
-    height: var(--spacing-lg);
-    width: var(--spacing-lg);
-    border-bottom: 2px solid var(--color-accent-teal);
-    margin-right: var(--spacing-xs);
+  animation: spin var(--animation-spin);
+  border-radius: var(--border-radius-full);
+  height: var(--spacing-lg);
+  width: var(--spacing-lg);
+  border-bottom: 2px solid var(--color-accent-teal);
+  margin-right: var(--spacing-xs);
 }
 
 .editorLoadingText {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
 }

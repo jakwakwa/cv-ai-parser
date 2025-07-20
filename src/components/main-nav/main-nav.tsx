@@ -3,9 +3,13 @@ import styles from './main-nav.module.css';
 
 interface MainNavProps {
   onLogoClick?: () => void;
+  isAuthenticated?: boolean;
 }
 
-export function MainNav({ onLogoClick }: MainNavProps) {
+export function MainNav({
+  onLogoClick,
+  isAuthenticated = false,
+}: MainNavProps) {
   return (
     <div className={styles.container}>
       <Link
@@ -21,12 +25,19 @@ export function MainNav({ onLogoClick }: MainNavProps) {
 
       <nav className={styles.navigation}>
         {/* Tools dropdown or links */}
-        <Link href="/tools/tailor" className={styles.navLink}>
-          Resume Tailor
+        <Link href="/tools/ai-resume-tailor" className={styles.navLink}>
+          Ai Resume Job Tailor
         </Link>
-        <Link href="/tools/figma-to-resume" className={styles.navLink}>
-          Figma to Resume
+
+        <Link href="/tools/ai-resume-generator" className={styles.navLink}>
+          Ai Resume Parser
         </Link>
+        {/* Only show library link for authenticated users */}
+        {isAuthenticated && (
+          <Link href="/library" className={styles.navLink}>
+            My Resumes
+          </Link>
+        )}
         <Link href="/docs" className={styles.navLink}>
           Docs
         </Link>

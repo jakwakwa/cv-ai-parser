@@ -1,56 +1,80 @@
+'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
 import styles from './page.module.css';
 
-export const metadata = {
-  title: 'Documentation | AI Resume Generator',
-  description: 'User-facing documentation and guides.',
-};
+interface GuideMeta {
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+}
 
-export default function DocsHome() {
+const guides: GuideMeta[] = [
+  {
+    slug: 'resume-from-file',
+    title: 'Uploading a Resume File',
+    description:
+      'Step-by-step guide to generate a brand new beautiful designed resume from a text/PDF file.',
+    category: 'How to Guides',
+  },
+  {
+    slug: 'jobfit-tailor-instructions',
+    title: 'Tailoring your Resume with Ai',
+    description:
+      'Step-by-step guide to create a resume tailored to your new dream job',
+    category: 'Ai Resume Tool',
+  },
+];
+
+const categories = Array.from(new Set(guides.map((g) => g.category)));
+
+export default function GuidesPage() {
+  const [filter, setFilter] = useState<string | null>(null);
+  const filtered = filter
+    ? guides.filter((g) => g.category === filter)
+    : guides;
+
   return (
-    <div className={styles.wrapper}>
-      <h1 className={styles.title}>Documentation</h1>
-      <p className={styles.lead}>
-        Welcome to the knowledge base. Here you'll find guides, best practices
-        and API references. Select a topic below to get started.
-      </p>
+    <div className={styles.content}>
+      <h1 className={styles.docsPageTitle} style={{ marginBottom: '2rem' }}>
+        Guides
+      </h1>
 
-      <nav className={styles.navSection}>
-        <h2>User Guides</h2>
-        <ul className={styles.list}>
-          <li>
-            <Link href="/docs/guides/resume-from-file" className={styles.link}>
-              Uploading a Resume File
-            </Link>
-          </li>
-          <li>
-            <Link href="/docs/guides/resume-from-figma" className={styles.link}>
-              Building a Resume from a Figma Design{' '}
-              <span className={styles.badge}>new</span>
-            </Link>
-          </li>
-        </ul>
-      </nav>
+      <div className={styles.filters}>
+        <button
+          type="button"
+          className={`${styles.filterBtn} ${filter === null ? styles.filterBtnActive : ''}`}
+          onClick={() => setFilter(null)}
+        >
+          All
+        </button>
+        {categories.map((cat) => (
+          <button
+            type="button"
+            key={cat}
+            className={`${styles.filterBtn} ${filter === cat ? styles.filterBtnActive : ''}`}
+            onClick={() => setFilter(cat)}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
 
-      <nav className={styles.navSection}>
-        <h2>Developer Documentation</h2>
-        <ul className={styles.list}>
-          <li>
-            <Link href="/docs/developer-notes" className={styles.link}>
-              Developer Notes <span className={styles.badge}>technical</span>
-            </Link>
-          </li>
-          <li>
+      <ul className={styles.guideList}>
+        {filtered.map((g) => (
+          <li key={g.slug}>
             <Link
-              href="/docs/developer-notes/figma-integration-status"
-              className={styles.link}
+              href={`/docs/guides/${g.slug}`}
+              className={styles.guideItemTitle}
             >
-              Figma Integration Status{' '}
-              <span className={styles.badge}>phase 1 complete</span>
+              {g.title}
             </Link>
+            <p className={styles.guideItemDesc}>{g.description}</p>
           </li>
-        </ul>
-      </nav>
+        ))}
+      </ul>
     </div>
   );
 }
