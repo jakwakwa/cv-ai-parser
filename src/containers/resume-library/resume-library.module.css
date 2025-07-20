@@ -15,13 +15,6 @@
   background: var(--color-accent-teal-light) !important;
 }
 
-h3::before,
-h3::after,
-.sectionTitle::after,
-.sectionTitle::before {
-  border-color: transparent !important;
-}
-
 .resumeCounter {
   font-size: var(--font-size-md);
   margin-top: 0.8rem;
@@ -263,12 +256,6 @@ input.searchInput::placeholder {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-}
-h3::before,
-h3::after,
-.sectionTitle::after,
-.sectionTitle::before {
-  border-color: transparent !important;
 }
 
 .cardTitleLabel {
@@ -727,22 +714,10 @@ h3::after,
     gap: var(--spacing-lg);
   }
 
-  h3::before,
-  h3::after,
-  .sectionTitle::after,
-  .sectionTitle::before {
-    border-color: transparent !important;
-  }
-
   .educationalSidebar {
     flex: none;
     position: static;
     width: 100%;
-  }
-
-  .educationalCard {
-    /* margin-top: var(--spacing-lg); */
-    /* margin-bottom: 0; */
   }
 
   .cardHeader {
