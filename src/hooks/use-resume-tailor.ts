@@ -183,7 +183,7 @@ export function useResumeTailor(isAuthenticated: boolean) {
       router.push(`/resume/${uploadInfo.resumeSlug}`);
     } else {
       const tempSlug = generateTempSlug();
-      addTempResume(tempSlug, parsedData, aiTailorCommentary || undefined);
+      addTempResume(tempSlug, parsedData, aiTailorCommentary || undefined, 'ai-resume-tailor');
       router.push(`/resume/temp-resume/${tempSlug}`);
     }
   };

@@ -27,6 +27,9 @@ export default function TempResumePage() {
   const [aiTailorCommentary, setAiTailorCommentary] = useState<string | null>(
     null
   );
+  const [sourceTool, setSourceTool] = useState<
+    'ai-resume-generator' | 'ai-resume-tailor'
+  >('ai-resume-tailor');
 
   const searchParams = useSearchParams();
 
@@ -61,19 +64,20 @@ export default function TempResumePage() {
   }, [searchParams, router, toast]);
 
   useEffect(() => {
-    if (typeof slug === 'string') {
-      const tempResume = getTempResume(slug);
-
-      if (tempResume) {
-        setResumeData(tempResume.resumeData);
-        setAiTailorCommentary(tempResume.aiTailorCommentary || null);
-      } else {
-        setResumeData(null);
-        setAiTailorCommentary(null);
-      }
+    const tempResume = getTempResume(slug as string);
+    if (tempResume) {
+      setResumeData(tempResume.resumeData);
+      setAiTailorCommentary(tempResume.aiTailorCommentary || null);
+      setSourceTool(tempResume.sourceTool);
+    } else {
+      toast({
+        title: 'Resume Not Found',
+        description: 'This temporary resume may have expired or been removed.',
+        variant: 'destructive',
+      });
+      router.push('/tools/ai-resume-generator'); // Default fallback if no source tool info
     }
-    setLoading(false);
-  }, [slug, getTempResume]);
+  }, [slug, getTempResume, router, toast]);
 
   // Configurable cleanup - only cleanup when testing flag is disabled
   useEffect(() => {
@@ -177,7 +181,11 @@ export default function TempResumePage() {
               onClick={() => {
                 if (typeof slug === 'string') {
                   removeTempResume(slug);
-                  router.push('/tools/ai-resume-tailor');
+                  const toolPath =
+                    sourceTool === 'ai-resume-generator'
+                      ? '/tools/ai-resume-generator'
+                      : '/tools/ai-resume-tailor';
+                  router.push(toolPath);
                 }
               }}
               style={{ fontSize: '11px', padding: '4px 8px' }}
@@ -194,7 +202,12 @@ export default function TempResumePage() {
             if (!KEEP_TEMP_RESUMES_FOR_TESTING && typeof slug === 'string') {
               removeTempResume(slug);
             }
-            router.push('/tools/ai-resume-tailor');
+            // Redirect back to the tool that was originally used
+            const toolPath =
+              sourceTool === 'ai-resume-generator'
+                ? '/tools/ai-resume-generator'
+                : '/tools/ai-resume-tailor';
+            router.push(toolPath);
           }}
           showDownload={true}
           showUploadNew={true}

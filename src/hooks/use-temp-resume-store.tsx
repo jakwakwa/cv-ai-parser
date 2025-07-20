@@ -9,10 +9,13 @@ import React, {
 import { KEEP_TEMP_RESUMES_FOR_TESTING } from '@/lib/config';
 import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
 
+type SourceTool = 'ai-resume-generator' | 'ai-resume-tailor';
+
 interface TempResumeData {
   slug: string;
   resumeData: ParsedResumeSchema;
   aiTailorCommentary?: string;
+  sourceTool: SourceTool;
   createdAt: number;
 }
 
@@ -21,7 +24,8 @@ interface TempResumeStore {
   addTempResume: (
     slug: string,
     resumeData: ParsedResumeSchema,
-    aiTailorCommentary?: string
+    aiTailorCommentary?: string,
+    sourceTool?: SourceTool
   ) => void;
   getTempResume: (slug: string) => TempResumeData | undefined;
   removeTempResume: (slug: string) => void;
@@ -68,12 +72,14 @@ export function TempResumeProvider({ children }: { children: ReactNode }) {
     addTempResume: (
       slug: string,
       resumeData: ParsedResumeSchema,
-      aiTailorCommentary?: string
+      aiTailorCommentary?: string,
+      sourceTool: SourceTool = 'ai-resume-tailor' // Default to tailor for backward compatibility
     ) => {
       tempResumesRef.current.set(slug, {
         slug,
         resumeData,
         aiTailorCommentary,
+        sourceTool,
         createdAt: Date.now(),
       });
     },
@@ -118,3 +124,5 @@ export function useTempResumeStore(): TempResumeStore {
   }
   return context;
 }
+
+export type { SourceTool };

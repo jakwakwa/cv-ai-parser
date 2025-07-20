@@ -16,8 +16,13 @@ interface ProcessingResult {
   };
 }
 
+interface CustomizationOptions {
+  profileImage?: string;
+  customColors?: Record<string, string>;
+}
+
 class GeneratorProcessor {
-  async process(fileResult: FileParseResult): Promise<ProcessingResult> {
+  async process(fileResult: FileParseResult, customization?: CustomizationOptions): Promise<ProcessingResult> {
     const startTime = Date.now();
     
     // Build precision-focused prompt
@@ -34,40 +39,60 @@ class GeneratorProcessor {
           role: 'user',
           content: [
             { type: 'text', text: prompt },
-            { type: 'file', data: fileResult.fileData, mimeType: 'application/pdf' },
+            { type: 'file', data: new Uint8Array(fileResult.fileData), mimeType: 'application/pdf' },
           ],
         }],
       });
-      // Strip markdown code block if present
-      const cleanText = text.replace(/^```json\s*|```$/g, '').trim();
+
+      // Strip markdown code block and extract JSON
+      let cleanText = text.trim();
+      if (cleanText.startsWith('```json')) {
+        cleanText = cleanText.replace(/^```json\s*/, '');
+      }
+      if (cleanText.endsWith('```')) {
+        cleanText = cleanText.replace(/```\s*$/, '');
+      }
+      
+      // Extract only the first valid JSON object
+      const firstBrace = cleanText.indexOf('{');
+      const lastBrace = cleanText.lastIndexOf('}');
+      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+        cleanText = cleanText.substring(firstBrace, lastBrace + 1);
+      }
+
       const parsed = JSON.parse(cleanText) as ParsedResumeSchema;
+      
+      // Apply customizations
+      const customizedResume = this.applyCustomizations(parsed, customization);
+      
       const processingTime = Date.now() - startTime;
-      const confidence = this.calculateConfidence(parsed);
+      const confidence = this.calculateConfidence(customizedResume);
+
       return {
-        data: parsed,
+        data: customizedResume,
         meta: {
-          method: 'ai-pdf-extraction',
+          method: 'ai-precision-pdf',
           confidence,
           processingType: 'generator',
-          fileType: 'pdf',
+          fileType: fileResult.fileType,
           processingTime,
         },
       };
     }
 
-    // TODO: Implement the actual AI call with the precision prompt
-    // For now, using enhanced placeholder that reflects the actual file
-    const parsed: ParsedResumeSchema = this.createPlaceholderResume(fileResult);
-
+    // Fallback to placeholder processing for non-PDF or text-based content
+    const placeholderResume = this.createPlaceholderResume(fileResult);
+    
+    // Apply customizations
+    const customizedResume = this.applyCustomizations(placeholderResume, customization);
+    
     const processingTime = Date.now() - startTime;
-    const confidence = this.calculateConfidence(parsed);
-
-    console.log('[Generator] Processing completed in', processingTime, 'ms with confidence:', confidence);
+    const confidence = this.calculateConfidence(customizedResume);
 
     return {
-      data: parsed,
+      data: customizedResume,
       meta: {
-        method: 'precise-extraction',
+        method: 'placeholder-with-extraction',
         confidence,
         processingType: 'generator',
         fileType: fileResult.fileType,
@@ -209,6 +234,26 @@ No text extraction needed - the AI will handle both extraction and structuring.
     maxScore += 0.1;
 
     return Math.min(score / maxScore, 1.0);
+  }
+
+  private applyCustomizations(resume: ParsedResumeSchema, customization?: CustomizationOptions): ParsedResumeSchema {
+    if (!customization) return resume;
+
+    const customizedResume = { ...resume };
+
+    // Apply profile image if provided and not empty
+    if (customization.profileImage && customization.profileImage.trim() !== '') {
+      customizedResume.profileImage = customization.profileImage;
+      console.log('[Generator] Applied profile image to resume');
+    }
+
+    // Apply custom colors if provided
+    if (customization.customColors && Object.keys(customization.customColors).length > 0) {
+      customizedResume.customColors = customization.customColors;
+      console.log('[Generator] Applied custom colors to resume:', Object.keys(customization.customColors));
+    }
+
+    return customizedResume;
   }
 }
 

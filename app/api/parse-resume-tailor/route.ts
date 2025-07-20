@@ -15,10 +15,25 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Tailor] Processing file: ${file.name} (${file.type}, ${file.size} bytes)`);
 
+    // Extract additional customization data
+    const profileImage = formData.get('profileImage') as string;
+    const customColorsStr = formData.get('customColors') as string;
+    let customColors = {};
+    
+    if (customColorsStr) {
+      try {
+        customColors = JSON.parse(customColorsStr);
+      } catch (error) {
+        console.warn('[Tailor] Failed to parse customColors:', error);
+      }
+    }
+
     // Process the actual file content
     const fileResult = await fileProcessor.validateAndProcessFile(file);
     
     console.log(`[Tailor] File processed successfully, content length: ${fileResult.content.length}`);
+    console.log(`[Tailor] Profile image provided: ${!!profileImage}`);
+    console.log(`[Tailor] Custom colors provided: ${Object.keys(customColors).length > 0}`);
 
     // Extract tailor context from form data
     const tailorContext: UserAdditionalContext = {
@@ -30,7 +45,10 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Tailor] Job spec length: ${tailorContext.jobSpecText?.length || 0}, tone: ${tailorContext.tone}`);
 
-    const result = await tailorProcessor.process(fileResult, tailorContext);
+    const result = await tailorProcessor.process(fileResult, tailorContext, {
+      profileImage,
+      customColors,
+    });
 
     return NextResponse.json(result);
   } catch (error) {

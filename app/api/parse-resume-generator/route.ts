@@ -14,12 +14,30 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Generator] Processing file: ${file.name} (${file.type}, ${file.size} bytes)`);
 
+    // Extract additional customization data
+    const profileImage = formData.get('profileImage') as string;
+    const customColorsStr = formData.get('customColors') as string;
+    let customColors = {};
+    
+    if (customColorsStr) {
+      try {
+        customColors = JSON.parse(customColorsStr);
+      } catch (error) {
+        console.warn('[Generator] Failed to parse customColors:', error);
+      }
+    }
+
     // Process the actual file content
     const fileResult = await fileProcessor.validateAndProcessFile(file);
     
     console.log(`[Generator] File processed successfully, content length: ${fileResult.content.length}`);
+    console.log(`[Generator] Profile image provided: ${!!profileImage}`);
+    console.log(`[Generator] Custom colors provided: ${Object.keys(customColors).length > 0}`);
 
-    const result = await generatorProcessor.process(fileResult);
+    const result = await generatorProcessor.process(fileResult, {
+      profileImage,
+      customColors,
+    });
 
     return NextResponse.json(result);
   } catch (error) {

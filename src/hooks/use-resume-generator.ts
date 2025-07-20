@@ -155,7 +155,7 @@ export function useResumeGenerator(isAuthenticated: boolean) {
     if (parsedData) {
       const tempSlug = generateTempSlug();
       
-      addTempResume(tempSlug, parsedData);
+      addTempResume(tempSlug, parsedData, undefined, 'ai-resume-generator');
       
       console.log('[GeneratorTool] Created temp resume with slug:', tempSlug);
       router.push(`/resume/temp-resume/${tempSlug}`);

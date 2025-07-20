@@ -25,13 +25,19 @@ interface ProcessingResult {
   };
 }
 
+interface CustomizationOptions {
+  profileImage?: string;
+  customColors?: Record<string, string>;
+}
+
 // Placeholder for the full context needed for tailoring
 type TailorContext = UserAdditionalContext;
 
 class TailorProcessor {
   async process(
     fileResult: FileParseResult,
-    tailorContext: TailorContext
+    tailorContext: TailorContext,
+    customization?: CustomizationOptions
   ): Promise<ProcessingResult> {
     const startTime = Date.now();
     console.log('Tailor processing for:', fileResult.fileName);
@@ -45,17 +51,20 @@ class TailorProcessor {
     // Step 3: Apply tailoring based on job spec and tone
     const tailored = await this.applyTailoring(originalParsed, tailorContext, fileResult.fileData);
 
+    // Step 4: Apply customizations (profile image and colors)
+    const customizedResume = this.applyCustomizations(tailored, customization);
+
     const processingTime = Date.now() - startTime;
-    const matchScore = this.calculateJobMatchScore(tailored, tailorContext);
+    const matchScore = this.calculateJobMatchScore(customizedResume, tailorContext);
     const strategy = getTailoringStrategy(tailorContext.tone);
 
     return {
-      data: tailored,
+      data: customizedResume,
       meta: {
         method: 'job-tailored',
-        confidence: this.calculateTailoringMatch(tailored, tailorContext),
+        confidence: this.calculateTailoringMatch(customizedResume, tailorContext),
         processingType: 'tailor',
-        aiTailorCommentary: tailored.metadata?.aiTailorCommentary,
+        aiTailorCommentary: customizedResume.metadata?.aiTailorCommentary,
         jobMatchScore: matchScore,
         optimizationLevel: strategy.keywordDensity,
         processingTime,
@@ -294,6 +303,26 @@ class TailorProcessor {
         source: 'tailored',
       },
     };
+  }
+
+  private applyCustomizations(resume: ParsedResumeSchema, customization?: CustomizationOptions): ParsedResumeSchema {
+    if (!customization) return resume;
+
+    const customizedResume = { ...resume };
+
+    // Apply profile image if provided and not empty
+    if (customization.profileImage && customization.profileImage.trim() !== '') {
+      customizedResume.profileImage = customization.profileImage;
+      console.log('[Tailor] Applied profile image to resume');
+    }
+
+    // Apply custom colors if provided
+    if (customization.customColors && Object.keys(customization.customColors).length > 0) {
+      customizedResume.customColors = customization.customColors;
+      console.log('[Tailor] Applied custom colors to resume:', Object.keys(customization.customColors));
+    }
+
+    return customizedResume;
   }
 
   private optimizeTitle(originalTitle: string, context: TailorContext): string {
