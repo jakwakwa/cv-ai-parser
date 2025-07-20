@@ -19,7 +19,7 @@ export default function AiResumeTailorPage() {
       <div className={styles.headerSection}>
         <h1 className={styles.title}>AI Resume Tailor</h1>
         <p className={styles.subtitle}>
-          Upload your resume and a job description to create a perfectly
+          Upload your PDF resume and a job description to create a perfectly
           tailored resume
         </p>
       </div>

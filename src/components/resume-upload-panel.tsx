@@ -73,7 +73,7 @@ export function ResumeUploadPanel({
           ref={fileInputRef}
           onChange={onFileChange}
           className={styles.fileInput}
-          accept=".pdf,.txt"
+          accept=".pdf"
         />
 
         {state.uploadedFile ? (
@@ -98,7 +98,7 @@ export function ResumeUploadPanel({
             <p className={styles.dropText}>Drag & drop your resume here</p>
             <p className={styles.dropSubtext}>or click to browse</p>
             <span className={styles.fileTypes}>
-              Supports PDF and TXT files (Max 10MB)
+              Supports PDF files (Max 10MB)
             </span>
           </div>
         )}

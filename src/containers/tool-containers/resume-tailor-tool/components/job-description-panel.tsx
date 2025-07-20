@@ -83,7 +83,7 @@ export function JobDescriptionPanel({
           <input
             type="file"
             ref={jobSpecFileInputRef}
-            accept=".pdf,.txt"
+            accept=".pdf"
             onChange={onJobSpecFileChange}
             className={styles.fileInput}
           />

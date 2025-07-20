@@ -54,12 +54,17 @@ export function useResumeTailor(isAuthenticated: boolean) {
 
   // Validation
   const validateFileSelection = (file: File): string | null => {
-    if (file.size > FILE_UPLOAD_LIMITS.MAX_SIZE) {
-      return ERROR_MESSAGES.FILE_TOO_LARGE;
+    const allowedTypes = ['application/pdf'];
+    const maxSize = 10 * 1024 * 1024; // 10MB
+
+    if (!allowedTypes.includes(file.type)) {
+      return 'Please upload a PDF file only.';
     }
-    if (!(FILE_UPLOAD_LIMITS.ACCEPTED_TYPES as readonly string[]).includes(file.type)) {
-      return ERROR_MESSAGES.INVALID_FILE_TYPE;
+
+    if (file.size > maxSize) {
+      return 'File size must be less than 10MB.';
     }
+
     return null;
   };
 

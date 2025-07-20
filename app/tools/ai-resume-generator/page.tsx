@@ -19,8 +19,8 @@ export default function AiResumeTailorPage() {
       <div className={styles.headerSection}>
         <h1 className={styles.title}>AI Resume Generator</h1>
         <p className={styles.subtitle}>
-          Upload your resume and a job description to generate a beautifully
-          customised version from the original file
+          Upload your PDF resume to generate a beautifully customised version
+          from the original file
         </p>
       </div>
 

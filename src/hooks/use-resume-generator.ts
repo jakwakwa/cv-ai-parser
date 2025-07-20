@@ -58,9 +58,9 @@ export function useResumeGenerator(isAuthenticated: boolean) {
   };
 
   const validateFileSelection = (file: File): string | null => {
-    const allowedTypes = ['application/pdf', 'text/plain'];
+    const allowedTypes = ['application/pdf'];
     if (!allowedTypes.includes(file.type)) {
-      return 'Please upload a PDF or TXT file only.';
+      return 'Please upload a PDF file only.';
     }
     return null;
   };

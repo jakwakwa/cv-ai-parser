@@ -2,7 +2,7 @@ import type { ToneOption } from '../types';
 
 export const FILE_UPLOAD_LIMITS = {
   MAX_SIZE: 10 * 1024 * 1024, // 10MB
-  ACCEPTED_TYPES: ['application/pdf', 'text/plain'],
+  ACCEPTED_TYPES: ['application/pdf'],
 } as const;
 
 export const CHARACTER_LIMITS = {
@@ -24,7 +24,7 @@ export const TONE_OPTIONS: Array<{
 
 export const ERROR_MESSAGES = {
   FILE_TOO_LARGE: 'File size must be less than 10MB',
-  INVALID_FILE_TYPE: 'Please upload a .txt or .pdf file',
+  INVALID_FILE_TYPE: 'Please upload a .pdf file',
   NO_FILE: 'Please upload a resume file',
   NO_JOB_DESCRIPTION: 'Please provide a job description',
   NO_JOB_FILE: 'Please upload a job description file',
