@@ -10,9 +10,24 @@
   width: 100%;
 }
 
+.accordionTrigger:hover {
+  text-decoration: none;
+  background: var(--color-accent-teal-light) !important;
+}
+
+h3::before,
+h3::after,
+.sectionTitle::after,
+.sectionTitle::before {
+  border-color: transparent !important;
+}
+
 .resumeCounter {
   font-size: var(--font-size-md);
   margin-top: 0.8rem;
+}
+.accordionTitle {
+  font-size: var(--font-size-xs);
 }
 
 .wrapper {
@@ -116,7 +131,9 @@ input.searchInput::placeholder {
   color: var(--color-error-text);
   font-family: var(--font-family-base);
 }
-
+.educationContent {
+  padding: 0.3rem;
+}
 /* Loading and empty states */
 .stateContainer {
   background-color: var(--color-background-primary);
@@ -222,7 +239,7 @@ input.searchInput::placeholder {
 }
 
 .card:hover {
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  /* box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); */
 }
 
 .cardHeader {
@@ -247,6 +264,12 @@ input.searchInput::placeholder {
   align-items: center;
   width: 100%;
 }
+h3::before,
+h3::after,
+.sectionTitle::after,
+.sectionTitle::before {
+  border-color: transparent !important;
+}
 
 .cardTitleLabel {
   font-size: var(--font-size-sm);
@@ -259,9 +282,16 @@ input.searchInput::placeholder {
   font-family: "DM Sans", sans-serif;
   font-weight: 800;
   text-transform: uppercase;
-  font-size: var(--font-size-md);
-  line-height: 3.5625em;
+  font-size: var(--font-size-sm);
+  /* line-height: 3.5625em; */
   color: var(--color-text-secondary);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: normal;
+  height: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .aiSummaryPlaintext {
@@ -359,8 +389,8 @@ input.searchInput::placeholder {
   height: 28px; /* Fixed height from Figma */
   box-sizing: border-box; /* Include padding and border in the element's total width and height */
   font-family: "DM Mono", monospace; /* For numeric values like 95% */
-  font-size: var(--font-size-xxs);
-  font-weight: 400;
+  font-size: 0.6rem;
+  font-weight: 600;
   line-height: 1.302em;
   color: var(--color-card-text-primary);
 }
@@ -368,8 +398,8 @@ input.searchInput::placeholder {
 .statLabel {
   font-family: "DM Sans", sans-serif; /* For labels like 'confidence' */
 
-  font-weight: 400;
-  font-size: var(--font-size-xxs);
+  font-weight: 700;
+  font-size: 0.6rem;
   line-height: 1em;
   color: var(--color-card-text-secondary);
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.03), 0px 1px 3px rgba(0, 0, 0, 0.05);
@@ -480,16 +510,32 @@ input.searchInput::placeholder {
 /* Educational Content Sidebar */
 .educationalSidebar {
   flex: 0 0 380px;
-  position: sticky;
+  background: #eeaeca;
+  background: radial-gradient(
+    circle,
+    rgba(238, 174, 202, 1) 0%,
+    rgba(148, 187, 233, 1) 100%
+  );
+
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 0.2) 0%,
+    rgba(9, 9, 121, 0.1) 35%,
+    rgba(31, 163, 68, 0.1) 100%
+  );
+  border-radius: 1rem;
+  overflow: hidden;
+  /* position: sticky; */
   top: var(--spacing-lg);
 }
 
 .educationalCard {
-  background: var(--color-card-background);
+  /* background: var(--color-card-background); */
   border: 1px solid var(--color-border-light);
   border-radius: var(--border-radius-medium);
   overflow: hidden;
   box-shadow: var(--color-shadow-small);
+  /* padding: 0.4rem; */
 }
 
 .cardHeader {
@@ -499,7 +545,7 @@ input.searchInput::placeholder {
 }
 
 .cardTitle {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin: 0;
@@ -516,13 +562,8 @@ input.searchInput::placeholder {
 .educationalContent {
   display: flex;
   flex-direction: column;
+  padding: 0.4rem;
   gap: var(--spacing-sm);
-}
-
-.introSection,
-.featuresSection,
-.bestPracticesSection {
-  margin-bottom: var(--spacing-lg);
 }
 
 .introSection:last-child,
@@ -540,11 +581,11 @@ input.searchInput::placeholder {
 }
 
 .sectionText {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
   line-height: var(--line-height-relaxed);
   margin-bottom: var(--spacing-md);
-  font-family: var(--font-family-base);
+  font-family: var(--font-family-sm);
 }
 
 .sectionText:last-child {
@@ -558,7 +599,7 @@ input.searchInput::placeholder {
 }
 
 .featureItem {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   line-height: var(--line-height-relaxed);
   padding: var(--spacing-sm);
@@ -588,7 +629,7 @@ input.searchInput::placeholder {
   }
 
   .educationalCard {
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: 0;
   }
 
   .cardHeader {
@@ -604,7 +645,7 @@ input.searchInput::placeholder {
   }
 
   .accordionTrigger h3 {
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-sm);
   }
 
   .accordionInner {
@@ -643,15 +684,18 @@ input.searchInput::placeholder {
 }
 
 .accordionTrigger:focus {
-  outline: 2px solid var(--color-accent-teal);
-  outline-offset: -2px;
+  box-shadow: 0px 1px 14px 0px #0d948859;
 }
 
 .accordionTrigger h3 {
   margin: 0;
   color: var(--color-text-primary);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-md);
   font-weight: var(--font-weight-semibold);
+}
+
+.accordionTrigger h3:hover {
+  text-decoration: none !important;
 }
 
 .accordionContent {
@@ -683,6 +727,13 @@ input.searchInput::placeholder {
     gap: var(--spacing-lg);
   }
 
+  h3::before,
+  h3::after,
+  .sectionTitle::after,
+  .sectionTitle::before {
+    border-color: transparent !important;
+  }
+
   .educationalSidebar {
     flex: none;
     position: static;
@@ -690,8 +741,8 @@ input.searchInput::placeholder {
   }
 
   .educationalCard {
-    margin-top: var(--spacing-lg);
-    margin-bottom: 0;
+    /* margin-top: var(--spacing-lg); */
+    /* margin-bottom: 0; */
   }
 
   .cardHeader {
@@ -699,7 +750,11 @@ input.searchInput::placeholder {
   }
 
   .cardTitle {
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-sm);
+    display: box;
+    line-clamp: 2;
+    box-orient: vertical;
+    overflow: hidden;
   }
 
   .accordionTrigger {
@@ -707,7 +762,7 @@ input.searchInput::placeholder {
   }
 
   .accordionTrigger h3 {
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-sm);
   }
 
   .accordionInner {
@@ -716,5 +771,9 @@ input.searchInput::placeholder {
 
   .accordionSubtitle {
     font-size: var(--font-size-sm);
+  }
+  .sectionTitle:after,
+  .sectionTitle:before {
+    border: none !important;
   }
 }

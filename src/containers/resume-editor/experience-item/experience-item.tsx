@@ -2,7 +2,7 @@
 
 import { Trash2 } from 'lucide-react';
 import { memo } from 'react';
-import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
+import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
 import { Input } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
 import { Textarea } from '@/src/components/ui/textarea';
@@ -10,14 +10,14 @@ import { Button } from '@/src/components/ui/ui-button/button';
 import styles from './experience-item.module.css';
 
 export interface ExperienceItemProps {
-  job: NonNullable<EnhancedParsedResume['experience']>[number];
+  job: NonNullable<ParsedResumeSchema['experience']>[number];
   index: number;
   onChange: <
-    Field extends keyof NonNullable<EnhancedParsedResume['experience']>[number],
+    Field extends keyof NonNullable<ParsedResumeSchema['experience']>[number],
   >(
     index: number,
     field: Field,
-    value: NonNullable<EnhancedParsedResume['experience']>[number][Field]
+    value: NonNullable<ParsedResumeSchema['experience']>[number][Field]
   ) => void;
   onRemove: (index: number) => void;
 }

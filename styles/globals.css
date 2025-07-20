@@ -4,14 +4,18 @@
  */
 
 /* Import the new ITCSS-based architecture */
-@import './main.css';
+@import "./main.css";
 
 /* Temporary: Keep Tailwind imports during transition */
 /* @tailwind base;
 @tailwind components;
 @tailwind utilities; */
 svg.mainIcon {
-      fill:  var(--resume-main-icons);
+  fill: var(--resume-main-icons);
+}
+
+* {
+  border-color: none !important;
 }
 
 .pageWrapper {
@@ -30,7 +34,7 @@ svg.mainIcon {
   flex-direction: row;
   align-items: start;
   margin-bottom: var(--spacing-lg);
-  padding:var(--spacing-xxl);
+  padding: var(--spacing-xxl);
   height: 400px;
 }
 
@@ -71,11 +75,20 @@ svg.mainIcon {
   max-width: var(--max-width-xl);
   margin: var(--spacing-lg) auto;
   padding: var(--spacing-lg) var(--spacing-lg) 80px var(--spacing-lg);
-  background-color: var(--color-background-secondary);
+  background: #eeaeca;
+  background: radial-gradient(
+    circle,
+    rgba(238, 174, 202, 1) 0%,
+    rgba(148, 187, 233, 1) 100%
+  );
   border-radius: var(--border-radius-large);
   background: var(--color-background-dark);
-  box-shadow:  var(--color-shadow-dark-inset-left),
-               var(--color-shadow-dark-inset-right);
+  box-shadow: var(--color-shadow-dark-inset-left),
+    var(--color-shadow-dark-inset-right);
+}
+
+.sectionTitle::before {
+  border: none !important;
 }
 
 .loadingContainer {
@@ -271,11 +284,11 @@ svg.mainIcon {
   margin-bottom: var(--spacing-lg);
   position: relative;
   display: flex;
-    justify-content: space-around;
-    align-content: space-around;
-    align-items: stretch;
-    padding: 1rem;
-    flex-direction: row;
+  justify-content: space-around;
+  align-content: space-around;
+  align-items: stretch;
+  padding: 1rem;
+  flex-direction: row;
 }
 
 .dropZone:hover {
@@ -331,7 +344,7 @@ input[type="checkbox"] {
   appearance: none;
   width: 1.6rem;
   height: 1.2rem;
-  padding-top:0.2em;
+  padding-top: 0.2em;
   /* border: 2px solid #ccc; */
   background-color: #fff;
   border: 0px solid var(--color-border-dark);
@@ -354,7 +367,6 @@ input[type="checkbox"]:checked::after {
   font-size: 0.8em;
   line-height: 1.2em;
 }
-
 
 .fileInput {
   display: none;
@@ -395,7 +407,6 @@ input[type="checkbox"]:checked::after {
   .userFeatures {
     display: none;
   }
-
 }
 
 .feature {
@@ -474,17 +485,16 @@ input[type="checkbox"]:checked::after {
   color: var(--color-text-secondary);
 }
 
-  .buttonContainer {
+.buttonContainer {
   display: flex;
   width: 100%;
   justify-content: center;
-  gap:0 !important;
+  gap: 0 !important;
 }
 
 .pageWrapper {
   background-color: var(--color-background-primary);
 }
-
 
 @media (min-width: 768px) {
   .header {
@@ -494,7 +504,6 @@ input[type="checkbox"]:checked::after {
   .mainContainer {
     flex-direction: column;
   }
-
 
   .mainUserContainer {
     padding: var(--spacing-sm) var(--spacing-sm) 40px var(--spacing-sm); /* Further reduce side padding */
@@ -560,16 +569,14 @@ input[type="checkbox"]:checked::after {
     padding: var(--spacing-lg);
   }
 
-    .buttonContainer {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  gap:0;
-  margin-top: 0;
-  padding: 0;
-}
-
-
+  .buttonContainer {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 0;
+    margin-top: 0;
+    padding: 0;
+  }
 }
 
 /* Ensure desktop resume layout when printing or downloading to PDF */

@@ -107,6 +107,20 @@ export class ResumeDatabase {
   }
 
   /**
+   * Get a resume by slug for a specific user (including private resumes)
+   */
+  static async getUserResumeBySlug(slug: string, userId: string): Promise<Resume | null> {
+    try {
+      const resume = await db.resume.findFirst({
+        where: { slug, userId },
+      });
+      return convertPrismaResume(resume);
+    } catch (_error) {
+      throw new Error('Error fetching user resume by slug');
+    }
+  }
+
+  /**
    * Get a public resume by slug
    */
   static async getPublicResume(slug: string): Promise<Resume | null> {

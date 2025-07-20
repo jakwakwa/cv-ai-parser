@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
 import { KEEP_TEMP_RESUMES_FOR_TESTING } from '@/lib/config';
-import type { ParsedResume } from '@/lib/tools-lib/shared-parsed-resume-schema';
+import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
 import ResumeTailorCommentary from '@/src/components/resume-tailor-commentary/resume-tailor-commentary';
 import { Button } from '@/src/components/ui/ui-button/button';
@@ -23,7 +23,7 @@ export default function TempResumePage() {
   const { getTempResume, removeTempResume } = useTempResumeStore();
 
   const [loading, setLoading] = useState(true);
-  const [resumeData, setResumeData] = useState<ParsedResume | null>(null);
+  const [resumeData, setResumeData] = useState<ParsedResumeSchema | null>(null);
   const [aiTailorCommentary, setAiTailorCommentary] = useState<string | null>(
     null
   );

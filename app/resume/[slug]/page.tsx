@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { usePdfDownloader } from '@/hooks/use-pdf-downloader';
 import { useToast } from '@/hooks/use-toast';
-import type { ParsedResume } from '@/lib/tools-lib/shared-parsed-resume-schema';
+import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
 import type { Resume } from '@/lib/types';
 import ResumeDisplayButtons from '@/src/components/resume-display-buttons/resume-display-buttons';
 import ResumeTailorCommentary from '@/src/components/resume-tailor-commentary/resume-tailor-commentary';
@@ -113,7 +113,7 @@ export default function ViewResumePage() {
     }
   }, [slug]); // Fire only once when slug is available
 
-  const handleSaveEdits = async (updatedData: ParsedResume) => {
+  const handleSaveEdits = async (updatedData: ParsedResumeSchema) => {
     if (!resume || !resume.id) {
       setError('Cannot save: Resume ID is missing.');
       return;

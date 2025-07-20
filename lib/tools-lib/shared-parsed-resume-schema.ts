@@ -45,7 +45,7 @@ export const parsedResumeSchema = z.object({
       company: z.string().optional(),
       role: z.string(),
       duration: z.string().optional(),
-      details: z.array(z.string().optional()),
+      details: z.array(z.string()),
     })
   ),
   metadata: z

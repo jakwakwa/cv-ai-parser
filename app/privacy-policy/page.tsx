@@ -10,18 +10,16 @@ const PrivacyPolicyPage: React.FC = () => {
     <div className={styles.pageWrapper}>
       <SiteHeader />
       <div className="container mx-auto p-4 max-w-4xl flex-1">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+        <div className="rounded-lg shadow-sm border border-gray-200 p-8">
           <BackButton />
-          <h1 className="text-3xl font-bold mb-4 text-gray-800">
-            Privacy Policy
-          </h1>
+          <h1 className="text-3xl font-bold mb-4 ">Privacy Policy</h1>
           <p className="mb-2">
             This Privacy Policy describes how your personal information is
             collected, used, and shared when you visit or make a purchase from
             airesumegen.com (the "Site").
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">
             Personal Information We Collect
           </h2>
           <p className="mb-2">
@@ -55,7 +53,7 @@ const PrivacyPolicyPage: React.FC = () => {
             </li>
           </ul>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">
             How We Use Your Personal Information
           </h2>
           <p className="mb-2">
@@ -67,7 +65,7 @@ const PrivacyPolicyPage: React.FC = () => {
             advertising campaigns).
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">
             Third-Party Advertising and Data Collection
           </h2>
           <p className="mb-4">
@@ -78,9 +76,7 @@ const PrivacyPolicyPage: React.FC = () => {
             to you.
           </p>
 
-          <h3 className="text-xl font-semibold mt-4 mb-2 text-gray-700">
-            Google AdSense
-          </h3>
+          <h3 className="text-xl font-semibold mt-4 mb-2 ">Google AdSense</h3>
           <p className="mb-2">
             Google AdSense is a third-party advertising service provided by
             Google LLC. Google uses cookies and similar technologies to:
@@ -96,7 +92,7 @@ const PrivacyPolicyPage: React.FC = () => {
             <li>Ensure ads are displayed properly</li>
           </ul>
 
-          <h3 className="text-xl font-semibold mt-4 mb-2 text-gray-700">
+          <h3 className="text-xl font-semibold mt-4 mb-2 ">
             DoubleClick Cookies
           </h3>
           <p className="mb-4">
@@ -106,7 +102,7 @@ const PrivacyPolicyPage: React.FC = () => {
             across the web and analyze website traffic.
           </p>
 
-          <h3 className="text-xl font-semibold mt-4 mb-2 text-gray-700">
+          <h3 className="text-xl font-semibold mt-4 mb-2 ">
             Your Choices and Opt-Out Options
           </h3>
           <p className="mb-2">
@@ -158,7 +154,7 @@ const PrivacyPolicyPage: React.FC = () => {
             </li>
           </ul>
 
-          <h3 className="text-xl font-semibold mt-4 mb-2 text-gray-700">
+          <h3 className="text-xl font-semibold mt-4 mb-2 ">
             Third-Party Privacy Policies
           </h3>
           <p className="mb-2">
@@ -190,7 +186,7 @@ const PrivacyPolicyPage: React.FC = () => {
             </li>
           </ul>
 
-          <h3 className="text-xl font-semibold mt-4 mb-2 text-gray-700">
+          <h3 className="text-xl font-semibold mt-4 mb-2 ">
             International Users and GDPR
           </h3>
           <p className="mb-4">
@@ -202,9 +198,7 @@ const PrivacyPolicyPage: React.FC = () => {
             contact Google directly regarding their data processing practices.
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
-            Data Retention
-          </h2>
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">Data Retention</h2>
           <p className="mb-4">
             We retain your personal information for as long as necessary to
             provide our services and comply with legal obligations. Advertising
@@ -212,18 +206,14 @@ const PrivacyPolicyPage: React.FC = () => {
             you can find in their respective privacy policies linked above.
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
-            Changes
-          </h2>
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">Changes</h2>
           <p className="mb-2">
             We may update this privacy policy from time to time in order to
             reflect, for example, changes to our practices or for other
             operational, legal or regulatory reasons.
           </p>
 
-          <h2 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
-            Contact Us
-          </h2>
+          <h2 className="text-2xl font-semibold mt-6 mb-3 ">Contact Us</h2>
           <p className="mb-2">
             For more information about our privacy practices, if you have
             questions, or if you would like to make a complaint, please contact

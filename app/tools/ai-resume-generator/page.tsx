@@ -24,11 +24,7 @@ export default function AiResumeTailorPage() {
         </p>
       </div>
 
-      <ResumeGeneratorTool
-        isLoading={isLoading}
-        setIsLoading={setIsLoading}
-        isAuthenticated={!!session}
-      />
+      <ResumeGeneratorTool isLoading={isLoading} isAuthenticated={!!session} />
       {shouldShowAds && <FooterAd />}
     </div>
   );

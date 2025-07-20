@@ -11,7 +11,17 @@ import { ContentAd } from '@/src/components/adsense/AdBanner';
 import { Button } from '@/src/components/ui/ui-button/button';
 import styles from './home-tool-item.module.css';
 
-function HomeToolItem({ content, link }) {
+interface HomeToolItemContent {
+  title: string;
+  description: string;
+}
+
+interface HomeToolItemProps {
+  content: HomeToolItemContent;
+  link: string;
+}
+
+function HomeToolItem({ content, link }: HomeToolItemProps) {
   const router = useRouter();
   return (
     <section className={styles.features}>

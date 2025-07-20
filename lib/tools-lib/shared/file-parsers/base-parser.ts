@@ -3,6 +3,7 @@ export interface FileParseResult {
   fileType: 'pdf' | 'txt' | 'docx';
   fileName: string;
   fileSize: number;
+  fileData?: ArrayBuffer; // For AI SDK PDF processing
 }
 
 export abstract class BaseFileParser {

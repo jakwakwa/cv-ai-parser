@@ -19,23 +19,25 @@ export default function HomePageContent() {
       </section>
 
       {/* Features Grid */}
-      <HomeToolItem
-        content={{
-          title: 'Resume Tailor Tool',
-          description:
-            'Transform your career with our intelligent resume tools. Create tailored resumes from scratch or convert your Figma designs into professional resume components.',
-        }}
-        link={'tools/ai-resume-tailor'}
-      />
+      <div className={styles.homeToolsWrapper}>
+        <HomeToolItem
+          content={{
+            title: 'Resume Tailor Tool',
+            description:
+              'Transform your career with our intelligent resume tools. Create tailored resumes from scratch or convert your Figma designs into professional resume components.',
+          }}
+          link={'tools/ai-resume-tailor'}
+        />
 
-      <HomeToolItem
-        content={{
-          title: 'Resume Generator / Parser',
-          description:
-            'Transform your career with our intelligent resume tools. Create tailored resumes from scratch or convert your Figma designs into professional resume components.',
-        }}
-        link={'tools/ai-resume-generator'}
-      />
+        <HomeToolItem
+          content={{
+            title: 'Resume Generator / Parser',
+            description:
+              'Transform your career with our intelligent resume tools. Create tailored resumes from scratch or convert your Figma designs into professional resume components.',
+          }}
+          link={'tools/ai-resume-generator'}
+        />
+      </div>
 
       {/* Benefits Section */}
       <section className={styles.benefits}>

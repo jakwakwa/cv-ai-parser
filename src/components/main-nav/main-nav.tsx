@@ -29,7 +29,7 @@ export function MainNav({
           Ai Resume Job Tailor
         </Link>
 
-        <Link href="/tools/ai-resume-tailor" className={styles.navLink}>
+        <Link href="/tools/ai-resume-generator" className={styles.navLink}>
           Ai Resume Parser
         </Link>
         {/* Only show library link for authenticated users */}

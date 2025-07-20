@@ -18,9 +18,9 @@ export interface ParseInfo {
   resumeSlug?: string;
   method: string;
   confidence: number;
-  filename: string;
-  fileType: string;
-  fileSize: number;
+  filename?: string;
+  fileType?: string;
+  fileSize?: number;
   aiTailorCommentary?: string;
 }
 

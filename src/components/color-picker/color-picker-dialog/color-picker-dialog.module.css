@@ -8,6 +8,7 @@
   max-height: 90vh;
   overflow-y: auto;
   padding: 0;
+  background-color: var(--color-background-secondary);
 }
 
 .dialogHeader {
@@ -72,20 +73,20 @@
     max-width: calc(100vw - var(--spacing-xl));
     max-height: 85vh;
   }
-  
+
   .dialogHeader,
   .contentContainer,
   .footerContainer {
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
   }
-  
+
   .headerContainer {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-sm);
   }
-  
+
   .closeButton {
     align-self: flex-end;
   }
@@ -95,7 +96,7 @@
   .dialogContent {
     max-height: 80vh;
   }
-  
+
   .dialogHeader,
   .contentContainer,
   .footerContainer {

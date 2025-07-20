@@ -10,7 +10,7 @@ import {
   //@ts-ignore
   Wand,
 } from 'lucide-react';
-import ColorPicker from '@/src/components/color-picker/color-picker';
+import ColorPickerDialog from '@/src/components/color-picker/color-picker-dialog/color-picker-dialog';
 import { Dialog, DialogContent, DialogTitle } from '@/src/components/ui/dialog';
 import { Button } from '@/src/components/ui/ui-button/button';
 import ProfileImageUploader from '@/src/containers/profile-image-uploader/profile-image-uploader';
@@ -113,25 +113,20 @@ export function ResumeUploadPanel({
       </div>
 
       <div className={styles.customizationSection}>
-        <Dialog open={state.showColorDialog} onOpenChange={onHideColorDialog}>
-          <button
-            type="button"
-            onClick={onShowColorDialog}
-            className={styles.colorButton}
-          >
-            <Palette size={20} />
-            Customize Colors
-          </button>
-          <DialogContent className={styles.colorDialogContent}>
-            <VisuallyHidden.Root>
-              <DialogTitle>Choose Colors</DialogTitle>
-            </VisuallyHidden.Root>
-            <ColorPicker
-              currentColors={state.customColors}
-              onColorsChange={onColorsChange}
-            />
-          </DialogContent>
-        </Dialog>
+        <ColorPickerDialog
+          open={state.showColorDialog}
+          onOpenChange={onHideColorDialog}
+          currentColors={state.customColors}
+          onColorsChange={onColorsChange}
+        />
+        <button
+          type="button"
+          onClick={onShowColorDialog}
+          className={styles.colorButton}
+        >
+          <Palette size={20} />
+          Customize Colors
+        </button>
 
         <div className={styles.actionSection}>
           {state.error && (

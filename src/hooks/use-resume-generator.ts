@@ -1,108 +1,90 @@
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
-import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
-import { createTailorFormData, parseResumeTailor } from '@/src/containers/tool-containers/api-service';
-import { CHARACTER_LIMITS, ERROR_MESSAGES, FILE_UPLOAD_LIMITS } from '@/src/containers/tool-containers/resume-tailor-tool/constants';
-import type {
-  JobSpecMethod,
-  ParseInfo,
-  ResumeTailorState,
-  StreamUpdate,
-  ToneOption,
-} from '@/src/containers/tool-containers/types';
+import { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
+import { createGeneratorFormData, parseResumeGenerator } from '../containers/tool-containers/api-service';
+import type { PartialResumeData, ResumeGeneratorState, StreamUpdate } from '../containers/tool-containers/types';
 import { useTempResumeStore } from './use-temp-resume-store';
 
-const initialState: ResumeTailorState = {
+const initialState: ResumeGeneratorState = {
+  // File upload states
   uploadedFile: null,
   error: '',
-  jobSpecMethod: 'paste',
-  jobSpecText: '',
-  jobSpecFile: null,
-  tone: 'Neutral',
-  extraPrompt: '',
+  
+  // UI states
   showErrorModal: false,
   modalErrorMessage: '',
   showColorDialog: false,
-  aiTailorCommentary: null,
+  
+  // Streaming states
   streamingProgress: 0,
   streamingMessage: '',
   partialResumeData: null,
-  profileImage: '',
+  
+  // Profile customization states
+  profileImage: null,
   customColors: {},
+  
+  // Result state
   localResumeData: null,
-  isProcessing: false, // Add this field
+  
+  // Processing state
+  isProcessing: false,
 };
 
-export function useResumeTailor(isAuthenticated: boolean) {
-  const router = useRouter();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const jobSpecFileInputRef = useRef<HTMLInputElement>(null);
-  const { addTempResume, generateTempSlug } = useTempResumeStore();
-  
-  const [state, setState] = useState<ResumeTailorState>(initialState);
+interface ParseInfo {
+  resumeId?: string;
+  resumeSlug?: string;
+  method: string;
+  confidence: number;
+  filename?: string;
+  fileType?: string;
+  fileSize?: number;
+  processingType?: 'generator';
+  processingTime?: number;
+}
 
-  // Update functions
-  const updateState = (updates: Partial<ResumeTailorState>) => {
+export function useResumeGenerator(isAuthenticated: boolean) {
+  const [state, setState] = useState<ResumeGeneratorState>(initialState);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+  const { addTempResume, generateTempSlug } = useTempResumeStore();
+
+  const updateState = (updates: Partial<ResumeGeneratorState>) => {
     setState(prev => ({ ...prev, ...updates }));
   };
 
   const resetToInitialState = () => {
     setState(initialState);
-    if (fileInputRef.current) fileInputRef.current.value = '';
-    if (jobSpecFileInputRef.current) jobSpecFileInputRef.current.value = '';
   };
 
-  // Validation
   const validateFileSelection = (file: File): string | null => {
-    if (file.size > FILE_UPLOAD_LIMITS.MAX_SIZE) {
-      return ERROR_MESSAGES.FILE_TOO_LARGE;
-    }
-    if (!(FILE_UPLOAD_LIMITS.ACCEPTED_TYPES as readonly string[]).includes(file.type)) {
-      return ERROR_MESSAGES.INVALID_FILE_TYPE;
+    const allowedTypes = ['application/pdf', 'text/plain'];
+    if (!allowedTypes.includes(file.type)) {
+      return 'Please upload a PDF or TXT file only.';
     }
     return null;
   };
 
   const validateForm = (): string | null => {
     if (!state.uploadedFile) {
-      return ERROR_MESSAGES.NO_FILE;
+      return 'Please upload a resume file to get started.';
     }
-   
-      if (state.jobSpecMethod === 'paste' && !state.jobSpecText.trim()) {
-        return ERROR_MESSAGES.NO_JOB_DESCRIPTION;
-      }
-      if (state.jobSpecMethod === 'upload' && !state.jobSpecFile) {
-        return ERROR_MESSAGES.NO_JOB_FILE;
-      }
-      if (state.jobSpecText.length > CHARACTER_LIMITS.JOB_SPEC) {
-        return ERROR_MESSAGES.JOB_SPEC_TOO_LONG(state.jobSpecText.length);
-      }
-  
-
-
     return null;
   };
 
-  // File handling
   const handleFileSelection = (file: File) => {
     const error = validateFileSelection(file);
     if (error) {
       updateState({ error });
       return;
     }
+
     updateState({ uploadedFile: file, error: '' });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
-      handleFileSelection(e.target.files[0]);
-    }
-  };
-
-  const handleJobSpecFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
-      updateState({ jobSpecFile: e.target.files[0] });
-    }
+    const file = e.target.files?.[0];
+    if (file) handleFileSelection(file);
   };
 
   const handleRemoveFile = () => {
@@ -110,18 +92,12 @@ export function useResumeTailor(isAuthenticated: boolean) {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  // Form updates
-  const setJobSpecMethod = (method: JobSpecMethod) => updateState({ jobSpecMethod: method });
-  const setJobSpecText = (text: string) => updateState({ jobSpecText: text });
-  const setTone = (tone: ToneOption) => updateState({ tone });
-  const setExtraPrompt = (prompt: string) => updateState({ extraPrompt: prompt });
-
   const setProfileImage = (image: string) => updateState({ profileImage: image });
   const setCustomColors = (colors: Record<string, string>) => updateState({ customColors: colors });
   const setShowColorDialog = (show: boolean) => updateState({ showColorDialog: show });
   const setShowErrorModal = (show: boolean) => updateState({ showErrorModal: show });
 
-  // Drag and drop
+  // Drag and drop handlers
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -130,32 +106,28 @@ export function useResumeTailor(isAuthenticated: boolean) {
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.dataTransfer.files?.[0]) {
-      handleFileSelection(e.dataTransfer.files[0]);
-    }
+
+    const file = e.dataTransfer.files?.[0];
+    if (file) handleFileSelection(file);
   };
 
-  // Stream handling
   const handleStreamUpdate = (streamUpdate: StreamUpdate) => {
-    if (streamUpdate.progress !== undefined) {
-      updateState({ streamingProgress: streamUpdate.progress });
-    }
-    if (streamUpdate.message) {
-      updateState({ streamingMessage: streamUpdate.message });
-    }
-    if (streamUpdate.partialData) {
-      updateState({ partialResumeData: streamUpdate.partialData });
-    }
+    updateState({
+      streamingProgress: streamUpdate.progress || 0,
+      streamingMessage: streamUpdate.message || '',
+      partialResumeData: streamUpdate.partialData || null,
+    });
   };
 
-  // Success handling
   const handleSuccessfulParse = async (parsedData: ParsedResumeSchema, uploadInfo?: ParseInfo) => {
-    // Always get aiTailorCommentary from parsedData.metadata if not present in uploadInfo
-    const aiTailorCommentary = uploadInfo?.aiTailorCommentary || parsedData.metadata?.aiTailorCommentary || null;
-    updateState({
-      localResumeData: parsedData,
-      aiTailorCommentary,
+    console.log('[GeneratorTool] Resume generated successfully:', {
+      hasData: !!parsedData,
+      method: uploadInfo?.method,
+      confidence: uploadInfo?.confidence,
+      processingType: uploadInfo?.processingType,
     });
+
+    updateState({ localResumeData: parsedData });
 
     if (isAuthenticated) {
       // Save to database for authed users
@@ -179,11 +151,13 @@ export function useResumeTailor(isAuthenticated: boolean) {
       }
     }
 
-    if (uploadInfo?.resumeSlug) {
-      router.push(`/resume/${uploadInfo.resumeSlug}`);
-    } else {
+    // Create temporary resume for unauthed users or fallback
+    if (parsedData) {
       const tempSlug = generateTempSlug();
-      addTempResume(tempSlug, parsedData, aiTailorCommentary || undefined);
+      
+      addTempResume(tempSlug, parsedData);
+      
+      console.log('[GeneratorTool] Created temp resume with slug:', tempSlug);
       router.push(`/resume/temp-resume/${tempSlug}`);
     }
   };
@@ -198,13 +172,13 @@ export function useResumeTailor(isAuthenticated: boolean) {
 
     updateState({ 
       error: '', 
-      isProcessing: true, // Set processing to true when starting
+      isProcessing: true,
       streamingProgress: 0,
-      streamingMessage: 'Preparing your resume...'
+      streamingMessage: 'Analyzing your resume with precision...'
     });
 
     try {
-      const formData = createTailorFormData(state, isAuthenticated);
+      const formData = createGeneratorFormData(state, isAuthenticated);
 
       // Log form data for debugging
       const formDataLog: Record<string, string | File> = {};
@@ -213,9 +187,9 @@ export function useResumeTailor(isAuthenticated: boolean) {
           ? `[File: ${value.name}, size: ${value.size}]` 
           : value;
       });
-      console.log('[TailorTool] Submitting resume:', formDataLog);
+      console.log('[GeneratorTool] Submitting resume for precise extraction:', formDataLog);
 
-      const result = await parseResumeTailor(formData, handleStreamUpdate);
+      const result = await parseResumeGenerator(formData, handleStreamUpdate);
       
       if (result.status === 'completed' && result.data) {
         handleSuccessfulParse(result.data, result.meta);
@@ -224,11 +198,11 @@ export function useResumeTailor(isAuthenticated: boolean) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
       
       const enhancedErrorMessage = `${errorMessage}\n\nDon't worry! You can try again with:
-• A different resume file
-• A simpler job description
+• A different resume file format (PDF or TXT)
 • Checking your internet connection
+• Ensuring the file contains readable text
 
-Your progress has been saved and you can continue from where you left off.`;
+The resume generator focuses on precise extraction, so clear, well-formatted files work best.`;
 
       updateState({
         modalErrorMessage: enhancedErrorMessage,
@@ -240,7 +214,7 @@ Your progress has been saved and you can continue from where you left off.`;
         streamingProgress: 0,
         streamingMessage: '',
         partialResumeData: null,
-        isProcessing: false, // Reset processing when done
+        isProcessing: false,
       });
     }
   };
@@ -251,11 +225,9 @@ Your progress has been saved and you can continue from where you left off.`;
     
     // Refs
     fileInputRef,
-    jobSpecFileInputRef,
     
     // Actions
     handleFileChange,
-    handleJobSpecFileChange,
     handleRemoveFile,
     handleDrag,
     handleDrop,
@@ -263,10 +235,6 @@ Your progress has been saved and you can continue from where you left off.`;
     resetToInitialState,
     
     // Setters
-    setJobSpecMethod,
-    setJobSpecText,
-    setTone,
-    setExtraPrompt,
     setProfileImage,
     setCustomColors,
     setShowColorDialog,

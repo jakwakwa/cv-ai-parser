@@ -7,11 +7,11 @@ import React, {
   useRef,
 } from 'react';
 import { KEEP_TEMP_RESUMES_FOR_TESTING } from '@/lib/config';
-import type { EnhancedParsedResume } from '@/lib/resume-parser/enhanced-schema';
+import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
 
 interface TempResumeData {
   slug: string;
-  resumeData: EnhancedParsedResume;
+  resumeData: ParsedResumeSchema;
   aiTailorCommentary?: string;
   createdAt: number;
 }
@@ -20,7 +20,7 @@ interface TempResumeStore {
   tempResumes: Map<string, TempResumeData>;
   addTempResume: (
     slug: string,
-    resumeData: EnhancedParsedResume,
+    resumeData: ParsedResumeSchema,
     aiTailorCommentary?: string
   ) => void;
   getTempResume: (slug: string) => TempResumeData | undefined;
@@ -67,7 +67,7 @@ export function TempResumeProvider({ children }: { children: ReactNode }) {
 
     addTempResume: (
       slug: string,
-      resumeData: EnhancedParsedResume,
+      resumeData: ParsedResumeSchema,
       aiTailorCommentary?: string
     ) => {
       tempResumesRef.current.set(slug, {

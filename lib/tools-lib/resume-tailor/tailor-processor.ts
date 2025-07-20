@@ -1,3 +1,5 @@
+import { google } from '@ai-sdk/google';
+import { generateText } from 'ai';
 import type { FileParseResult } from '../shared/file-parsers/base-parser';
 import type { ParsedResumeSchema } from '../shared-parsed-resume-schema';
 import { 
@@ -41,7 +43,7 @@ class TailorProcessor {
     const jobAnalysis = await this.analyzeJobSpec(tailorContext.jobSpecText || '');
 
     // Step 3: Apply tailoring based on job spec and tone
-    const tailored = await this.applyTailoring(originalParsed, tailorContext);
+    const tailored = await this.applyTailoring(originalParsed, tailorContext, fileResult.fileData);
 
     const processingTime = Date.now() - startTime;
     const matchScore = this.calculateJobMatchScore(tailored, tailorContext);
@@ -64,9 +66,102 @@ class TailorProcessor {
   private async parseOriginal(content: string): Promise<ParsedResumeSchema> {
     // TODO: Implement actual AI call using getOriginalResumeParsingPrompt
     const prompt = getOriginalResumeParsingPrompt(content);
-    console.log('Parsing original resume for tailoring...');
+    console.log('[Tailor] Parsing original resume for tailoring...');
     
-    // Placeholder - would be replaced with actual AI parsing
+    // Check if this is a PDF that should be sent directly to AI
+    const isPdfForAI = content.startsWith('PDF_FILE_FOR_AI_PROCESSING');
+    const hasRealTextContent = !content.includes('Placeholder content') && 
+                              !isPdfForAI && 
+                              content.length > 100;
+    
+    if (isPdfForAI) {
+      console.log('[Tailor] PDF detected - ready for direct AI processing with Gemini Flash Pro');
+      
+      const fileInfo = content.split(':');
+      const fileName = fileInfo[1] || 'Resume.pdf';
+      
+      return {
+        name: fileName.replace(/\.(pdf)$/i, '').replace(/[_-]/g, ' '),
+        title: 'Professional Title (AI will extract from PDF)',
+        summary: `PDF Resume ready for AI tailoring with Gemini Flash Pro.
+        
+⚡ Advanced Processing Capabilities:
+• Direct PDF object parsing (no text extraction needed)
+• Precise content extraction maintaining original formatting  
+• Job-specific optimization while preserving factual accuracy
+• ATS-compatible output generation
+
+[In production: PDF + Job Spec → AI → Tailored Resume]`,
+        experience: [
+          {
+            title: 'Position (AI will extract and optimize from PDF)',
+            company: 'Company (AI will extract from PDF)',
+            role: 'Role (AI will extract from PDF)', 
+            duration: 'Duration (AI will extract from PDF)',
+            details: [
+              'AI will extract original achievements from PDF',
+              'Content will be optimized for job requirements',
+              'Keywords will be naturally integrated'
+            ],
+          },
+        ],
+        skills: ['Skills will be extracted and optimized by AI from PDF'],
+        contact: {
+          email: 'email@extracted.by.ai.from.pdf',
+          phone: 'phone-extracted-by-ai',
+          location: 'location-extracted-by-ai',
+        },
+        education: [
+          {
+            degree: 'Degree (AI will extract from PDF)',
+            institution: 'Institution (AI will extract from PDF)',
+            duration: 'Period (AI will extract from PDF)',
+          },
+        ],
+      };
+    }
+    
+    if (hasRealTextContent) {
+      console.log('[Tailor] Working with real text content, length:', content.length);
+      
+      // Extract name from content if possible
+      const nameMatch = content.match(/(?:Name|My name is|I am|I'm)\s*:?\s*([A-Za-z\s]+)/i);
+      const extractedName = nameMatch ? nameMatch[1].trim() : 'Resume Candidate';
+      
+      return {
+        name: extractedName,
+        title: 'Professional Title (from original resume)',
+        summary: `Original resume content preview: ${content.substring(0, 200)}...`,
+        experience: [
+          {
+            title: 'Position (extracted from original)',
+            company: 'Company (extracted from original)',
+            role: 'Role (extracted from original)',
+            duration: 'Duration (extracted from original)',
+            details: [
+              'Original responsibility/achievement from resume',
+              'Original technical contribution from resume',
+              'Original impact/result from resume'
+            ],
+          },
+        ],
+        skills: this.extractSkillsFromContent(content),
+        contact: {
+          email: 'email@from.original.resume',
+          phone: 'phone-from-original',
+          location: 'location-from-original',
+        },
+        education: [
+          {
+            degree: 'Degree (from original resume)',
+            institution: 'Institution (from original resume)',
+            duration: 'Study period (from original)',
+          },
+        ],
+      };
+    }
+    
+    // Fallback placeholder for other cases
     return {
       name: 'John Doe',
       title: 'Software Developer',
@@ -100,6 +195,23 @@ class TailorProcessor {
     };
   }
 
+  private extractSkillsFromContent(content: string): string[] {
+    // Simple skill extraction for demonstration
+    const commonSkills = [
+      'JavaScript', 'Python', 'React', 'Node.js', 'TypeScript', 'HTML', 'CSS',
+      'SQL', 'Git', 'AWS', 'Docker', 'API', 'REST', 'GraphQL', 'MongoDB',
+      'PostgreSQL', 'Linux', 'Agile', 'Scrum', 'Leadership', 'Communication',
+      'Vue', 'Angular', 'Express', 'Django', 'Flask', 'Spring', 'Java', 'C#',
+      'PHP', 'Ruby', 'Go', 'Rust', 'Kubernetes', 'Jenkins', 'CI/CD'
+    ];
+
+    const foundSkills = commonSkills.filter(skill => 
+      content.toLowerCase().includes(skill.toLowerCase())
+    );
+
+    return foundSkills.length > 0 ? foundSkills.slice(0, 15) : ['Skills from original resume'];
+  }
+
   private async analyzeJobSpec(jobSpec: string): Promise<any> {
     if (!jobSpec.trim()) {
       return { keywords: [], requirements: [], skills: [] };
@@ -119,8 +231,43 @@ class TailorProcessor {
 
   private async applyTailoring(
     original: ParsedResumeSchema,
-    context: TailorContext
+    context: TailorContext,
+    fileData?: ArrayBuffer
   ): Promise<ParsedResumeSchema> {
+    if (fileData) {
+      const model = google('gemini-1.5-flash');
+      const prompt = getTailoredResumeParsingPrompt(
+        'PDF_FILE_FOR_AI_PROCESSING',
+        context.jobSpecText || '',
+        context.tone
+      );
+      const { text } = await generateText({
+        model,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'text', text: prompt },
+            { type: 'file', data: new Uint8Array(fileData), mimeType: 'application/pdf' },
+          ],
+        }],
+      });
+      // Strip markdown code block and any extra content after JSON
+      let cleanText = text.trim();
+      // Remove code block markers if present
+      if (cleanText.startsWith('```json')) {
+        cleanText = cleanText.replace(/^```json\s*/, '');
+      }
+      if (cleanText.endsWith('```')) {
+        cleanText = cleanText.replace(/```\s*$/, '');
+      }
+      // Extract only the first valid JSON object (in case of extra content)
+      const firstBrace = cleanText.indexOf('{');
+      const lastBrace = cleanText.lastIndexOf('}');
+      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+        cleanText = cleanText.substring(firstBrace, lastBrace + 1);
+      }
+      return JSON.parse(cleanText) as ParsedResumeSchema;
+    }
     // TODO: Implement the main AI call using getTailoredResumeParsingPrompt
     const prompt = getTailoredResumeParsingPrompt(
       JSON.stringify(original, null, 2),
@@ -223,7 +370,7 @@ class TailorProcessor {
     // Check experience relevance
     const relevantExp = tailored.experience?.filter(exp => 
       exp.details?.some(detail => 
-        jobSpec.split(' ').some(word => 
+        detail && jobSpec.split(' ').some(word => 
           detail.toLowerCase().includes(word.toLowerCase()) && word.length > 3
         )
       )

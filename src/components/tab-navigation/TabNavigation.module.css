@@ -28,7 +28,6 @@
   border-radius: var(--border-radius-medium);
   font-weight: var(--font-weight-semibold);
   transition: var(--transition-fast);
-  
 }
 @media (max-width: 768px) {
   .tabNavigationContainer {
@@ -51,11 +50,9 @@
     padding: var(--spacing-xs) var(--spacing-md);
     height: 3rem;
     font-size: var(--font-size-xxs);
-
   }
 }
 
 .activeTab {
   display: none;
 }
-

@@ -4,7 +4,12 @@
   flex-direction: column;
   gap: 1rem;
 }
-
+.homeToolsWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+  margin-bottom: 1rem;
+}
 /* Hero Section */
 .heroContainer {
   background: var(--color-gradient-primary);
@@ -227,6 +232,12 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .homeToolsWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    margin-bottom: 1rem;
+  }
   .heroTitle {
     font-size: 2rem;
     line-height: 1.1;

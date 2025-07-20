@@ -1,339 +1,340 @@
 /* Container and Layout */
 .container {
-    min-height: 100vh;
-    width: 100vw;
-    background-color: var(--color-background-tertiary);
+  min-height: 100vh;
+  width: 100%;
+  border-radius: var(--border-radius-medium);
+  /* background-color: var(--color-background-tertiary); */
 }
 
 .wrapper {
-    max-width: var(--max-width-lg);
-    margin: 0 auto;
-    padding: var(--spacing-lg);
+  max-width: var(--max-width-lg);
+  margin: 0 auto;
+  padding: var(--spacing-lg);
 }
 
 .header {
-    background-color: var(--color-background-primary);
-    border-radius: var(--border-radius-medium);
-    box-shadow: var(--color-shadow-small);
-    border: 1px solid var(--color-border-light);
-    padding: var(--spacing-lg);
-    margin-bottom: var(--spacing-lg);
-    position: sticky;
-    top: 60px;
-    z-index: 10;
-    box-shadow: 10px 10px 10px black;
+  background-color: var(--color-background-primary);
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--color-shadow-small);
+  border: 1px solid var(--color-border-light);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  position: sticky;
+  top: 60px;
+  z-index: 10;
+  box-shadow: 4px 10px 12px 0px #0000001f;
 }
 
 .headerContent {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .headerTitle {
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-primary);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
 }
 
 .headerSubtitle {
-    color: var(--color-text-secondary);
-    margin-top: var(--spacing-xs);
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-xs);
 }
 
 .headerActions {
-    display: flex;
-    gap: var(--spacing-sm);
-    flex-direction: row;
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-direction: row;
 }
 
 .previewButton {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
 }
 
 .saveButton {
-    background-color: var(--color-accent-teal);
+  background-color: var(--color-accent-teal);
 }
 
 .saveButton:hover {
-    background-color: var(--color-accent-teal-dark);
+  background-color: var(--color-accent-teal-dark);
 }
 
 /* Grid Layout */
 .grid {
-    display: grid;
-    gap: var(--spacing-lg);
+  display: grid;
+  gap: var(--spacing-lg);
 }
 
 .gridOneColumn {
-    grid-template-columns: 1fr;
+  grid-template-columns: 1fr;
 }
 
 .gridTwoColumns {
-    grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
 }
 
 .editorPanel {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
 }
 
 /* Cards */
 .card {
-    background-color: var(--color-background-secondary);
-    border: 1px solid var(--color-border-light);
-    box-shadow: var(--color-shadow-small);
+  background-color: var(--color-background-secondary);
+  border: 1px solid var(--color-border-light);
+  box-shadow: var(--color-shadow-small);
 }
 
 .cardTitle {
-    color: var(--color-text-primary);
-    text-align: left;
+  color: var(--color-text-primary);
+  text-align: left;
 }
 
 /* Skills Section */
 .skillsInputGroup {
-    display: flex;
-    gap: var(--spacing-xs);
+  display: flex;
+  gap: var(--spacing-xs);
 }
 
 .addSkillButton {
-    background-color: var(--color-accent-teal);
+  background-color: var(--color-accent-teal);
 }
 
 .addSkillButton:hover {
-    background-color: var(--color-accent-teal-dark);
+  background-color: var(--color-accent-teal-dark);
 }
 
 .skillsList {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-xs);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
 }
 
 .skillBadge {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    background-color: var(--color-background-secondary);
-    color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-primary);
 }
 
 .removeSkillButton {
-    margin-left: var(--spacing-xs);
+  margin-left: var(--spacing-xs);
 }
 
 .removeSkillButton:hover {
-    color: var(--color-error-text);
+  color: var(--color-error-text);
 }
 
 /* Experience Section */
 .addExperienceButton {
-    background-color: var(--color-accent-teal);
+  background-color: var(--color-accent-teal);
 }
 
 .addExperienceButton:hover {
-    background-color: var(--color-accent-teal-dark);
+  background-color: var(--color-accent-teal-dark);
 }
 
 .experienceItem {
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--border-radius-medium);
-    padding: var(--spacing-md);
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
-    background-color: var(--color-background-tertiary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius-medium);
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  background-color: var(--color-background-tertiary);
 }
 
 .experienceItemHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .experienceItemTitle {
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-accent);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-accent);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
 }
 
 .removeExperienceButton {
-    color: var(--color-error-text);
+  color: var(--color-error-text);
 }
 
 .removeExperienceButton:hover {
-    color: var(--color-error-dark);
-    background-color: var(--color-error-bg);
+  color: var(--color-error-dark);
+  background-color: var(--color-error-bg);
 }
 
 /* Spacing Utilities */
 .spaceY4 {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
 }
 
 .spaceY6 {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
 }
 
 .mb4 {
-    margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
 }
 
 .mb6 {
-    margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
 }
 
 .mt1 {
-    margin-top: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
 }
 
 .mt2 {
-    margin-top: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
 }
 
 .mb2 {
-    margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
 }
 
 .mb3 {
-    margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
 }
 
 .mb4 {
-    margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
 }
 
 /* Text Utilities */
 .textXs {
-    font-size: var(--font-size-xs);
+  font-size: var(--font-size-xs);
 }
 
 .textSm {
-    font-size: var(--font-size-sm);
+  font-size: var(--font-size-sm);
 }
 
 .textLg {
-    font-size: var(--font-size-lg);
+  font-size: var(--font-size-lg);
 }
 
 .text2xl {
-    font-size: var(--font-size-2xl);
+  font-size: var(--font-size-2xl);
 }
 
 .fontBold {
-    font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 
 .fontMedium {
-    font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-medium);
 }
 
 .fontSemibold {
-    font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-semibold);
 }
 
 .textGray500 {
-    color: var(--color-text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .textGray600 {
-    color: var(--color-text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .textGray700 {
-    color: var(--color-text-light);
+  color: var(--color-text-light);
 }
 
 .textGray800 {
-    color: var(--color-text-primary);
+  color: var(--color-text-primary);
 }
 
 .textGray900 {
-    color: var(--color-text-primary);
+  color: var(--color-text-primary);
 }
 
 .textRed600 {
-    color: var(--color-error-text);
+  color: var(--color-error-text);
 }
 
 .textRed700 {
-    color: var(--color-error-dark);
+  color: var(--color-error-dark);
 }
 
 /* Flex Utilities */
 .flex {
-    display: flex;
+  display: flex;
 }
 
 .flexWrap {
-    flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 .itemsCenter {
-    align-items: center;
+  align-items: center;
 }
 
 .itemsStart {
-    align-items: flex-start;
+  align-items: flex-start;
 }
 
 .justifyBetween {
-    justify-content: space-between;
+  justify-content: space-between;
 }
 
 .gap1 {
-    gap: var(--spacing-xs);
+  gap: var(--spacing-xs);
 }
 
 .gap2 {
-    gap: var(--spacing-sm);
+  gap: var(--spacing-sm);
 }
 
 .gap3 {
-    gap: var(--spacing-sm);
+  gap: var(--spacing-sm);
 }
 
 .gap4 {
-    gap: var(--spacing-md);
+  gap: var(--spacing-md);
 }
 
 .gap6 {
-    gap: var(--spacing-lg);
+  gap: var(--spacing-lg);
 }
 
 /* Icon Sizes */
 .iconSm {
-    width: var(--spacing-xs);
-    height: var(--spacing-xs);
+  width: var(--spacing-xs);
+  height: var(--spacing-xs);
 }
 
 .iconLg {
-    width: var(--spacing-lg);
-    height: var(--spacing-lg);
+  width: var(--spacing-lg);
+  height: var(--spacing-lg);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .gridTwoColumns {
-        grid-template-columns: 1fr;
-    }
+  .gridTwoColumns {
+    grid-template-columns: 1fr;
+  }
 
-    .headerContent {
-        flex-direction: column;
-        gap: var(--spacing-md);
-        align-items: stretch;
-    }
+  .headerContent {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: stretch;
+  }
 
-    .headerActions {
-        justify-content: center;
-        flex-direction: column;
-    }
+  .headerActions {
+    justify-content: center;
+    flex-direction: column;
+  }
 }

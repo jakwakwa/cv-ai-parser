@@ -7,8 +7,21 @@
 .mainUserContainer {
   flex-grow: 1;
   padding: var(--spacing-md);
-  background: var(--color-page-background-fallback);
-  background-image: var(--color-page-background-gradient);
+  /* background-color: #4a4a4a; */
+  background: #eeaeca;
+  background: radial-gradient(
+    circle,
+    rgba(238, 174, 202, 1) 0%,
+    rgba(148, 187, 233, 1) 100%
+  );
+  background: #eeaeca;
+  background: radial-gradient(
+    circle,
+    rgba(238, 174, 202, 1) 0%,
+    rgba(148, 187, 233, 1) 100%
+  );
+  /* background: var(--color-page-background-fallback); */
+  /* background-image: var(--color-page-background-gradient); */
 }
 
 @media (min-width: 768px) {

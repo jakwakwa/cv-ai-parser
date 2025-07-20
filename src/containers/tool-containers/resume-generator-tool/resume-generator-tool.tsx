@@ -1,15 +1,20 @@
 'use client';
 
-import { ErrorModal } from '@/src/components/error-modal';
-import { LoadingState } from '@/src/components/loading-state';
 import { ResumeUploadPanel } from '@/src/components/resume-upload-panel';
-import { useResumeTailor } from '@/src/hooks/use-resume-tailor';
+import { useResumeGenerator } from '@/src/hooks/use-resume-generator';
+import { ErrorModal } from '../../../components/error-modal';
+import { LoadingState } from '../../../components/loading-state';
 import styles from '../shared-tool.module.css';
+
+interface ResumeGeneratorToolProps {
+  isLoading: boolean;
+  isAuthenticated: boolean;
+}
 
 const ResumeGeneratorTool = ({
   isLoading = false,
   isAuthenticated = false,
-}) => {
+}: ResumeGeneratorToolProps) => {
   const {
     state,
     fileInputRef,
@@ -23,7 +28,7 @@ const ResumeGeneratorTool = ({
     setCustomColors,
     setShowColorDialog,
     setShowErrorModal,
-  } = useResumeTailor(isAuthenticated);
+  } = useResumeGenerator(isAuthenticated);
 
   // Show loading state if we have streaming progress, isLoading is true, or processing
   const shouldShowLoading =

@@ -1,11 +1,12 @@
 import { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
-import type { ResumeTailorState, StreamUpdate } from './types';
+import type { ResumeGeneratorState, ResumeTailorState, StreamUpdate } from './types';
 
-export async function parseResume(
+// Resume Generator API Service
+export async function parseResumeGenerator(
   formData: FormData,
   onStreamUpdate?: (update: StreamUpdate) => void
 ): Promise<StreamUpdate> {
-  const response = await fetch('/api/parse-resume', {
+  const response = await fetch('/api/parse-resume-generator', {
     method: 'POST',
     body: formData,
   });
@@ -31,6 +32,48 @@ export async function parseResume(
     return handleStreamingResponse(response, onStreamUpdate);
   }
   return handleRegularResponse(response);
+}
+
+// Resume Tailor API Service
+export async function parseResumeTailor(
+  formData: FormData,
+  onStreamUpdate?: (update: StreamUpdate) => void
+): Promise<StreamUpdate> {
+  const response = await fetch('/api/parse-resume-tailor', {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    const errorMsg = errorData?.error || 'Failed to tailor resume';
+
+    if (response.status === 401) {
+      throw new Error('Authentication required. Please sign in to continue.');
+    }
+
+    if (response.status === 400 && errorData?.redirectTo) {
+      throw new Error(`${errorMsg}\n\n${errorData.details || ''}\n\nPlease try uploading a different file with more content.`);
+    }
+
+    throw new Error(errorMsg);
+  }
+
+  const contentType = response.headers.get('content-type');
+  
+  if (contentType?.includes('text/plain')) {
+    return handleStreamingResponse(response, onStreamUpdate);
+  }
+  return handleRegularResponse(response);
+}
+
+// Legacy function for backward compatibility (can be removed later)
+export async function parseResume(
+  formData: FormData,
+  onStreamUpdate?: (update: StreamUpdate) => void
+): Promise<StreamUpdate> {
+  // Default to tailor for backward compatibility
+  return parseResumeTailor(formData, onStreamUpdate);
 }
 
 async function handleStreamingResponse(
@@ -138,11 +181,16 @@ async function handleRegularResponse(response: Response): Promise<StreamUpdate> 
     meta?: {
       method: string;
       confidence: number;
-      filename: string;
-      fileType: string;
-      fileSize: number;
+      filename?: string;
+      fileType?: string;
+      fileSize?: number;
       resumeId?: string;
       resumeSlug?: string;
+      processingType?: 'generator' | 'tailor';
+      aiTailorCommentary?: string;
+      jobMatchScore?: number;
+      optimizationLevel?: string;
+      processingTime?: number;
     };
   };
 
@@ -161,7 +209,8 @@ async function handleRegularResponse(response: Response): Promise<StreamUpdate> 
   };
 }
 
-export function createFormData(state: ResumeTailorState, isAuthenticated: boolean): FormData {
+// Form data creation for Resume Generator
+export function createGeneratorFormData(state: ResumeGeneratorState, isAuthenticated: boolean): FormData {
   const formData = new FormData();
   
   if (!state.uploadedFile) {
@@ -179,18 +228,44 @@ export function createFormData(state: ResumeTailorState, isAuthenticated: boolea
     formData.append('customColors', JSON.stringify(state.customColors));
   }
 
+  return formData;
+}
 
-    formData.append('jobSpecMethod', state.jobSpecMethod);
-
-    if (state.jobSpecMethod === 'paste') {
-      formData.append('jobSpecText', state.jobSpecText);
-    } else if (state.jobSpecFile) {
-      formData.append('jobSpecFile', state.jobSpecFile);
-    }
-
-    formData.append('tone', state.tone);
-    formData.append('extraPrompt', state.extraPrompt);
+// Form data creation for Resume Tailor
+export function createTailorFormData(state: ResumeTailorState, isAuthenticated: boolean): FormData {
+  const formData = new FormData();
   
+  if (!state.uploadedFile) {
+    throw new Error('No file uploaded');
+  }
+
+  formData.append('file', state.uploadedFile);
+  formData.append('isAuthenticated', String(isAuthenticated));
+
+  if (state.profileImage) {
+    formData.append('profileImage', state.profileImage);
+  }
+
+  if (state.customColors && Object.keys(state.customColors).length > 0) {
+    formData.append('customColors', JSON.stringify(state.customColors));
+  }
+
+  // Tailor-specific data
+  formData.append('jobSpecMethod', state.jobSpecMethod);
+
+  if (state.jobSpecMethod === 'paste') {
+    formData.append('jobSpecText', state.jobSpecText);
+  } else if (state.jobSpecFile) {
+    formData.append('jobSpecFile', state.jobSpecFile);
+  }
+
+  formData.append('tone', state.tone);
+  formData.append('extraPrompt', state.extraPrompt);
 
   return formData;
+}
+
+// Legacy function for backward compatibility (can be removed later)
+export function createFormData(state: ResumeTailorState, isAuthenticated: boolean): FormData {
+  return createTailorFormData(state, isAuthenticated);
 } 
