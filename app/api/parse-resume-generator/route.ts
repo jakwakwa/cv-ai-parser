@@ -1,8 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { generatorProcessor } from '@/lib/tools-lib/resume-generator/generator-processor';
 
 export async function POST(request: NextRequest) {
   try {
-    // TODO: Implement generator-specific parsing logic
     console.log('Received request for resume-generator');
     const formData = await request.formData();
     const file = formData.get('file') as File;
@@ -11,11 +11,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 });
     }
 
-    // Placeholder response
-    return NextResponse.json({
-      message: 'Generator: File received, processing not implemented yet.',
+    // This is a placeholder for the full file parse result
+    const fileResult = {
+      content: 'File content would be here',
+      fileType: 'pdf' as const,
       fileName: file.name,
-    });
+      fileSize: file.size,
+    };
+
+    const result = await generatorProcessor.process(fileResult);
+
+    return NextResponse.json(result);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : 'An unknown error occurred.';
