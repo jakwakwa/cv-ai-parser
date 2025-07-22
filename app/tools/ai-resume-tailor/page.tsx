@@ -1,7 +1,7 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
-import { FooterAd, HeaderAd } from '@/src/components/adsense/AdBanner';
+// Ads temporarily removed until sufficient content is added
 import ResumeTailorTool from '@/src/containers/tool-containers/resume-tailor-tool/resume-tailor-tool';
 import styles from './page.module.css';
 
@@ -15,7 +15,6 @@ export default function AiResumeTailorPage() {
 
   return (
     <div className={styles.pageContainer}>
-      {shouldShowAds && <HeaderAd />}
       <div className={styles.headerSection}>
         <h1 className={styles.title}>AI Resume Tailor</h1>
         <p className={styles.subtitle}>
@@ -29,7 +28,6 @@ export default function AiResumeTailorPage() {
         setIsLoading={setIsLoading}
         isAuthenticated={!!session}
       />
-      {shouldShowAds && <FooterAd />}
     </div>
   );
 }
