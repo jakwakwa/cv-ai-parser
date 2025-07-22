@@ -1,27 +1,28 @@
 import { SiteHeader } from '@/src/components/site-header/site-header';
 import { HeaderAd, FooterAd, ContentAd } from '@/src/components/adsense/AdBanner';
 import Link from 'next/link';
+import styles from './page.module.css';
 
 export default function CareerAdvicePage() {
   return (
-    <div className="pageWrapper">
+    <div className={styles.pageWrapper}>
       <SiteHeader />
       <HeaderAd />
       
-      <main style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto', lineHeight: '1.7' }}>
-        <header style={{ marginBottom: '3rem' }}>
-          <nav style={{ marginBottom: '1rem', fontSize: '0.9rem' }}>
-            <Link href="/blog" style={{ color: '#007bff', textDecoration: 'none' }}>Blog</Link>
-            <span style={{ margin: '0 0.5rem', color: '#666' }}>›</span>
-            <span style={{ color: '#666' }}>Career Advice</span>
+      <main className={styles.content}>
+        <header className={styles.header}>
+          <nav className={styles.nav}>
+            <Link href="/blog" className={styles.navLink}>Blog</Link>
+            <span className={styles.navSeparator}>›</span>
+            <span className={styles.navCurrent}>Career Advice</span>
           </nav>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', lineHeight: '1.2' }}>
+          <h1 className={styles.title}>
             Career Development Strategies for Modern Professionals: Building Lasting Success
           </h1>
-          <div style={{ color: '#666', fontSize: '0.9rem', marginBottom: '2rem' }}>
+          <div className={styles.meta}>
             <span>December 2024</span> • <span>10 min read</span> • <span>Career Advice</span>
           </div>
-          <p style={{ fontSize: '1.2rem', color: '#666' }}>
+          <p className={styles.subtitle}>
             Discover effective career development strategies that will help you advance your professional goals, build meaningful relationships, and create lasting success in today's dynamic workplace.
           </p>
         </header>

@@ -1,39 +1,40 @@
 import { SiteHeader } from '@/src/components/site-header/site-header';
 import { HeaderAd, FooterAd, ContentAd } from '@/src/components/adsense/AdBanner';
 import Link from 'next/link';
+import styles from './page.module.css';
 
 export default function ResumeWritingTipsPage() {
   return (
-    <div className="pageWrapper">
+    <div className={styles.pageWrapper}>
       <SiteHeader />
       <HeaderAd />
       
-      <main style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto', lineHeight: '1.7' }}>
-        <header style={{ marginBottom: '3rem' }}>
-          <nav style={{ marginBottom: '1rem', fontSize: '0.9rem' }}>
-            <Link href="/blog" style={{ color: '#007bff', textDecoration: 'none' }}>Blog</Link>
-            <span style={{ margin: '0 0.5rem', color: '#666' }}>›</span>
-            <span style={{ color: '#666' }}>Resume Writing Tips</span>
+      <main className={styles.content}>
+        <header className={styles.header}>
+          <nav className={styles.nav}>
+            <Link href="/blog" className={styles.navLink}>Blog</Link>
+            <span className={styles.navSeparator}>›</span>
+            <span className={styles.navCurrent}>Resume Writing Tips</span>
           </nav>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', lineHeight: '1.2' }}>
+          <h1 className={styles.title}>
             Essential Resume Writing Tips for 2024: A Comprehensive Guide
           </h1>
-          <div style={{ color: '#666', fontSize: '0.9rem', marginBottom: '2rem' }}>
+          <div className={styles.meta}>
             <span>December 2024</span> • <span>8 min read</span> • <span>Resume Writing</span>
           </div>
-          <p style={{ fontSize: '1.2rem', color: '#666' }}>
+          <p className={styles.subtitle}>
             Master the art of resume writing with these proven strategies that help you stand out in today's competitive job market and increase your interview chances.
           </p>
         </header>
 
-        <article>
-          <section style={{ marginBottom: '3rem' }}>
-            <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Introduction: The Modern Resume Landscape</h2>
-            <p>
+        <article className={styles.article}>
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>Introduction: The Modern Resume Landscape</h2>
+            <p className={styles.paragraph}>
               In 2024, the resume writing landscape has evolved significantly from traditional formats and expectations. With the widespread adoption of Applicant Tracking Systems (ATS), remote work considerations, and changing hiring practices, creating an effective resume requires understanding both technological requirements and human psychology. This comprehensive guide provides you with the essential strategies needed to craft a resume that not only passes automated screening but also captures the attention of hiring managers.
             </p>
             
-            <p>
+            <p className={styles.paragraph}>
               Today's successful resume must serve multiple purposes: it needs to be ATS-friendly for automated processing, visually appealing for human reviewers, keyword-optimized for searchability, and compelling enough to differentiate you from hundreds of other candidates. The key is balancing these sometimes competing requirements while maintaining authenticity and professional presentation.
             </p>
           </section>
@@ -171,9 +172,9 @@ export default function ResumeWritingTipsPage() {
             </p>
           </section>
 
-          <section style={{ backgroundColor: '#f8f9fa', padding: '2rem', borderRadius: '8px', marginBottom: '3rem' }}>
-            <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Key Takeaways</h2>
-            <ul style={{ paddingLeft: '1.5rem', lineHeight: '1.8' }}>
+          <section className={styles.takeaways}>
+            <h2>Key Takeaways</h2>
+            <ul>
               <li>Focus on achievements and quantifiable results rather than job duties</li>
               <li>Optimize for both ATS systems and human reviewers</li>
               <li>Customize your resume for each application and target role</li>
@@ -185,8 +186,8 @@ export default function ResumeWritingTipsPage() {
           </section>
         </article>
 
-        <nav style={{ marginTop: '3rem', padding: '2rem 0', borderTop: '1px solid #e0e0e0' }}>
-          <Link href="/blog" style={{ color: '#007bff', textDecoration: 'none' }}>
+        <nav className={styles.backNav}>
+          <Link href="/blog" className={styles.backLink}>
             ← Back to Blog
           </Link>
         </nav>
