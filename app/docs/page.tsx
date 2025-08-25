@@ -26,6 +26,13 @@ const guides: GuideMeta[] = [
       'Step-by-step guide to create a resume tailored to your new dream job',
     category: 'Ai Resume Tool',
   },
+  {
+    slug: 'posts',
+    title: 'Technical Blog Posts',
+    description:
+      'In-depth technical articles about building AI-powered resume tools and features.',
+    category: 'Technical Articles',
+  },
 ];
 
 const categories = Array.from(new Set(guides.map((g) => g.category)));
@@ -66,7 +73,7 @@ export default function GuidesPage() {
         {filtered.map((g) => (
           <li key={g.slug}>
             <Link
-              href={`/docs/guides/${g.slug}`}
+              href={g.slug === 'posts' ? `/docs/posts` : `/docs/guides/${g.slug}`}
               className={styles.guideItemTitle}
             >
               {g.title}
