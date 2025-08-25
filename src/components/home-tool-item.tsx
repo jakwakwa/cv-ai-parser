@@ -6,7 +6,7 @@ import {
   Upload,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { ContentAd } from '@/src/components/adsense/AdBanner';
+// ContentAd removed for better content compliance
 //   import HomeToolItem from '@/src/components/home-tool-item';
 import { Button } from '@/src/components/ui/ui-button/button';
 import styles from './home-tool-item.module.css';
@@ -60,8 +60,7 @@ function HomeToolItem({ content, link }: HomeToolItemProps) {
           </Button>
         </div>
 
-        {/* Figma to Resume Card */}
-        <ContentAd />
+        {/* Additional content space reserved for future features */}
       </div>
     </section>
   );

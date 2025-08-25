@@ -75,8 +75,17 @@ export const AdBanner: FC<Props> = ({
     const isRestricted = RESTRICTED_PAGES.some((path) =>
       pathname.startsWith(path)
     );
-
-    if (!isRestricted) {
+    
+    // Additional content validation before showing ads
+    const hasMinimumContent = () => {
+      if (typeof window === 'undefined') return false;
+      const mainContent = document.querySelector('main');
+      if (!mainContent) return false;
+      const textContent = mainContent.textContent || '';
+      return textContent.trim().length >= 500; // Minimum 500 characters
+    };
+    
+    if (!isRestricted && hasMinimumContent()) {
       loadAdSenseScript();
 
       // Listen for ad load events
@@ -143,9 +152,9 @@ export const AdBanner: FC<Props> = ({
       />
     </div>
   );
-};
+}
 
-// Restricted pages where ads should never show
+// Restricted pages where ads should never show - expanded for better compliance
 const RESTRICTED_PAGES = [
   '/404',
   '/500',
@@ -154,6 +163,12 @@ const RESTRICTED_PAGES = [
   '/admin',
   '/sitemap',
   '/robots',
+  '/auth',
+  '/login',
+  '/register',
+  '/thank-you',
+  '/loading',
+  '/tools', // Restrict tool pages until we add more content
 ] as const;
 
 // Ad slot configurations

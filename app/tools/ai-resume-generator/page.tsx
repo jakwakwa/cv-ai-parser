@@ -1,7 +1,7 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
-import { FooterAd, HeaderAd } from '@/src/components/adsense/AdBanner';
+// Ads temporarily removed until sufficient content is added
 import ResumeGeneratorTool from '@/src/containers/tool-containers/resume-generator-tool/resume-generator-tool';
 import styles from './page.module.css';
 
@@ -15,7 +15,6 @@ export default function AiResumeTailorPage() {
 
   return (
     <div className={styles.pageContainer}>
-      {shouldShowAds && <HeaderAd />}
       <div className={styles.headerSection}>
         <h1 className={styles.title}>AI Resume Generator</h1>
         <p className={styles.subtitle}>
@@ -25,7 +24,6 @@ export default function AiResumeTailorPage() {
       </div>
 
       <ResumeGeneratorTool isLoading={isLoading} isAuthenticated={!!session} />
-      {shouldShowAds && <FooterAd />}
     </div>
   );
 }
