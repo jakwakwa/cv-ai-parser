@@ -39,7 +39,7 @@ class GeneratorProcessor {
           role: 'user',
           content: [
             { type: 'text', text: prompt },
-            { type: 'file', data: new Uint8Array(fileResult.fileData), mimeType: 'application/pdf' },
+            { type: 'file', data: new Uint8Array(fileResult.fileData) },
           ],
         }],
       });
