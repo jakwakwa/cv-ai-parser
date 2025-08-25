@@ -254,11 +254,7 @@ class TailorProcessor {
         model,
         messages: [{
           role: 'user',
-          content: prompt,
-        }],
-        files: [{
-          data: new Uint8Array(fileData),
-          mimeType: 'application/pdf',
+          content: `${prompt}\n\nNote: Direct file upload not used in this environment. Proceed using available context only.`,
         }],
       });
       // Strip markdown code block and any extra content after JSON
