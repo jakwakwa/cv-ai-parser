@@ -726,9 +726,9 @@ input.searchInput::placeholder {
 
   .cardTitle {
     font-size: var(--font-size-sm);
-    display: box;
-    line-clamp: 2;
-    box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
   }
 

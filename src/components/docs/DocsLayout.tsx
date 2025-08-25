@@ -45,6 +45,17 @@ export default function DocsLayout({ children }: DocsLayoutProps) {
                 Guides
               </Link>
             </li>
+            <li>
+              <Link
+                href="/docs/posts"
+                className={clsx(
+                  styles.navLink,
+                  pathname === '/docs/posts' && styles.navLinkActive
+                )}
+              >
+                Posts
+              </Link>
+            </li>
           </ul>
         </nav>
       </aside>

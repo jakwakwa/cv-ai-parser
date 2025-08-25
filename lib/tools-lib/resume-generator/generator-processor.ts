@@ -33,14 +33,12 @@ class GeneratorProcessor {
     // AI PDF processing if fileData is present and fileType is pdf
     if (fileResult.fileType === 'pdf' && fileResult.fileData) {
       const model = google('gemini-1.5-flash');
+      // For now, we'll use the extracted text content since generateText doesn't support file uploads
       const { text } = await generateText({
         model,
         messages: [{
           role: 'user',
-          content: [
-            { type: 'text', text: prompt },
-            { type: 'file', data: new Uint8Array(fileResult.fileData), mimeType: 'application/pdf' },
-          ],
+          content: `${prompt}\n\nResume Content:\n${fileResult.content}`,
         }],
       });
 
