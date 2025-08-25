@@ -37,10 +37,11 @@ class GeneratorProcessor {
         model,
         messages: [{
           role: 'user',
-          content: [
-            { type: 'text', text: prompt },
-            { type: 'file', data: new Uint8Array(fileResult.fileData) },
-          ],
+          content: prompt,
+        }],
+        files: [{
+          data: new Uint8Array(fileResult.fileData),
+          mimeType: 'application/pdf',
         }],
       });
 

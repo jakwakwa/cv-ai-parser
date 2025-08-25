@@ -254,10 +254,11 @@ class TailorProcessor {
         model,
         messages: [{
           role: 'user',
-          content: [
-            { type: 'text', text: prompt },
-            { type: 'file', data: new Uint8Array(fileData) },
-          ],
+          content: prompt,
+        }],
+        files: [{
+          data: new Uint8Array(fileData),
+          mimeType: 'application/pdf',
         }],
       });
       // Strip markdown code block and any extra content after JSON
