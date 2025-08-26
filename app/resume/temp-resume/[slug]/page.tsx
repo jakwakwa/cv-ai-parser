@@ -69,6 +69,7 @@ export default function TempResumePage() {
       setResumeData(tempResume.resumeData);
       setAiTailorCommentary(tempResume.aiTailorCommentary || null);
       setSourceTool(tempResume.sourceTool);
+      setLoading(false);
     } else {
       toast({
         title: 'Resume Not Found',
