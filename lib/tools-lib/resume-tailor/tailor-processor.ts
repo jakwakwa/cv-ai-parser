@@ -1,6 +1,6 @@
 import { google } from '@ai-sdk/google';
 import { generateText } from 'ai';
-import { AI_MODEL_FLASH } from '@/lib/config';
+import { AI_MODEL_PRO } from '@/lib/config';
 import type { FileParseResult } from '../shared/file-parsers/base-parser';
 import { parsedResumeSchema } from '../shared-parsed-resume-schema';
 import type { ParsedResumeSchema } from '../shared-parsed-resume-schema';
@@ -162,7 +162,7 @@ class TailorProcessor {
   }
 
   private async parseOriginal(fileResult: FileParseResult): Promise<ParsedResumeSchema> {
-    const model = google(AI_MODEL_FLASH);
+    const model = google(AI_MODEL_PRO);
     const messagesContent: ModelMessage[] = [];
 
     if (fileResult.fileType === 'pdf' && fileResult.fileData) {
@@ -236,7 +236,7 @@ class TailorProcessor {
     original: ParsedResumeSchema,
     context: TailorContext
   ): Promise<ParsedResumeSchema> {
-    const model = google(AI_MODEL_FLASH);
+    const model = google(AI_MODEL_PRO);
     const prompt = getTailoredResumeParsingPrompt(
       JSON.stringify(original, null, 2),
       context.jobSpecText || '',
