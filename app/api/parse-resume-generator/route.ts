@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { generatorProcessor } from '@/lib/tools-lib/resume-generator/generator-processor';
 import { fileProcessor } from '@/lib/tools-lib/shared/file-parsers/file-processor';
+import { FileParseResult } from '@/lib/tools-lib/shared/file-parsers/base-parser';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,6 +14,11 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(`[Generator] Processing file: ${file.name} (${file.type}, ${file.size} bytes)`);
+
+    // Process the actual file content
+    const fileResult = await fileProcessor.validateAndProcessFile(file);
+    
+    console.log(`[Generator] File processed successfully, content length: ${fileResult.content.length}`);
 
     // Extract additional customization data
     const profileImage = formData.get('profileImage') as string;
@@ -27,10 +33,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Process the actual file content
-    const fileResult = await fileProcessor.validateAndProcessFile(file);
-    
-    console.log(`[Generator] File processed successfully, content length: ${fileResult.content.length}`);
     console.log(`[Generator] Profile image provided: ${!!profileImage}`);
     console.log(`[Generator] Custom colors provided: ${Object.keys(customColors).length > 0}`);
 

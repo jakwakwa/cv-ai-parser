@@ -27,10 +27,13 @@ const initialState: ResumeTailorState = {
   streamingProgress: 0,
   streamingMessage: '',
   partialResumeData: null,
-  profileImage: '',
+  profileImage: null,
   customColors: {},
   localResumeData: null,
-  isProcessing: false, // Add this field
+  isProcessing: false,
+  isTailoring: false,
+  tailoredResume: null,
+  tailoredResumeId: null,
 };
 
 export function useResumeTailor(isAuthenticated: boolean) {

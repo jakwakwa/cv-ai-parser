@@ -11,6 +11,7 @@ const initialState: ResumeGeneratorState = {
   error: '',
   
   // UI states
+  isGenerating: false, // Add this line
   showErrorModal: false,
   modalErrorMessage: '',
   showColorDialog: false,
@@ -23,6 +24,8 @@ const initialState: ResumeGeneratorState = {
   // Profile customization states
   profileImage: null,
   customColors: {},
+  resumeId: null,       // Added missing property
+  generatedResume: null, // Added missing property
   
   // Result state
   localResumeData: null,

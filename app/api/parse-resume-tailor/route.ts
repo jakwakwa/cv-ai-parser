@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { tailorProcessor } from '@/lib/tools-lib/resume-tailor/tailor-processor';
 import type { UserAdditionalContext } from '@/lib/tools-lib/resume-tailor/tailor-schema';
 import { fileProcessor } from '@/lib/tools-lib/shared/file-parsers/file-processor';
+import { FileParseResult } from '@/lib/tools-lib/shared/file-parsers/base-parser';
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,6 +15,11 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(`[Tailor] Processing file: ${file.name} (${file.type}, ${file.size} bytes)`);
+
+    // Process the actual file content
+    const fileResult = await fileProcessor.validateAndProcessFile(file);
+    
+    console.log(`[Tailor] File processed successfully, content length: ${fileResult.content.length}`);
 
     // Extract additional customization data
     const profileImage = formData.get('profileImage') as string;
@@ -28,16 +34,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Process the actual file content
-    const fileResult = await fileProcessor.validateAndProcessFile(file);
-    
-    console.log(`[Tailor] File processed successfully, content length: ${fileResult.content.length}`);
     console.log(`[Tailor] Profile image provided: ${!!profileImage}`);
     console.log(`[Tailor] Custom colors provided: ${Object.keys(customColors).length > 0}`);
 
     // Extract tailor context from form data
     const tailorContext: UserAdditionalContext = {
-      jobSpecSource: 'pasted',
+      jobSpecSource: formData.get('jobSpecSource') as UserAdditionalContext['jobSpecSource'],
       jobSpecText: formData.get('jobSpecText') as string,
       tone: (formData.get('tone') as any) || 'Neutral',
       extraPrompt: formData.get('extraPrompt') as string,

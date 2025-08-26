@@ -53,26 +53,6 @@ export const getPrecisionExtractionPrompt = (
   fileType: 'pdf' | 'txt' | 'docx'
 ): string => {
   
-  // Handle PDF files that should be sent directly to AI models
-  if (fileType === 'pdf' && content.startsWith('PDF_FILE_FOR_AI_PROCESSING')) {
-    return `
-${PRECISION_EXTRACTION_PROMPT}
-
-FILE TYPE: PDF (Direct AI Processing)
-PROCESSING NOTE: This PDF should be sent directly to an AI model (like Gemini Flash Pro) that can parse PDF objects natively.
-
-PDF AI PROCESSING INSTRUCTIONS:
-- Send the PDF file directly to the AI model without text extraction
-- Let the AI handle both extraction and structured parsing
-- Focus on precision extraction maintaining original formatting
-- Extract all content exactly as written in the PDF
-
-CONTENT REFERENCE: ${content}
-
-Perform direct PDF parsing and precise extraction following all rules above. Output only the JSON object.
-`;
-  }
-
   // Handle text files normally
   return `
 ${PRECISION_EXTRACTION_PROMPT}

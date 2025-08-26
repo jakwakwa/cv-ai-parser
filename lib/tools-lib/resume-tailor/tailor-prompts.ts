@@ -7,48 +7,6 @@ export const getTailoredResumeParsingPrompt = (
   tone: string
 ): string => {
   
-  // Handle PDF files that should be sent directly to AI models
-  if (resumeContent.includes('PDF_FILE_FOR_AI_PROCESSING')) {
-    return `
-You are an expert resume writer and AI assistant with advanced PDF processing capabilities (like Gemini Flash Pro). 
-Your task is to extract information from the provided PDF resume, tailor it to the given job specification, and return a structured JSON object.
-
-REQUIRED SCHEMA STRUCTURE:
-${RESUME_JSON_SCHEMA}
-
-**1. Job Specification for Tailoring:**
----
-${jobSpec}
----
-
-**2. Desired Tone:** ${tone}
-
-**3. PDF Resume to Process:**
-${resumeContent}
-
-PDF TAILORING REQUIREMENTS:
-1. Process the PDF file directly without text extraction
-2. Extract all factual information precisely (dates, company names, education details)
-3. Optimize bullet points to highlight relevant experience for the target role
-4. Incorporate keywords from job specification naturally throughout the resume
-5. Reorder and emphasize experiences that best match the job requirements
-6. Adjust skill descriptions to align with job requirements
-7. Maintain professional formatting and structure
-8. Ensure ATS compatibility with clean, parsed output
-9. Generate a human-readable commentary about the tailoring process in metadata.aiTailorCommentary
-
-IMPORTANT:
-- Include a commentary in metadata.aiTailorCommentary explaining how the resume was optimized for this role
-- Highlight key strengths and matches between the candidate and job requirements
-- Note any significant changes or optimizations made
-- Preserve all original factual content while optimizing presentation
-
-Output as a valid JSON object following REQUIRED SCHEMA STRUCTURE:
-
-**Critical Rule:** Do not include any text or explanations outside of the final JSON object.
-`;
-  }
-
   // Handle regular content normally
   return `
 You are an expert resume writer and AI assistant. Your task is to extract information from the provided resume content, tailor it to the given job specification, and return a structured JSON object.
@@ -92,30 +50,6 @@ Output as a valid JSON object following REQUIRED SCHEMA STRUCTURE:
 // Original resume parsing (first step of tailoring process)
 export const getOriginalResumeParsingPrompt = (resumeContent: string): string => {
   
-  // Handle PDF files that should be sent directly to AI models
-  if (resumeContent.startsWith('PDF_FILE_FOR_AI_PROCESSING')) {
-    return `
-You are an expert resume parser with PDF processing capabilities (like Gemini Flash Pro). 
-Extract information from the provided PDF file exactly as presented, without any modifications or enhancements.
-
-REQUIRED SCHEMA STRUCTURE:
-${RESUME_JSON_SCHEMA}
-
-PDF PROCESSING INSTRUCTIONS:
-- Process the PDF file directly without text extraction
-- Extract information precisely as written in the PDF
-- Maintain original structure and order  
-- Preserve exact wording and phrasing
-- Do not optimize or enhance content
-- Focus on complete and accurate extraction
-
-CONTENT REFERENCE: ${resumeContent}
-
-Output as a valid JSON object following REQUIRED SCHEMA STRUCTURE.
-**Critical Rule:** Do not include any text or explanations outside of the final JSON object.
-`;
-  }
-
   // Handle text content normally
   return `
 You are an expert resume parser. Extract information from the provided resume content exactly as presented, without any modifications or enhancements.

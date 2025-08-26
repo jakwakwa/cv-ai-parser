@@ -212,19 +212,18 @@ async function handleRegularResponse(response: Response): Promise<StreamUpdate> 
 // Form data creation for Resume Generator
 export function createGeneratorFormData(state: ResumeGeneratorState, isAuthenticated: boolean): FormData {
   const formData = new FormData();
-  
-  if (!state.uploadedFile) {
-    throw new Error('No file uploaded');
+
+  if (state.uploadedFile) {
+    formData.append('file', state.uploadedFile);
   }
 
-  formData.append('file', state.uploadedFile);
   formData.append('isAuthenticated', String(isAuthenticated));
 
   if (state.profileImage) {
     formData.append('profileImage', state.profileImage);
   }
 
-  if (state.customColors && Object.keys(state.customColors).length > 0) {
+  if (Object.keys(state.customColors).length > 0) {
     formData.append('customColors', JSON.stringify(state.customColors));
   }
 
@@ -234,33 +233,30 @@ export function createGeneratorFormData(state: ResumeGeneratorState, isAuthentic
 // Form data creation for Resume Tailor
 export function createTailorFormData(state: ResumeTailorState, isAuthenticated: boolean): FormData {
   const formData = new FormData();
-  
-  if (!state.uploadedFile) {
-    throw new Error('No file uploaded');
+
+  if (state.uploadedFile) {
+    formData.append('file', state.uploadedFile);
   }
 
-  formData.append('file', state.uploadedFile);
   formData.append('isAuthenticated', String(isAuthenticated));
 
-  if (state.profileImage) {
-    formData.append('profileImage', state.profileImage);
-  }
-
-  if (state.customColors && Object.keys(state.customColors).length > 0) {
-    formData.append('customColors', JSON.stringify(state.customColors));
-  }
-
-  // Tailor-specific data
+  // Append job specification context
   formData.append('jobSpecMethod', state.jobSpecMethod);
-
-  if (state.jobSpecMethod === 'paste') {
-    formData.append('jobSpecText', state.jobSpecText);
-  } else if (state.jobSpecFile) {
+  formData.append('jobSpecText', state.jobSpecText);
+  if (state.jobSpecFile) {
     formData.append('jobSpecFile', state.jobSpecFile);
   }
 
   formData.append('tone', state.tone);
   formData.append('extraPrompt', state.extraPrompt);
+
+  // Append customization options
+  if (state.profileImage) {
+    formData.append('profileImage', state.profileImage);
+  }
+  if (Object.keys(state.customColors).length > 0) {
+    formData.append('customColors', JSON.stringify(state.customColors));
+  }
 
   return formData;
 }

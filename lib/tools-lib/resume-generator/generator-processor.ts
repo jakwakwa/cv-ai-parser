@@ -1,5 +1,6 @@
 import { google } from '@ai-sdk/google';
 import { generateText } from 'ai';
+import { AI_MODEL_FLASH, AI_MODEL_PRO } from '@/lib/config';
 import type { FileParseResult } from '../shared/file-parsers/base-parser';
 import type { ParsedResumeSchema } from '../shared-parsed-resume-schema';
 import { GENERATOR_CONFIG, getPrecisionExtractionPrompt } from './generator-prompts';
@@ -25,171 +26,77 @@ class GeneratorProcessor {
   async process(fileResult: FileParseResult, customization?: CustomizationOptions): Promise<ProcessingResult> {
     const startTime = Date.now();
     
-    // Build precision-focused prompt
-    const prompt = this.buildPrecisionPrompt(fileResult);
-    console.log('[Generator] Using precision extraction for:', fileResult.fileName);
-    console.log('[Generator] Content preview:', fileResult.content.substring(0, 200) + '...');
+    const model = google(AI_MODEL_FLASH); // Use AI_MODEL_FLASH for resume parsing, it supports PDF processing
 
-    // AI PDF processing if fileData is present and fileType is pdf
+    let messagesContent: any[] = [];
+
     if (fileResult.fileType === 'pdf' && fileResult.fileData) {
-      const model = google('gemini-1.5-flash');
-      // For now, we'll use the extracted text content since generateText doesn't support file uploads
-      const { text } = await generateText({
-        model,
-        messages: [{
-          role: 'user',
-          content: `${prompt}\n\nResume Content:\n${fileResult.content}`,
-        }],
+      // For PDF files, send the ArrayBuffer directly as a file input
+      messagesContent.push({
+        type: 'file',
+        data: new Uint8Array(fileResult.fileData),
+        mimeType: 'application/pdf',
       });
-
-      // Strip markdown code block and extract JSON
-      let cleanText = text.trim();
-      if (cleanText.startsWith('```json')) {
-        cleanText = cleanText.replace(/^```json\s*/, '');
-      }
-      if (cleanText.endsWith('```')) {
-        cleanText = cleanText.replace(/```\s*$/, '');
-      }
-      
-      // Extract only the first valid JSON object
-      const firstBrace = cleanText.indexOf('{');
-      const lastBrace = cleanText.lastIndexOf('}');
-      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-        cleanText = cleanText.substring(firstBrace, lastBrace + 1);
-      }
-
-      const parsed = JSON.parse(cleanText) as ParsedResumeSchema;
-      
-      // Apply customizations
-      const customizedResume = this.applyCustomizations(parsed, customization);
-      
-      const processingTime = Date.now() - startTime;
-      const confidence = this.calculateConfidence(customizedResume);
-
-      return {
-        data: customizedResume,
-        meta: {
-          method: 'ai-precision-pdf',
-          confidence,
-          processingType: 'generator',
-          fileType: fileResult.fileType,
-          processingTime,
-        },
-      };
+      // Add a text part for instructions
+      messagesContent.push({
+        type: 'text',
+        text: getPrecisionExtractionPrompt('', 'pdf'), // Pass empty string as content, as fileData is sent separately
+      });
+    } else {
+      // For text files, send the content as text
+      messagesContent.push({
+        type: 'text',
+        text: getPrecisionExtractionPrompt(fileResult.content, fileResult.fileType),
+      });
     }
 
-    // Fallback to placeholder processing for non-PDF or text-based content
-    const placeholderResume = this.createPlaceholderResume(fileResult);
-    
+    console.log('[Generator] Sending messages content to AI:', messagesContent);
+
+    const { text } = await generateText({
+      model,
+      messages: [
+        {
+          role: 'user',
+          content: messagesContent,
+        },
+      ],
+      temperature: 0.2,
+    });
+
+    // Strip markdown code block and extract JSON
+    let cleanText = text.trim();
+    if (cleanText.startsWith('```json')) {
+      cleanText = cleanText.replace(/^```json\s*/, '');
+    }
+    if (cleanText.endsWith('```')) {
+      cleanText = cleanText.replace(/```\s*$/, '');
+    }
+
+    // Extract only the first valid JSON object
+    const firstBrace = cleanText.indexOf('{');
+    const lastBrace = cleanText.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+      cleanText = cleanText.substring(firstBrace, lastBrace + 1);
+    }
+
+    const parsed = JSON.parse(cleanText) as ParsedResumeSchema;
+
     // Apply customizations
-    const customizedResume = this.applyCustomizations(placeholderResume, customization);
-    
+    const customizedResume = this.applyCustomizations(parsed, customization);
+
     const processingTime = Date.now() - startTime;
     const confidence = this.calculateConfidence(customizedResume);
 
     return {
       data: customizedResume,
       meta: {
-        method: 'placeholder-with-extraction',
+        method: 'ai-precision-pdf',
         confidence,
         processingType: 'generator',
         fileType: fileResult.fileType,
         processingTime,
       },
     };
-  }
-
-  private createPlaceholderResume(fileResult: FileParseResult): ParsedResumeSchema {
-    // Extract name from filename as a placeholder
-    const nameFromFile = fileResult.fileName
-      .replace(/\.(pdf|txt)$/i, '')
-      .replace(/[_-]/g, ' ')
-      .replace(/\b\w/g, l => l.toUpperCase());
-
-    // Check if this is a PDF that should be sent directly to AI
-    const isPdfForAI = fileResult.content.startsWith('PDF_FILE_FOR_AI_PROCESSING');
-    const hasRealTextContent = fileResult.fileType === 'txt' && 
-                          !fileResult.content.includes('Placeholder content');
-    
-    let summary: string;
-    
-    if (isPdfForAI) {
-      summary = `PDF Resume: ${fileResult.fileName} (${Math.round(fileResult.fileSize / 1024)}KB)
-
-⚡ Ready for AI Processing with Gemini Flash Pro
-This PDF will be sent directly to an AI model that can parse PDF objects natively.
-No text extraction needed - the AI will handle both extraction and structuring.
-
-[In production: Direct PDF → AI → Structured Resume Data]`;
-    } else if (hasRealTextContent) {
-      summary = `Extracted from ${fileResult.fileType.toUpperCase()} file: ${fileResult.content.substring(0, 300)}...`;
-    } else {
-      summary = `Resume content from ${fileResult.fileName}. [AI processing would extract and structure the actual resume content here]`;
-    }
-
-    return {
-      name: nameFromFile || 'Resume Candidate',
-      title: isPdfForAI ? 'Professional Title (AI will extract from PDF)' : 'Professional Title (extracted from resume)',
-      summary,
-      experience: [
-        {
-          title: isPdfForAI ? 'Position (AI extracted from PDF)' : 'Position Title',
-          company: isPdfForAI ? 'Company (AI extracted from PDF)' : 'Company Name',
-          role: isPdfForAI ? 'Role (AI extracted from PDF)' : 'Role Description',
-          duration: isPdfForAI ? 'Duration (AI extracted from PDF)' : 'Employment Period',
-          details: isPdfForAI ? [
-            'AI will extract precise work details from PDF',
-            'All achievements and responsibilities preserved',
-            'Technical skills and tools mentioned exactly as written'
-          ] : [
-            'Key responsibility or achievement extracted from resume',
-            'Another achievement or responsibility',
-            'Technical skills and tools mentioned'
-          ],
-        },
-      ],
-      skills: isPdfForAI 
-        ? ['Skills will be extracted by AI from PDF']
-        : hasRealTextContent 
-          ? this.extractSkillsFromContent(fileResult.content)
-          : ['Skill 1', 'Skill 2', 'Skill 3', 'Technology 1', 'Technology 2'],
-      contact: {
-        email: isPdfForAI ? 'email@extracted.by.ai.from.pdf' : 'email@extracted.from.resume',
-        phone: isPdfForAI ? 'phone-extracted-by-ai' : 'phone-from-resume',
-        location: isPdfForAI ? 'location-extracted-by-ai' : 'Location from resume',
-      },
-      education: [
-        {
-          degree: isPdfForAI ? 'Degree (AI extracted from PDF)' : 'Degree Name',
-          institution: isPdfForAI ? 'Institution (AI extracted from PDF)' : 'Institution Name',
-          duration: isPdfForAI ? 'Period (AI extracted from PDF)' : 'Study Period',
-        },
-      ],
-      metadata: {
-        source: 'generator',
-        lastUpdated: new Date().toISOString(),
-        version: isPdfForAI ? 'PDF ready for direct AI processing with Gemini Flash Pro' : 'Text content processed',
-      },
-    };
-  }
-
-  private extractSkillsFromContent(content: string): string[] {
-    // Simple skill extraction for demonstration
-    const commonSkills = [
-      'JavaScript', 'Python', 'React', 'Node.js', 'TypeScript', 'HTML', 'CSS',
-      'SQL', 'Git', 'AWS', 'Docker', 'API', 'REST', 'GraphQL', 'MongoDB',
-      'PostgreSQL', 'Linux', 'Agile', 'Scrum', 'Leadership', 'Communication'
-    ];
-
-    const foundSkills = commonSkills.filter(skill => 
-      content.toLowerCase().includes(skill.toLowerCase())
-    );
-
-    return foundSkills.length > 0 ? foundSkills.slice(0, 10) : ['Skills extracted from resume'];
-  }
-
-  private buildPrecisionPrompt(fileResult: FileParseResult): string {
-    return getPrecisionExtractionPrompt(fileResult.content, fileResult.fileType);
   }
 
   private calculateConfidence(parsed: ParsedResumeSchema): number {

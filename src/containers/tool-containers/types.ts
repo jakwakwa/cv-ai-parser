@@ -36,65 +36,46 @@ export interface StreamUpdate {
 export type JobSpecMethod = 'paste' | 'upload';
 export type ToneOption = 'Formal' | 'Neutral' | 'Creative';
 
-export interface ResumeTailorState {
-  // File upload states
+export interface ResumeGeneratorState {
   uploadedFile: File | null;
   error: string;
-  
-  // Job tailoring states
-  jobSpecMethod: JobSpecMethod;
-  jobSpecText: string;
-  jobSpecFile: File | null;
-  tone: ToneOption;
-  extraPrompt: string;
-  
-  // UI states
+  isGenerating: boolean;
   showErrorModal: boolean;
   modalErrorMessage: string;
   showColorDialog: boolean;
-  aiTailorCommentary: string | null;
-  
-  // Streaming states
+  profileImage: string | null;
+  customColors: Record<string, string>;
+  resumeId: string | null;
+  generatedResume: ParsedResumeSchema | null;
   streamingProgress: number;
   streamingMessage: string;
   partialResumeData: PartialResumeData | null;
-  
-  // Profile customization states
-  profileImage?: string | null;
-  customColors: Record<string, string>;
-  
-  // Result state
   localResumeData: ParsedResumeSchema | null;
-  
-  // Processing state
   isProcessing: boolean;
 }
 
-
-export interface ResumeGeneratorState {
-  // File upload states
+export interface ResumeTailorState {
   uploadedFile: File | null;
   error: string;
-  
-  // UI states
+  jobSpecMethod: 'upload' | 'paste';
+  jobSpecText: string;
+  jobSpecFile: File | null;
+  tone: 'Neutral' | 'Formal' | 'Concise' | 'Creative';
+  extraPrompt: string;
+  isTailoring: boolean;
   showErrorModal: boolean;
   modalErrorMessage: string;
   showColorDialog: boolean;
-  
-  // Streaming states
+  profileImage: string | null;
+  customColors: Record<string, string>;
+  tailoredResume: ParsedResumeSchema | null;
+  tailoredResumeId: string | null;
+  isProcessing: boolean;
+  aiTailorCommentary: string | null;
   streamingProgress: number;
   streamingMessage: string;
   partialResumeData: PartialResumeData | null;
-  
-  // Profile customization states
-  profileImage: string | null;
-  customColors: Record<string, string>;
-  
-  // Result state
   localResumeData: ParsedResumeSchema | null;
-  
-  // Processing state
-  isProcessing: boolean;
 }
 
 export interface ResumeTailorToolProps {
