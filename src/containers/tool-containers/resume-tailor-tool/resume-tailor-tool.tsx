@@ -4,6 +4,7 @@ import { ResumeUploadPanel } from '@/src/components/resume-upload-panel';
 import { useResumeTailor } from '@/src/hooks/use-resume-tailor';
 import { ErrorModal } from '../../../components/error-modal';
 import { LoadingState } from '../../../components/loading-state';
+import { Button } from '@/src/components/ui/ui-button/button';
 import styles from '../shared-tool.module.css';
 import type { ResumeTailorToolProps } from '../types';
 import { JobDescriptionPanel } from './components/job-description-panel';
@@ -31,6 +32,7 @@ const ResumeTailorTool = ({
     setCustomColors,
     setShowColorDialog,
     setShowErrorModal,
+    setModalErrorMessage,
   } = useResumeTailor(isAuthenticated);
 
   // Show loading state if we have streaming progress, isLoading is true, or processing
@@ -61,6 +63,24 @@ const ResumeTailorTool = ({
           resetToInitialState();
         }}
       />
+
+      {process.env.NODE_ENV !== 'production' && (
+        <div>
+          <Button
+            variant="outline"
+            size="sm"
+            type="button"
+            onClick={() => {
+              setModalErrorMessage(
+                'Sample error while parsing your PDF. This is a test of the error dialog.'
+              );
+              setShowErrorModal(true);
+            }}
+          >
+            Show error dialog (dev)
+          </Button>
+        </div>
+      )}
 
       <div className={styles.toolGrid}>
         <ResumeUploadPanel

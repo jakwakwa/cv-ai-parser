@@ -6,12 +6,12 @@ import ResumeGeneratorTool from '@/src/containers/tool-containers/resume-generat
 import styles from './page.module.css';
 
 export default function AiResumeTailorPage() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, _setIsLoading] = useState(false);
   const { data: session, status } = useSession();
 
   // Only show ads when we're sure the user is NOT authenticated
   // Don't show during loading to prevent flashing
-  const shouldShowAds = status === 'unauthenticated';
+  const _shouldShowAds = status === 'unauthenticated';
 
   return (
     <div className={styles.pageContainer}>

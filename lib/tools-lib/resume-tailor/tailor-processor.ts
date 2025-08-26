@@ -2,6 +2,7 @@ import { google } from '@ai-sdk/google';
 import { generateText } from 'ai';
 import { AI_MODEL_FLASH } from '@/lib/config';
 import type { FileParseResult } from '../shared/file-parsers/base-parser';
+import { parsedResumeSchema } from '../shared-parsed-resume-schema';
 import type { ParsedResumeSchema } from '../shared-parsed-resume-schema';
 import {
   getJobSpecAnalysisPrompt,
@@ -34,7 +35,94 @@ interface CustomizationOptions {
 // Placeholder for the full context needed for tailoring
 type TailorContext = UserAdditionalContext;
 
+// Local helper types
+type ModelMessage = {
+  type: 'file' | 'text';
+  data?: Uint8Array;
+  mimeType?: string;
+  text?: string;
+};
+
+type JobAnalysis = {
+  keywords: string[];
+  requirements: string[];
+  skills: string[];
+};
+
 class TailorProcessor {
+  private stripCodeFences(raw: string): string {
+    let text = raw.trim();
+    // Remove triple backtick fences if present
+    if (text.startsWith('```json')) {
+      text = text.replace(/^```json\s*/, '');
+    } else if (text.startsWith('```')) {
+      text = text.replace(/^```\s*/, '');
+    }
+    if (text.endsWith('```')) {
+      text = text.replace(/```\s*$/, '');
+    }
+    return text;
+  }
+
+  // Extract the first balanced JSON object from the text
+  private extractBalancedJsonObject(text: string): string | null {
+    const start = text.indexOf('{');
+    if (start === -1) return null;
+    let depth = 0;
+    let inString = false;
+    let isEscaped = false;
+    for (let i = start; i < text.length; i++) {
+      const ch = text[i];
+      if (inString) {
+        if (isEscaped) {
+          isEscaped = false;
+        } else if (ch === '\\') {
+          isEscaped = true;
+        } else if (ch === '"') {
+          inString = false;
+        }
+        continue;
+      }
+      if (ch === '"') {
+        inString = true;
+        continue;
+      }
+      if (ch === '{') depth++;
+      if (ch === '}') depth--;
+      if (depth === 0) {
+        return text.substring(start, i + 1);
+      }
+    }
+    return null;
+  }
+
+  private removeTrailingCommas(jsonText: string): string {
+    // Remove dangling commas before } or ]
+    return jsonText.replace(/,(\s*[}\]])/g, '$1');
+  }
+
+  private cleanJson(raw: string): string {
+    // Normalize unicode spaces and remove zero-width characters
+    let text = raw.replace(/[\u200B-\u200D\uFEFF]/g, '');
+    text = this.stripCodeFences(text);
+    const balanced = this.extractBalancedJsonObject(text);
+    text = balanced ?? text;
+    text = this.removeTrailingCommas(text);
+    return text.trim();
+  }
+
+  private parseResumeJsonOrThrow(raw: string): ParsedResumeSchema {
+    const cleaned = this.cleanJson(raw);
+    try {
+      const parsed = JSON.parse(cleaned);
+      const result = parsedResumeSchema.parse(parsed);
+      return result;
+    } catch (err) {
+      console.error('[Tailor] Failed to parse AI JSON. Cleaned snippet:', cleaned.slice(0, 600));
+      throw new Error('AI returned invalid JSON. Please try again with a simpler file or job spec.');
+    }
+  }
+
   async process(
     fileResult: FileParseResult,
     tailorContext: TailorContext,
@@ -75,7 +163,7 @@ class TailorProcessor {
 
   private async parseOriginal(fileResult: FileParseResult): Promise<ParsedResumeSchema> {
     const model = google(AI_MODEL_FLASH);
-    let messagesContent: any[] = [];
+    const messagesContent: ModelMessage[] = [];
 
     if (fileResult.fileType === 'pdf' && fileResult.fileData) {
       messagesContent.push({
@@ -101,29 +189,13 @@ class TailorProcessor {
       messages: [
         {
           role: 'user',
-          content: messagesContent,
+          content: messagesContent as any,
         },
       ],
       temperature: 0.2,
     });
 
-    // Strip markdown code block and extract JSON
-    let cleanText = text.trim();
-    if (cleanText.startsWith('```json')) {
-      cleanText = cleanText.replace(/^```json\s*/, '');
-    }
-    if (cleanText.endsWith('```')) {
-      cleanText = cleanText.replace(/```\s*$/, '');
-    }
-
-    // Extract only the first valid JSON object
-    const firstBrace = cleanText.indexOf('{');
-    const lastBrace = cleanText.lastIndexOf('}');
-    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-      cleanText = cleanText.substring(firstBrace, lastBrace + 1);
-    }
-
-    return JSON.parse(cleanText) as ParsedResumeSchema;
+    return this.parseResumeJsonOrThrow(text);
   }
 
   private extractSkillsFromContent(content: string): string[] {
@@ -143,7 +215,7 @@ class TailorProcessor {
     return foundSkills.length > 0 ? foundSkills.slice(0, 15) : ['Skills from original resume'];
   }
 
-  private async analyzeJobSpec(jobSpec: string): Promise<any> {
+  private async analyzeJobSpec(jobSpec: string): Promise<JobAnalysis> {
     if (!jobSpec.trim()) {
       return { keywords: [], requirements: [], skills: [] };
     }
@@ -184,22 +256,7 @@ class TailorProcessor {
       temperature: 0.2,
     });
 
-    // Strip markdown code block and any extra content after JSON
-    let cleanText = text.trim();
-    // Remove code block markers if present
-    if (cleanText.startsWith('```json')) {
-      cleanText = cleanText.replace(/^```json\s*/, '');
-    }
-    if (cleanText.endsWith('```')) {
-      cleanText = cleanText.replace(/```\s*$/, '');
-    }
-    // Extract only the first valid JSON object (in case of extra content)
-    const firstBrace = cleanText.indexOf('{');
-    const lastBrace = cleanText.lastIndexOf('}');
-    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-      cleanText = cleanText.substring(firstBrace, lastBrace + 1);
-    }
-    return JSON.parse(cleanText) as ParsedResumeSchema;
+    return this.parseResumeJsonOrThrow(text);
   }
 
   private applyCustomizations(resume: ParsedResumeSchema, customization?: CustomizationOptions): ParsedResumeSchema {

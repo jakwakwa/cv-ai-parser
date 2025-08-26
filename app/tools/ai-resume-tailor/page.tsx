@@ -11,7 +11,7 @@ export default function AiResumeTailorPage() {
 
   // Only show ads when we're sure the user is NOT authenticated
   // Don't show during loading to prevent flashing
-  const shouldShowAds = status === 'unauthenticated';
+  const _shouldShowAds = status === 'unauthenticated';
 
   return (
     <div className={styles.pageContainer}>

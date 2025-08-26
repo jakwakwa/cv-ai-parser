@@ -2,7 +2,7 @@ import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
 import { createTailorFormData, parseResumeTailor } from '@/src/containers/tool-containers/api-service';
-import { CHARACTER_LIMITS, ERROR_MESSAGES, FILE_UPLOAD_LIMITS } from '@/src/containers/tool-containers/resume-tailor-tool/constants';
+import { CHARACTER_LIMITS, ERROR_MESSAGES } from '@/src/containers/tool-containers/resume-tailor-tool/constants';
 import type {
   JobSpecMethod,
   ParseInfo,
@@ -128,6 +128,7 @@ export function useResumeTailor(isAuthenticated: boolean) {
   const setCustomColors = (colors: Record<string, string>) => updateState({ customColors: colors });
   const setShowColorDialog = (show: boolean) => updateState({ showColorDialog: show });
   const setShowErrorModal = (show: boolean) => updateState({ showErrorModal: show });
+  const setModalErrorMessage = (message: string) => updateState({ modalErrorMessage: message });
 
   // Drag and drop
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
@@ -178,7 +179,7 @@ export function useResumeTailor(isAuthenticated: boolean) {
         }
         router.push('/library');
         return;
-      } catch (err) {
+      } catch (_err) {
         updateState({
           modalErrorMessage: 'Failed to save resume to your library. You can still preview it as a temp resume.',
           showErrorModal: true,
@@ -279,5 +280,6 @@ Your progress has been saved and you can continue from where you left off.`;
     setCustomColors,
     setShowColorDialog,
     setShowErrorModal,
+    setModalErrorMessage,
   };
 } 
