@@ -60,29 +60,77 @@
 /* Fallback styles for when ads are blocked or fail to load */
 .fallbackContainer {
   width: 100%;
-  min-height: 90px;
+  min-height: 120px;
   border: 1px solid var(--color-border-light);
-  border-radius: var(--border-radius-small);
-  background-color: var(--color-background-secondary);
+  border-radius: var(--border-radius-medium);
+  background: linear-gradient(135deg, var(--color-background-secondary) 0%, var(--color-background-tertiary) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: var(--spacing-md) 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.fallbackContainer:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .fallbackContent {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-md);
+  padding: var(--spacing-lg);
+  gap: var(--spacing-md);
 }
 
-.fallbackText {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
+.fallbackIcon {
+  font-size: 2rem;
+  margin-right: var(--spacing-sm);
+}
+
+.fallbackTextContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.fallbackTitle {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
   text-align: center;
-  user-select: none;
+}
+
+.fallbackSubtitle {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.fallbackCta {
+  background: linear-gradient(135deg, var(--color-accent-teal) 0%, var(--color-accent-teal-dark) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-small);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.fallbackCta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.fallbackCta:active {
+  transform: translateY(0);
 }
 
 .adPlaceholder {

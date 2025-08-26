@@ -19,7 +19,7 @@ export const AdBanner: FC<Props> = ({
   adSlot = AD_SLOTS.content,
   adClient = 'ca-pub-7169177467099391',
   adFormat = 'auto',
-  showFallback = false,
+  showFallback = true, // Default to true to prevent white space
   fallbackMessage = 'Advertisement',
   responsive = true,
   ...props
@@ -27,9 +27,13 @@ export const AdBanner: FC<Props> = ({
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [adLoaded, setAdLoaded] = useState(false);
 
   const loadAdSenseScript = useCallback(() => {
-    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+    if (
+      typeof window !== 'undefined' &&
+      process.env.NODE_ENV === 'production'
+    ) {
       try {
         // Check if AdSense script is already loaded
         if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
@@ -46,29 +50,67 @@ export const AdBanner: FC<Props> = ({
             const adsbygoogle = (window as any).adsbygoogle || [];
             (window as any).adsbygoogle = adsbygoogle;
             adsbygoogle.push({});
+
+            // Set a timeout to detect if ads fail to load
+            setTimeout(() => {
+              if (!adLoaded) {
+                setError(true);
+                setLoading(false);
+              }
+            }, 2000); // 2 second timeout - faster collapse
           } catch (adError) {
             setError(true);
+            setLoading(false);
           }
         }, 100);
       } catch (err) {
         setError(true);
+        setLoading(false);
       }
     }
-  }, [adClient]);
+  }, [adClient, adLoaded]);
 
   useEffect(() => {
     // Check if page is restricted
-    const isRestricted = RESTRICTED_PAGES.some(path => pathname.startsWith(path));
+    const isRestricted = RESTRICTED_PAGES.some((path) =>
+      pathname.startsWith(path)
+    );
     
-    if (!isRestricted) {
+    // Additional content validation before showing ads
+    const hasMinimumContent = () => {
+      if (typeof window === 'undefined') return false;
+      const mainContent = document.querySelector('main');
+      if (!mainContent) return false;
+      const textContent = mainContent.textContent || '';
+      return textContent.trim().length >= 500; // Minimum 500 characters
+    };
+    
+    if (!isRestricted && hasMinimumContent()) {
       loadAdSenseScript();
+
+      // Listen for ad load events
+      const handleAdLoad = () => {
+        setAdLoaded(true);
+        setLoading(false);
+        setError(false);
+      };
+
+      // Check if ads loaded after a short delay
+      const checkAdLoad = setTimeout(() => {
+        const adElements = document.querySelectorAll('.adsbygoogle');
+        if (adElements.length > 0) {
+          handleAdLoad();
+        }
+      }, 1000); // 1 second timeout - faster collapse
+
+      return () => clearTimeout(checkAdLoad);
     }
-    
+
     setLoading(false);
   }, [pathname, loadAdSenseScript]);
 
   // Don't render on restricted pages
-  if (RESTRICTED_PAGES.some(path => pathname.startsWith(path))) {
+  if (RESTRICTED_PAGES.some((path) => pathname.startsWith(path))) {
     return null;
   }
 
@@ -81,13 +123,9 @@ export const AdBanner: FC<Props> = ({
     ) : null;
   }
 
-  // Show fallback if error occurred
-  if (error) {
-    return showFallback ? (
-      <div className={styles.fallback}>
-        <span className={styles.fallbackText}>{fallbackMessage}</span>
-      </div>
-    ) : null;
+  // Don't show anything if ad failed to load - this prevents white space
+  if (error || (!loading && !adLoaded)) {
+    return null;
   }
 
   if (loading) {
@@ -114,9 +152,9 @@ export const AdBanner: FC<Props> = ({
       />
     </div>
   );
-};
+}
 
-// Restricted pages where ads should never show
+// Restricted pages where ads should never show - expanded for better compliance
 const RESTRICTED_PAGES = [
   '/404',
   '/500',
@@ -125,6 +163,12 @@ const RESTRICTED_PAGES = [
   '/admin',
   '/sitemap',
   '/robots',
+  '/auth',
+  '/login',
+  '/register',
+  '/thank-you',
+  '/loading',
+  '/tools', // Restrict tool pages until we add more content
 ] as const;
 
 // Ad slot configurations

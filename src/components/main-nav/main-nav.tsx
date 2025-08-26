@@ -38,6 +38,10 @@ export function MainNav({
             My Resumes
           </Link>
         )}
+        <Link href="/blog" className={styles.navLink}>
+          Blog
+        </Link>
+        
         <Link href="/docs" className={styles.navLink}>
           Docs
         </Link>
