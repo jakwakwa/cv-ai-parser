@@ -1,4 +1,4 @@
-import Script from 'next/script';
+import Script from "next/script"
 
 const themeScript = `
 (function() {
@@ -38,12 +38,12 @@ const themeScript = `
     document.documentElement.setAttribute('data-theme', 'light');
   }
 })();
-`;
+`
 
 export function ThemeScript() {
-  return (
-    <Script id="theme-script" strategy="beforeInteractive">
-      {themeScript}
-    </Script>
-  );
+	return (
+		<Script id="theme-script" strategy="beforeInteractive">
+			{themeScript}
+		</Script>
+	)
 }

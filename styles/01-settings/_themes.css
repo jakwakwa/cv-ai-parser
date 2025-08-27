@@ -213,7 +213,7 @@
     --color-background-overlay: rgba(31, 41, 55, 0.95);
 
     /* Text Colors - Light grays for better readability */
-    --color-text-primary: #94cebf;
+    --color-text-primary: #6eb5a2;
     --color-text-secondary: #d1d5db;
     --color-text-light: #e5e7eb;
     --color-text-hover: #4d607ffa;
@@ -421,7 +421,7 @@
     --color-background-tertiary: #ebeef3;
     --color-background-overlay: rgba(255, 255, 255, 0.95);
 
-    --color-text-primary: #525b68;
+    --color-text-primary: #6eb5a2;
     --color-text-secondary: #6b7280;
     --color-text-light: #374151;
     --color-text-hover: #1f2937;
@@ -664,7 +664,7 @@
     --color-primary-button-custom: #0d9488;
     --color-background-overlay: rgba(31, 41, 55, 0.95);
 
-    --color-text-primary: #94cebf;
+    --color-text-primary: #6eb5a2;
     --color-text-secondary: #d1d5db;
     --color-text-light: #e5e7eb;
     --color-text-hover: #4d607ffa;

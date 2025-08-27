@@ -71,7 +71,7 @@ The goal is to create a comprehensive data structure that can be seamlessly mapp
 Output as a valid JSON object following REQUIRED SCHEMA STRUCTURE:
 
 **Critical Rule:** Do not include any text or explanations outside of the final JSON object.
-`;
+`
 
 export const RESUME_JSON_SCHEMA = `
 {
@@ -210,7 +210,7 @@ export const RESUME_JSON_SCHEMA = `
     "skills"
   ]
 }
-`;
+`
 
 export const getResumeParsingPromptForTXT = (uploadedTxtFile: File): string => `
 You are an expert resume parser that extracts comprehensive structured data from text - optimised for design mapping and visualisation.
@@ -222,12 +222,10 @@ ${RESUME_JSON_SCHEMA}
 ENHANCED EXTRACTION REQUIREMENTS:
 ${STANDARD_PROMPT}
 
-${uploadedTxtFile ? `Resume content to parse:\n---\n${uploadedTxtFile}\n---` : ''}
-`;
+${uploadedTxtFile ? `Resume content to parse:\n---\n${uploadedTxtFile}\n---` : ""}
+`
 
-export const getResumeParsingPromptForPDF = (
-  uploadedPdf: File
-): Blob | string => `
+export const getResumeParsingPromptForPDF = (uploadedPdf: File): Blob | string => `
 You are an expert resume parser that extracts comprehensive structured data from text - optimised for design mapping and visualisation.
 Your task is to extract information from the provided resume as .txt  and format it as a detailed JSON object.
 
@@ -238,5 +236,5 @@ ENHANCED EXTRACTION REQUIREMENTS:
 ${STANDARD_PROMPT}
 
 
-${uploadedPdf ? `Resume content to parse:\n---\n${uploadedPdf}\n---` : ''}
-`;
+${uploadedPdf ? `Resume content to parse:\n---\n${uploadedPdf}\n---` : ""}
+`

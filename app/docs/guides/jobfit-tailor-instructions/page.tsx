@@ -1,6 +1,6 @@
-import Markdown from '@/src/components/docs/Markdown';
+import Markdown from "@/src/components/docs/Markdown"
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic"
 
 const md = `
 # AI Resume Tailor: Optimize Your Resume for Any Job
@@ -48,8 +48,8 @@ After providing all the necessary information, click the "Generate Tailored Resu
 *   **Review and Refine:** Always review the AI-generated resume and make any final adjustments.
 *   **Experiment with Tones:** Try different tones to see which one best fits the job application.
 *   **Check Character Limits:** Ensure your pasted job description and extra prompt are within the specified character limits.
-`;
+`
 
 export default function Guide() {
-  return <Markdown>{md}</Markdown>;
+	return <Markdown>{md}</Markdown>
 }

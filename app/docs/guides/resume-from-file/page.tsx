@@ -1,6 +1,6 @@
-import Markdown from '@/src/components/docs/Markdown';
+import Markdown from "@/src/components/docs/Markdown"
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic"
 
 const md = `
 # Uploading a Resume File
@@ -20,8 +20,8 @@ This guide walks you through turning a plain text or PDF resume into an online d
 * PDFs should contain selectable text (not scanned images).
 * Keep section headings like **Experience**, **Education**, **Skills** so the AI can recognise sections.
 * For privacy, remove sensitive information you don’t want stored.
-`;
+`
 
 export default function Guide() {
-  return <Markdown>{md}</Markdown>;
+	return <Markdown>{md}</Markdown>
 }

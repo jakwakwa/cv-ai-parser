@@ -6,10 +6,11 @@
     "dev": "npx prisma generate && next dev --port 8000 --turbopack ",
     "build": "npx prisma generate --no-engine && next build",
     "lint": "biome lint .",
-    "format": "biome format --write .",
     "start": "next start",
     "mcp:figma": "npx -y figma-developer-mcp --stdio",
-    "caching": "ts-node ./src/caching.ts"
+    "caching": "ts-node ./src/caching.ts",
+    "format": "biome format --write .",
+    "format:fix": "biome format --write . && biome lint --write ."
   },
   "dependencies": {
     "@ai-sdk/google": "latest",

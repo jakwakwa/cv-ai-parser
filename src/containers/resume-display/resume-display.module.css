@@ -8,12 +8,21 @@
   border-radius: 0.75rem;
   overflow: hidden;
   width: 100%;
-  max-width: 64rem;
-  margin: auto;
+  max-width: 48rem;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr;
+  
 }
 
+@media print {
+  .resumeContent {
+    /* max-width: 64rem; */
+
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
 
 .pageWrapper{
     background: var(--color-background-primary);

@@ -50,8 +50,8 @@ export const themeScript = `
     document.documentElement.setAttribute('data-theme', 'light');
   }
 })();
-`;
+`
 
 export const getThemeScriptTag = () => {
-  return `<script>${themeScript}</script>`;
-};
+	return `<script>${themeScript}</script>`
+}

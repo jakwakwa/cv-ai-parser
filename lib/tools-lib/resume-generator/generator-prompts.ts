@@ -1,7 +1,4 @@
-import {
-  RESUME_JSON_SCHEMA,
-  STANDARD_PROMPT,
-} from '../shared-resume-tool-prompts';
+import { RESUME_JSON_SCHEMA, STANDARD_PROMPT } from "../shared-resume-tool-prompts"
 
 export const PRECISION_EXTRACTION_PROMPT = `
 You are a precision resume parser. Your ONLY goal is to extract information 
@@ -49,14 +46,11 @@ PRECISION OUTPUT REQUIREMENTS:
 Output: Complete, unmodified extraction as JSON following the required schema.
 
 **Critical Rule:** Extract exactly what is written - nothing more, nothing less.
-`;
+`
 
-export const getPrecisionExtractionPrompt = (
-  content: string,
-  fileType: 'pdf' | 'txt' | 'docx'
-): string => {
-  // Handle text files normally
-  return `
+export const getPrecisionExtractionPrompt = (content: string, fileType: "pdf" | "txt" | "docx"): string => {
+	// Handle text files normally
+	return `
 ${PRECISION_EXTRACTION_PROMPT}
 
 FILE TYPE: ${fileType.toUpperCase()}
@@ -66,18 +60,14 @@ ${content}
 ---
 
 Perform precise extraction following all rules above. Output only the JSON object.
-`;
-};
+`
+}
 
 export const GENERATOR_CONFIG = {
-  maxRetries: 3,
-  timeoutMs: 30000,
-  aiModel: 'precision-optimized',
-  features: [
-    'comprehensive-extraction',
-    'format-preservation',
-    'accuracy-first',
-  ],
-  confidenceThreshold: 0.85,
-  preservationMode: 'strict',
-};
+	maxRetries: 3,
+	timeoutMs: 30000,
+	aiModel: "precision-optimized",
+	features: ["comprehensive-extraction", "format-preservation", "accuracy-first"],
+	confidenceThreshold: 0.85,
+	preservationMode: "strict",
+}

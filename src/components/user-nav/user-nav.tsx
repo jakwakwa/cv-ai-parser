@@ -1,60 +1,52 @@
-'use client';
+"use client"
 
-import Link from 'next/link';
-import { signOut, useSession } from 'next-auth/react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/src/components/ui/dropdown-menu';
-import { Button } from '@/src/components/ui/ui-button/button';
-import styles from './user-nav.module.css';
+import Link from "next/link"
+import { signOut, useSession } from "next-auth/react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu"
+import { Button } from "@/src/components/ui/ui-button/button"
+import styles from "./user-nav.module.css"
 
 export function UserNav() {
-  const { data: session } = useSession();
+	const { data: session } = useSession()
 
-  if (!session?.user) {
-    return null;
-  }
+	if (!session?.user) {
+		return null
+	}
 
-  const getInitials = (name: string | undefined | null) => {
-    if (!name) return 'U';
-    const names = name.split(' ');
-    const initials = names.map((n) => n[0]).join('');
-    return initials.toUpperCase();
-  };
+	const getInitials = (name: string | undefined | null) => {
+		if (!name) return "U"
+		const names = name.split(" ")
+		const initials = names.map(n => n[0]).join("")
+		return initials.toUpperCase()
+	}
 
-  const handleLogout = async () => {
-    await signOut({ callbackUrl: '/' }); // Redirects to the root directory after logout
-  };
+	const handleLogout = async () => {
+		await signOut({ callbackUrl: "/" }) // Redirects to the root directory after logout
+	}
 
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" nav className={styles.userNavButton}>
-          {getInitials(session.user.name)}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className={styles.dropdownContent}>
-        <div className={styles.dropdownLabel}>
-          <div className={styles.labelContainer}>
-            <p className={styles.userName}>{session.user.name}</p>
-            <p className={styles.userEmail}>{session.user.email}</p>
-          </div>
-        </div>
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button variant="ghost" nav className={styles.userNavButton}>
+					{getInitials(session.user.name)}
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent className={styles.dropdownContent}>
+				<div className={styles.dropdownLabel}>
+					<div className={styles.labelContainer}>
+						<p className={styles.userName}>{session.user.name}</p>
+						<p className={styles.userEmail}>{session.user.email}</p>
+					</div>
+				</div>
 
-        <DropdownMenuItem className={styles.dropdownMenuItem} asChild>
-          <Link href={'/library'}>My Library</Link>
-        </DropdownMenuItem>
+				<DropdownMenuItem className={styles.dropdownMenuItem} asChild>
+					<Link href={"/library"}>My Library</Link>
+				</DropdownMenuItem>
 
-        <DropdownMenuItem
-          className={styles.dropdownMenuItem}
-          onClick={() => handleLogout()}
-        >
-          Log out
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+				<DropdownMenuItem className={styles.dropdownMenuItem} onClick={() => handleLogout()}>
+					Log out
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
+	)
 }

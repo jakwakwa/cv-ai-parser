@@ -1,79 +1,55 @@
-import { EducationIcon } from '../resume-display-icons';
-import styles from './education-section.module.css';
+import { EducationIcon } from "../resume-display-icons"
+import styles from "./education-section.module.css"
 
 interface EducationItem {
-  degree: string;
-  institution: string;
-  duration?: string;
-  note?: string;
+	degree: string
+	institution: string
+	duration?: string
+	note?: string
 }
 
 interface EducationSectionProps {
-  education?: EducationItem[];
-  customColors: Record<string, string>;
+	education?: EducationItem[]
+	customColors: Record<string, string>
 }
 
-const EducationSection = ({
-  education,
-  customColors,
-}: EducationSectionProps) => {
-  // const colors = customColors || {};
+const EducationSection = ({ education, customColors }: EducationSectionProps) => {
+	// const colors = customColors || {};
 
-  return (
-    <section className={styles.educationSection}>
-      <h2
-        className={styles.sectionTitle}
-        style={{ color: customColors['--resume-section-titles'] }}
-      >
-        <EducationIcon className="mainIcon" />
-        Education
-      </h2>
-      {education && education.length > 0 ? (
-        education.map((edu) => (
-          <div
-            key={`${edu.degree}-${edu.institution}`}
-            className={styles.educationItem}
-          >
-            <p
-              className="subject"
-              style={{ color: customColors['--resume-job-title'] }}
-            >
-              {edu.degree}
-            </p>
-            <p
-              className="issuer"
-              style={{ color: customColors['--resume-main-icons'] }}
-            >
-              {edu.institution}
-            </p>
-            {edu.duration && (
-              <p
-                className="date"
-                style={{ color: customColors['--resume-dates'] }}
-              >
-                {edu.duration}
-              </p>
-            )}
-            {edu.note && (
-              <p
-                className={styles.detail}
-                style={{ color: customColors['--resume-body-text'] }}
-              >
-                {edu.note}
-              </p>
-            )}
-          </div>
-        ))
-      ) : (
-        <p
-          className={styles.emptyState}
-          style={{ color: customColors['--resume-body-text'] }}
-        >
-          No education details available.
-        </p>
-      )}
-    </section>
-  );
-};
+	return (
+		<section className={styles.educationSection}>
+			<h2 className={styles.sectionTitle} style={{ color: customColors["--resume-section-titles"] }}>
+				<EducationIcon className="mainIcon" />
+				Education
+			</h2>
+			{education && education.length > 0 ? (
+				education.map(edu => (
+					<div key={`${edu.degree}-${edu.institution}`} className={styles.educationItem}>
+						<p className="subject" style={{ color: customColors["--resume-job-title"] }}>
+							{edu.degree}
+						</p>
+						<p className="issuer" style={{ color: customColors["--resume-main-icons"] }}>
+							{edu.institution}
+						</p>
+						{edu.duration && (
+							<p className="text-slate-500 text-[0.52rem] font-medium" >
+								{edu.duration}
+							</p>
+						)}
+						{edu.note && (
+							<p className={styles.detail} style={{ color: customColors["--resume-body-text"] }}>
+								{edu.note}
+							</p>
+						)}
+					</div>
+				))
+			) : (
+				<p className={styles.emptyState} style={{ color: customColors["--resume-body-text"] }}>
+					No education details available.
+				</p>
+			)}
+		</section>
+	)
+}
 
-export default EducationSection;
+export default EducationSection

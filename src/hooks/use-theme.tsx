@@ -1,113 +1,86 @@
-'use client';
+"use client"
 
-import {
-  createContext,
-  type ReactNode,
-  useContext,
-  useEffect,
-  useState,
-  useSyncExternalStore,
-} from 'react';
+import { createContext, type ReactNode, useContext, useEffect, useState, useSyncExternalStore } from "react"
 
-type Theme = 'light' | 'dark' | 'system';
+type Theme = "light" | "dark" | "system"
 
 interface ThemeContextType {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-  resolvedTheme?: 'light' | 'dark';
+	theme: Theme
+	setTheme: (theme: Theme) => void
+	resolvedTheme?: "light" | "dark"
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 interface ThemeProviderProps {
-  children: ReactNode;
-  defaultTheme?: Theme;
+	children: ReactNode
+	defaultTheme?: Theme
 }
 
 const subscribe = (callback: () => void) => {
-  if (typeof window === 'undefined') {
-    return () => {};
-  }
-  window.addEventListener('storage', callback);
-  window
-    .matchMedia('(prefers-color-scheme: dark)')
-    .addEventListener('change', callback);
-  return () => {
-    window.removeEventListener('storage', callback);
-    window
-      .matchMedia('(prefers-color-scheme: dark)')
-      .removeEventListener('change', callback);
-  };
-};
+	if (typeof window === "undefined") {
+		return () => {}
+	}
+	window.addEventListener("storage", callback)
+	window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", callback)
+	return () => {
+		window.removeEventListener("storage", callback)
+		window.matchMedia("(prefers-color-scheme: dark)").removeEventListener("change", callback)
+	}
+}
 
 const getSnapshot = () => {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-  return localStorage.getItem('theme');
-};
+	if (typeof window === "undefined") {
+		return null
+	}
+	return localStorage.getItem("theme")
+}
 
 const getServerSnapshot = () => {
-  return 'system';
-};
+	return "system"
+}
 
-export function ThemeProvider({
-  children,
-  defaultTheme = 'system',
-}: ThemeProviderProps) {
-  const storedTheme = useSyncExternalStore(
-    subscribe,
-    getSnapshot,
-    getServerSnapshot
-  );
+export function ThemeProvider({ children, defaultTheme = "system" }: ThemeProviderProps) {
+	const storedTheme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
-  // Initialize with default theme, then sync with stored theme
-  const [theme, setThemeState] = useState<Theme>(defaultTheme);
-  const [resolvedTheme, setResolvedTheme] = useState<
-    'light' | 'dark' | undefined
-  >();
+	// Initialize with default theme, then sync with stored theme
+	const [theme, setThemeState] = useState<Theme>(defaultTheme)
+	const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark" | undefined>()
 
-  // Sync theme state with stored theme when it changes
-  useEffect(() => {
-    if (storedTheme) {
-      setThemeState(storedTheme as Theme);
-    }
-  }, [storedTheme]);
+	// Sync theme state with stored theme when it changes
+	useEffect(() => {
+		if (storedTheme) {
+			setThemeState(storedTheme as Theme)
+		}
+	}, [storedTheme])
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
+	useEffect(() => {
+		if (typeof window === "undefined") return
 
-    const newResolvedTheme =
-      theme === 'system'
-        ? window.matchMedia('(prefers-color-scheme: dark)').matches
-          ? 'dark'
-          : 'light'
-        : theme;
+		const newResolvedTheme = theme === "system" ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : theme
 
-    setResolvedTheme(newResolvedTheme);
-    document.documentElement.setAttribute('data-theme', newResolvedTheme);
-  }, [theme]);
+		setResolvedTheme(newResolvedTheme)
+		document.documentElement.setAttribute("data-theme", newResolvedTheme)
+	}, [theme])
 
-  const setTheme = (newTheme: Theme) => {
-    localStorage.setItem('theme', newTheme);
-    setThemeState(newTheme);
-  };
+	const setTheme = (newTheme: Theme) => {
+		localStorage.setItem("theme", newTheme)
+		setThemeState(newTheme)
+	}
 
-  const value: ThemeContextType = {
-    theme,
-    setTheme,
-    resolvedTheme,
-  };
+	const value: ThemeContextType = {
+		theme,
+		setTheme,
+		resolvedTheme,
+	}
 
-  return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
-  );
+	return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
 
 export function useTheme(): ThemeContextType {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
+	const context = useContext(ThemeContext)
+	if (context === undefined) {
+		throw new Error("useTheme must be used within a ThemeProvider")
+	}
+	return context
 }

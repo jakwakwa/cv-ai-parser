@@ -1,6 +1,6 @@
-import Markdown from '@/src/components/docs/Markdown';
+import Markdown from "@/src/components/docs/Markdown"
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic"
 
 const md = `
 # Building AIResumeGen's Job Tailoring Feature: A Smart Tool for Customizing Resumes to Job Specs
@@ -144,8 +144,8 @@ This project reinforced modular design's power—new features slotted in without
 What's next? Maybe integrating more LLMs or adding cover letter generation. If you try AIResumeGen.com or have feedback, hit me up in the comments. Happy job hunting, and remember: Your resume is your story—make it fit the chapter.
 
 Thanks for reading! If this resonated, clap, share, or follow for more dev journeys. 🚀
-`;
+`
 
 export default function Guide() {
-  return <Markdown>{md}</Markdown>;
+	return <Markdown>{md}</Markdown>
 }

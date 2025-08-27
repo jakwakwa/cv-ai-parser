@@ -1,11 +1,7 @@
-import { RESUME_JSON_SCHEMA } from '../shared-resume-tool-prompts';
+import { RESUME_JSON_SCHEMA } from "../shared-resume-tool-prompts"
 
 // Parsed PDF gets tailored to new object
-export const getTailoredResumeParsingPrompt = (
-  resumeContent: string,
-  jobSpec: string,
-  tone: string
-): string => `
+export const getTailoredResumeParsingPrompt = (resumeContent: string, jobSpec: string, tone: string): string => `
 You are an expert resume writer and AI assistant. Your task is to extract information from the provided resume content, tailor it to the given job specification, and return a structured JSON object.
 
 REQUIRED SCHEMA STRUCTURE:
@@ -41,4 +37,4 @@ IMPORTANT:
 Output as a valid JSON object following REQUIRED SCHEMA STRUCTURE:
 
 **Critical Rule:** Do not include any text or explanations outside of the final JSON object.
-`;
+`

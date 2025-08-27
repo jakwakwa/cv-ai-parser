@@ -32,16 +32,12 @@ Rules:
 - Do NOT include keys like "type", "properties", or "required".
 - Do NOT include markdown code fences.
 - Ensure arrays are arrays; ensure "experience[].details" is always an array of strings.
-`;
+`
 
 // Enhanced tailoring prompt for job-specific optimization
-export const getTailoredResumeParsingPrompt = (
-  resumeContent: string,
-  jobSpec: string,
-  tone: string
-): string => {
-  // Handle regular content normally
-  return `
+export const getTailoredResumeParsingPrompt = (resumeContent: string, jobSpec: string, tone: string): string => {
+	// Handle regular content normally
+	return `
 You are an expert resume writer and AI assistant. Your task is to extract information from the provided resume content, tailor it to the given job specification, and return a structured JSON object.
 
 REQUIRED OUTPUT SHAPE:
@@ -77,15 +73,13 @@ IMPORTANT:
 Output as a valid JSON object following REQUIRED OUTPUT SHAPE.
 
 **Critical Rule:** Do not include any text or explanations outside of the final JSON object.
-`;
-};
+`
+}
 
 // Original resume parsing (first step of tailoring process)
-export const getOriginalResumeParsingPrompt = (
-  resumeContent: string
-): string => {
-  // Handle text content normally
-  return `
+export const getOriginalResumeParsingPrompt = (resumeContent: string): string => {
+	// Handle text content normally
+	return `
 You are an expert resume parser. Extract information from the provided resume content exactly as presented, without any modifications or enhancements.
 
 REQUIRED OUTPUT SHAPE:
@@ -105,8 +99,8 @@ ${resumeContent}
 
 Output as a valid JSON object following REQUIRED OUTPUT SHAPE.
 **Critical Rule:** Do not include any text or explanations outside of the final JSON object.
-`;
-};
+`
+}
 
 // Job specification analysis prompt
 export const getJobSpecAnalysisPrompt = (jobSpec: string): string => `
@@ -126,47 +120,41 @@ Extract and identify:
 6. Preferred qualifications
 
 Return as a structured analysis that can be used for resume tailoring.
-`;
+`
 
 // Tailoring strategy configuration based on tone
 export const getTailoringStrategy = (tone: string) => {
-  const strategies = {
-    Formal: {
-      language: 'professional and conservative',
-      keywordDensity: 'moderate',
-      bulletStyle: 'action-oriented with quantifiable results',
-      summaryStyle: 'concise and achievement-focused',
-    },
-    Neutral: {
-      language: 'balanced professional tone',
-      keywordDensity: 'optimal',
-      bulletStyle: 'clear achievements with balanced technical and soft skills',
-      summaryStyle: 'comprehensive yet focused on key qualifications',
-    },
-    Creative: {
-      language: 'dynamic and engaging',
-      keywordDensity: 'high',
-      bulletStyle: 'impactful statements with innovative achievements',
-      summaryStyle:
-        'compelling narrative highlighting unique value proposition',
-    },
-  };
+	const strategies = {
+		Formal: {
+			language: "professional and conservative",
+			keywordDensity: "moderate",
+			bulletStyle: "action-oriented with quantifiable results",
+			summaryStyle: "concise and achievement-focused",
+		},
+		Neutral: {
+			language: "balanced professional tone",
+			keywordDensity: "optimal",
+			bulletStyle: "clear achievements with balanced technical and soft skills",
+			summaryStyle: "comprehensive yet focused on key qualifications",
+		},
+		Creative: {
+			language: "dynamic and engaging",
+			keywordDensity: "high",
+			bulletStyle: "impactful statements with innovative achievements",
+			summaryStyle: "compelling narrative highlighting unique value proposition",
+		},
+	}
 
-  return strategies[tone as keyof typeof strategies] || strategies.Neutral;
-};
+	return strategies[tone as keyof typeof strategies] || strategies.Neutral
+}
 
 // Tailor-specific configuration
 export const TAILOR_CONFIG = {
-  maxRetries: 2,
-  timeoutMs: 45000,
-  aiModel: 'creativity-optimized',
-  features: [
-    'job-matching',
-    'keyword-optimization',
-    'tone-adjustment',
-    'ats-optimization',
-  ],
-  confidenceThreshold: 0.75,
-  optimizationLevel: 'moderate',
-  keywordIntegration: 'natural',
-};
+	maxRetries: 2,
+	timeoutMs: 45000,
+	aiModel: "creativity-optimized",
+	features: ["job-matching", "keyword-optimization", "tone-adjustment", "ats-optimization"],
+	confidenceThreshold: 0.75,
+	optimizationLevel: "moderate",
+	keywordIntegration: "natural",
+}
