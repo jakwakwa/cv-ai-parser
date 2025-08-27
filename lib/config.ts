@@ -1,4 +1,3 @@
-
 /**
  * The specific Google Gemini model to be used for AI parsing.
  * Gemini 2.0 Flash supports direct PDF processing

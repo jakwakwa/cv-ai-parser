@@ -48,10 +48,10 @@ export async function POST(request: NextRequest) {
 
   try {
     const parsedData = await request.json();
-    
+
     // Generate a unique slug
     const slug = `cv-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-    
+
     // Create the resume in the database
     const newResume = await ResumeDatabase.saveResume({
       userId: session.user.id,
@@ -60,17 +60,22 @@ export async function POST(request: NextRequest) {
       fileType: 'application/json',
       fileSize: JSON.stringify(parsedData).length,
       parsedData,
-      parseMethod: parsedData.metadata?.source === 'tailored' ? 'ai-tailored' : 'ai-generated',
+      parseMethod:
+        parsedData.metadata?.source === 'tailored'
+          ? 'ai-tailored'
+          : 'ai-generated',
       confidenceScore: parsedData.metadata?.confidence || 0.9,
       isPublic: false,
       slug,
-      additionalContext: parsedData.metadata?.source === 'tailored' ? 
-        {
-          jobSpecSource: 'pasted',
-          jobSpecText: '',
-          tone: 'Neutral',
-          extraPrompt: parsedData.metadata?.aiTailorCommentary || ''
-        } : undefined,
+      additionalContext:
+        parsedData.metadata?.source === 'tailored'
+          ? {
+              jobSpecSource: 'pasted',
+              jobSpecText: '',
+              tone: 'Neutral',
+              extraPrompt: parsedData.metadata?.aiTailorCommentary || '',
+            }
+          : undefined,
     });
 
     return NextResponse.json({

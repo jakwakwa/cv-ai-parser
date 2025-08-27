@@ -2,7 +2,8 @@ import type { MetadataRoute } from 'next';
 import { ResumeDatabase } from '@/lib/db';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.airesumegen.com';
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || 'https://www.airesumegen.com';
   const resumes = await ResumeDatabase.getAllPublicResumes();
 
   const resumeEntries: MetadataRoute.Sitemap = resumes.map(

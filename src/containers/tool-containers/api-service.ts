@@ -1,5 +1,9 @@
 import { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
-import type { ResumeGeneratorState, ResumeTailorState, StreamUpdate } from './types';
+import type {
+  ResumeGeneratorState,
+  ResumeTailorState,
+  StreamUpdate,
+} from './types';
 
 // Resume Generator API Service
 export async function parseResumeGenerator(
@@ -20,14 +24,16 @@ export async function parseResumeGenerator(
     }
 
     if (response.status === 400 && errorData?.redirectTo) {
-      throw new Error(`${errorMsg}\n\n${errorData.details || ''}\n\nPlease try uploading a different file with more content.`);
+      throw new Error(
+        `${errorMsg}\n\n${errorData.details || ''}\n\nPlease try uploading a different file with more content.`
+      );
     }
 
     throw new Error(errorMsg);
   }
 
   const contentType = response.headers.get('content-type');
-  
+
   if (contentType?.includes('text/plain')) {
     return handleStreamingResponse(response, onStreamUpdate);
   }
@@ -53,14 +59,16 @@ export async function parseResumeTailor(
     }
 
     if (response.status === 400 && errorData?.redirectTo) {
-      throw new Error(`${errorMsg}\n\n${errorData.details || ''}\n\nPlease try uploading a different file with more content.`);
+      throw new Error(
+        `${errorMsg}\n\n${errorData.details || ''}\n\nPlease try uploading a different file with more content.`
+      );
     }
 
     throw new Error(errorMsg);
   }
 
   const contentType = response.headers.get('content-type');
-  
+
   if (contentType?.includes('text/plain')) {
     return handleStreamingResponse(response, onStreamUpdate);
   }
@@ -97,10 +105,10 @@ async function handleStreamingResponse(
 
       // Decode chunk and add to buffer
       buffer += decoder.decode(value, { stream: true });
-      
+
       // Process complete lines
       const lines = buffer.split('\n');
-      
+
       // Keep the last incomplete line in the buffer
       buffer = lines.pop() || '';
 
@@ -112,7 +120,7 @@ async function handleStreamingResponse(
             if (jsonStr) {
               const streamUpdate = JSON.parse(jsonStr) as StreamUpdate;
               lastUpdate = streamUpdate;
-              
+
               onStreamUpdate?.(streamUpdate);
 
               if (streamUpdate.status === 'completed' && streamUpdate.data) {
@@ -120,11 +128,17 @@ async function handleStreamingResponse(
               }
 
               if (streamUpdate.status === 'error') {
-                throw new Error(streamUpdate.message || 'Stream processing failed');
+                throw new Error(
+                  streamUpdate.message || 'Stream processing failed'
+                );
               }
             }
           } catch (parseError) {
-            console.warn('[ResumeParsingService] Failed to parse stream chunk:', trimmedLine, parseError);
+            console.warn(
+              '[ResumeParsingService] Failed to parse stream chunk:',
+              trimmedLine,
+              parseError
+            );
           }
         }
       }
@@ -139,16 +153,18 @@ async function handleStreamingResponse(
           if (jsonStr) {
             const streamUpdate = JSON.parse(jsonStr) as StreamUpdate;
             lastUpdate = streamUpdate;
-            
+
             onStreamUpdate?.(streamUpdate);
 
             if (streamUpdate.status === 'completed' && streamUpdate.data) {
               return streamUpdate;
             }
           }
-
         } catch {
-          console.warn('[ResumeParsingService] Failed to parse final buffer:', trimmedBuffer);
+          console.warn(
+            '[ResumeParsingService] Failed to parse final buffer:',
+            trimmedBuffer
+          );
         }
       }
     }
@@ -160,24 +176,28 @@ async function handleStreamingResponse(
   if (lastUpdate?.data) {
     return {
       ...lastUpdate,
-      status: 'completed'
+      status: 'completed',
     };
   }
 
   throw new Error('Stream ended without completion. Please try again.');
 }
 
-async function handleRegularResponse(response: Response): Promise<StreamUpdate> {
+async function handleRegularResponse(
+  response: Response
+): Promise<StreamUpdate> {
   let result: unknown;
   try {
     result = await response.json();
   } catch (_error) {
-    throw new Error('Failed to parse response. The server may have returned invalid data.');
+    throw new Error(
+      'Failed to parse response. The server may have returned invalid data.'
+    );
   }
 
-  const parsedResult = result as { 
-    error?: string; 
-    data?: ParsedResumeSchema; 
+  const parsedResult = result as {
+    error?: string;
+    data?: ParsedResumeSchema;
     meta?: {
       method: string;
       confidence: number;
@@ -210,7 +230,10 @@ async function handleRegularResponse(response: Response): Promise<StreamUpdate> 
 }
 
 // Form data creation for Resume Generator
-export function createGeneratorFormData(state: ResumeGeneratorState, isAuthenticated: boolean): FormData {
+export function createGeneratorFormData(
+  state: ResumeGeneratorState,
+  isAuthenticated: boolean
+): FormData {
   const formData = new FormData();
 
   if (state.uploadedFile) {
@@ -231,7 +254,10 @@ export function createGeneratorFormData(state: ResumeGeneratorState, isAuthentic
 }
 
 // Form data creation for Resume Tailor
-export function createTailorFormData(state: ResumeTailorState, isAuthenticated: boolean): FormData {
+export function createTailorFormData(
+  state: ResumeTailorState,
+  isAuthenticated: boolean
+): FormData {
   const formData = new FormData();
 
   if (state.uploadedFile) {
@@ -262,6 +288,9 @@ export function createTailorFormData(state: ResumeTailorState, isAuthenticated: 
 }
 
 // Legacy function for backward compatibility (can be removed later)
-export function createFormData(state: ResumeTailorState, isAuthenticated: boolean): FormData {
+export function createFormData(
+  state: ResumeTailorState,
+  isAuthenticated: boolean
+): FormData {
   return createTailorFormData(state, isAuthenticated);
-} 
+}

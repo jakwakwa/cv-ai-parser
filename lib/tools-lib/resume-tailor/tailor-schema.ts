@@ -23,6 +23,4 @@ export const userAdditionalContextSchema = z
   });
 
 export type ParsedJobSpec = z.infer<typeof jobSpecSchema>;
-export type UserAdditionalContext = z.infer<
-  typeof userAdditionalContextSchema
->; 
+export type UserAdditionalContext = z.infer<typeof userAdditionalContextSchema>;

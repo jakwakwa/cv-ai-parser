@@ -11,18 +11,22 @@ export class FileProcessor {
       switch (file.type) {
         case 'application/pdf':
           return await this.pdfParser.parse(file);
-        
+
         case 'text/plain':
           return await this.txtParser.parse(file);
-        
+
         default:
-          throw new Error(`Unsupported file type: ${file.type}. Please upload a PDF or TXT file.`);
+          throw new Error(
+            `Unsupported file type: ${file.type}. Please upload a PDF or TXT file.`
+          );
       }
     } catch (error) {
       if (error instanceof Error) {
         throw error;
       }
-      throw new Error('Failed to process file. Please try again with a different file.');
+      throw new Error(
+        'Failed to process file. Please try again with a different file.'
+      );
     }
   }
 
@@ -40,7 +44,9 @@ export class FileProcessor {
 
   validateFileSize(file: File): void {
     if (file.size > this.getMaxFileSize()) {
-      throw new Error(`File size (${Math.round(file.size / 1024 / 1024)}MB) exceeds the maximum limit of 10MB.`);
+      throw new Error(
+        `File size (${Math.round(file.size / 1024 / 1024)}MB) exceeds the maximum limit of 10MB.`
+      );
     }
   }
 
@@ -50,7 +56,9 @@ export class FileProcessor {
 
     // Validate file type
     if (!this.isFileTypeSupported(file.type)) {
-      throw new Error(`Unsupported file type: ${file.type}. Please upload a PDF or TXT file.`);
+      throw new Error(
+        `Unsupported file type: ${file.type}. Please upload a PDF or TXT file.`
+      );
     }
 
     // Process the file
@@ -59,4 +67,4 @@ export class FileProcessor {
 }
 
 // Export singleton instance
-export const fileProcessor = new FileProcessor(); 
+export const fileProcessor = new FileProcessor();

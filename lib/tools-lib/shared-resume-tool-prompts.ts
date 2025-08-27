@@ -1,4 +1,4 @@
-export const STANDARD_PROMPT =`
+export const STANDARD_PROMPT = `
 
 1. PERSONAL INFORMATION:
    - Extract full name and current job title
@@ -71,7 +71,7 @@ The goal is to create a comprehensive data structure that can be seamlessly mapp
 Output as a valid JSON object following REQUIRED SCHEMA STRUCTURE:
 
 **Critical Rule:** Do not include any text or explanations outside of the final JSON object.
-`
+`;
 
 export const RESUME_JSON_SCHEMA = `
 {
@@ -225,8 +225,9 @@ ${STANDARD_PROMPT}
 ${uploadedTxtFile ? `Resume content to parse:\n---\n${uploadedTxtFile}\n---` : ''}
 `;
 
-
-export const getResumeParsingPromptForPDF = (uploadedPdf: File): Blob | string => `
+export const getResumeParsingPromptForPDF = (
+  uploadedPdf: File
+): Blob | string => `
 You are an expert resume parser that extracts comprehensive structured data from text - optimised for design mapping and visualisation.
 Your task is to extract information from the provided resume as .txt  and format it as a detailed JSON object.
 

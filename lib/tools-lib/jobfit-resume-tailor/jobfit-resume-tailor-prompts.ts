@@ -1,6 +1,6 @@
-import { RESUME_JSON_SCHEMA } from "../shared-resume-tool-prompts";
+import { RESUME_JSON_SCHEMA } from '../shared-resume-tool-prompts';
 
-// Parsed PDF gets tailored to new object 
+// Parsed PDF gets tailored to new object
 export const getTailoredResumeParsingPrompt = (
   resumeContent: string,
   jobSpec: string,

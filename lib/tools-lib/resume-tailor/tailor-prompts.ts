@@ -40,7 +40,6 @@ export const getTailoredResumeParsingPrompt = (
   jobSpec: string,
   tone: string
 ): string => {
-  
   // Handle regular content normally
   return `
 You are an expert resume writer and AI assistant. Your task is to extract information from the provided resume content, tailor it to the given job specification, and return a structured JSON object.
@@ -82,8 +81,9 @@ Output as a valid JSON object following REQUIRED OUTPUT SHAPE.
 };
 
 // Original resume parsing (first step of tailoring process)
-export const getOriginalResumeParsingPrompt = (resumeContent: string): string => {
-  
+export const getOriginalResumeParsingPrompt = (
+  resumeContent: string
+): string => {
   // Handle text content normally
   return `
 You are an expert resume parser. Extract information from the provided resume content exactly as presented, without any modifications or enhancements.
@@ -147,10 +147,11 @@ export const getTailoringStrategy = (tone: string) => {
       language: 'dynamic and engaging',
       keywordDensity: 'high',
       bulletStyle: 'impactful statements with innovative achievements',
-      summaryStyle: 'compelling narrative highlighting unique value proposition',
+      summaryStyle:
+        'compelling narrative highlighting unique value proposition',
     },
   };
-  
+
   return strategies[tone as keyof typeof strategies] || strategies.Neutral;
 };
 
@@ -159,8 +160,13 @@ export const TAILOR_CONFIG = {
   maxRetries: 2,
   timeoutMs: 45000,
   aiModel: 'creativity-optimized',
-  features: ['job-matching', 'keyword-optimization', 'tone-adjustment', 'ats-optimization'],
+  features: [
+    'job-matching',
+    'keyword-optimization',
+    'tone-adjustment',
+    'ats-optimization',
+  ],
   confidenceThreshold: 0.75,
   optimizationLevel: 'moderate',
   keywordIntegration: 'natural',
-}; 
+};

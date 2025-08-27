@@ -40,8 +40,24 @@
   color: var(--color-text-muted);
   display: flex;
   justify-content: flex-end;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-xs);
 }
 
 .charCounterLimit {
   color: var(--color-accent-teal-dark);
+}
+
+.charCounterExceeded {
+  color: var(--color-accent-red, #ef4444);
+  font-weight: 600;
+}
+
+.charCounterWarning {
+  color: var(--color-accent-red, #ef4444);
+  font-size: var(--font-size-xs);
+  text-align: right;
+  max-width: 300px;
+  line-height: 1.4;
 }

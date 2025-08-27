@@ -75,7 +75,7 @@ export const AdBanner: FC<Props> = ({
     const isRestricted = RESTRICTED_PAGES.some((path) =>
       pathname.startsWith(path)
     );
-    
+
     // Additional content validation before showing ads
     const hasMinimumContent = () => {
       if (typeof window === 'undefined') return false;
@@ -84,7 +84,7 @@ export const AdBanner: FC<Props> = ({
       const textContent = mainContent.textContent || '';
       return textContent.trim().length >= 500; // Minimum 500 characters
     };
-    
+
     if (!isRestricted && hasMinimumContent()) {
       loadAdSenseScript();
 
@@ -152,7 +152,7 @@ export const AdBanner: FC<Props> = ({
       />
     </div>
   );
-}
+};
 
 // Restricted pages where ads should never show - expanded for better compliance
 const RESTRICTED_PAGES = [

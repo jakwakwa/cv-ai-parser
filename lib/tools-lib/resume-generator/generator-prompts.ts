@@ -1,4 +1,7 @@
-import { RESUME_JSON_SCHEMA, STANDARD_PROMPT } from '../shared-resume-tool-prompts';
+import {
+  RESUME_JSON_SCHEMA,
+  STANDARD_PROMPT,
+} from '../shared-resume-tool-prompts';
 
 export const PRECISION_EXTRACTION_PROMPT = `
 You are a precision resume parser. Your ONLY goal is to extract information 
@@ -52,7 +55,6 @@ export const getPrecisionExtractionPrompt = (
   content: string,
   fileType: 'pdf' | 'txt' | 'docx'
 ): string => {
-  
   // Handle text files normally
   return `
 ${PRECISION_EXTRACTION_PROMPT}
@@ -71,7 +73,11 @@ export const GENERATOR_CONFIG = {
   maxRetries: 3,
   timeoutMs: 30000,
   aiModel: 'precision-optimized',
-  features: ['comprehensive-extraction', 'format-preservation', 'accuracy-first'],
+  features: [
+    'comprehensive-extraction',
+    'format-preservation',
+    'accuracy-first',
+  ],
   confidenceThreshold: 0.85,
   preservationMode: 'strict',
-}; 
+};

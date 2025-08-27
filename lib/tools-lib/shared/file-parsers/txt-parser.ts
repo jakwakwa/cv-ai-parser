@@ -7,7 +7,7 @@ export class TxtParser extends BaseFileParser {
     try {
       // Read text content directly from the file
       const content = await file.text();
-      
+
       return {
         content,
         fileType: 'txt',
@@ -15,7 +15,9 @@ export class TxtParser extends BaseFileParser {
         fileSize: file.size,
       };
     } catch (error) {
-      throw new Error(`Failed to parse TXT file: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to parse TXT file: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
-} 
+}

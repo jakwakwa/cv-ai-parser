@@ -73,7 +73,9 @@ export default function GuidesPage() {
         {filtered.map((g) => (
           <li key={g.slug}>
             <Link
-              href={g.slug === 'posts' ? `/docs/posts` : `/docs/guides/${g.slug}`}
+              href={
+                g.slug === 'posts' ? `/docs/posts` : `/docs/guides/${g.slug}`
+              }
               className={styles.guideItemTitle}
             >
               {g.title}

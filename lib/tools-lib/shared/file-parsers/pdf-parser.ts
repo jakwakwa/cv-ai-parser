@@ -19,7 +19,9 @@ export class PdfParser extends BaseFileParser {
         fileData: arrayBuffer, // For AI SDK
       };
     } catch (error) {
-      throw new Error(`Failed to prepare PDF for AI processing: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to prepare PDF for AI processing: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
-} 
+}

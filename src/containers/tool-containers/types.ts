@@ -1,4 +1,4 @@
-import type { ParsedResumeSchema } from "@/lib/tools-lib/shared-parsed-resume-schema";
+import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
 
 export interface PartialResumeData {
   name?: string;

@@ -60,7 +60,7 @@ export function ThemeProvider({
     getSnapshot,
     getServerSnapshot
   );
-  
+
   // Initialize with default theme, then sync with stored theme
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
   const [resolvedTheme, setResolvedTheme] = useState<
@@ -76,7 +76,7 @@ export function ThemeProvider({
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    
+
     const newResolvedTheme =
       theme === 'system'
         ? window.matchMedia('(prefers-color-scheme: dark)').matches

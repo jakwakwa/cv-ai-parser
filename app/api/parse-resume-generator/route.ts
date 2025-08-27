@@ -13,18 +13,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 });
     }
 
-    console.log(`[Generator] Processing file: ${file.name} (${file.type}, ${file.size} bytes)`);
+    console.log(
+      `[Generator] Processing file: ${file.name} (${file.type}, ${file.size} bytes)`
+    );
 
     // Process the actual file content
     const fileResult = await fileProcessor.validateAndProcessFile(file);
-    
-    console.log(`[Generator] File processed successfully, content length: ${fileResult.content.length}`);
+
+    console.log(
+      `[Generator] File processed successfully, content length: ${fileResult.content.length}`
+    );
 
     // Extract additional customization data
     const profileImage = formData.get('profileImage') as string;
     const customColorsStr = formData.get('customColors') as string;
     let customColors = {};
-    
+
     if (customColorsStr) {
       try {
         customColors = JSON.parse(customColorsStr);
@@ -34,7 +38,9 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(`[Generator] Profile image provided: ${!!profileImage}`);
-    console.log(`[Generator] Custom colors provided: ${Object.keys(customColors).length > 0}`);
+    console.log(
+      `[Generator] Custom colors provided: ${Object.keys(customColors).length > 0}`
+    );
 
     const result = await generatorProcessor.process(fileResult, {
       profileImage,
@@ -51,4 +57,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}

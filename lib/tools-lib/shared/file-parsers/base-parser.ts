@@ -14,4 +14,4 @@ export abstract class BaseFileParser {
       throw new Error(`Unsupported file type: ${file.type}`);
     }
   }
-} 
+}

@@ -272,7 +272,11 @@ export const useResumeEditor = (
   }, []);
 
   const handleCertificationChange = useCallback(
-    <Field extends keyof NonNullable<ParsedResumeSchema['certifications']>[number]>(
+    <
+      Field extends keyof NonNullable<
+        ParsedResumeSchema['certifications']
+      >[number],
+    >(
       index: number,
       field: Field,
       value: NonNullable<ParsedResumeSchema['certifications']>[number][Field]

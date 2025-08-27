@@ -1,8 +1,14 @@
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
-import { createTailorFormData, parseResumeTailor } from '@/src/containers/tool-containers/api-service';
-import { CHARACTER_LIMITS, ERROR_MESSAGES } from '@/src/containers/tool-containers/resume-tailor-tool/constants';
+import {
+  createTailorFormData,
+  parseResumeTailor,
+} from '@/src/containers/tool-containers/api-service';
+import {
+  CHARACTER_LIMITS,
+  ERROR_MESSAGES,
+} from '@/src/containers/tool-containers/resume-tailor-tool/constants';
 import type {
   JobSpecMethod,
   ParseInfo,
@@ -41,12 +47,12 @@ export function useResumeTailor(isAuthenticated: boolean) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const jobSpecFileInputRef = useRef<HTMLInputElement>(null);
   const { addTempResume, generateTempSlug } = useTempResumeStore();
-  
+
   const [state, setState] = useState<ResumeTailorState>(initialState);
 
   // Update functions
   const updateState = (updates: Partial<ResumeTailorState>) => {
-    setState(prev => ({ ...prev, ...updates }));
+    setState((prev) => ({ ...prev, ...updates }));
   };
 
   const resetToInitialState = () => {
@@ -75,18 +81,16 @@ export function useResumeTailor(isAuthenticated: boolean) {
     if (!state.uploadedFile) {
       return ERROR_MESSAGES.NO_FILE;
     }
-   
-      if (state.jobSpecMethod === 'paste' && !state.jobSpecText.trim()) {
-        return ERROR_MESSAGES.NO_JOB_DESCRIPTION;
-      }
-      if (state.jobSpecMethod === 'upload' && !state.jobSpecFile) {
-        return ERROR_MESSAGES.NO_JOB_FILE;
-      }
-      if (state.jobSpecText.length > CHARACTER_LIMITS.JOB_SPEC) {
-        return ERROR_MESSAGES.JOB_SPEC_TOO_LONG(state.jobSpecText.length);
-      }
-  
 
+    if (state.jobSpecMethod === 'paste' && !state.jobSpecText.trim()) {
+      return ERROR_MESSAGES.NO_JOB_DESCRIPTION;
+    }
+    if (state.jobSpecMethod === 'upload' && !state.jobSpecFile) {
+      return ERROR_MESSAGES.NO_JOB_FILE;
+    }
+    if (state.jobSpecText.length > CHARACTER_LIMITS.JOB_SPEC) {
+      return ERROR_MESSAGES.JOB_SPEC_TOO_LONG(state.jobSpecText.length);
+    }
 
     return null;
   };
@@ -119,16 +123,23 @@ export function useResumeTailor(isAuthenticated: boolean) {
   };
 
   // Form updates
-  const setJobSpecMethod = (method: JobSpecMethod) => updateState({ jobSpecMethod: method });
+  const setJobSpecMethod = (method: JobSpecMethod) =>
+    updateState({ jobSpecMethod: method });
   const setJobSpecText = (text: string) => updateState({ jobSpecText: text });
   const setTone = (tone: ToneOption) => updateState({ tone });
-  const setExtraPrompt = (prompt: string) => updateState({ extraPrompt: prompt });
+  const setExtraPrompt = (prompt: string) =>
+    updateState({ extraPrompt: prompt });
 
-  const setProfileImage = (image: string) => updateState({ profileImage: image });
-  const setCustomColors = (colors: Record<string, string>) => updateState({ customColors: colors });
-  const setShowColorDialog = (show: boolean) => updateState({ showColorDialog: show });
-  const setShowErrorModal = (show: boolean) => updateState({ showErrorModal: show });
-  const setModalErrorMessage = (message: string) => updateState({ modalErrorMessage: message });
+  const setProfileImage = (image: string) =>
+    updateState({ profileImage: image });
+  const setCustomColors = (colors: Record<string, string>) =>
+    updateState({ customColors: colors });
+  const setShowColorDialog = (show: boolean) =>
+    updateState({ showColorDialog: show });
+  const setShowErrorModal = (show: boolean) =>
+    updateState({ showErrorModal: show });
+  const setModalErrorMessage = (message: string) =>
+    updateState({ modalErrorMessage: message });
 
   // Drag and drop
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
@@ -158,9 +169,15 @@ export function useResumeTailor(isAuthenticated: boolean) {
   };
 
   // Success handling
-  const handleSuccessfulParse = async (parsedData: ParsedResumeSchema, uploadInfo?: ParseInfo) => {
+  const handleSuccessfulParse = async (
+    parsedData: ParsedResumeSchema,
+    uploadInfo?: ParseInfo
+  ) => {
     // Always get aiTailorCommentary from parsedData.metadata if not present in uploadInfo
-    const aiTailorCommentary = uploadInfo?.aiTailorCommentary || parsedData.metadata?.aiTailorCommentary || null;
+    const aiTailorCommentary =
+      uploadInfo?.aiTailorCommentary ||
+      parsedData.metadata?.aiTailorCommentary ||
+      null;
     updateState({
       localResumeData: parsedData,
       aiTailorCommentary,
@@ -181,7 +198,8 @@ export function useResumeTailor(isAuthenticated: boolean) {
         return;
       } catch (_err) {
         updateState({
-          modalErrorMessage: 'Failed to save resume to your library. You can still preview it as a temp resume.',
+          modalErrorMessage:
+            'Failed to save resume to your library. You can still preview it as a temp resume.',
           showErrorModal: true,
         });
         // fallback to temp resume preview
@@ -192,7 +210,12 @@ export function useResumeTailor(isAuthenticated: boolean) {
       router.push(`/resume/${uploadInfo.resumeSlug}`);
     } else {
       const tempSlug = generateTempSlug();
-      addTempResume(tempSlug, parsedData, aiTailorCommentary || undefined, 'ai-resume-tailor');
+      addTempResume(
+        tempSlug,
+        parsedData,
+        aiTailorCommentary || undefined,
+        'ai-resume-tailor'
+      );
       router.push(`/resume/temp-resume/${tempSlug}`);
     }
   };
@@ -205,11 +228,11 @@ export function useResumeTailor(isAuthenticated: boolean) {
       return;
     }
 
-    updateState({ 
-      error: '', 
+    updateState({
+      error: '',
       isProcessing: true, // Set processing to true when starting
       streamingProgress: 0,
-      streamingMessage: 'Preparing your resume...'
+      streamingMessage: 'Preparing your resume...',
     });
 
     try {
@@ -218,20 +241,22 @@ export function useResumeTailor(isAuthenticated: boolean) {
       // Log form data for debugging
       const formDataLog: Record<string, string | File> = {};
       formData.forEach((value, key) => {
-        formDataLog[key] = value instanceof File 
-          ? `[File: ${value.name}, size: ${value.size}]` 
-          : value;
+        formDataLog[key] =
+          value instanceof File
+            ? `[File: ${value.name}, size: ${value.size}]`
+            : value;
       });
       console.log('[TailorTool] Submitting resume:', formDataLog);
 
       const result = await parseResumeTailor(formData, handleStreamUpdate);
-      
+
       if (result.status === 'completed' && result.data) {
         handleSuccessfulParse(result.data, result.meta);
       }
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
-      
+      const errorMessage =
+        err instanceof Error ? err.message : 'An unknown error occurred.';
+
       const enhancedErrorMessage = `${errorMessage}\n\nDon't worry! You can try again with:
 • A different resume file
 • A simpler job description
@@ -257,11 +282,11 @@ Your progress has been saved and you can continue from where you left off.`;
   return {
     // State
     state,
-    
+
     // Refs
     fileInputRef,
     jobSpecFileInputRef,
-    
+
     // Actions
     handleFileChange,
     handleJobSpecFileChange,
@@ -270,7 +295,7 @@ Your progress has been saved and you can continue from where you left off.`;
     handleDrop,
     handleCreateResume,
     resetToInitialState,
-    
+
     // Setters
     setJobSpecMethod,
     setJobSpecText,
@@ -282,4 +307,4 @@ Your progress has been saved and you can continue from where you left off.`;
     setShowErrorModal,
     setModalErrorMessage,
   };
-} 
+}

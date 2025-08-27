@@ -49,12 +49,20 @@ const ProfileEditorSection = ({
               placeholder="Write a brief professional summary highlighting your key strengths and career goals..."
               className={styles.textarea}
               rows={4}
-              maxLength={SUMMARY_MAX_CHARS}
+              // REMOVED: maxLength={SUMMARY_MAX_CHARS} - Allow users to type beyond limit
             />
             <div className={styles.charCounter}>
-              <span className={styles.charCounterLimit}>
+              <span
+                className={`${styles.charCounterLimit} ${(summary || '').length > SUMMARY_MAX_CHARS ? styles.charCounterExceeded : ''}`}
+              >
                 {(summary || '').length}/{SUMMARY_MAX_CHARS}
               </span>
+              {(summary || '').length > SUMMARY_MAX_CHARS && (
+                <span className={styles.charCounterWarning}>
+                  Limit exceeded. Reduce the characters as indicated to enable
+                  saving your current edit.
+                </span>
+              )}
             </div>
           </div>
         </CardContent>

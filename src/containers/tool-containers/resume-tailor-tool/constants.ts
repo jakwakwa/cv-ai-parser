@@ -17,7 +17,11 @@ export const TONE_OPTIONS: Array<{
   label: string;
   description: string;
 }> = [
-  { value: 'Formal', label: 'Formal', description: 'Conservative, traditional' },
+  {
+    value: 'Formal',
+    label: 'Formal',
+    description: 'Conservative, traditional',
+  },
   { value: 'Neutral', label: 'Neutral', description: 'Balanced, professional' },
   { value: 'Creative', label: 'Creative', description: 'Dynamic, engaging' },
 ] as const;
@@ -28,6 +32,6 @@ export const ERROR_MESSAGES = {
   NO_FILE: 'Please upload a resume file',
   NO_JOB_DESCRIPTION: 'Please provide a job description',
   NO_JOB_FILE: 'Please upload a job description file',
-  JOB_SPEC_TOO_LONG: (length: number) => 
+  JOB_SPEC_TOO_LONG: (length: number) =>
     `Job description is too long (${length}/${CHARACTER_LIMITS.JOB_SPEC} characters)`,
-} as const; 
+} as const;

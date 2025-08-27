@@ -1,35 +1,42 @@
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
-import { createGeneratorFormData, parseResumeGenerator } from '../containers/tool-containers/api-service';
-import type { PartialResumeData, ResumeGeneratorState, StreamUpdate } from '../containers/tool-containers/types';
+import {
+  createGeneratorFormData,
+  parseResumeGenerator,
+} from '../containers/tool-containers/api-service';
+import type {
+  PartialResumeData,
+  ResumeGeneratorState,
+  StreamUpdate,
+} from '../containers/tool-containers/types';
 import { useTempResumeStore } from './use-temp-resume-store';
 
 const initialState: ResumeGeneratorState = {
   // File upload states
   uploadedFile: null,
   error: '',
-  
+
   // UI states
   isGenerating: false, // Add this line
   showErrorModal: false,
   modalErrorMessage: '',
   showColorDialog: false,
-  
+
   // Streaming states
   streamingProgress: 0,
   streamingMessage: '',
   partialResumeData: null,
-  
+
   // Profile customization states
   profileImage: null,
   customColors: {},
-  resumeId: null,       // Added missing property
+  resumeId: null, // Added missing property
   generatedResume: null, // Added missing property
-  
+
   // Result state
   localResumeData: null,
-  
+
   // Processing state
   isProcessing: false,
 };
@@ -53,7 +60,7 @@ export function useResumeGenerator(isAuthenticated: boolean) {
   const { addTempResume, generateTempSlug } = useTempResumeStore();
 
   const updateState = (updates: Partial<ResumeGeneratorState>) => {
-    setState(prev => ({ ...prev, ...updates }));
+    setState((prev) => ({ ...prev, ...updates }));
   };
 
   const resetToInitialState = () => {
@@ -95,10 +102,14 @@ export function useResumeGenerator(isAuthenticated: boolean) {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const setProfileImage = (image: string) => updateState({ profileImage: image });
-  const setCustomColors = (colors: Record<string, string>) => updateState({ customColors: colors });
-  const setShowColorDialog = (show: boolean) => updateState({ showColorDialog: show });
-  const setShowErrorModal = (show: boolean) => updateState({ showErrorModal: show });
+  const setProfileImage = (image: string) =>
+    updateState({ profileImage: image });
+  const setCustomColors = (colors: Record<string, string>) =>
+    updateState({ customColors: colors });
+  const setShowColorDialog = (show: boolean) =>
+    updateState({ showColorDialog: show });
+  const setShowErrorModal = (show: boolean) =>
+    updateState({ showErrorModal: show });
 
   // Drag and drop handlers
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
@@ -122,7 +133,10 @@ export function useResumeGenerator(isAuthenticated: boolean) {
     });
   };
 
-  const handleSuccessfulParse = async (parsedData: ParsedResumeSchema, uploadInfo?: ParseInfo) => {
+  const handleSuccessfulParse = async (
+    parsedData: ParsedResumeSchema,
+    uploadInfo?: ParseInfo
+  ) => {
     console.log('[GeneratorTool] Resume generated successfully:', {
       hasData: !!parsedData,
       method: uploadInfo?.method,
@@ -147,7 +161,8 @@ export function useResumeGenerator(isAuthenticated: boolean) {
         return;
       } catch (err) {
         updateState({
-          modalErrorMessage: 'Failed to save resume to your library. You can still preview it as a temp resume.',
+          modalErrorMessage:
+            'Failed to save resume to your library. You can still preview it as a temp resume.',
           showErrorModal: true,
         });
         // fallback to temp resume preview
@@ -157,9 +172,9 @@ export function useResumeGenerator(isAuthenticated: boolean) {
     // Create temporary resume for unauthed users or fallback
     if (parsedData) {
       const tempSlug = generateTempSlug();
-      
+
       addTempResume(tempSlug, parsedData, undefined, 'ai-resume-generator');
-      
+
       console.log('[GeneratorTool] Created temp resume with slug:', tempSlug);
       router.push(`/resume/temp-resume/${tempSlug}`);
     }
@@ -173,11 +188,11 @@ export function useResumeGenerator(isAuthenticated: boolean) {
       return;
     }
 
-    updateState({ 
-      error: '', 
+    updateState({
+      error: '',
       isProcessing: true,
       streamingProgress: 0,
-      streamingMessage: 'Analyzing your resume with precision...'
+      streamingMessage: 'Analyzing your resume with precision...',
     });
 
     try {
@@ -186,20 +201,25 @@ export function useResumeGenerator(isAuthenticated: boolean) {
       // Log form data for debugging
       const formDataLog: Record<string, string | File> = {};
       formData.forEach((value, key) => {
-        formDataLog[key] = value instanceof File 
-          ? `[File: ${value.name}, size: ${value.size}]` 
-          : value;
+        formDataLog[key] =
+          value instanceof File
+            ? `[File: ${value.name}, size: ${value.size}]`
+            : value;
       });
-      console.log('[GeneratorTool] Submitting resume for precise extraction:', formDataLog);
+      console.log(
+        '[GeneratorTool] Submitting resume for precise extraction:',
+        formDataLog
+      );
 
       const result = await parseResumeGenerator(formData, handleStreamUpdate);
-      
+
       if (result.status === 'completed' && result.data) {
         handleSuccessfulParse(result.data, result.meta);
       }
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
-      
+      const errorMessage =
+        err instanceof Error ? err.message : 'An unknown error occurred.';
+
       const enhancedErrorMessage = `${errorMessage}\n\nDon't worry! You can try again with:
 • A different resume file format (PDF or TXT)
 • Checking your internet connection
@@ -225,10 +245,10 @@ The resume generator focuses on precise extraction, so clear, well-formatted fil
   return {
     // State
     state,
-    
+
     // Refs
     fileInputRef,
-    
+
     // Actions
     handleFileChange,
     handleRemoveFile,
@@ -236,11 +256,11 @@ The resume generator focuses on precise extraction, so clear, well-formatted fil
     handleDrop,
     handleCreateResume,
     resetToInitialState,
-    
+
     // Setters
     setProfileImage,
     setCustomColors,
     setShowColorDialog,
     setShowErrorModal,
   };
-} 
+}

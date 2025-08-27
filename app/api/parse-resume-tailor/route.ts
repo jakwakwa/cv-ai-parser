@@ -17,21 +17,25 @@ export async function POST(request: NextRequest) {
     }
 
     if (process.env.NODE_ENV !== 'production') {
-      console.log(`[Tailor] Processing file: ${file.name} (${file.type}, ${file.size} bytes)`);
+      console.log(
+        `[Tailor] Processing file: ${file.name} (${file.type}, ${file.size} bytes)`
+      );
     }
 
     // Process the actual file content
     const fileResult = await fileProcessor.validateAndProcessFile(file);
-    
+
     if (process.env.NODE_ENV !== 'production') {
-      console.log(`[Tailor] File processed successfully, content length: ${fileResult.content.length}`);
+      console.log(
+        `[Tailor] File processed successfully, content length: ${fileResult.content.length}`
+      );
     }
 
     // Extract additional customization data
     const profileImage = formData.get('profileImage') as string;
     const customColorsStr = formData.get('customColors') as string;
     let customColors = {};
-    
+
     if (customColorsStr) {
       try {
         customColors = JSON.parse(customColorsStr);
@@ -42,7 +46,9 @@ export async function POST(request: NextRequest) {
 
     if (process.env.NODE_ENV !== 'production') {
       console.log(`[Tailor] Profile image provided: ${!!profileImage}`);
-      console.log(`[Tailor] Custom colors provided: ${Object.keys(customColors).length > 0}`);
+      console.log(
+        `[Tailor] Custom colors provided: ${Object.keys(customColors).length > 0}`
+      );
     }
 
     // Extract tailor context from form data
@@ -53,14 +59,18 @@ export async function POST(request: NextRequest) {
         : 'Neutral';
 
     const tailorContext: UserAdditionalContext = {
-      jobSpecSource: formData.get('jobSpecSource') as UserAdditionalContext['jobSpecSource'],
+      jobSpecSource: formData.get(
+        'jobSpecSource'
+      ) as UserAdditionalContext['jobSpecSource'],
       jobSpecText: formData.get('jobSpecText') as string,
       tone,
       extraPrompt: formData.get('extraPrompt') as string,
     };
 
     if (process.env.NODE_ENV !== 'production') {
-      console.log(`[Tailor] Job spec length: ${tailorContext.jobSpecText?.length || 0}, tone: ${tailorContext.tone}`);
+      console.log(
+        `[Tailor] Job spec length: ${tailorContext.jobSpecText?.length || 0}, tone: ${tailorContext.tone}`
+      );
     }
 
     const result = await tailorProcessor.process(fileResult, tailorContext, {
@@ -78,4 +88,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}

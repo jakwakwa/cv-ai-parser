@@ -3,7 +3,10 @@ import { generateText } from 'ai';
 import { AI_MODEL_FLASH, AI_MODEL_PRO } from '@/lib/config';
 import type { FileParseResult } from '../shared/file-parsers/base-parser';
 import type { ParsedResumeSchema } from '../shared-parsed-resume-schema';
-import { GENERATOR_CONFIG, getPrecisionExtractionPrompt } from './generator-prompts';
+import {
+  GENERATOR_CONFIG,
+  getPrecisionExtractionPrompt,
+} from './generator-prompts';
 import { enforceSummaryLimit } from '../shared/summary-limiter';
 
 // This will be expanded with more metadata later
@@ -24,9 +27,12 @@ interface CustomizationOptions {
 }
 
 class GeneratorProcessor {
-  async process(fileResult: FileParseResult, customization?: CustomizationOptions): Promise<ProcessingResult> {
+  async process(
+    fileResult: FileParseResult,
+    customization?: CustomizationOptions
+  ): Promise<ProcessingResult> {
     const startTime = Date.now();
-    
+
     const model = google(AI_MODEL_FLASH); // Use AI_MODEL_FLASH for resume parsing, it supports PDF processing
 
     let messagesContent: any[] = [];
@@ -47,7 +53,10 @@ class GeneratorProcessor {
       // For text files, send the content as text
       messagesContent.push({
         type: 'text',
-        text: getPrecisionExtractionPrompt(fileResult.content, fileResult.fileType),
+        text: getPrecisionExtractionPrompt(
+          fileResult.content,
+          fileResult.fileType
+        ),
       });
     }
 
@@ -121,13 +130,14 @@ class GeneratorProcessor {
 
     // Experience completeness
     if (parsed.experience && parsed.experience.length > 0) {
-      const expScore = parsed.experience.reduce((acc, exp) => {
-        let expPoints = 0;
-        if (exp.title) expPoints += 0.25;
-        if (exp.company) expPoints += 0.25;
-        if (exp.details && exp.details.length > 0) expPoints += 0.5;
-        return acc + expPoints;
-      }, 0) / parsed.experience.length;
+      const expScore =
+        parsed.experience.reduce((acc, exp) => {
+          let expPoints = 0;
+          if (exp.title) expPoints += 0.25;
+          if (exp.company) expPoints += 0.25;
+          if (exp.details && exp.details.length > 0) expPoints += 0.5;
+          return acc + expPoints;
+        }, 0) / parsed.experience.length;
       score += expScore * 0.3;
     }
     maxScore += 0.3;
@@ -146,25 +156,37 @@ class GeneratorProcessor {
     return Math.min(score / maxScore, 1.0);
   }
 
-  private applyCustomizations(resume: ParsedResumeSchema, customization?: CustomizationOptions): ParsedResumeSchema {
+  private applyCustomizations(
+    resume: ParsedResumeSchema,
+    customization?: CustomizationOptions
+  ): ParsedResumeSchema {
     if (!customization) return resume;
 
     const customizedResume = { ...resume };
 
     // Apply profile image if provided and not empty
-    if (customization.profileImage && customization.profileImage.trim() !== '') {
+    if (
+      customization.profileImage &&
+      customization.profileImage.trim() !== ''
+    ) {
       customizedResume.profileImage = customization.profileImage;
       console.log('[Generator] Applied profile image to resume');
     }
 
     // Apply custom colors if provided
-    if (customization.customColors && Object.keys(customization.customColors).length > 0) {
+    if (
+      customization.customColors &&
+      Object.keys(customization.customColors).length > 0
+    ) {
       customizedResume.customColors = customization.customColors;
-      console.log('[Generator] Applied custom colors to resume:', Object.keys(customization.customColors));
+      console.log(
+        '[Generator] Applied custom colors to resume:',
+        Object.keys(customization.customColors)
+      );
     }
 
     return customizedResume;
   }
 }
 
-export const generatorProcessor = new GeneratorProcessor(); 
+export const generatorProcessor = new GeneratorProcessor();

@@ -3,6 +3,7 @@
 import { Eye, EyeOff, Save, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import type { ParsedResumeSchema } from '@/lib/tools-lib/shared-parsed-resume-schema';
+import { SUMMARY_MAX_CHARS } from '@/lib/tools-lib/shared/summary-limiter';
 import CertificationItem from '@/src/components/certification-item/certification-item';
 import { Card, CardContent } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/ui-button/button';
@@ -69,6 +70,10 @@ const ResumeEditor = ({
     onSave(editedData);
   };
 
+  // SAFE ADDITION: Check if summary exceeds character limit to disable save button
+  const isSummaryValid =
+    !editedData.summary || editedData.summary.length <= SUMMARY_MAX_CHARS;
+
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -101,6 +106,7 @@ const ResumeEditor = ({
                 type="button"
                 onClick={handleSave}
                 className={styles.saveButton}
+                disabled={!isSummaryValid}
               >
                 <Save className={`${styles.iconMd} ${styles.gap2}`} />
                 Save Changes

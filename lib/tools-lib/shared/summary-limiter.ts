@@ -33,7 +33,9 @@ export async function enforceSummaryLimit(
 
   try {
     if (process.env.NODE_ENV !== 'production') {
-      console.log('[SummaryLimiter] Summary too long; invoking lightweight rewrite');
+      console.log(
+        '[SummaryLimiter] Summary too long; invoking lightweight rewrite'
+      );
     }
 
     const { text } = await generateText({
@@ -61,7 +63,9 @@ export async function enforceSummaryLimit(
   } catch (_error) {
     // SAFE FALLBACK: if rewrite fails for any reason, just slice to max
     if (process.env.NODE_ENV !== 'production') {
-      console.warn('[SummaryLimiter] Rewrite failed; falling back to simple slice');
+      console.warn(
+        '[SummaryLimiter] Rewrite failed; falling back to simple slice'
+      );
     }
     return {
       ...resume,
@@ -69,5 +73,3 @@ export async function enforceSummaryLimit(
     };
   }
 }
-
-

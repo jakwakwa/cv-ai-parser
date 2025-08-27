@@ -109,7 +109,10 @@ export class ResumeDatabase {
   /**
    * Get a resume by slug for a specific user (including private resumes)
    */
-  static async getUserResumeBySlug(slug: string, userId: string): Promise<Resume | null> {
+  static async getUserResumeBySlug(
+    slug: string,
+    userId: string
+  ): Promise<Resume | null> {
     try {
       const resume = await db.resume.findFirst({
         where: { slug, userId },
