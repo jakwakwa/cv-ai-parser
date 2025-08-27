@@ -64,23 +64,7 @@ const ResumeTailorTool = ({
         }}
       />
 
-      {process.env.NODE_ENV !== 'production' && (
-        <div>
-          <Button
-            variant="outline"
-            size="sm"
-            type="button"
-            onClick={() => {
-              setModalErrorMessage(
-                'Sample error while parsing your PDF. This is a test of the error dialog.'
-              );
-              setShowErrorModal(true);
-            }}
-          >
-            Show error dialog (dev)
-          </Button>
-        </div>
-      )}
+      {/* Dev-only modal trigger removed */}
 
       <div className={styles.toolGrid}>
         <ResumeUploadPanel
@@ -96,6 +80,7 @@ const ResumeTailorTool = ({
           onHideColorDialog={() => setShowColorDialog(false)}
           onCreateResume={handleCreateResume}
           isLoading={isLoading}
+          hideSubmitButton
         />
 
         <JobDescriptionPanel

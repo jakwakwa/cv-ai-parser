@@ -18,9 +18,9 @@ const SkillsSection = ({ skills, customColors }: SkillsSectionProps) => {
       </h2>
       {skills && skills.length > 0 ? (
         <div>
-          {skills.map((s) => (
+          {skills.map((s, index) => (
             <span
-              key={s}
+              key={`${s}-${index}`}
               className={styles.skill}
               style={{
                 backgroundColor: 'rgba(255, 255,255,0.5)',

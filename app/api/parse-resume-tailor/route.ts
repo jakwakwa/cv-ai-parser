@@ -6,7 +6,9 @@ import { fileProcessor } from '@/lib/tools-lib/shared/file-parsers/file-processo
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('Received request for resume-tailor');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Received request for resume-tailor');
+    }
     const formData = await request.formData();
     const file = formData.get('file') as File;
 
@@ -14,12 +16,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 });
     }
 
-    console.log(`[Tailor] Processing file: ${file.name} (${file.type}, ${file.size} bytes)`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[Tailor] Processing file: ${file.name} (${file.type}, ${file.size} bytes)`);
+    }
 
     // Process the actual file content
     const fileResult = await fileProcessor.validateAndProcessFile(file);
     
-    console.log(`[Tailor] File processed successfully, content length: ${fileResult.content.length}`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[Tailor] File processed successfully, content length: ${fileResult.content.length}`);
+    }
 
     // Extract additional customization data
     const profileImage = formData.get('profileImage') as string;
@@ -34,8 +40,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    console.log(`[Tailor] Profile image provided: ${!!profileImage}`);
-    console.log(`[Tailor] Custom colors provided: ${Object.keys(customColors).length > 0}`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[Tailor] Profile image provided: ${!!profileImage}`);
+      console.log(`[Tailor] Custom colors provided: ${Object.keys(customColors).length > 0}`);
+    }
 
     // Extract tailor context from form data
     const toneRaw = (formData.get('tone') as string) || 'Neutral';
@@ -51,7 +59,9 @@ export async function POST(request: NextRequest) {
       extraPrompt: formData.get('extraPrompt') as string,
     };
 
-    console.log(`[Tailor] Job spec length: ${tailorContext.jobSpecText?.length || 0}, tone: ${tailorContext.tone}`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[Tailor] Job spec length: ${tailorContext.jobSpecText?.length || 0}, tone: ${tailorContext.tone}`);
+    }
 
     const result = await tailorProcessor.process(fileResult, tailorContext, {
       profileImage,

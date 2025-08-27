@@ -15,7 +15,7 @@
   "cursor.composer.showSuggestedFiles": false,
   "cursor.composer.subAgentsMode": "off",
   "cursor.composer.supportsReviewMode": false,
-  "cursor.composer.textSizeScale": 0.85,
+  "cursor.composer.textSizeScale": 1,
   "cursor.cpp.disabledLanguages": [
     "plaintext"
   ],

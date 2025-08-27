@@ -60,10 +60,10 @@ const ExperienceSection = ({
             </div>
             {job.details && job.details.length >= 0 && (
               <ul className={styles.details}>
-                {job.details.map((detail) =>
+                {job.details.map((detail, index) =>
                   detail !== '' ? (
                     <li
-                      key={detail}
+                      key={`${job.company}-${job.title}-${index}`}
                       className={`${styles.detailItem} bullet-point content-body`}
                       style={{ color: customColors['--resume-body-text'] }}
                     >

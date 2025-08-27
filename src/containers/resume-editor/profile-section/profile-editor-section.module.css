@@ -25,4 +25,23 @@
 
 .input {
   width: 100%;
+}
+
+.textarea {
+  width: 100%;
+  min-height: var(--spacing-xl);
+  resize: vertical;
+  font-family: inherit;
 } 
+
+.charCounter {
+  margin-top: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.charCounterLimit {
+  color: var(--color-accent-teal-dark);
+}

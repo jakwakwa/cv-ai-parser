@@ -4,6 +4,7 @@ import { AI_MODEL_FLASH, AI_MODEL_PRO } from '@/lib/config';
 import type { FileParseResult } from '../shared/file-parsers/base-parser';
 import type { ParsedResumeSchema } from '../shared-parsed-resume-schema';
 import { GENERATOR_CONFIG, getPrecisionExtractionPrompt } from './generator-prompts';
+import { enforceSummaryLimit } from '../shared/summary-limiter';
 
 // This will be expanded with more metadata later
 interface ProcessingResult {
@@ -84,11 +85,15 @@ class GeneratorProcessor {
     // Apply customizations
     const customizedResume = this.applyCustomizations(parsed, customization);
 
+    // SAFE ADDITION: Enforce summary length post-parse using a lightweight model.
+    // This runs only if summary exceeds the limit and will fall back safely.
+    const lengthSafeResume = await enforceSummaryLimit(customizedResume);
+
     const processingTime = Date.now() - startTime;
     const confidence = this.calculateConfidence(customizedResume);
 
     return {
-      data: customizedResume,
+      data: lengthSafeResume,
       meta: {
         method: 'ai-precision-pdf',
         confidence,

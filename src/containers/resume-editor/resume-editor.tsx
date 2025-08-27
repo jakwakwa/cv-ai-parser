@@ -32,6 +32,7 @@ const ResumeEditor = ({
 
   const {
     editedData,
+    handleInputChange,
     handleNestedInputChange,
     handleExperienceChange,
     removeExperience,
@@ -55,6 +56,13 @@ const ResumeEditor = ({
       handleNestedInputChange('contact', field, value);
     },
     [handleNestedInputChange]
+  );
+
+  const handleSummaryChange = useCallback(
+    (value: string) => {
+      handleInputChange('summary', value);
+    },
+    [handleInputChange]
   );
 
   const handleSave = () => {
@@ -108,8 +116,10 @@ const ResumeEditor = ({
           <div className={styles.editorPanel}>
             <ProfileEditorSection
               profileImage={editedData.profileImage}
+              summary={editedData.summary}
               contact={editedData.contact}
               onProfileImageChange={handleProfileImageChange}
+              onSummaryChange={handleSummaryChange}
               onContactChange={handleContactChange}
             />
 

@@ -1,4 +1,38 @@
-import { RESUME_JSON_SCHEMA } from "../shared-resume-tool-prompts";
+// Define an explicit output shape for the model to return a data object, not a schema
+const TAILORED_OUTPUT_SHAPE = `
+Return one JSON object with the following keys and types (no extra keys):
+{
+  "name": string,
+  "title": string,
+  "summary"?: string,
+  "profileImage"?: string | null,
+  "customColors"?: { [name: string]: string },
+  "contact"?: {
+    "email"?: string,
+    "phone"?: string,
+    "location"?: string,
+    "website"?: string,
+    "github"?: string,
+    "linkedin"?: string
+  },
+  "skills"?: string[],
+  "education"?: Array<{ "degree": string, "institution": string, "duration"?: string, "note"?: string }>,
+  "certifications"?: Array<{ "name": string, "issuer": string, "date"?: string, "id"?: string }>,
+  "experience": Array<{
+    "title"?: string,
+    "company"?: string,
+    "duration"?: string,
+    "details": string[]
+  }>,
+  "metadata"?: { "aiTailorCommentary"?: string }
+}
+
+Rules:
+- Output ONLY a JSON data object. Do NOT output a JSON Schema, types, or a "properties" wrapper.
+- Do NOT include keys like "type", "properties", or "required".
+- Do NOT include markdown code fences.
+- Ensure arrays are arrays; ensure "experience[].details" is always an array of strings.
+`;
 
 // Enhanced tailoring prompt for job-specific optimization
 export const getTailoredResumeParsingPrompt = (
@@ -11,8 +45,8 @@ export const getTailoredResumeParsingPrompt = (
   return `
 You are an expert resume writer and AI assistant. Your task is to extract information from the provided resume content, tailor it to the given job specification, and return a structured JSON object.
 
-REQUIRED SCHEMA STRUCTURE:
-${RESUME_JSON_SCHEMA}
+REQUIRED OUTPUT SHAPE:
+${TAILORED_OUTPUT_SHAPE}
 
 **1. Job Specification for Tailoring:**
 ---
@@ -41,7 +75,7 @@ IMPORTANT:
 - Highlight key strengths and matches between the candidate and job requirements
 - Note any significant changes or optimizations made
 
-Output as a valid JSON object following REQUIRED SCHEMA STRUCTURE:
+Output as a valid JSON object following REQUIRED OUTPUT SHAPE.
 
 **Critical Rule:** Do not include any text or explanations outside of the final JSON object.
 `;
@@ -54,8 +88,8 @@ export const getOriginalResumeParsingPrompt = (resumeContent: string): string =>
   return `
 You are an expert resume parser. Extract information from the provided resume content exactly as presented, without any modifications or enhancements.
 
-REQUIRED SCHEMA STRUCTURE:
-${RESUME_JSON_SCHEMA}
+REQUIRED OUTPUT SHAPE:
+${TAILORED_OUTPUT_SHAPE}
 
 ORIGINAL EXTRACTION RULES:
 - Extract information precisely as written
@@ -69,7 +103,7 @@ RESUME CONTENT:
 ${resumeContent}
 ---
 
-Output as a valid JSON object following REQUIRED SCHEMA STRUCTURE.
+Output as a valid JSON object following REQUIRED OUTPUT SHAPE.
 **Critical Rule:** Do not include any text or explanations outside of the final JSON object.
 `;
 };

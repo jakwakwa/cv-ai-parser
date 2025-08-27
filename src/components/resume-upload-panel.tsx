@@ -33,6 +33,7 @@ interface ResumeUploadPanelProps {
   onHideColorDialog: () => void;
   onCreateResume: () => void;
   isLoading: boolean;
+  hideSubmitButton?: boolean;
 }
 
 export function ResumeUploadPanel({
@@ -48,6 +49,7 @@ export function ResumeUploadPanel({
   onHideColorDialog,
   onCreateResume,
   isLoading,
+  hideSubmitButton,
 }: ResumeUploadPanelProps) {
   return (
     <div className={styles.panel}>
@@ -136,16 +138,18 @@ export function ResumeUploadPanel({
             </div>
           )}
 
-          <Button
-            onClick={onCreateResume}
-            disabled={isLoading || !state.uploadedFile}
-            className={styles.createButton}
-            variant="primary"
-            size="lg"
-          >
-            <Wand size={20} />
-            Create Resume
-          </Button>
+          {!hideSubmitButton && (
+            <Button
+              onClick={onCreateResume}
+              disabled={isLoading || !state.uploadedFile}
+              className={styles.createButton}
+              variant="primary"
+              size="lg"
+            >
+              <Wand size={20} />
+              Create Resume
+            </Button>
+          )}
         </div>
       </div>
     </div>

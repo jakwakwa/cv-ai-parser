@@ -1,6 +1,6 @@
 import { google } from '@ai-sdk/google';
 import { generateText } from 'ai';
-import { AI_MODEL_PRO } from '@/lib/config';
+import { AI_MODEL_FLASH } from '@/lib/config';
 import type { FileParseResult } from '../shared/file-parsers/base-parser';
 import { parsedResumeSchema } from '../shared-parsed-resume-schema';
 import type { ParsedResumeSchema } from '../shared-parsed-resume-schema';
@@ -12,6 +12,7 @@ import {
   TAILOR_CONFIG
 } from './tailor-prompts';
 import type { UserAdditionalContext } from './tailor-schema';
+import { enforceSummaryLimit } from '../shared/summary-limiter';
 
 // This will be expanded with more metadata later
 interface ProcessingResult {
@@ -115,12 +116,73 @@ class TailorProcessor {
     const cleaned = this.cleanJson(raw);
     try {
       const parsed = JSON.parse(cleaned);
-      const result = parsedResumeSchema.parse(parsed);
+      const sanitized = this.sanitizeResumeCandidate(parsed);
+      const result = parsedResumeSchema.parse(sanitized);
       return result;
     } catch (err) {
-      console.error('[Tailor] Failed to parse AI JSON. Cleaned snippet:', cleaned.slice(0, 600));
-      throw new Error('AI returned invalid JSON. Please try again with a simpler file or job spec.');
+      const prefix = cleaned.slice(0, 2000);
+      // Try to locate error position if available
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      const positionMatch = errorMsg.match(/position\s+(\d+)/i);
+      let context = '';
+      if (positionMatch) {
+        const pos = Number(positionMatch[1]);
+        const start = Math.max(0, pos - 80);
+        const end = Math.min(cleaned.length, pos + 80);
+        const marker = `${cleaned.slice(start, pos)}<<<HERE>>>${cleaned.slice(pos, end)}`;
+        context = `Context around error position ${pos}:\n${marker}`;
+      }
+      const looksLikeSchema = /\"type\"\s*:\s*\"object\"|\"properties\"\s*:/i.test(prefix);
+      console.error('[Tailor] Failed to parse AI JSON. Error:', errorMsg);
+      console.error('[Tailor] Cleaned prefix (first 2000 chars):', prefix);
+      if (context) console.error('[Tailor] Parse context:', context);
+      if (looksLikeSchema) {
+        console.error('[Tailor] Detected schema-shaped output (type/properties). Model likely emitted a JSON Schema instead of data.');
+      }
+      const devInfo =
+        process.env.NODE_ENV !== 'production'
+          ? ` | dev: schemaLike=${looksLikeSchema}; ${context || `prefix:${prefix.slice(0, 300)}`}`
+          : '';
+      throw new Error(`AI returned invalid JSON. Please try again with a simpler file or job spec.${devInfo}`);
     }
+  }
+
+  private sanitizeResumeCandidate(candidate: unknown): unknown {
+    // Remove nulls for optional string fields; ensure arrays; fix experience role/title; ensure details arrays
+    const deepSanitize = (value: any): any => {
+      if (value === null) {
+        return undefined;
+      }
+      if (Array.isArray(value)) {
+        return value.map((v) => deepSanitize(v)).filter((v) => v !== undefined);
+      }
+      if (typeof value === 'object' && value) {
+        const out: any = {};
+        for (const [k, v] of Object.entries(value)) {
+          const sv = deepSanitize(v as any);
+          if (sv !== undefined) out[k] = sv;
+        }
+        return out;
+      }
+      return value;
+    };
+
+    const result: any = deepSanitize(candidate);
+
+    // Experience normalization
+    if (Array.isArray(result?.experience)) {
+      result.experience = result.experience.map((exp: any) => {
+        const e: any = { ...exp };
+        if (!e.role && e.title) e.role = e.title;
+        if (!e.title && e.role) e.title = e.role;
+        if (!Array.isArray(e.details)) e.details = [];
+        // Keep only string details
+        e.details = e.details.filter((d: any) => typeof d === 'string');
+        return e;
+      });
+    }
+
+    return result;
   }
 
   async process(
@@ -129,7 +191,9 @@ class TailorProcessor {
     customization?: CustomizationOptions
   ): Promise<ProcessingResult> {
     const startTime = Date.now();
-    console.log('Tailor processing for:', fileResult.fileName);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Tailor processing for:', fileResult.fileName);
+    }
 
     // Step 1: Parse original resume with precision
     const originalParsed = await this.parseOriginal(fileResult);
@@ -143,12 +207,15 @@ class TailorProcessor {
     // Step 4: Apply customizations (profile image and colors)
     const customizedResume = this.applyCustomizations(tailored, customization);
 
+    // SAFE ADDITION: Post-process summary to respect max character constraint.
+    const lengthSafeResume = await enforceSummaryLimit(customizedResume);
+
     const processingTime = Date.now() - startTime;
     const matchScore = this.calculateJobMatchScore(customizedResume, tailorContext);
     const strategy = getTailoringStrategy(tailorContext.tone);
 
     return {
-      data: customizedResume,
+      data: lengthSafeResume,
       meta: {
         method: 'job-tailored',
         confidence: this.calculateTailoringMatch(customizedResume, tailorContext),
@@ -162,7 +229,7 @@ class TailorProcessor {
   }
 
   private async parseOriginal(fileResult: FileParseResult): Promise<ParsedResumeSchema> {
-    const model = google(AI_MODEL_PRO);
+    const model = google(AI_MODEL_FLASH);
     const messagesContent: ModelMessage[] = [];
 
     if (fileResult.fileType === 'pdf' && fileResult.fileData) {
@@ -182,7 +249,9 @@ class TailorProcessor {
       });
     }
 
-    console.log('[Tailor] Parsing original resume for tailoring...');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[Tailor] Parsing original resume for tailoring...');
+    }
 
     const { text } = await generateText({
       model,
@@ -222,7 +291,9 @@ class TailorProcessor {
 
     // TODO: Implement actual AI call using getJobSpecAnalysisPrompt
     const prompt = getJobSpecAnalysisPrompt(jobSpec);
-    console.log('Analyzing job specification...');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Analyzing job specification...');
+    }
     
     // Placeholder analysis
     return {
@@ -236,14 +307,16 @@ class TailorProcessor {
     original: ParsedResumeSchema,
     context: TailorContext
   ): Promise<ParsedResumeSchema> {
-    const model = google(AI_MODEL_PRO);
+    const model = google(AI_MODEL_FLASH);
     const prompt = getTailoredResumeParsingPrompt(
       JSON.stringify(original, null, 2),
       context.jobSpecText || '',
       context.tone
     );
 
-    console.log('Applying tailoring with tone:', context.tone);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Applying tailoring with tone:', context.tone);
+    }
 
     const { text } = await generateText({
       model,
@@ -267,13 +340,17 @@ class TailorProcessor {
     // Apply profile image if provided and not empty
     if (customization.profileImage && customization.profileImage.trim() !== '') {
       customizedResume.profileImage = customization.profileImage;
-      console.log('[Tailor] Applied profile image to resume');
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[Tailor] Applied profile image to resume');
+      }
     }
 
     // Apply custom colors if provided
     if (customization.customColors && Object.keys(customization.customColors).length > 0) {
       customizedResume.customColors = customization.customColors;
-      console.log('[Tailor] Applied custom colors to resume:', Object.keys(customization.customColors));
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[Tailor] Applied custom colors to resume:', Object.keys(customization.customColors));
+      }
     }
 
     return customizedResume;
