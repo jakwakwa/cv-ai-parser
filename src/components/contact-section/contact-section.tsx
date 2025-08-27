@@ -52,7 +52,7 @@ const ContactSection = ({ contact, customColors }: ContactSectionProps) => (
 			{contact.linkedin && (
 				<div className={styles.detail}>
 					<LinkedInIcon className={styles.icon} />
-					<a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className={styles.link}>
+					<a href={`https://${contact.linkedin}`} target="_blank" rel="noopener noreferrer" className={styles.link} style={{ color: customColors["--resume-body-text"] }}				>
 						LinkedIn
 					</a>
 				</div>
@@ -60,7 +60,7 @@ const ContactSection = ({ contact, customColors }: ContactSectionProps) => (
 			{contact.github && (
 				<div className={styles.detail}>
 					<GitHubIcon className={styles.icon} />
-					<a href={contact.github} target="_blank" rel="noopener noreferrer" className={styles.link} style={{ color: customColors["--resume-body-text"] }}>
+					<a href={`https://${contact.github}`} target="_blank" rel="noopener noreferrer" className={styles.link} style={{ color: customColors["--resume-body-text"] }}>
 						GitHub
 					</a>
 				</div>
@@ -68,7 +68,7 @@ const ContactSection = ({ contact, customColors }: ContactSectionProps) => (
 			{contact.website && (
 				<div className={styles.detail}>
 					<GlobeIcon className={styles.icon} />
-					<a href={contact.website} target="_blank" rel="noopener noreferrer" className={styles.link} style={{ color: customColors["--resume-body-text"] }}>
+					<a href={`https://${contact.website}`} target="_blank" rel="noopener noreferrer" className={styles.link} style={{ color: customColors["--resume-body-text"] }}>
 						Website
 					</a>
 				</div>
