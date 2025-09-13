@@ -169,9 +169,9 @@ const RESTRICTED_PAGES = [
 
 // Ad slot configurations
 const AD_SLOTS = {
-	header: "1234567890",
-	content: "0987654321",
-	footer: "1122334455",
+	header: "9667986278",
+	content: "7560041144",
+	footer: "9100353525",
 } as const
 
 // Convenience components for different ad placements
