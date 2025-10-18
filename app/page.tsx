@@ -10,47 +10,49 @@ import homePageContentStyles from "../src/containers/home-page-content/home-page
 import styles from "./page.module.css"
 
 function HomeContent() {
-	const { toast } = useToast()
-	const searchParams = useSearchParams()
+    const { toast } = useToast()
+    const searchParams = useSearchParams()
 
-	useEffect(() => {
-		const authRequired = searchParams.get("auth")
-		if (authRequired === "required") {
-			toast({
-				title: "Authentication Required",
-				description: "Please sign in to access your resume library.",
-				variant: "default",
-			})
-			// Clean up the URL
-			window.history.replaceState({}, "", "/")
-		}
-	}, [searchParams, toast])
+    useEffect(() => {
+        const authRequired = searchParams.get("auth")
+        if (authRequired === "required") {
+            toast({
+                title: "Authentication Required",
+                description: "Please sign in to access your resume library.",
+                variant: "default",
+            })
+            // Clean up the URL
+            window.history.replaceState({}, "", "/")
+        }
+    }, [searchParams, toast])
 
-	return (
-		<>
-			<SiteHeader
-				onLogoClick={() => {
-					window.location.href = "/"
-				}}
-			/>
-			<main className={styles.mainContent}>
-				<div className={homePageContentStyles.container}>
-					<HeaderAd />
-				</div>
-				<Suspense fallback={<div className={styles.loading}>Loading...</div>}>
-					<HomePageContent />
-				</Suspense>
-			</main>
-		</>
-	)
+    return (
+        <>
+            <SiteHeader
+                onLogoClick={() => {
+                    window.location.href = "/"
+                }}
+            />
+            <main className={styles.mainContent}>
+                <div className={homePageContentStyles.container}>
+
+                </div>
+                <Suspense fallback={<div className={styles.loading}>Loading...</div>}>
+
+                    <HomePageContent />
+                    <HeaderAd />
+                </Suspense>
+            </main>
+        </>
+    )
 }
 
 export default function Home() {
-	return (
-		<div className={styles.pageWrapper}>
-			<Suspense fallback={<div className={styles.loading}>Loading...</div>}>
-				<HomeContent />
-			</Suspense>
-		</div>
-	)
+    return (
+        <div className={styles.pageWrapper}>
+            <Suspense fallback={<div className={styles.loading}>Loading...</div>}>
+                <HomeContent />
+            </Suspense>
+        </div>
+    )
 }
