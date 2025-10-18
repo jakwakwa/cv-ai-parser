@@ -81,7 +81,7 @@ export default function BlogPage() {
                                     <CardContent>
                                         <p className={styles.articleDescription}>Master the art of resume writing with these proven strategies that help you stand out in today's competitive job market.</p>
                                         <div className={styles.articleFooter}>
-                                            <span className={styles.publishDate}>December 2024</span>
+                                            <span className={styles.publishDate}>2 October 2025 </span>
                                             <Link href="/blog/resume-writing-tips" className={styles.readMore}>
                                                 Read More →
                                             </Link>
@@ -104,7 +104,7 @@ export default function BlogPage() {
                                     <CardContent>
                                         <p className={styles.articleDescription}>Learn how to optimize your resume for Applicant Tracking Systems and increase your chances of getting past automated screening.</p>
                                         <div className={styles.articleFooter}>
-                                            <span className={styles.publishDate}>December 2024</span>
+                                            <span className={styles.publishDate}>19 October 2025</span>
                                             <Link href="/blog/ats-optimization" className={styles.readMore}>
                                                 Read More →
                                             </Link>
@@ -127,7 +127,7 @@ export default function BlogPage() {
                                     <CardContent>
                                         <p className={styles.articleDescription}>Discover effective career development strategies that will help you advance your professional goals and build lasting success.</p>
                                         <div className={styles.articleFooter}>
-                                            <span className={styles.publishDate}>December 2024</span>
+                                            <span className={styles.publishDate}>10 August 2025</span>
                                             <Link href="/blog/career-advice" className={styles.readMore}>
                                                 Read More →
                                             </Link>

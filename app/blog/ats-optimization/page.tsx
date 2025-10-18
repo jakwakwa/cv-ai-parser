@@ -54,7 +54,7 @@ export default function ATSOptimizationPage() {
                     </nav>
                     <h1 className={styles.title}>Complete Guide to ATS Optimization: Beat the Bots and Reach Human Reviewers</h1>
                     <div className={styles.meta}>
-                        <span>October 2025</span> • <span>12 min read</span> • <span>ATS Optimization</span>
+                        <span>19 October 2025</span> • <span>12 min read</span> • <span>ATS Optimization</span>
                     </div>
                     <p className={styles.subtitle}>
                         Learn how to optimize your resume for Applicant Tracking Systems and dramatically increase your chances of getting past automated screening to reach hiring managers.

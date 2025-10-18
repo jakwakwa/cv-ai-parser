@@ -55,7 +55,7 @@ export default function ResumeWritingTipsPage() {
                     </nav>
                     <h1 className={styles.title}>Essential Resume Writing Tips for 2024: A Comprehensive Guide</h1>
                     <div className={styles.meta}>
-                        <span>December 2024</span> • <span>8 min read</span> • <span>Resume Writing</span>
+                        <span>2 October 2025 </span> • <span>8 min read</span> • <span>Resume Writing</span>
                     </div>
                     <p className={styles.subtitle}>
                         Master the art of resume writing with these proven strategies that help you stand out in today's competitive job market and increase your interview chances.

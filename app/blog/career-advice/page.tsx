@@ -54,7 +54,7 @@ export default function CareerAdvicePage() {
                     </nav>
                     <h1 className={styles.title}>Career Development Strategies for Modern Professionals: Building Lasting Success</h1>
                     <div className={styles.meta}>
-                        <span>December 2024</span> • <span>10 min read</span> • <span>Career Advice</span>
+                        <span>10 August 2025</span> • <span>10 min read</span> • <span>Career Advice</span>
                     </div>
                     <p className={styles.subtitle}>
                         Discover effective career development strategies that will help you advance your professional goals, build meaningful relationships, and create lasting success in today's dynamic
