@@ -6,7 +6,7 @@ import styles from "./home-page-content.module.css"
 
 export default function HomePageContent() {
     return (
-        <div className={styles.container}>
+        <div className="w-screen max-w-[95vw] mb-24 mt-2 mx-auto md:pl-3 md:w-full md:min-w-[90%] md:max-w-[80vw]">
             {/* Hero Section */}
             <section className={styles.hero}>
                 <div className={styles.heroContent}>

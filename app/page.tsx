@@ -34,13 +34,13 @@ function HomeContent() {
                 }}
             />
             <main className={styles.mainContent}>
-                <div className={homePageContentStyles.container}>
-
+                <div className="p-1 mx-4" >
+                    <HeaderAd />
                 </div>
                 <Suspense fallback={<div className={styles.loading}>Loading...</div>}>
 
                     <HomePageContent />
-                    <HeaderAd />
+
                 </Suspense>
             </main>
         </>

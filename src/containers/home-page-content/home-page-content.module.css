@@ -277,7 +277,11 @@
 .benefits {
     background: var(--color-background-secondary);
     border-radius: var(--border-radius-large);
-    padding: var(--spacing-xxl);
+    padding: 100px 110px;
+    margin-top: 60px;
+    border-radius: 30px;
+    border: 1px solid var(--color-info-dark);
+    box-shadow: 0px 10px 10px 3px rgba(0, 0, 0, 0.15);
 }
 
 .benefitsGrid {
