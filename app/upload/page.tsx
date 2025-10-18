@@ -24,11 +24,7 @@ export default function UploadPage() {
     return (
         <div className={styles.pageWrapper}>
             <JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
-            <SiteHeader
-                onLogoClick={() => {
-                    window.location.href = "/"
-                }}
-            />
+            <SiteHeader />
             <main className={styles.mainContent}>
                 <Suspense fallback={<div className={styles.loading}>Loading...</div>}>
                     <PageContent />

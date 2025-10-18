@@ -33,7 +33,7 @@ const article = {
     authorName: "AI Resume Generator Team",
     datePublished: "2024-12-01",
     tags: ["ATS", "resume", "keywords"],
-} as const
+}
 
 export default function ATSOptimizationPage() {
     return (
