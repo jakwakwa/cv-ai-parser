@@ -3,135 +3,136 @@
 @tailwind utilities;
 
 :root {
-  --light-brown-border: #a49990;
-  --mint-light: #d8b08c;
-  --teal-dark: #1f3736;
-  --charcoal: #565854;
-  --mint-background: #c4f0dc;
-  --bronze-dark: #7c5029;
-  --peach: #f9b87f;
-  --coffee: #3e2f22;
-  --teal-main: #116964;
-  --light-grey-background: #f5f5f5;
-  --off-white: #faf4ec;
-  --light-brown-border: #a49990;
+    --light-brown-border: #a49990;
+    --mint-light: #d8b08c;
+    --teal-dark: #1f3736;
+    --charcoal: #565854;
+    --mint-background: #c4f0dc;
+    --bronze-dark: #7c5029;
+    --peach: #f9b87f;
+    --coffee: #3e2f22;
+    --teal-main: #116964;
+    --light-grey-background: #f5f5f5;
+    --off-white: #faf4ec;
+    --light-brown-border: #a49990;
 
-  /* Font families with system fallbacks */
-  --font-poppins: "Poppins";
-  --font-dm-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-dm-mono: "DM Mono", "SF Mono", Monaco, Inconsolata, "Roboto Mono", "Source Code Pro", Menlo, Consolas,
-    "DejaVu Sans Mono", monospace;
+    /* Font families with system fallbacks */
+    --font-poppins: "Poppins";
+    --font-dm-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-dm-mono: "DM Mono", "SF Mono", Monaco, Inconsolata, "Roboto Mono", "Source Code Pro", Menlo, Consolas,
+        "DejaVu Sans Mono", monospace;
 }
 
 .issuer {
-  text-transform: uppercase;
-  color: var(--bronze-dark);
-  font-family: var(--font-dm-mono);
-  letter-spacing: 0.03rem;
-  font-weight: 600;
-  margin-top: 3px;
-  margin-bottom: 2px;
-  text-transform: uppercase;
-  font-size: 0.3rem;
+    text-transform: uppercase;
+    color: var(--bronze-dark);
+    font-family: var(--font-dm-mono);
+    letter-spacing: 0.03rem;
+    font-weight: 600;
+    margin-top: 3px;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    font-size: 0.3rem;
 }
 
 .date {
-  font-size: 0.35rem;
-  font-weight: 400;
-  font-family: var(--font-dm-mono);
+    font-size: 0.35rem;
+    font-weight: 400;
+    font-family: var(--font-dm-mono);
 }
 
 .subject {
-  font-weight: 600;
-  font-size: 0.58rem;
-  line-height: 1.1;
-  color: var(--charcoal, #565854);
+    font-weight: 600;
+    font-size: 0.58rem;
+    line-height: 1.1;
+    color: var(--charcoal, #565854);
 }
 
 body {
-  font-family: var(--font-dm-sans);
+    font-family: var(--font-dm-sans);
+    font-size: 16px !important;
 }
 
 .bullet-point::before {
-  content: "•";
-  color: var(--teal-main, #116964);
-  font-weight: bold;
-  display: inline-block;
-  width: 1em;
-  margin-left: -1em;
+    content: "•";
+    color: var(--teal-main, #116964);
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
 }
 
 .profile-image-frame {
-  width: 96px;
-  height: 96px;
-  border-radius: 9999px;
-  overflow: hidden;
-  margin: 0 auto 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--mint-light);
+    width: 96px;
+    height: 96px;
+    border-radius: 9999px;
+    overflow: hidden;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--mint-light);
 }
 
 .profile-image {
-  width: 90%;
-  height: auto;
-  object-fit: cover;
-  border-radius: 9999px;
+    width: 90%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 9999px;
 }
 
 .font-dm-mono-subheading {
-  font-weight: 600;
-  font-size: 1rem;
-  line-height: 1;
-  font-family: var(--font-dm-mono);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1;
+    font-family: var(--font-dm-mono);
 }
 
 .font-dm-mono-degree {
-  letter-spacing: 0.05rem;
-  font-family: var(--font-dm-mono);
-  font-weight: 600;
-  font-size: 0.6rem;
-  opacity: 0.8;
+    letter-spacing: 0.05rem;
+    font-family: var(--font-dm-mono);
+    font-weight: 600;
+    font-size: 0.6rem;
+    opacity: 0.8;
 }
 
 .font-dm-mono-edu-detail {
-  font-family: var(--font-dm-mono);
-  font-weight: 400;
-  font-size: 0.65rem;
-  margin-top: 0.1rem;
-  opacity: 0.95;
+    font-family: var(--font-dm-mono);
+    font-weight: 400;
+    font-size: 0.65rem;
+    margin-top: 0.1rem;
+    opacity: 0.95;
 }
 
 .font-dm-mono-header {
-  letter-spacing: 0.3rem;
-  font-family: var(--font-dm-mono);
-  margin-bottom: 3px;
-  font-size: 0.75rem;
-  font-weight: 400;
+    letter-spacing: 0.3rem;
+    font-family: var(--font-dm-mono);
+    margin-bottom: 3px;
+    font-size: 0.75rem;
+    font-weight: 400;
 }
 
 .font-dm-sans-experience-title {
-  font-family: var(--font-dm-sans);
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin-top: 2rem !important;
+    font-family: var(--font-dm-sans);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: 2rem !important;
 }
 
 .content-body {
-  color: #535c5b;
-  font-size: 0.9rem;
+    color: #535c5b;
+    font-size: 0.9rem;
 }
 
 .sectionTitle {
-  font-size: 1.125rem;
-  font-weight: bold;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  display: flex;
-  justify-content: flex-start;
-  gap: 5px;
-  align-items: center;
-  border-bottom: 1px solid var(--light-brown-border);
-  color: var(--charcoal);
+    font-size: 1.125rem;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    display: flex;
+    justify-content: flex-start;
+    gap: 5px;
+    align-items: center;
+    border-bottom: 1px solid var(--light-brown-border);
+    color: var(--charcoal);
 }

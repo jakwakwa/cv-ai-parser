@@ -4,163 +4,182 @@
  */
 
 :root {
-  /* Base Color System */
-  --background: 0 0% 100%;
-  --foreground: 0 0% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 3.9%;
-  --primary: 0 0% 9%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 0 0% 96.1%;
-  --secondary-foreground: 0 0% 9%;
-  --muted: 0 0% 96.1%;
-  --muted-foreground: 0 0% 45.1%;
-  --accent: 0 0% 96.1%;
-  --accent-foreground: 0 0% 9%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 0 0% 89.8%;
-  --input: 0 0% 89.8%;
-  --ring: 0 0% 3.9%;
+    /* Base Color System */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
 
-  /* Chart Colors */
-  --chart-1: 12 76% 61%;
-  --chart-2: 173 58% 39%;
-  --chart-3: 197 37% 24%;
-  --chart-4: 43 74% 66%;
-  --chart-5: 27 87% 67%;
+    /* Chart Colors */
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
 
-  /* Sidebar Colors */
-  --sidebar-background: 0 0% 98%;
-  --sidebar-foreground: 240 5.3% 26.1%;
-  --sidebar-primary: 240 5.9% 10%;
-  --sidebar-primary-foreground: 0 0% 98%;
-  --sidebar-accent: 240 4.8% 95.9%;
-  --sidebar-accent-foreground: 240 5.9% 10%;
-  --sidebar-border: 220 13% 91%;
-  --sidebar-ring: 217.2 10.6% 64.9%;
+    /* Sidebar Colors */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 10.6% 64.9%;
 
-  /* Semantic Color Tokens */
-  /* Background Colors */
-  --color-background-primary: #ffffff;
-  --color-background-secondary: #ffffff;
-  --color-background-info: #f0f9ff;
+    /* Semantic Color Tokens */
+    /* Background Colors */
+    --color-background-primary: #ffffff;
+    --color-background-secondary: #ffffff;
+    --color-background-info: #f0f9ff;
 
-  /* Text Colors */
-  /* --color-text-primary: #1f2937; */
-  --color-text-secondary: #6b7280;
-  --color-text-light: #374151;
-  --color-text-success: #a6d9d4;
-  --color-text-info: #1f2937;
+    /* Text Colors */
+    /* --color-text-primary: #1f2937; */
+    --color-text-secondary: #6b7280;
+    --color-text-light: #374151;
+    --color-text-success: #a6d9d4;
+    --color-text-info: #1f2937;
 
-  /* Border Colors */
-  --color-border-light: #e5e7eb;
-  --color-border-info: #e0f2fe;
+    /* Border Colors */
+    --color-border-light: #e5e7eb;
+    --color-border-info: #e0f2fe;
 
-  /* Accent Colors */
-  --color-accent-teal: #0d9488;
-  --color-accent-teal-dark: #0f766e;
-  --color-accent-teal-light: #f0fdfa;
+    /* Accent Colors */
+    --color-accent-teal: #0d9488;
+    --color-accent-teal-dark: #0f766e;
+    --color-accent-teal-light: #f0fdfa;
 
-  /* Primary Colors */
-  --color-primary-dark: #a77046;
-  --color-primary-darker: #8e5d39;
+    /* Primary Colors */
+    --color-primary-dark: #a77046;
+    --color-primary-darker: #8e5d39;
 
-  /* Secondary Colors */
-  --color-secondary-blue: #5bb5e1;
-  --color-secondary-blue-dark: #0d9488;
+    /* Secondary Colors */
+    --color-secondary-blue: #5bb5e1;
+    --color-secondary-blue-dark: #0d9488;
 
-  /* Error Colors */
-  --color-error-text: #dc2626;
-  --color-error-bg: #fef2f2;
-  --color-error-border: #fecaca;
-  --color-error-button: #ab5c5e;
+    /* Error Colors */
+    --color-error-text: #dc2626;
+    --color-error-bg: #fef2f2;
+    --color-error-border: #fecaca;
+    --color-error-button: #ab5c5e;
 
-  /* Disabled State */
-  --color-disabled: #9ca3af;
+    /* Disabled State */
+    --color-disabled: #9ca3af;
 
-  /* Component-specific Colors */
-  --color-button-primary-bg: var(--color-accent-teal);
-  --color-button-primary-hover: var(--color-accent-teal-dark);
-  --color-button-secondary-bg: var(--color-secondary-blue);
-  --color-button-secondary-hover: var(--color-secondary-blue-dark);
-  --color-background-primary-lighter: #e1ebea;
-  --color-button-secondary: #133938;
+    /* Component-specific Colors */
+    --color-button-primary-bg: var(--color-accent-teal);
+    --color-button-primary-hover: var(--color-accent-teal-dark);
+    --color-button-secondary-bg: var(--color-secondary-blue);
+    --color-button-secondary-hover: var(--color-secondary-blue-dark);
+    --color-background-primary-lighter: #e1ebea;
+    --color-button-secondary: #133938;
 
-  --color-card-gradient-start: #f5fafd; /* very light blue (was #192E42) */
-  --color-card-gradient-end: #eaf3fa; /* light blue (was #1A3B56) */
-  --color-card-border: #e0e7ef; /* light border (was #062421) */
-  --color-card-content-bg: #f7fbff; /* very light blue (was #1A3145) */
-  --color-card-content-border: #e3eaf2; /* light border (was #162028) */
-  --color-card-footer-bg: #f3f7fa; /* very light blue (was #152437) */
-  --color-card-footer-gradient-end: #eaf3fa; /* light blue (was #1B3D58) */
-  --color-card-footer-border: #e0e0e0; /* light gray (was rgba(127,127,127,0.5)) */
-  --color-card-footer-border-dark: #b0b0b0; /* medium gray (was #3D3D3D) */
-  --color-card-text-primary: #1a202c; /* dark text (was #F5F5F5) */
-  --color-card-text-secondary: #0d9488; /* accent teal (same as dark) */
-  --color-card-text-light: #374151; /* muted dark (was #FFFFFF) */
-  --color-card-button-view: #e0f7f4; /* light teal (was #15B8A7) */
-  --color-card-button-view-text: #0d9488; /* teal (was #152437) */
-  --color-card-button-share: #e3f0fa;
-  --color-card-button-share-border: #88bae0; /* light blue (was #16588D) */
-  --color-card-button-delete: #fbeaea; /* light red (was #7D4545) */
-  --color-card-button-delete-border: #f5bcbc; /* light red border (was #914A4A) */
-  --color-card-public-toggle-public-bg: #e0f7f4; /* light teal (was #15B8A7) */
-  --color-card-public-toggle-private-bg: #fbeaea; /* light red (was #7D4545) */
+    --color-card-gradient-start: #f5fafd;
+    /* very light blue (was #192E42) */
+    --color-card-gradient-end: #eaf3fa;
+    /* light blue (was #1A3B56) */
+    --color-card-border: #e0e7ef;
+    /* light border (was #062421) */
+    --color-card-content-bg: #f7fbff;
+    /* very light blue (was #1A3145) */
+    --color-card-content-border: #e3eaf2;
+    /* light border (was #162028) */
+    --color-card-footer-bg: #f3f7fa;
+    /* very light blue (was #152437) */
+    --color-card-footer-gradient-end: #eaf3fa;
+    /* light blue (was #1B3D58) */
+    --color-card-footer-border: #e0e0e0;
+    /* light gray (was rgba(127,127,127,0.5)) */
+    --color-card-footer-border-dark: #b0b0b0;
+    /* medium gray (was #3D3D3D) */
+    --color-card-text-primary: #1a202c;
+    /* dark text (was #F5F5F5) */
+    --color-card-text-secondary: #0d9488;
+    /* accent teal (same as dark) */
+    --color-card-text-light: #374151;
+    /* muted dark (was #FFFFFF) */
+    --color-card-button-view: #e0f7f4;
+    /* light teal (was #15B8A7) */
+    --color-card-button-view-text: #0d9488;
+    /* teal (was #152437) */
+    --color-card-button-share: #e3f0fa;
+    --color-card-button-share-border: #88bae0;
+    /* light blue (was #16588D) */
+    --color-card-button-delete: #fbeaea;
+    /* light red (was #7D4545) */
+    --color-card-button-delete-border: #f5bcbc;
+    /* light red border (was #914A4A) */
+    --color-card-public-toggle-public-bg: #e0f7f4;
+    /* light teal (was #15B8A7) */
+    --color-card-public-toggle-private-bg: #fbeaea;
+    /* light red (was #7D4545) */
 }
 
 /* Dark mode color overrides */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
+    :root {
+        --background: 0 0% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 0 0% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 0 0% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 0 0% 9%;
+        --secondary: 0 0% 14.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 0 0% 14.9%;
+        --muted-foreground: 0 0% 63.9%;
+        --accent: 0 0% 14.9%;
+        --accent-foreground: 0 0% 98%;
+        --border: 0 0% 14.9%;
+        --input: 0 0% 14.9%;
+        --ring: 0 0% 83.1%;
 
-    /* Dark mode semantic colors */
-    --color-background-primary: #0d1724;
-    --color-background-priamry-lighter: #022532;
-    --color-background-secondary: #0d2638;
+        /* Dark mode semantic colors */
+        --color-background-primary: #0d1724;
+        --color-background-priamry-lighter: #022532;
+        --color-background-secondary: #0d2638;
 
-    /* --color-text-primary: #94cebf; */
-    --color-text-secondary: #d1d5db;
-    --color-border-light: #000;
+        /* --color-text-primary: #94cebf; */
+        --color-text-secondary: #d1d5db;
+        --color-border-light: #000;
 
-    /* Dark mode Figma Card Colors (same as light mode for now, adjust if needed) */
-    --color-card-gradient-start: #192e42;
-    --color-card-gradient-end: #1a3b56;
-    --color-card-border: #062421;
-    --color-card-content-bg: #1a3145;
-    --color-card-content-border: #162028;
-    --color-card-footer-bg: #152437;
-    --color-card-footer-gradient-end: #1b3d58;
-    --color-card-footer-border: rgba(127, 127, 127, 0.5);
-    --color-card-footer-border-dark: #3d3d3d;
-    --color-card-text-primary: #f5f5f5;
-    --color-card-text-secondary: #15b8a7;
-    --color-card-text-light: #ffffff;
-    --color-card-button-view: #15b8a7;
-    --color-card-button-view-text: #152437;
-    --color-card-button-share: #16588d;
-    --color-card-button-share-border: #3d7bab;
-    --color-card-button-delete: #7d4545;
-    --color-card-button-delete-border: #914a4a;
-    --color-card-public-toggle-public-bg: #15b8a7;
-    --color-card-public-toggle-private-bg: #7d4545;
-  }
+        /* Dark mode Figma Card Colors (same as light mode for now, adjust if needed) */
+        --color-card-gradient-start: #192e42;
+        --color-card-gradient-end: #1a3b56;
+        --color-card-border: #062421;
+        --color-card-content-bg: #1a3145;
+        --color-card-content-border: #162028;
+        --color-card-footer-bg: #152437;
+        --color-card-footer-gradient-end: #1b3d58;
+        --color-card-footer-border: rgba(127, 127, 127, 0.5);
+        --color-card-footer-border-dark: #3d3d3d;
+        --color-card-text-primary: #f5f5f5;
+        --color-card-text-secondary: #15b8a7;
+        --color-card-text-light: #ffffff;
+        --color-card-button-view: #15b8a7;
+        --color-card-button-view-text: #152437;
+        --color-card-button-share: #16588d;
+        --color-card-button-share-border: #3d7bab;
+        --color-card-button-delete: #7d4545;
+        --color-card-button-delete-border: #914a4a;
+        --color-card-public-toggle-public-bg: #15b8a7;
+        --color-card-public-toggle-private-bg: #7d4545;
+    }
 }

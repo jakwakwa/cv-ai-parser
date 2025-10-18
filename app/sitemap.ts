@@ -1,4 +1,30 @@
 import type { MetadataRoute } from "next"
+import { SITE } from "@/src/lib/seo/config"
+
+export default function sitemap(): MetadataRoute.Sitemap {
+	const lastModified = new Date()
+
+	const urls = [
+		"/",
+		"/blog",
+		"/blog/ats-optimization",
+		"/blog/career-advice",
+		"/blog/resume-writing-tips",
+		"/tools/ai-resume-generator",
+		"/tools/ai-resume-tailor",
+		"/library",
+		"/docs",
+		"/docs/posts",
+		"/docs/guides/jobfit-tailor-instructions",
+		"/docs/guides/resume-from-file",
+		"/privacy-policy",
+		"/terms-and-conditions",
+	]
+
+	return urls.map((path) => ({ url: `${SITE.baseUrl}${path}`, lastModified }))
+}
+
+import type { MetadataRoute } from "next"
 import { ResumeDatabase } from "@/lib/db"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

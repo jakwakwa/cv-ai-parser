@@ -2,12 +2,29 @@
 
 import type React from "react"
 import { SiteHeader } from "@/src/components/site-header/site-header"
+import { JsonLd } from "@/src/components/seo/JsonLd"
+import { buildBreadcrumbSchema } from "@/src/lib/seo/schemas"
+import { buildPageMetadata } from "@/src/lib/seo/metadata"
+import { SITE } from "@/src/lib/seo/config"
 import BackButton from "@/src/components/ui/BackButton"
 import styles from "./page.module.css"
+
+export const metadata = buildPageMetadata({
+	title: "Terms and Conditions",
+	description: "Use of AiresumeGen's AI resume tools and services, including fair use, limitations, and legal terms.",
+	path: "/terms-and-conditions",
+	keywords: ["terms and conditions", "terms of service", "legal terms"],
+})
+
+const breadcrumbs = [
+	{ name: "Home", item: SITE.baseUrl },
+	{ name: "Terms and Conditions", item: `${SITE.baseUrl}/terms-and-conditions` },
+]
 
 const TermsAndConditionsPage: React.FC = () => {
 	return (
 		<div className={styles.pageWrapper}>
+			<JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
 			<SiteHeader />
 			<div className="container mx-auto p-4 max-w-4xl flex-1">
 				<div className=" rounded-lg shadow-sm border border-gray-200 p-8">

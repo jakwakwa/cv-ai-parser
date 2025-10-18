@@ -1,5 +1,6 @@
 "use client"
 
+import { buildPageMetadata } from "@/src/lib/seo/metadata"
 import { ArrowLeft } from "lucide-react"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
 import { useSession } from "next-auth/react"
@@ -14,6 +15,13 @@ import { Button } from "@/src/components/ui/ui-button/button"
 import ResumeDisplay from "@/src/containers/resume-display/resume-display"
 import ResumeEditor from "@/src/containers/resume-editor/resume-editor"
 import styles from "./layout.module.css"
+
+export const metadata = buildPageMetadata({
+	title: "Private Resume Preview",
+	description: "Temporary or private resume preview page. Not indexable.",
+	path: "/resume",
+	robotsIndex: false,
+})
 
 export default function ViewResumePage() {
 	const router = useRouter()

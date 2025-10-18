@@ -2,12 +2,29 @@
 
 import type React from "react"
 import { SiteHeader } from "@/src/components/site-header/site-header"
+import { JsonLd } from "@/src/components/seo/JsonLd"
+import { buildBreadcrumbSchema } from "@/src/lib/seo/schemas"
+import { buildPageMetadata } from "@/src/lib/seo/metadata"
+import { SITE } from "@/src/lib/seo/config"
 import BackButton from "@/src/components/ui/BackButton"
 import styles from "./page.module.css"
+
+export const metadata = buildPageMetadata({
+	title: "Privacy Policy",
+	description: "How AiresumeGen collects, uses, and protects your data for resume generation and optimization.",
+	path: "/privacy-policy",
+	keywords: ["privacy policy", "data protection", "resume data privacy"],
+})
+
+const breadcrumbs = [
+	{ name: "Home", item: SITE.baseUrl },
+	{ name: "Privacy Policy", item: `${SITE.baseUrl}/privacy-policy` },
+]
 
 const PrivacyPolicyPage: React.FC = () => {
 	return (
 		<div className={styles.pageWrapper}>
+			<JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
 			<SiteHeader />
 			<div className="container mx-auto p-4 max-w-4xl flex-1">
 				<div className="rounded-lg shadow-sm border border-gray-200 p-8">

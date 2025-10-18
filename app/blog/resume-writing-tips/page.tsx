@@ -1,11 +1,46 @@
 import { SiteHeader } from "@/src/components/site-header/site-header"
 import { HeaderAd, FooterAd, ContentAd } from "@/src/components/adsense/AdBanner"
 import Link from "next/link"
+import { JsonLd } from "@/src/components/seo/JsonLd"
+import { buildBreadcrumbSchema, buildArticleSchema } from "@/src/lib/seo/schemas"
+import { buildPageMetadata } from "@/src/lib/seo/metadata"
+import { SITE } from "@/src/lib/seo/config"
 import styles from "./page.module.css"
+
+export const metadata = buildPageMetadata({
+	title: "Essential Resume Writing Tips for 2024: A Comprehensive Guide",
+	description:
+		"Master the art of resume writing with proven strategies to stand out and increase interview chances in today's market.",
+	path: "/blog/resume-writing-tips",
+	keywords: [
+		"resume writing tips",
+		"ATS resume",
+		"professional summary",
+		"skills section resume",
+	],
+})
+
+const breadcrumbs = [
+	{ name: "Home", item: SITE.baseUrl },
+	{ name: "Blog", item: `${SITE.baseUrl}/blog` },
+	{ name: "Resume Writing Tips", item: `${SITE.baseUrl}/blog/resume-writing-tips` },
+]
+
+const article = {
+	title: "Essential Resume Writing Tips for 2024: A Comprehensive Guide",
+	description:
+		"Master the art of resume writing with proven strategies to stand out and increase interview chances in today's market.",
+	path: "/blog/resume-writing-tips",
+	authorName: "AI Resume Generator Team",
+	datePublished: "2024-12-01",
+	tags: ["resume", "ATS", "career"],
+} as const
 
 export default function ResumeWritingTipsPage() {
 	return (
 		<div className={styles.pageWrapper}>
+			<JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
+			<JsonLd data={buildArticleSchema(article)} />
 			<SiteHeader />
 			<HeaderAd />
 

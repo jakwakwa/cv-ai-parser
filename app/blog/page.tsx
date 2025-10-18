@@ -2,11 +2,34 @@ import Link from "next/link"
 import { SiteHeader } from "@/src/components/site-header/site-header"
 import { HeaderAd, FooterAd } from "@/src/components/adsense/AdBanner"
 import { Card, CardContent, CardHeader } from "@/src/components/ui/card"
+import { JsonLd } from "@/src/components/seo/JsonLd"
+import { buildBreadcrumbSchema } from "@/src/lib/seo/schemas"
+import { buildPageMetadata } from "@/src/lib/seo/metadata"
+import { SITE } from "@/src/lib/seo/config"
 import styles from "./page.module.css"
+
+export const metadata = buildPageMetadata({
+	title: "Resume Writing Tips, ATS Optimization, and Career Advice",
+	description:
+		"Actionable guides on ATS-friendly resume PDFs, AI-powered resume optimization, and career development strategies.",
+	path: "/blog",
+	keywords: [
+		"AI resume parser",
+		"ATS-friendly resume tips",
+		"professional resume writing 2024",
+		"career development strategies",
+	],
+})
+
+const breadcrumbs = [
+	{ name: "Home", item: SITE.baseUrl },
+	{ name: "Blog", item: `${SITE.baseUrl}/blog` },
+]
 
 export default function BlogPage() {
 	return (
 		<div className={styles.pageWrapper}>
+			<JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
 			<SiteHeader />
 			<HeaderAd />
 

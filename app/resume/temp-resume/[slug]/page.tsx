@@ -1,5 +1,6 @@
 "use client"
 
+import { buildPageMetadata } from "@/src/lib/seo/metadata"
 import { ArrowLeft } from "lucide-react"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -13,6 +14,13 @@ import { Button } from "@/src/components/ui/ui-button/button"
 import ResumeDisplay from "@/src/containers/resume-display/resume-display"
 import { useTempResumeStore } from "@/src/hooks/use-temp-resume-store"
 import styles from "../../[slug]/layout.module.css"
+
+export const metadata = buildPageMetadata({
+	title: "Private Resume Preview",
+	description: "Temporary or private resume preview page. Not indexable.",
+	path: "/resume/temp-resume",
+	robotsIndex: false,
+})
 
 export default function TempResumePage() {
 	const router = useRouter()

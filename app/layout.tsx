@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import type React from "react"
 import "../styles/globals.css"
 import "../src/index.css"
@@ -11,11 +11,23 @@ import { SiteFooter } from "@/src/components/site-footer/SiteFooter"
 import { Toaster } from "@/src/components/ui/toaster"
 import { TempResumeProvider } from "@/src/hooks/use-temp-resume-store"
 import { ThemeProvider } from "@/src/hooks/use-theme"
+import { JsonLd } from "@/src/components/seo/JsonLd"
+import { buildOrganizationSchema, buildWebSiteSchema } from "@/src/lib/seo/schemas"
+import { SITE } from "@/src/lib/seo/config"
+
+export const viewport: Viewport = {
+	width: "device-width",
+	initialScale: 1,
+}
 
 export const metadata: Metadata = {
-	metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://www.airesumegen.com"),
-	title: "AI Resume Parser & Online CV Generator - Convert to PDF with Custom Colors",
-	description: "Effortlessly convert your text resumes into stunning online CVs using AI-powered parsing. Customize with beautiful colors, download as PDF, and manage your professional presence.",
+	metadataBase: new URL(SITE.baseUrl),
+	title: {
+		default: "AI Resume Parser & Online CV Generator - Convert to PDF with Custom Colors",
+		template: `%s | ${SITE.name}`,
+	},
+	description:
+		"Effortlessly convert your text resumes into stunning online CVs using AI-powered parsing. Customize with beautiful colors, download as PDF, and manage your professional presence.",
 	keywords: [
 		"AI resume parser",
 		"online resume generator",
@@ -28,12 +40,16 @@ export const metadata: Metadata = {
 		"job application tool",
 		"text to resume",
 	],
+	alternates: {
+		canonical: SITE.baseUrl,
+	},
 	openGraph: {
 		title: "AI Resume Parser & Online CV Generator - Convert to PDF with Custom Colors",
-		description: "Effortlessly convert your text resumes into stunning online CVs using AI-powered parsing. Customize with beautiful colors, download as PDF, and manage your professional presence.",
-		url: "https://www.airesumegen.com",
-		siteName: "CV AI Parser",
-		locale: "en_US",
+		description:
+			"Effortlessly convert your text resumes into stunning online CVs using AI-powered parsing. Customize with beautiful colors, download as PDF, and manage your professional presence.",
+		url: SITE.baseUrl,
+		siteName: SITE.name,
+		locale: SITE.locale,
 		type: "website",
 		images: [
 			{
@@ -46,9 +62,11 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: "summary_large_image",
+		site: SITE.twitterHandle,
+		creator: SITE.twitterHandle,
 		title: "AI Resume Parser & Online CV Generator - Convert to PDF with Custom Colors",
-		description: "Effortlessly convert your text resumes into stunning online CVs using AI-powered parsing. Customize with beautiful colors, download as PDF, and manage your professional presence.",
-		creator: "@your_twitter_handle", // Replace with your actual Twitter handle
+		description:
+			"Effortlessly convert your text resumes into stunning online CVs using AI-powered parsing. Customize with beautiful colors, download as PDF, and manage your professional presence.",
 		images: [
 			{
 				url: "/opengraph-home.png",
@@ -58,6 +76,9 @@ export const metadata: Metadata = {
 			},
 		],
 	},
+	authors: [{ name: SITE.publisher }],
+	applicationName: SITE.name,
+	category: "Business",
 	other: {
 		"google-adsense-account": "ca-pub-7169177467099391",
 	},
@@ -73,6 +94,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7169177467099391" crossOrigin="anonymous" strategy="lazyOnload" />
 			</head>
 			<body>
+				<JsonLd data={buildOrganizationSchema()} />
+				<JsonLd data={buildWebSiteSchema()} />
 				<ThemeProvider>
 					<AuthProvider>
 						<AuthModalProvider>

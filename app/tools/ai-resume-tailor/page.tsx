@@ -1,26 +1,49 @@
-"use client"
-import { useSession } from "next-auth/react"
-import { useState } from "react"
-// Ads temporarily removed until sufficient content is added
-import ResumeTailorTool from "@/src/containers/tool-containers/resume-tailor-tool/resume-tailor-tool"
-import styles from "./page.module.css"
+import { JsonLd } from "@/src/components/seo/JsonLd"
+import { buildBreadcrumbSchema, buildFAQSchema, buildSoftwareAppSchema } from "@/src/lib/seo/schemas"
+import { buildPageMetadata } from "@/src/lib/seo/metadata"
+import { SITE } from "@/src/lib/seo/config"
+import ClientPage from "./ClientPage"
 
-export default function AiResumeTailorPage() {
-	const [isLoading, setIsLoading] = useState(false)
-	const { data: session, status } = useSession()
+export const metadata = buildPageMetadata({
+	title: "AI Resume Tailor – Match Your Resume to Any Job Post",
+	description:
+		"Paste a job description and instantly tailor your resume with AI to boost ATS matching and recruiter relevance.",
+	path: "/tools/ai-resume-tailor",
+	keywords: [
+		"AI-powered resume optimization",
+		"tailor resume to job post",
+		"resume keyword matching",
+		"boost ATS score",
+	],
+})
 
-	// Only show ads when we're sure the user is NOT authenticated
-	// Don't show during loading to prevent flashing
-	const _shouldShowAds = status === "unauthenticated"
+export default function Page() {
+	const breadcrumbs = [
+		{ name: "Home", item: SITE.baseUrl },
+		{ name: "Tools", item: `${SITE.baseUrl}/tools` },
+		{ name: "AI Resume Tailor", item: `${SITE.baseUrl}/tools/ai-resume-tailor` },
+	]
+
+	const faq = [
+		{ question: "How does tailoring work?", answer: "We analyze your job description and align resume keywords and phrasing to improve ATS relevance." },
+		{ question: "Will it change my formatting?", answer: "The tool keeps clean structure suitable for ATS while refining content and sections." },
+		{ question: "Is my data private?", answer: "We do not share your content and use secure processing. See the Privacy Policy for details." },
+	]
 
 	return (
-		<div className={styles.pageContainer}>
-			<div className={styles.headerSection}>
-				<h1 className={styles.title}>AI Resume Tailor</h1>
-				<p className={styles.subtitle}>Upload your PDF resume and a job description to create a perfectly tailored resume</p>
-			</div>
-
-			<ResumeTailorTool isLoading={isLoading} setIsLoading={setIsLoading} isAuthenticated={!!session} />
-		</div>
+		<>
+			<JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
+			<JsonLd
+				data={buildSoftwareAppSchema({
+					name: "AI Resume Tailor",
+					description: "Optimize your resume for specific job descriptions using AI keyword matching and formatting.",
+					path: "/tools/ai-resume-tailor",
+					operatingSystem: "Web",
+					applicationCategory: "BusinessApplication",
+				})}
+			/>
+			<JsonLd data={buildFAQSchema(faq)} />
+			<ClientPage />
+		</>
 	)
 }
