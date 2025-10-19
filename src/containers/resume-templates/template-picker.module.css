@@ -1,0 +1,246 @@
+.templatePicker {
+  margin-bottom: 1.5rem;
+}
+
+.pickerTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: var(--app-charcoal, #565854);
+}
+
+.pickerDescription {
+  font-size: 0.875rem;
+  margin: 0 0 1rem 0;
+  color: var(--app-charcoal, #565854);
+  opacity: 0.75;
+}
+
+.templateGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .templateGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.templateCard {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+  border: 2px solid var(--app-light-grey-border, #cecac6);
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.templateCard:hover {
+  border-color: var(--app-teal-main, #116964);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.templateCardSelected {
+  border-color: var(--app-teal-main, #116964);
+  background: var(--app-mint-background, #c4f0dc);
+  box-shadow: 0 4px 16px rgba(17, 105, 100, 0.2);
+}
+
+.templateCardSelected:hover {
+  transform: translateY(0);
+}
+
+.templatePreview {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--app-light-grey-background, #f5f5f5);
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  padding: 0.5rem;
+}
+
+/* Preview: Original */
+.previewOriginal {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  gap: 0.25rem;
+}
+
+.previewSidebar {
+  width: 35%;
+  background: #d0d0d0;
+  border-radius: 2px;
+}
+
+.previewMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.25rem;
+}
+
+.previewLine {
+  height: 6px;
+  background: #c0c0c0;
+  border-radius: 2px;
+}
+
+/* Preview: Template 1 */
+.previewTemplate1 {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  gap: 0.25rem;
+}
+
+.previewSidebarLeft {
+  width: 35%;
+  background: linear-gradient(135deg, #d0d0d0 0%, #e0e0e0 100%);
+  border-radius: 2px;
+  border-right: 2px solid var(--app-bronze-dark, #a67244);
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.previewCircle {
+  width: 16px;
+  height: 16px;
+  background: var(--app-teal-main, #116964);
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+/* Preview: Template 2 */
+.previewTemplate2 {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 0.25rem;
+}
+
+.previewHeader {
+  height: 25%;
+  background: #d8d8d8;
+  border-bottom: 2px solid var(--app-teal-main, #116964);
+  border-radius: 2px 2px 0 0;
+}
+
+.previewBody {
+  flex: 1;
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  position: relative;
+  border-left: 2px solid var(--app-bronze-dark, #a67244);
+  padding-left: 0.5rem;
+}
+
+.previewTimelineDot {
+  position: absolute;
+  top: 0.25rem;
+  left: -4px;
+  width: 6px;
+  height: 6px;
+  background: var(--app-teal-main, #116964);
+  border-radius: 50%;
+  border: 1px solid white;
+}
+
+/* Preview: Template 3 */
+.previewTemplate3 {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 0.25rem;
+}
+
+.previewHeaderCentered {
+  height: 30%;
+  background: linear-gradient(180deg, #d8d8d8 0%, white 100%);
+  border-bottom: 1px solid #c0c0c0;
+  border-radius: 2px 2px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.previewCircleSmall {
+  width: 14px;
+  height: 14px;
+  background: var(--app-teal-main, #116964);
+  border-radius: 50%;
+  border: 2px solid var(--app-bronze-dark, #a67244);
+}
+
+/* Template Info */
+.templateInfo {
+  flex: 1;
+}
+
+.templateName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: var(--app-charcoal, #565854);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.selectedBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: var(--app-teal-main, #116964);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.templateDescription {
+  font-size: 0.7rem;
+  margin: 0;
+  color: var(--app-charcoal, #565854);
+  opacity: 0.7;
+  line-height: 1.3;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .templateGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .templatePreview {
+    height: 70px;
+  }
+
+  .templateName {
+    font-size: 0.75rem;
+  }
+
+  .templateDescription {
+    font-size: 0.65rem;
+  }
+}
