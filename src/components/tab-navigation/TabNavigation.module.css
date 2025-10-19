@@ -50,11 +50,7 @@
         margin-bottom: var(--spacing-md);
     }
 
-    .tabButton {
-        /* padding: var(--spacing-xs) var(--spacing-md); */
-        /* height: 1rem; */
-        /* font-size: var(--font-size-xxs); */
-    }
+
 }
 
 .activeTab {

@@ -1,0 +1,194 @@
+{
+    "data": {
+        "id": "cmg51rge50001g5eazlnw3c6c",
+        "title": "Frontend Software Engineer",
+        "originalFilename": "api-generated.json",
+        "fileType": "application/json",
+        "fileSize": 30655,
+        "parsedData": {
+            "name": "Jacob Kotzee",
+            "title": "Frontend Software Engineer",
+            "skills": [
+                "React",
+                "Next.js",
+                "TypeScript",
+                "Jamstack",
+                "RBAC",
+                "HTML",
+                "CSS",
+                "JavaScript",
+                "Figma",
+                "Communication",
+                "Teamwork",
+                "Mentorship",
+                "Problem-solving",
+                "Design systems",
+                "Google Cloud Services",
+                "Postgres",
+                "UI Design",
+                "TailwindCSS",
+                "Inngest",
+                "Al Automation Tools"
+            ],
+            "contact": {
+                "email": "work@jacofrontend.dev",
+                "phone": "+27 76 341 0291",
+                "github": "www.github.com/jakwakwa",
+                "website": "www.jacofrontend.dev",
+                "linkedin": "www.linkedin.com/in/jacobkotzee",
+                "location": "Cape Town, Western Cape, South Africa"
+            },
+            "summary": "Frontend Engineer and UI/Ul with five years of experience building high-performing web applications with React, Next.js, and\nTypeScript, coupled with a passion for leveraging Al tools to solve real-world problems. Proven ability to learn quickly,\ncollaborate effectively, and deliver innovative solutions, demonstrated through full-stack projects and design system\ncontributions.",
+            "education": [
+                {
+                    "id": "720f022f-ed25-43e2-8a25-869b93a6c3b5",
+                    "note": null,
+                    "degree": "BTECH MULTIMEDIA DESGIN",
+                    "duration": "2006-2009",
+                    "institution": "TSHWANE UNIVERSITY OF TECHNOLOGY"
+                }
+            ],
+            "experience": [
+                {
+                    "id": "61a2e191-a6d9-4a13-8cdb-40ecd3df9a3b",
+                    "role": "Senior Frontend Engineer",
+                    "title": "Senior Frontend Engineer",
+                    "company": "STRATCOL",
+                    "details": [
+                        "Tasked with engineering high-fidelity prototypes and implementing user-\ncentric payment solutions for Stratcol's client platform. Responsible for building\nand integrating frontend applications using Next.js, TypeScript, and Zustand.",
+                        "Develop interactive, high-fidelity prototypes for new \"Debit Order\" and \"Card\nPayment\" user flows using Next.js and TailwindCSS, based on detailed Figma\ndesigns to validate UX concepts before full-scale implementation.",
+                        "Engineer the frontend integration with Stratcol's back-end services,\nimplementing complex state management with Zustand and ensuring type\nsafety with TypeScript for all payment process enhancements.",
+                        "Actively improve the development lifecycle by translating Figma designs into\nproduction-ready components, working closely with back-end engineers to\ndefine API contracts and ensure seamless data flow.",
+                        "Collaborate daily with the Stratcol management team to align technical\nstrategy with business objectives, translating high-level requirements into\nfunctional Figma designs and Next.js prototypes."
+                    ],
+                    "duration": "Jun 2024 Present 1 year 7 months"
+                },
+                {
+                    "id": "507f111d-96c1-4889-9111-67fea72da872",
+                    "role": "Software Web Developer & UI Designer",
+                    "title": "Software Web Developer & UI Designer",
+                    "company": "JACOFRONTEND.DEV",
+                    "details": [
+                        "Built and launched innovative Al tools from concept to completion, including\npodslice.ai and airesumegen.com, showcasing a robust set of full-stack\ndevelopment skills and a strong aptitude for product innovation.",
+                        "Designed and developed high-performance Jamstack websites for various\nclients, leveraging modern React.js frameworks like Gatsby and Next.js to\nsignificantly enhance user experience and performance.",
+                        "Engineered secure and engaging user experiences, implementing security-first\nprinciples such as Role-Based Access Control (RBAC) to fortify client-side\napplications."
+                    ],
+                    "duration": "Dec 2022 - Present  (2 yrs 11 mos)"
+                },
+                {
+                    "id": "aa656dc1-5513-4648-99ed-a9675c934b3a",
+                    "role": "Senior Frontend Engineer",
+                    "title": "Senior Frontend Engineer",
+                    "company": "7SECONDSOLAR",
+                    "details": [
+                        "Designed and developed new features for the AUTOPV platform, working\ndirectly with back-end and UX/UI teams, leveraging React and TypeScript to\nbuild a feature-rich software system.",
+                        "Identified and resolved a critical vulnerability in the front-end architecture,\nreplacing a complex setup with a more maintainable architecture, resulting in\ndecreased AWS service expenses.",
+                        "Actively contributed to code reviews and mentored junior developers, fostering\na culture of continuous improvement and collaboration."
+                    ],
+                    "duration": "Sep 2023 - Apr 2024  (8 months)"
+                },
+                {
+                    "id": "88855901-2ecd-4088-876b-9ab0dbd76334",
+                    "role": "Frontend Software Engineer",
+                    "title": "Frontend Software Engineer",
+                    "company": "DITTO JOBS",
+                    "details": [
+                        "Led the front-end team in creating core product features for Ditto Hire,\nfocusing on enhancing development efficiency and design consistency.",
+                        "Streamlined the development workflow by integrating tools like Figma, Zeplin,\nStorybook, and Next.js, facilitating efficient translation of designs into code.",
+                        "Led a front-end team of two remote engineers, fostering collaboration and\ngrowth, and mentored a new Product designer in design system creation."
+                    ],
+                    "duration": "Jun 2021 - Nov 2022 (1 yr 6 mos)"
+                },
+                {
+                    "id": "1bb30a05-d370-4de6-880b-686e8abbb42a",
+                    "role": "User Experience Engineer",
+                    "title": "User Experience Engineer",
+                    "company": "CAPITEC",
+                    "details": [
+                        "Supported Capitec's mobile banking application, gaining experience with HTML,\nCSS, JavaScript, and the Kendo Ul library.",
+                        "Developed UX/UI components and accessibility scripts for visually impaired\nusers, ensuring a more inclusive user experience.",
+                        "Gained hands-on experience in a large-scale, enterprise application within an\nAgile Scrum environment."
+                    ],
+                    "duration": "Feb 2020 - Nov 2020  (10 months)"
+                },
+                {
+                    "id": "88b07ed6-91c2-46bb-b7ed-01c504a0dea4",
+                    "role": "Frontend Developer",
+                    "title": "Frontend Developer",
+                    "company": "SPAN DIGITAL INNOVATION",
+                    "details": [
+                        "Maintained and fixed code on a complex internal application for a prominent\ninternational client, applying foundational React.js and JavaScript skills.",
+                        "Developed and published a progressive internal design system library,\ngatekeeper-ds, using the Figma Web API to generate styling elements for\nstandardized use across projects.",
+                        "Collaborated with a senior developer, gaining valuable knowledge and\nmentorship while contributing to the project."
+                    ],
+                    "duration": "Feb 2018  - Feb 2020 (2 yrs 1 mo)"
+                },
+                {
+                    "id": "f7ac0b5d-90a6-4fe5-9fc2-77583236fbfd",
+                    "role": "HTML/CSS UI Engineer",
+                    "title": "HTML/CSS UI Engineer",
+                    "company": "IO AGENCY",
+                    "details": [
+                        "Contributed to the conceptualization, design, development, and scaling of\nseveral dynamic websites, ensuring successful project builds and launches.",
+                        "Developed responsive and scalable front-end solutions for multiple dynamic\nwebsites, using modern web technologies like HTML, CSS, JavaScript, and\njQuery.",
+                        "Collaborated directly with the Head of Design to ensure user-centered and\naesthetically pleasing interfaces, providing key advisory support throughout\nthe design process."
+                    ],
+                    "duration": "Dec 2014  -  Dec 2017  (3 years)"
+                }
+            ],
+            "customColors": {
+                "--resume-dates": "#2E3442",
+                "--resume-body-text": "#2D3340",
+                "--resume-job-title": "#2D3340",
+                "--resume-sub-icons": "#3c7956",
+                "--resume-main-icons": "#9225a7",
+                "--resume-profile-name": "#2E3442",
+                "--resume-skill-border": "#9CC4C3",
+                "--resume-section-titles": "#2E3442",
+                "--resume-sub-titles-issuer": "#9225a7",
+                "--resume-sidebar-background": "#EDEBF0",
+                "--resume-sub-titles-companies": "#9225a7",
+                "--resume-profile-header-subtitle": "#2E3442",
+                "--resume-profile-header-background": "#EDEBF0"
+            },
+            "profileImage": "data:image/jpeg;base64,/9j/",
+            "certifications": [
+                {
+                    "id": "ID: ID: 8797b6e5-ble6-49e3-aa8f-acc7919ce6le",
+                    "date": "Issued Nov 2024",
+                    "name": "React Course",
+                    "issuer": "CODECADEMY"
+                },
+                {
+                    "id": "ID: ID: 2ba5f7f8-4b34-449d-8912-ebe625230ff1",
+                    "date": "Issued Sep 2024",
+                    "name": "Generative Al Course",
+                    "issuer": "CODECADEMY"
+                },
+                {
+                    "id": "ID: ID: e8628bea-acaa-4d68-8479-d339783ab187",
+                    "date": "Issued Sep 2024",
+                    "name": "TypeScript: Fundamentals Course",
+                    "issuer": "CODECADEMY"
+                },
+                {
+                    "id": "ID: ID: cb740271-2ef6-4085-929b-f168403515f8",
+                    "date": "Issued Sep 2023",
+                    "name": "Intro to Cloud Computing Course",
+                    "issuer": "CODECADEMY"
+                }
+            ]
+        },
+        "parseMethod": "ai-generated",
+        "confidenceScore": 0.9,
+        "isPublic": true,
+        "slug": "cv-1759145416472-qkoe5ki",
+        "customColors": null,
+        "additionalContext": null,
+        "viewCount": 2,
+        "downloadCount": 0,
+        "userId": "cmcvr9te30000ad0vrq9qwkz3",
+        "createdAt": "2025-09-29T11:30:18.942Z",
+        "updatedAt": "2025-09-29T11:43:02.569Z"
+    }
+}
