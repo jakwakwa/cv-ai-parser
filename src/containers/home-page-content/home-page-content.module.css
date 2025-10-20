@@ -391,19 +391,14 @@
     }
 
     .heroImageWrapper {
-        /*border-radius: 20px !important; */
-        overflow: hidden;
         overflow: hidden;
         border-radius: 40px;
         max-height: 200px;
-        /* max-width: 100%; */
-        /* max-width: 400px; */
         max-width: 90%;
     }
 
     .heroImage {
         border-radius: 20px;
-
         min-width: 900px;
     }
 
