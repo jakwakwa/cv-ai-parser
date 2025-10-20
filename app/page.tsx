@@ -3,10 +3,8 @@
 import { useSearchParams } from "next/navigation"
 import { Suspense, useEffect } from "react"
 import { useToast } from "@/hooks/use-toast"
-import { HeaderAd } from "@/src/components/adsense/AdBanner"
 import { SiteHeader } from "@/src/components/site-header/site-header"
 import HomePageContent from "../src/containers/home-page-content/home-page-content"
-import homePageContentStyles from "../src/containers/home-page-content/home-page-content.module.css"
 import styles from "./page.module.css"
 
 function HomeContent() {

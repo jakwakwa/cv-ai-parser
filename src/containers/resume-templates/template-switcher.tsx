@@ -1,55 +1,69 @@
 "use client";
 
 import type React from "react";
-import styles from "./template-selector.module.css";
-import { templateMetadata } from "./index";
+import styles from "./template-switcher.module.css";
+import { useTemplate } from "@/src/stores/template-context";
 
-interface TemplateSelectorProps {
-    selectedTemplate: string;
-    onTemplateChange: (templateId: string) => void;
-}
+/**
+ * TemplateSwitcher
+ *
+ * A vertical template selector for the resume display view that:
+ * - Allows users to switch templates in REAL-TIME after resume generation
+ * - Positioned on the side of the resume display
+ * - Vertical/column layout (unlike the horizontal picker in the form)
+ * - Syncs with TemplatePicker via Context
+ * - Shows visual previews in a compact vertical format
+ */
+const TemplateSwitcher: React.FC = () => {
+    const { selectedTemplate, setSelectedTemplate } = useTemplate();
 
-const TemplateSelector: React.FC<TemplateSelectorProps> = ({
-    selectedTemplate,
-    onTemplateChange,
-}) => {
-    const allTemplates = [
+    const templates = [
         {
             id: "original",
             name: "Original",
-            description: "Default two-column layout with sidebar",
-            component: "ResumeDisplay",
+            shortName: "Original",
         },
-        ...templateMetadata,
+        {
+            id: "template-1",
+            name: "Modern Two-Column",
+            shortName: "Modern",
+        },
+        {
+            id: "template-2",
+            name: "Timeline Vertical",
+            shortName: "Timeline",
+        },
+        {
+            id: "template-3",
+            name: "Classic Centered",
+            shortName: "Classic",
+        },
     ];
 
     return (
-        <div className={styles.templateSelector}>
-            <h3 className={styles.selectorTitle}>Choose Resume Template</h3>
-            <p className={styles.selectorDescription}>
-                Select a template to change how your resume is displayed. All templates
-                use your data and colors.
-            </p>
+        <div className={styles.templateSwitcher}>
+            <div className={styles.switcherHeader}>
+                <h4 className={styles.switcherTitle}>Templates</h4>
+            </div>
 
-            <div className={styles.templateGrid}>
-                {allTemplates.map((template) => {
+            <div className={styles.templateStack}>
+                {templates.map((template) => {
                     const isSelected = selectedTemplate === template.id;
 
                     return (
                         <button
                             key={template.id}
-                            type="button"
-                            onClick={() => onTemplateChange(template.id)}
-                            className={`${styles.templateCard} ${isSelected ? styles.templateCardSelected : ""
+                            onClick={() => setSelectedTemplate(template.id)}
+                            className={`${styles.templateButton} ${isSelected ? styles.templateButtonSelected : ""
                                 }`}
-                            aria-pressed={isSelected}
+                            type="button"
+                            title={template.name}
                         >
                             <div className={styles.templatePreview}>
                                 {template.id === "original" && (
                                     <div className={styles.previewOriginal}>
                                         <div className={styles.previewSidebar}></div>
                                         <div className={styles.previewMain}>
-                                            <div className={styles.previewLine}></div>
                                             <div className={styles.previewLine}></div>
                                             <div className={styles.previewLine}></div>
                                         </div>
@@ -59,11 +73,8 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                                     <div className={styles.previewTemplate1}>
                                         <div className={styles.previewSidebarLeft}>
                                             <div className={styles.previewCircle}></div>
-                                            <div className={styles.previewSmallLine}></div>
-                                            <div className={styles.previewSmallLine}></div>
                                         </div>
                                         <div className={styles.previewMain}>
-                                            <div className={styles.previewLine}></div>
                                             <div className={styles.previewLine}></div>
                                             <div className={styles.previewLine}></div>
                                         </div>
@@ -71,11 +82,8 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                                 )}
                                 {template.id === "template-2" && (
                                     <div className={styles.previewTemplate2}>
-                                        <div className={styles.previewHeader}>
-                                            <div className={styles.previewSmallLine}></div>
-                                        </div>
+                                        <div className={styles.previewHeader}></div>
                                         <div className={styles.previewBody}>
-                                            <div className={styles.previewLine}></div>
                                             <div className={styles.previewLine}></div>
                                             <div className={styles.previewTimelineDot}></div>
                                         </div>
@@ -85,27 +93,20 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                                     <div className={styles.previewTemplate3}>
                                         <div className={styles.previewHeaderCentered}>
                                             <div className={styles.previewCircleSmall}></div>
-                                            <div className={styles.previewSmallLine}></div>
                                         </div>
                                         <div className={styles.previewBody}>
-                                            <div className={styles.previewLine}></div>
                                             <div className={styles.previewLine}></div>
                                         </div>
                                     </div>
                                 )}
                             </div>
 
-                            <div className={styles.templateInfo}>
-                                <h4 className={styles.templateName}>
-                                    {template.name}
-                                    {isSelected && (
-                                        <span className={styles.selectedBadge}>✓</span>
-                                    )}
-                                </h4>
-                                <p className={styles.templateDescription}>
-                                    {template.description}
-                                </p>
-                            </div>
+                            <span className={styles.templateLabel}>
+                                {template.shortName}
+                                {isSelected && (
+                                    <span className={styles.selectedIndicator}>✓</span>
+                                )}
+                            </span>
                         </button>
                     );
                 })}
@@ -114,4 +115,5 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
     );
 };
 
-export default TemplateSelector;
+export default TemplateSwitcher;
+

@@ -1,0 +1,98 @@
+/**
+ * Resume Display with Switcher Layout
+ * 
+ * Three-column grid layout for template picker, resume display, and AI insights
+ * All three components share screen width equally
+ */
+
+.displayWrapper {
+    display: grid;
+    grid-template-columns: 200px 1fr 320px;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    align-items: flex-start;
+    padding: 0 var(--spacing-md);
+}
+
+.switcherSidebar {
+    position: sticky;
+    top: 2rem;
+    align-self: flex-start;
+    z-index: 10;
+}
+
+.resumeContent {
+    min-width: 0;
+    /* Prevents flex item from overflowing */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.insightsSidebar {
+    position: sticky;
+    top: 2rem;
+    align-self: flex-start;
+    z-index: 10;
+}
+
+/* Responsive behavior */
+@media (max-width: 767px) {
+    .displayWrapper {
+        grid-template-columns: 1fr;
+        padding: 0;
+    }
+
+    .switcherSidebar,
+    .insightsSidebar {
+        display: none;
+    }
+
+    .resumeContent {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1200px) {
+    .displayWrapper {
+        grid-template-columns: 180px 1fr 280px;
+        gap: 1rem;
+        padding: 0 var(--spacing-sm);
+    }
+}
+
+@media (min-width: 1200px) and (max-width: 1600px) {
+    .displayWrapper {
+        grid-template-columns: 200px 1fr 320px;
+        gap: 1.5rem;
+        padding: 0 var(--spacing-md);
+    }
+}
+
+@media (min-width: 1600px) {
+    .displayWrapper {
+        grid-template-columns: 220px 1fr 360px;
+        gap: 2rem;
+        padding: 0 var(--spacing-lg);
+    }
+}
+
+/* Ensure the wrapper doesn't conflict with existing page styles */
+.displayWrapper > * {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

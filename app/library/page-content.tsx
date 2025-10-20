@@ -6,10 +6,8 @@ import { useEffect, useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import type { Resume } from "@/lib/types"
 import {
-    ContentAd,
     FooterAd,
 } from "@/src/components/adsense/AdBanner"
-import TabNavigation from '@/src/components/tab-navigation/TabNavigation';
 import ResumeLibrary from "@/src/containers/resume-library/resume-library"
 import styles from "./layout.module.css"
 

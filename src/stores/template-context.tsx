@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import type React from "react";
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 
 interface TemplateContextType {
   selectedTemplate: string;

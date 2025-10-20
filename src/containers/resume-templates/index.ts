@@ -3,6 +3,7 @@ export { default as ResumeTemplate2 } from "./resume-template-2";
 export { default as ResumeTemplate3 } from "./resume-template-3";
 export { default as TemplateSelector } from "./template-selector";
 export { default as TemplatePicker } from "./template-picker";
+export { default as TemplateSwitcher } from "./template-switcher";
 
 // Template metadata for UI selection
 export const templateMetadata = [

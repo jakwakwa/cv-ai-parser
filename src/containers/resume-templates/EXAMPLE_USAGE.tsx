@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import type React from "react";
+import { useState, useEffect } from "react";
 import type { ParsedResumeSchema } from "@/lib/tools-lib/shared-parsed-resume-schema";
 import ResumeDisplay from "@/src/containers/resume-display/resume-display";
 import {

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import type React from "react";
 import styles from "./template-picker.module.css";
 import { useTemplate } from "@/src/stores/template-context";
 

@@ -1,228 +1,228 @@
 .resumeContent {
-  background: #fff;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  border-radius: 0.75rem;
-  overflow: hidden;
-  width: 100%;
-  max-width: 48rem;
-  margin: 0 auto;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    width: 100%;
+    max-width: 48rem;
+    margin: 0 auto;
 }
 
 @media print {
-  .resumeContent {
-    padding: 0 !important;
-    margin: 0 !important;
-    box-shadow: none;
-  }
+    .resumeContent {
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none;
+    }
 }
 
 /* Centered Header */
 .centeredHeader {
-  text-align: center;
-  padding: 3rem 2rem 2rem;
-  background: linear-gradient(180deg, var(--resume-profile-header-background) 0%, #fff 100%);
-  border-bottom: 1px solid var(--resume-skill-border);
+    text-align: center;
+    padding: 3rem 2rem 2rem;
+    background: linear-gradient(180deg, var(--resume-profile-header-background) 0%, #fff 100%);
+    border-bottom: 1px solid var(--resume-skill-border);
 }
 
 .profileImageWrapper {
-  width: 130px;
-  height: 130px;
-  margin: 0 auto 1.5rem;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 5px solid var(--resume-job-title);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid var(--resume-job-title);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .profileImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .name {
-  font-size: 2.75rem;
-  font-weight: 800;
-  margin: 0 0 1rem 0;
-  line-height: 1.1;
-  letter-spacing: 1px;
+    font-size: 2.75rem;
+    font-weight: 800;
+    margin: 0 0 1rem 0;
+    line-height: 1.1;
+    letter-spacing: 1px;
 }
 
 .titleDivider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  margin: 1rem 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 1rem 0 1.5rem;
 }
 
 .dividerLine {
-  flex: 1;
-  max-width: 80px;
-  height: 2px;
-  background: var(--resume-main-icons);
+    flex: 1;
+    max-width: 80px;
+    height: 2px;
+    background: var(--resume-main-icons);
 }
 
 .title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0;
-  white-space: nowrap;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .contactWrapper {
-  margin-top: 1.5rem;
-  display: flex;
-  justify-content: center;
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
 }
 
 /* Main Content */
 .mainContent {
-  padding: 2rem 2.5rem;
+    padding: 2rem 2.5rem;
 }
 
 .summarySection {
-  margin-bottom: 2rem;
-  text-align: center;
+    margin-bottom: 2rem;
+    text-align: center;
 }
 
 .sectionTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0 0 1rem 0;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
 .sectionTitle::before,
 .sectionTitle::after {
-  content: '';
-  flex: 1;
-  max-width: 60px;
-  height: 2px;
-  background: var(--resume-job-title);
-  margin: 0 1rem;
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 2px;
+    background: var(--resume-job-title);
+    margin: 0 1rem;
 }
 
 .titleText {
-  white-space: nowrap;
+    white-space: nowrap;
 }
 
 .summaryText {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  margin: 0;
-  max-width: 90%;
-  margin-left: auto;
-  margin-right: auto;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .skillsSection {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: var(--resume-sidebar-background);
-  border-radius: 8px;
-  text-align: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--resume-sidebar-background);
+    border-radius: 8px;
+    text-align: center;
 }
 
 .experienceSection {
-  margin-bottom: 2rem;
-  padding: 1.5rem 0;
+    margin-bottom: 2rem;
+    padding: 1.5rem 0;
 }
 
 /* Bottom Sections - Two Column Layout */
 .bottomSections {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
 }
 
 @media (min-width: 768px) {
-  .bottomSections {
-    grid-template-columns: 1fr 1fr;
-  }
+    .bottomSections {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
 .sectionWrapper {
-  padding: 1.5rem;
-  background: var(--resume-sidebar-background);
-  border-radius: 8px;
-  border-top: 4px solid var(--resume-job-title);
+    padding: 1.5rem;
+    background: var(--resume-sidebar-background);
+    border-radius: 8px;
+    border-top: 4px solid var(--resume-job-title);
 }
 
 /* Responsive Adjustments */
 @media (max-width: 767px) {
-  .centeredHeader {
-    padding: 2rem 1.5rem 1.5rem;
-  }
+    .centeredHeader {
+        padding: 2rem 1.5rem 1.5rem;
+    }
 
-  .name {
-    font-size: 2rem;
-  }
+    .name {
+        font-size: 2rem;
+    }
 
-  .title {
-    font-size: 0.95rem;
-  }
+    .title {
+        font-size: 0.95rem;
+    }
 
-  .profileImageWrapper {
-    width: 100px;
-    height: 100px;
-  }
+    .profileImageWrapper {
+        width: 100px;
+        height: 100px;
+    }
 
-  .mainContent {
-    padding: 1.5rem;
-  }
+    .mainContent {
+        padding: 1.5rem;
+    }
 
-  .titleDivider {
-    gap: 1rem;
-  }
+    .titleDivider {
+        gap: 1rem;
+    }
 
-  .dividerLine {
-    max-width: 40px;
-  }
+    .dividerLine {
+        max-width: 40px;
+    }
 
-  .summaryText {
-    max-width: 100%;
-  }
+    .summaryText {
+        max-width: 100%;
+    }
 }
 
 @media print {
-  .centeredHeader {
-    padding: 2rem 1.5rem !important;
-    background: var(--resume-profile-header-background) !important;
-  }
+    .centeredHeader {
+        padding: 2rem 1.5rem !important;
+        background: var(--resume-profile-header-background) !important;
+    }
 
-  .name {
-    font-size: 2.25rem;
-  }
+    .name {
+        font-size: 2.25rem;
+    }
 
-  .title {
-    font-size: 1rem;
-  }
+    .title {
+        font-size: 1rem;
+    }
 
-  .profileImageWrapper {
-    width: 100px;
-    height: 100px;
-  }
+    .profileImageWrapper {
+        width: 100px;
+        height: 100px;
+    }
 
-  .mainContent {
-    padding: 1.5rem !important;
-  }
+    .mainContent {
+        padding: 1.5rem !important;
+    }
 
-  .bottomSections {
-    grid-template-columns: 1fr 1fr !important;
-  }
+    .bottomSections {
+        grid-template-columns: 1fr 1fr !important;
+    }
 
-  .summarySection,
-  .experienceSection,
-  .sectionWrapper {
-    page-break-inside: avoid;
-  }
+    .summarySection,
+    .experienceSection,
+    .sectionWrapper {
+        page-break-inside: avoid;
+    }
 }

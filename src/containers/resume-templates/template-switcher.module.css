@@ -1,0 +1,263 @@
+/**
+ * Template Switcher - Vertical Layout
+ * 
+ * A sleek side panel for switching resume templates in real-time
+ * Designed to be positioned alongside the resume display
+ */
+
+.templateSwitcher {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--color-background-primary, white);
+    border: 1px solid var(--app-light-grey-border, #cecac6);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    max-width: 140px;
+    min-width: 120px;
+}
+
+.switcherHeader {
+    margin-bottom: 0.25rem;
+    text-align: center;
+}
+
+.switcherTitle {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--app-charcoal, #565854);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.templateStack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.templateButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 0.5rem;
+    border: 2px solid var(--app-light-grey-border, #cecac6);
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    width: 100%;
+}
+
+.templateButton:hover {
+    border-color: var(--app-teal-main, #116964);
+    box-shadow: 0 4px 12px rgba(17, 105, 100, 0.15);
+    transform: translateX(4px);
+}
+
+.templateButtonSelected {
+    border-color: var(--app-teal-main, #116964);
+    background: var(--app-mint-background, #c4f0dc);
+    box-shadow: 0 4px 16px rgba(17, 105, 100, 0.25);
+    transform: translateX(4px);
+}
+
+.templateButtonSelected:hover {
+    transform: translateX(6px);
+}
+
+.templatePreview {
+    width: 80px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--app-light-grey-background, #f5f5f5);
+    border-radius: 4px;
+    overflow: hidden;
+    padding: 0.375rem;
+}
+
+.templateLabel {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--app-charcoal, #565854);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    line-height: 1.2;
+}
+
+.selectedIndicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    background: var(--app-teal-main, #116964);
+    color: white;
+    border-radius: 50%;
+    font-size: 0.65rem;
+    font-weight: 700;
+}
+
+/* Preview: Original */
+.previewOriginal {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    gap: 0.2rem;
+}
+
+.previewSidebar {
+    width: 35%;
+    background: #d0d0d0;
+    border-radius: 2px;
+}
+
+.previewMain {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.2rem;
+}
+
+.previewLine {
+    height: 4px;
+    background: #c0c0c0;
+    border-radius: 2px;
+}
+
+/* Preview: Template 1 */
+.previewTemplate1 {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    gap: 0.2rem;
+}
+
+.previewSidebarLeft {
+    width: 35%;
+    background: linear-gradient(135deg, #d0d0d0 0%, #e0e0e0 100%);
+    border-radius: 2px;
+    border-right: 2px solid var(--app-bronze-dark, #a67244);
+    padding: 0.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.previewCircle {
+    width: 12px;
+    height: 12px;
+    background: var(--app-teal-main, #116964);
+    border-radius: 50%;
+    border: 1.5px solid white;
+}
+
+/* Preview: Template 2 */
+.previewTemplate2 {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 0.2rem;
+}
+
+.previewHeader {
+    height: 25%;
+    background: #d8d8d8;
+    border-bottom: 2px solid var(--app-teal-main, #116964);
+    border-radius: 2px 2px 0 0;
+}
+
+.previewBody {
+    flex: 1;
+    padding: 0.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    position: relative;
+    border-left: 2px solid var(--app-bronze-dark, #a67244);
+    padding-left: 0.4rem;
+}
+
+.previewTimelineDot {
+    position: absolute;
+    top: 0.2rem;
+    left: -3px;
+    width: 5px;
+    height: 5px;
+    background: var(--app-teal-main, #116964);
+    border-radius: 50%;
+    border: 1px solid white;
+}
+
+/* Preview: Template 3 */
+.previewTemplate3 {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+    gap: 0.2rem;
+}
+
+.previewHeaderCentered {
+    height: 30%;
+    background: linear-gradient(180deg, #d8d8d8 0%, white 100%);
+    border-bottom: 1px solid #c0c0c0;
+    border-radius: 2px 2px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.previewCircleSmall {
+    width: 10px;
+    height: 10px;
+    background: var(--app-teal-main, #116964);
+    border-radius: 50%;
+    border: 1.5px solid var(--app-bronze-dark, #a67244);
+}
+
+/* Responsive - Hide on mobile, show on tablet+ */
+@media (max-width: 767px) {
+    .templateSwitcher {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .templateSwitcher {
+        max-width: 110px;
+        min-width: 100px;
+        padding: 0.75rem;
+    }
+
+    .switcherTitle {
+        font-size: 0.8rem;
+    }
+
+    .templatePreview {
+        width: 70px;
+        height: 50px;
+    }
+
+    .templateLabel {
+        font-size: 0.7rem;
+    }
+}
+
+/* Sticky positioning when in layout wrapper */
+.templateSwitcher.sticky {
+    position: sticky;
+    top: 2rem;
+    align-self: flex-start;
+}

@@ -1,88 +1,107 @@
+.collapsibleWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    width: 100%;
+}
+
 .card {
-  width: 100%;
-  background: var(--color-background-primary);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--border-radius-medium);
-  overflow: hidden;
-  margin-top: var(--spacing-lg); /* Add some margin from buttons */
-  box-shadow: var(--color-shadow-medium);
-  margin-bottom: 1.2rem;
+    width: 100%;
+    background: var(--color-background-primary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-medium);
+    overflow: hidden;
+    box-shadow: var(--color-shadow-medium);
 }
 
 .cardHeader {
-  background-color: var(--color-background-tertiary);
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-bottom: 1px solid var(--color-border-light);
+    background-color: var(--color-background-tertiary);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-bottom: 1px solid var(--color-border-light);
 }
 
 .cardHeaderContent {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 130px;
-  
-  margin-left: var(--spacing-xl);
-  gap: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: var(--spacing-sm);
 }
 
 .title {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-accent-teal-dark);
-  margin: 0;
-  text-align: center;
-  width: 100%;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-accent-teal-dark);
+    margin: 0;
+    flex: 1;
 }
-  .cardContent {
-margin-top: 1rem;
-     /* padding:  20px; */
-  }
+
+.cardContent {
+    padding: var(--spacing-md);
+}
 
 
 
 .summaryText {
-  
-  font-size: var(--font-size-sm);
-  color: var(--color-text-primary);
-  line-height: var(--line-height-normal);
-  margin: 0;
-} 
-  .summaryText  p {
-    
-  font-size: 0.3rem;
-  color: var(--color-text-primary);
-  line-height: var(--line-height-normal);
-  margin: 0;
-} 
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+    line-height: var(--line-height-relaxed);
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.collapsibleContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.toggleButton {
+    width: 2rem;
+    height: 2rem;
+}
+
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
 
 
 @media (max-width: 768px) {
-  .header {
-    grid-template-columns: repeat(3, 1fr);
-  }
+    .header {
+        grid-template-columns: repeat(3, 1fr);
+    }
 
-  /* When no image, content spans full width */
-  .header.noImage {
-    grid-template-columns: 1fr;
-  }
+    /* When no image, content spans full width */
+    .header.noImage {
+        grid-template-columns: 1fr;
+    }
 
-  .cardContent {
+    .cardContent {
 
-     padding: 10px 20px;
-     margin-bottom: 10px;
-  }
+        padding: 10px 20px;
+        margin-bottom: 10px;
+    }
 
-  .cardHeader {
+    .cardHeader {
 
-  padding:5px 0;
-}
-  
-.cardContent p {
-  margin-top: 0rem;
-  margin-bottom: 0rem;
-  font-size: 0.65rem;
-  font-weight: 500;
-  line-height: 1rem;
-}
+        padding: 5px 0;
+    }
+
+    .cardContent p {
+        margin-top: 0rem;
+        margin-bottom: 0rem;
+        font-size: 0.65rem;
+        font-weight: 500;
+        line-height: 1rem;
+    }
 
 }
