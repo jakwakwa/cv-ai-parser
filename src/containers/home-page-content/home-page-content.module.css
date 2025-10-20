@@ -82,9 +82,11 @@
     position: absolute;
     width: 80%;
     height: 80%;
-    background: radial-gradient(circle,
-            var(--color-accent-teal-light) 0%,
-            transparent 70%);
+    background: radial-gradient(
+        circle,
+        var(--color-accent-teal-light) 0%,
+        transparent 70%
+    );
     opacity: 0.3;
     filter: blur(60px);
     animation: pulse 3s ease-in-out infinite;
@@ -132,7 +134,6 @@
 }
 
 @keyframes pulse {
-
     0%,
     100% {
         transform: scale(1);
@@ -342,8 +343,6 @@
         padding-right: 0;
         order: 2;
         max-width: 100%;
-
-
     }
 
     .heroImageWrapper {
@@ -377,7 +376,6 @@
         gap: var(--spacing-lg);
         display: flex;
         flex-direction: column-reverse;
-
     }
 
     .heroTitle {
@@ -392,13 +390,12 @@
         line-height: 1.5;
     }
 
-
     .heroImageWrapper {
-        /* border-radius: 20px !important; */
+        /*border-radius: 20px !important; */
         overflow: hidden;
         overflow: hidden;
         border-radius: 40px;
-        /* max-height: 200px; */
+        max-height: 200px;
         /* max-width: 100%; */
         /* max-width: 400px; */
         max-width: 90%;
