@@ -1,161 +1,161 @@
 .resumeContent {
-  background: #fff;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  border-radius: 0.75rem;
-  overflow: hidden;
-  width: 100%;
-  max-width: 48rem;
-  margin: 0 auto;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    width: 100%;
+    max-width: 48rem;
+    margin: 0 auto;
 }
 
 @media print {
-  .resumeContent {
-    padding: 0 !important;
-    margin: 0 !important;
-    box-shadow: none;
-  }
+    .resumeContent {
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none;
+    }
 }
 
 .resumeGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-  min-height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  .resumeGrid {
-    grid-template-columns: 35fr 65fr;
-  }
+    .resumeGrid {
+        grid-template-columns: 35fr 65fr;
+    }
 }
 
 /* Left Sidebar Styling */
 .leftSidebar {
-  display: flex;
-  flex-direction: column;
-  padding: 2rem 1.5rem;
-  background: linear-gradient(135deg, var(--resume-sidebar-background) 0%, rgba(245, 245, 245, 0.6) 100%);
-  border-right: 3px solid var(--resume-skill-border);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    background: linear-gradient(135deg, var(--resume-sidebar-background) 0%, rgba(245, 245, 245, 0.6) 100%);
+    border-right: 3px solid var(--resume-skill-border);
 }
 
 @media (min-width: 768px) {
-  .leftSidebar {
-    padding: 2.5rem 2rem;
-  }
+    .leftSidebar {
+        padding: 2.5rem 2rem;
+    }
 }
 
 .profileSection {
-  text-align: center;
-  margin-bottom: 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
 }
 
 .profileImageWrapper {
-  width: 120px;
-  height: 120px;
-  margin: 0 auto 1.5rem;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 4px solid var(--resume-main-icons);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--resume-main-icons);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .profileImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .profileName {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.2;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .profileTitle {
-  font-size: 1rem;
-  font-weight: 500;
-  margin: 0;
-  opacity: 0.9;
-  letter-spacing: 0.3px;
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0;
+    opacity: 0.9;
+    letter-spacing: 0.3px;
 }
 
 .sidebarDivider {
-  height: 2px;
-  background: linear-gradient(to right, transparent, var(--resume-main-icons), transparent);
-  margin: 1.5rem 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--resume-main-icons), transparent);
+    margin: 1.5rem 0;
 }
 
 /* Main Content Styling */
 .mainContent {
-  padding: 2rem 1.5rem;
-  background: #fff;
+    padding: 2rem 1.5rem;
+    background: #fff;
 }
 
 @media (min-width: 768px) {
-  .mainContent {
-    padding: 2.5rem 2rem;
-  }
+    .mainContent {
+        padding: 2.5rem 2rem;
+    }
 }
 
 .summarySection {
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 2px solid var(--resume-sidebar-background);
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--resume-sidebar-background);
 }
 
 .sectionTitle {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin: 0 0 1rem 0;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  position: relative;
-  padding-bottom: 0.5rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    padding-bottom: 0.5rem;
 }
 
 .sectionTitle::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 60px;
-  height: 3px;
-  background: var(--resume-job-title);
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--resume-job-title);
 }
 
 .summaryText {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.6;
+    margin: 0;
 }
 
 @media print {
-  .resumeGrid {
-    grid-template-columns: 35fr 65fr !important;
-  }
+    .resumeGrid {
+        grid-template-columns: 35fr 65fr !important;
+    }
 
-  .leftSidebar {
-    padding: 2rem !important;
-    background: var(--resume-sidebar-background) !important;
-  }
+    .leftSidebar {
+        padding: 2rem !important;
+        background: var(--resume-sidebar-background) !important;
+    }
 
-  .mainContent {
-    padding: 2rem !important;
-  }
+    .mainContent {
+        padding: 2rem !important;
+    }
 
-  .profileImageWrapper {
-    width: 100px;
-    height: 100px;
-  }
+    .profileImageWrapper {
+        width: 100px;
+        height: 100px;
+    }
 
-  .profileName {
-    font-size: 1.5rem;
-  }
+    .profileName {
+        font-size: 1.5rem;
+    }
 
-  .sectionTitle {
-    font-size: 1.2rem;
-  }
+    .sectionTitle {
+        font-size: 1.2rem;
+    }
 }

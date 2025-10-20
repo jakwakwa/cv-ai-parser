@@ -107,11 +107,11 @@
 }
 
 p {
-    color: var(--color-text-secondary) !important;
+    color: var(--color-text-secondary);
 }
 
 h3 {
     line-height: 2 !important;
     margin-top: 15px !important;
-    color: var(--color-card-text-secondary) !important;
+    color: var(--color-card-text-secondary);
 }
