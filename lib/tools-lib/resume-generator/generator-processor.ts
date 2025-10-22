@@ -1,6 +1,6 @@
 import { google } from "@ai-sdk/google"
 import { generateText } from "ai"
-import { AI_MODEL_FLASH } from "@/lib/config"
+import { AI_MODEL_FLASH, AI_MODEL_PRO } from "@/lib/config"
 import type { FileParseResult } from "../shared/file-parsers/base-parser"
 import { enforceSummaryLimit } from "../shared/summary-limiter"
 import type { ParsedResumeSchema } from "../shared-parsed-resume-schema"
@@ -27,8 +27,8 @@ class GeneratorProcessor {
 	async process(fileResult: FileParseResult, customization?: CustomizationOptions): Promise<ProcessingResult> {
 		const startTime = Date.now()
 
-		const model = google(AI_MODEL_FLASH) // Use AI_MODEL_FLASH for resume parsing, it supports PDF processing
-
+		const model = google(AI_MODEL_PRO) // Use AI_MODEL_FLASH for resume parsing, it supports PDF processing
+		console.warn("GEMINI PRO is parsing... replace with", AI_MODEL_FLASH)
 		const messagesContent: unknown[] = []
 
 		if (fileResult.fileType === "pdf" && fileResult.fileData) {
