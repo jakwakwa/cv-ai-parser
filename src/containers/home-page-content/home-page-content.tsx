@@ -1,31 +1,33 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import HomeToolItem from "@/src/components/home-tool-item"
-import styles from "./home-page-content.module.css"
+import Image from "next/image";
+import HomeToolItem from "@/src/components/home-tool-item";
+import styles from "./home-page-content.module.css";
 
 export default function HomePageContent() {
     return (
-        <div className="w-screen max-w-[95vw] mb-24 mt-2 mx-auto md:pl-3 md:w-full md:min-w-[90%] md:max-w-[80vw]">
+        <div className="w-screen max-w-[100vw] mb-24 mt-2 mx-auto md:pl-3 md:w-full md:min-w-[100%] md:max-w-[100vw]">
+            <div className={styles.heroImageWrapper}>
+                <div className={styles.heroImage} />
+                {/* <div className={styles.heroImageGlow} /> */}
+                {/* <Image
+                    src="/hero-img.jpg"
+                    alt="AI-powered resume generation illustration showing intelligent document processing"
+                    width={1200}
+                    height={800}
+                    priority
+                    className="w-[300%] md:min-w-[100%] md:max-w-[100vw] h-full object-fill -right-10 -top-20 relative z-110 overflow-hidden"
+                /> */}
+            </div>
             {/* Hero Section */}
             <section className={styles.hero}>
                 <div className={styles.heroContent}>
                     <div className={styles.heroText}>
                         <h1 className={styles.heroTitle}>AI-Powered Resume Generator</h1>
                         <p className={styles.heroSubtitle}>
-                            Transform your career with our intelligent resume tools. Create tailored resumes from scratch or generate a new professional    design and layout from your existing resume.
+                            Transform your career with our intelligent resume tools. Create tailored resumes from scratch or generate a
+                            new professional design and layout from your existing resume.
                         </p>
-                    </div>
-                    <div className={styles.heroImageWrapper}>
-                        <div className={styles.heroImageGlow} />
-                        <Image
-                            src="/home-hero-img.png"
-                            alt="AI-powered resume generation illustration showing intelligent document processing"
-                            width={600}
-                            height={600}
-                            priority
-                            className={styles.heroImage}
-                        />
                     </div>
                 </div>
             </section>
@@ -35,7 +37,8 @@ export default function HomePageContent() {
                 <HomeToolItem
                     content={{
                         title: "Resume Tailor Tool",
-                        description: "Transform your career with our intelligent resume tools. Create tailored resumes from scratch or convert your Figma designs into professional resume components.",
+                        description:
+                            "Transform your career with our intelligent resume tools. Create tailored resumes from scratch or convert your Figma designs into professional resume components.",
                     }}
                     link={"tools/ai-resume-tailor"}
                 />
@@ -43,7 +46,8 @@ export default function HomePageContent() {
                 <HomeToolItem
                     content={{
                         title: "Resume Generator / Parser",
-                        description: "Transform your career with our intelligent resume tools. Create tailored resumes from scratch or convert your Figma designs into professional resume components.",
+                        description:
+                            "Transform your career with our intelligent resume tools. Create tailored resumes from scratch or convert your Figma designs into professional resume components.",
                     }}
                     link={"tools/ai-resume-generator"}
                 />
@@ -72,5 +76,5 @@ export default function HomePageContent() {
                 </div>
             </section>
         </div>
-    )
+    );
 }

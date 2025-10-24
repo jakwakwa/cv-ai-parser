@@ -12,16 +12,38 @@
     margin-bottom: 1rem;
 }
 
+.heroImage {
+    background-image:
+        linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(3, 86, 109, 0.8)),
+        linear-gradient(to right, rgba(79, 32, 167, 0.5), rgba(33, 192, 236, 0.297)),
+        url('/hero-img.jpg');
+    width: 100vw;
+    height: 86vh;
+    background-size: 130%;
+    opacity: 0.6;
+    background-position: left top;
+    background-repeat: no-repeat;
+    background-blend-mode: multiply, screen !important;
+    position: absolute;
+    filter: brightness(0.9) contrast(1.8) saturate(0.9) !important;
+    -webkit-filter: brightness(1.1) contrast(4) saturate(0.6) hue-rotate(300deg) !important;
+    top: -20;
+    left: 0;
+    z-index: -1;
+    box-shadow: 0px 20px 19px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
 /* Hero Section */
 .hero {
     position: relative;
     overflow: hidden;
-    border-radius: var(--border-radius-large);
-    margin-bottom: var(--spacing-xxl);
-    background: var(--color-background-secondary);
-    border-radius: 30px;
-    border: 3px dashed var(--color-border-light);
-    box-shadow: 0px 20px 19px 2px rgba(0, 0, 0, 0.3) !important;
+    min-height: 100vh;
+    /*border-radius: var(--border-radius-large);*/
+    /*margin-bottom: var(--spacing-xxl);*/
+    /*background: var(--color-background-secondary);*/
+    /*border-radius: 30px;*/
+    /*border: 3px dashed var(--color-border-light);*/
+
 }
 
 .heroContent {
@@ -70,7 +92,9 @@
 }
 
 .heroImageWrapper {
-    position: relative;
+    position: absolute;
+    width: 100vw;
+    left: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -82,31 +106,13 @@
     position: absolute;
     width: 80%;
     height: 80%;
-    background: radial-gradient(
-        circle,
-        var(--color-accent-teal-light) 0%,
-        transparent 70%
-    );
+    background: radial-gradient(circle, var(--color-accent-teal-light) 0%, transparent 70%);
     opacity: 0.3;
     filter: blur(60px);
     animation: pulse 3s ease-in-out infinite;
 }
 
-.heroImage {
-    position: relative;
-    width: 100%;
-    height: auto;
-    max-width: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2));
-    transition: transform 0.3s ease;
-    border-radius: 50px !important;
-    overflow: hidden;
-}
 
-.heroImage:hover {
-    transform: scale(1.02);
-}
 
 /* Animations */
 @keyframes fadeInUp {
@@ -134,6 +140,7 @@
 }
 
 @keyframes pulse {
+
     0%,
     100% {
         transform: scale(1);
@@ -301,6 +308,20 @@
     .container {
         gap: 2rem;
     }
+
+    .heroContent {
+        /* display: grid; */
+        display: flex;
+        flex-direction: row;
+
+        /* grid-template-columns: 1fr 1fr; */
+        gap: var(--spacing-xxl);
+        align-items: center;
+        padding: var(--spacing-xxl);
+        max-width: 100%;
+        margin: 0 auto;
+        min-height: 300px;
+    }
 }
 
 @media (min-width: 1024px) {
@@ -330,12 +351,17 @@
 /* Tablet and below */
 @media (max-width: 1024px) {
     .heroContent {
-        /* grid-template-columns: 1fr; */
+        /* display: grid; */
         display: flex;
         flex-direction: row;
-        gap: var(--spacing-xl);
-        padding: var(--spacing-xl);
-        min-height: auto;
+
+        /* grid-template-columns: 1fr 1fr; */
+        gap: var(--spacing-xxl);
+        align-items: center;
+        padding: var(--spacing-xxl);
+        max-width: 100%;
+        margin: 0 auto;
+        min-height: 300px;
     }
 
     .heroText {
@@ -345,16 +371,44 @@
         max-width: 100%;
     }
 
-    .heroImageWrapper {
-        order: 1;
-        max-width: 300px;
-        border-radius: 100px;
-        overflow: hidden;
+    .heroContent {
+        /* display: grid; */
+        display: flex;
+        flex-direction: row;
+
+        /* grid-template-columns: 1fr 1fr; */
+        gap: var(--spacing-xxl);
+        align-items: center;
+        padding: var(--spacing-xxl);
+        max-width: 100%;
         margin: 0 auto;
+        min-height: 300px;
+    }
+
+    .heroImageWrapper {
+        top: 0px;
+        /* position: relative; */
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-position: center;
+        /* background-repeat: no-repeat; */
+        background-size: 100%;
+    }
+
+    .heroImage {
+        top: 0px;
+        position: absolute;
+        min-width: 100%;
+        /* overflow: visible !important; */
+        background-position: right 50% bottom 100%;
+        background-repeat: no-repeat;
+        height: 100vh;
+        background-size: 400%;
     }
 
     .heroTitle {
-        font-size: var(--font-size-2xl);
+        font-size: var(--font-size-4xl);
     }
 
     .heroSubtitle {
@@ -372,16 +426,39 @@
     }
 
     .heroContent {
-        padding: var(--spacing-lg);
-        gap: var(--spacing-lg);
+        /* display: grid; */
         display: flex;
         flex-direction: column-reverse;
+        justify-content: flex-end;
+        /* grid-template-columns: 1fr 1fr; */
+        gap: var(--spacing-xxl);
+        align-items: center;
+        padding: var(--spacing-xxl);
+        max-width: 100%;
+        margin: 0 auto;
+        min-height: 300px;
     }
 
     .heroTitle {
         font-size: 2rem;
         line-height: 1.1;
         text-align: center;
+    }
+
+    .heroImage {
+        border-radius: 20px;
+        min-width: 100%;
+        overflow: visible !important;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        height: 100vh;
+
+        background-size: 300%;
+
+        /* background-position: left top; */
+        /* background-repeat: no-repeat; */
+
     }
 
     .heroSubtitle {
@@ -391,15 +468,34 @@
     }
 
     .heroImageWrapper {
-        overflow: hidden;
-        border-radius: 40px;
-        max-height: 200px;
-        max-width: 90%;
+        /* overflow: hidden; */
+        border-radius: 0 !important;
+        max-height: 100vh;
+        height: 90vh;
+
+        /* padding-top: 40px !important; */
+        /* ensure wrapper has height so absolutely positioned background shows */
+        max-width: 100%;
     }
 
     .heroImage {
-        border-radius: 20px;
-        min-width: 900px;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: bottom;
+        background-size: 550%;
+        background-position: top center;
+        background-repeat: no-repeat;
+        position: absolute;
+        max-height: 90vh;
+        width: 100vw;
+        filter: brightness(0.7) contrast(1) saturate(0.6) hue-rotate(300deg);
+        -webkit-filter: brightness(0.9) contrast(1.7) saturate(0.6) hue-rotate(300deg);
+        /* background-size: 420%; */
+        /* background-position: center; */
+        background-repeat: no-repeat;
+        overflow: hidden;
     }
 
     .heroCta {
@@ -443,10 +539,42 @@
         font-size: 0.9rem;
     }
 
+    .heroContent {
+        display: grid;
+        /* display: flex; */
+        /* flex-direction: row; */
+        width: 100vw;
+        max-width: 100%;
+        height: 100%;
+        padding: 0 0.5rem !important;
+        /* grid-template-columns: 1fr 1fr; */
+        gap: var(--spacing-xxl);
+        align-items: center;
+        padding: var(--spacing-xxl);
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
     .heroImage {
-        max-width: 300px;
-        border-radius: 20px !important;
+        /* height: 20vh; */
         overflow: hidden;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: bottom;
+        background-size: 550%;
+        background-position: top center;
+        background-repeat: no-repeat;
+        position: absolute;
+        max-height: 70vh;
+        width: 100vw;
+        filter: brightness(0.7) contrast(1) saturate(0.6) hue-rotate(300deg);
+        -webkit-filter: brightness(0.9) contrast(1.7) saturate(0.6) hue-rotate(300deg);
+        /* background-size: 420%; */
+        /* background-position: center; */
+        background-repeat: no-repeat;
+        overflow: hidden;
+        position: absolute;
     }
 
     .heroImageGlow {
