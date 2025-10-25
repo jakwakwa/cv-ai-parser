@@ -4,66 +4,68 @@
  */
 
 .layout {
-  display: flex;
-  gap: var(--spacing-xl);
-  flex-direction: row;
-  /* max-width: 1200px; */
-  width: 100%;
-  margin: 0 auto;
-  padding: var(--spacing-lg) var(--spacing-md);
-}
-
-.sidebar {
-  position: sticky;
-  top: var(--spacing-lg);
-  align-self: start;
-  width: 10%;
-  min-width: 100px;
-}
-
-.sidebarNav {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  font-size: var(--font-size-sm);
-  display: flex;
-  flex-direction: column;
-  min-width: 0px;
-  gap: var(--spacing-xs);
-}
-
-.navLink {
-  text-decoration: none;
-  color: var(--color-text-secondary);
-  transition: var(--transition-fast);
-}
-
-.navLink:hover {
-  color: var(--color-accent-teal);
-}
-
-.navLinkActive {
-  color: var(--color-accent-teal);
-  font-weight: var(--font-weight-semibold);
-}
-
-.content {
-  min-width: 350px;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .layout {
     display: flex;
     gap: var(--spacing-xl);
-    flex-direction: column;
+    flex-direction: row;
     /* max-width: 1200px; */
     width: 100%;
     margin: 0 auto;
     padding: var(--spacing-lg) var(--spacing-md);
-  }
+}
 
-  .content {
-    width: 100%;
-  }
+.sidebar {
+    position: sticky;
+    top: var(--spacing-lg);
+    align-self: start;
+    width: 20%;
+    min-width: 200px;
+}
+
+.sidebarNav {
+    list-style: none;
+    padding: 14px 10px;
+    margin: 0;
+    font-size: var(--font-size-sm);
+    display: flex;
+    flex-direction: column;
+    min-width: 0px;
+    gap: var(--spacing-md);
+    border-bottom: 1px solid rgba(100, 255, 255, 0.2);
+}
+
+.navLink {
+    text-decoration: none;
+    font-size: 15px;
+    color: var(--color-text-secondary);
+    transition: var(--transition-fast);
+}
+
+.navLink:hover {
+    color: var(--color-accent-teal);
+}
+
+.navLinkActive {
+    color: var(--color-accent-teal);
+    font-weight: var(--font-weight-semibold);
+}
+
+.content {
+    min-width: 350px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .layout {
+        display: flex;
+        gap: var(--spacing-xl);
+        flex-direction: column;
+        /* max-width: 1200px; */
+        width: 100%;
+        margin: 0 auto;
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .content {
+        width: 100%;
+    }
 }

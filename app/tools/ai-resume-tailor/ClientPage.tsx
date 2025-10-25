@@ -1,26 +1,32 @@
-"use client"
-import { useSession } from "next-auth/react"
-import { useState } from "react"
+"use client";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
 // Ads temporarily removed until sufficient content is added
-import ResumeTailorTool from "@/src/containers/tool-containers/resume-tailor-tool/resume-tailor-tool"
-import styles from "./page.module.css"
+import ResumeTailorTool from "@/src/containers/tool-containers/resume-tailor-tool/resume-tailor-tool";
+import styles from "./page.module.css";
+import Link from "next/link";
 
 export default function ClientPage() {
-	const [isLoading, setIsLoading] = useState(false)
-	const { data: session, status } = useSession()
+  const [isLoading, setIsLoading] = useState(false);
+  const { data: session, status } = useSession();
 
-	// Only show ads when we're sure the user is NOT authenticated
-	// Don't show during loading to prevent flashing
-	const _shouldShowAds = status === "unauthenticated"
+  // Only show ads when we're sure the user is NOT authenticated
+  // Don't show during loading to prevent flashing
+  const _shouldShowAds = status === "unauthenticated";
 
-	return (
-		<div className={styles.pageContainer}>
-			<div className={styles.headerSection}>
-				<h1 className={styles.title}>AI Resume Tailor</h1>
-				<p className={styles.subtitle}>Upload your PDF resume and a job description to create a perfectly tailored resume</p>
-			</div>
+  return (
+    <div className={styles.pageContainer}>
+      <div className={styles.headerSection}>
+        <h1 className={styles.title}>AI Resume Tailor</h1>
+        <p className={styles.subtitle}>
+          Upload your PDF resume and a job description to create a perfectly tailored resume
+        </p>
+        <Link href="/docs/guides/jobfit-tailor-instructions" className={styles.button}>
+          Need help getting started?
+        </Link>
+      </div>
 
-			<ResumeTailorTool isLoading={isLoading} setIsLoading={setIsLoading} isAuthenticated={!!session} />
-		</div>
-	)
+      <ResumeTailorTool isLoading={isLoading} setIsLoading={setIsLoading} isAuthenticated={!!session} />
+    </div>
+  );
 }
