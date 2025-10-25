@@ -9,7 +9,7 @@ export default function HomePageContent() {
     <div className="w-screen max-w-[100vw] mb-24 mt-2 mx-auto md:pl-3 md:w-full md:min-w-[100%] md:max-w-[100vw]">
       <div className={styles.heroImageWrapper}>
         <div className={styles.heroImage} />
-        <div className={styles.heroImageGlow} />
+        {/*<div className={styles.heroImageGlow} />*/}
         {/*<Image
           src="/hero-img.jpg"
           alt="AI-powered resume generation illustration showing intelligent document processing"
