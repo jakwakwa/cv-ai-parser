@@ -46,7 +46,7 @@ This project includes comprehensive guides for managing blog content:
 #### 📚 Core Documentation
 * **[BLOG_POST_GUIDE.md](./BLOG_POST_GUIDE.md)**: Complete developer guide for adding new blog posts with step-by-step instructions, SEO considerations, styling guidelines, and troubleshooting tips
 * **[BLOG_QUICK_REF.md](./BLOG_QUICK_REF.md)**: Quick reference card for rapid blog post creation with code templates and common patterns
-* **[BLOG_POST_TEMPLATE.tsx](./BLOG_POST_TEMPLATE.tsx)**: Ready-to-copy TypeScript template for new blog posts
+* **[BLOG_POST_TEMPLATE.tsx.example](./BLOG_POST_TEMPLATE.tsx.example)**: Ready-to-copy TypeScript template for new blog posts
 * **[BLOG_WORKFLOW.md](./BLOG_WORKFLOW.md)**: Visual workflow diagrams and system architecture
 
 #### 🤖 For AI Assistants
@@ -64,7 +64,7 @@ mkdir app/blog/your-slug
 cp app/blog/resume-writing-tips/page.module.css app/blog/your-slug/
 
 # 2. Copy template
-cp BLOG_POST_TEMPLATE.tsx app/blog/your-slug/page.tsx
+cp BLOG_POST_TEMPLATE.tsx.example app/blog/your-slug/page.tsx
 
 # 3. Update app/blog/your-slug/page.tsx (customize content)
 # 4. Update app/blog/page.tsx (add card to Featured Articles as FIRST item)

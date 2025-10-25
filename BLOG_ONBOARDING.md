@@ -22,7 +22,7 @@ Choose your path:
 
 ### Path A: Quick Learner (5 minutes)
 - [ ] Read `BLOG_QUICK_REF.md` from top to bottom
-- [ ] Skim `BLOG_POST_TEMPLATE.tsx` to see structure
+- [ ] Skim `BLOG_POST_TEMPLATE.tsx.example` to see structure
 - [ ] You're ready to start!
 
 ### Path B: Thorough Learner (15 minutes)
@@ -90,7 +90,7 @@ cp resume-writing-tips/page.module.css your-article-slug/
 ### 3.3 Copy Template
 ```bash
 cd ../..
-cp BLOG_POST_TEMPLATE.tsx app/blog/your-article-slug/page.tsx
+cp BLOG_POST_TEMPLATE.tsx.example app/blog/your-article-slug/page.tsx
 ```
 - [ ] Template copied to new directory
 

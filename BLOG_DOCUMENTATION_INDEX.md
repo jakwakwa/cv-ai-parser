@@ -10,7 +10,7 @@
 |--------------|------------|
 | Add a blog post quickly | [BLOG_QUICK_REF.md](#quick-reference-card) |
 | Understand the full system | [BLOG_POST_GUIDE.md](#comprehensive-guide) |
-| Copy a template | [BLOG_POST_TEMPLATE.tsx](#template-file) |
+| Copy a template | [BLOG_POST_TEMPLATE.tsx.example](#template-file) |
 | See visual workflows | [BLOG_WORKFLOW.md](#workflow-diagrams) |
 | Configure AI assistant | [.zed/blog-post-rules.md](#ai-assistant-rules) |
 | Understand the system | [.zed/README.md](#system-overview) |
@@ -61,7 +61,7 @@
 ---
 
 ### 3. Template File
-**File**: `BLOG_POST_TEMPLATE.tsx`  
+**File**: `BLOG_POST_TEMPLATE.tsx.example`  
 **Size**: ~300 lines  
 **Reading Time**: N/A (for copying)  
 **Best For**: Starting point for new blog posts
@@ -78,7 +78,7 @@
 
 **How to Use**:
 ```bash
-cp BLOG_POST_TEMPLATE.tsx app/blog/your-slug/page.tsx
+cp BLOG_POST_TEMPLATE.tsx.example app/blog/your-slug/page.tsx
 ```
 
 ---
@@ -155,7 +155,7 @@ cp BLOG_POST_TEMPLATE.tsx app/blog/your-slug/page.tsx
 
 **Recommended Reading Order**:
 1. `.zed/blog-post-rules.md` - Start here for structured rules
-2. `BLOG_POST_TEMPLATE.tsx` - Use as structural reference
+2. `BLOG_POST_TEMPLATE.tsx.example` - Use as structural reference
 3. `BLOG_QUICK_REF.md` - For specific code patterns
 4. `BLOG_POST_GUIDE.md` - If encountering issues
 
@@ -168,7 +168,7 @@ cp BLOG_POST_TEMPLATE.tsx app/blog/your-slug/page.tsx
 **Recommended Reading Order**:
 1. `BLOG_QUICK_REF.md` - Get the overview (5 min)
 2. `BLOG_POST_GUIDE.md` - Read the full guide (20 min)
-3. `BLOG_POST_TEMPLATE.tsx` - Copy for your post
+3. `BLOG_POST_TEMPLATE.tsx.example` - Copy for your post
 4. `BLOG_WORKFLOW.md` - Reference if needed
 
 **Time Investment**: ~30 minutes for complete understanding
@@ -179,7 +179,7 @@ cp BLOG_POST_TEMPLATE.tsx app/blog/your-slug/page.tsx
 
 **Recommended Reading Order**:
 1. `BLOG_QUICK_REF.md` - Quick reminder
-2. `BLOG_POST_TEMPLATE.tsx` - Copy template
+2. `BLOG_POST_TEMPLATE.tsx.example` - Copy template
 3. Start coding!
 
 **Time Investment**: ~5 minutes
@@ -193,7 +193,7 @@ Project Root (airesumegen/)
 │
 ├── 📄 BLOG_POST_GUIDE.md          ← Comprehensive guide
 ├── 📄 BLOG_QUICK_REF.md            ← Quick reference
-├── 📄 BLOG_POST_TEMPLATE.tsx       ← Copy this for new posts
+├── 📄 BLOG_POST_TEMPLATE.tsx.example       ← Copy this for new posts
 ├── 📄 BLOG_WORKFLOW.md             ← Visual diagrams
 ├── 📄 BLOG_DOCUMENTATION_INDEX.md  ← This file
 │
@@ -229,7 +229,7 @@ Project Root (airesumegen/)
 ### Phase 2: File Creation
 - [ ] Create directory: `app/blog/[slug]/`
 - [ ] Copy CSS from existing post
-- [ ] Copy `BLOG_POST_TEMPLATE.tsx` to new directory
+- [ ] Copy `BLOG_POST_TEMPLATE.tsx.example` to new directory
 - [ ] Rename to `page.tsx`
 
 ### Phase 3: Content Development
@@ -259,7 +259,7 @@ Project Root (airesumegen/)
 |----------|--------|-----------|-----------|----------|--------|
 | BLOG_POST_GUIDE.md | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ❌ | ✅ | ❌ |
 | BLOG_QUICK_REF.md | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ✅ | ❌ | ❌ |
-| BLOG_POST_TEMPLATE.tsx | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ✅ | ❌ | ❌ |
+| BLOG_POST_TEMPLATE.tsx.example | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ✅ | ❌ | ❌ |
 | BLOG_WORKFLOW.md | ⭐⭐ | ⭐⭐⭐⭐ | ❌ | ✅ | ✅ |
 | .zed/blog-post-rules.md | ⭐⭐⭐⭐⭐ | ⭐⭐ | ✅ | ✅ | ❌ |
 | .zed/README.md | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ❌ | ✅ | ❌ |
@@ -314,14 +314,14 @@ Every new blog post requires updating exactly 2 existing files:
 1. Read: `BLOG_QUICK_REF.md` (5 min)
 2. Read: `BLOG_POST_GUIDE.md` (20 min)
 3. Study: `app/blog/profile-summary-guide/page.tsx` (5 min)
-4. Copy: `BLOG_POST_TEMPLATE.tsx` and customize (30 min)
+4. Copy: `BLOG_POST_TEMPLATE.tsx.example` and customize (30 min)
 5. Reference: `BLOG_POST_GUIDE.md` as needed
 
 **Total Time**: ~1 hour for first post
 
 ### Intermediate (Created 1-2 posts)
 1. Reference: `BLOG_QUICK_REF.md` (2 min)
-2. Copy: `BLOG_POST_TEMPLATE.tsx` (1 min)
+2. Copy: `BLOG_POST_TEMPLATE.tsx.example` (1 min)
 3. Customize and create (20 min)
 
 **Total Time**: ~25 minutes per post
@@ -399,7 +399,7 @@ Your blog post is complete when:
 ## 📞 Support Resources
 
 1. **Documentation Issues**: Check troubleshooting section in `BLOG_POST_GUIDE.md`
-2. **Code Examples**: Reference `BLOG_POST_TEMPLATE.tsx` and existing posts
+2. **Code Examples**: Reference `BLOG_POST_TEMPLATE.tsx.example` and existing posts
 3. **Visual Help**: See diagrams in `BLOG_WORKFLOW.md`
 4. **Quick Answers**: Search `BLOG_QUICK_REF.md`
 
@@ -413,7 +413,7 @@ Your blog post is complete when:
 # 1. Create & setup
 mkdir app/blog/my-post
 cp app/blog/resume-writing-tips/page.module.css app/blog/my-post/
-cp BLOG_POST_TEMPLATE.tsx app/blog/my-post/page.tsx
+cp BLOG_POST_TEMPLATE.tsx.example app/blog/my-post/page.tsx
 
 # 2. Edit 3 files
 # - app/blog/my-post/page.tsx (your content)
@@ -456,7 +456,7 @@ npm run build
 
 **Need comprehensive understanding?** Read [BLOG_POST_GUIDE.md](./BLOG_POST_GUIDE.md)!
 
-**Just want the template?** Copy [BLOG_POST_TEMPLATE.tsx](./BLOG_POST_TEMPLATE.tsx)!
+**Just want the template?** Copy [BLOG_POST_TEMPLATE.tsx.example](./BLOG_POST_TEMPLATE.tsx.example)!
 
 ---
 

@@ -40,7 +40,7 @@ Contains:
 - Common patterns and elements
 - Checklist for verification
 
-### 4. **../BLOG_POST_TEMPLATE.tsx** (Project Root)
+### 4. **../BLOG_POST_TEMPLATE.tsx.example** (Project Root)
 **Purpose**: Complete TypeScript template file  
 **Use When**: Starting a new blog post from scratch  
 **Format**: Fully commented React/Next.js component
@@ -56,13 +56,13 @@ Contains:
 
 ### For AI Assistants (LLMs)
 1. **Read**: `blog-post-rules.md` (this directory) first
-2. **Reference**: `BLOG_POST_TEMPLATE.tsx` for structure
+2. **Reference**: `BLOG_POST_TEMPLATE.tsx.example` for structure
 3. **Check**: `BLOG_QUICK_REF.md` for specific patterns
 4. **Consult**: `BLOG_POST_GUIDE.md` if issues arise
 
 ### For Human Developers
 1. **Start**: `BLOG_QUICK_REF.md` for overview
-2. **Copy**: `BLOG_POST_TEMPLATE.tsx` as starting point
+2. **Copy**: `BLOG_POST_TEMPLATE.tsx.example` as starting point
 3. **Reference**: `BLOG_POST_GUIDE.md` for details
 4. **Follow**: Checklist to ensure completeness
 
@@ -150,7 +150,7 @@ Every new blog post requires:
 ## 🆘 Need Help?
 
 1. **For Implementation**: See `BLOG_POST_GUIDE.md` Common Issues section
-2. **For Templates**: Copy from `BLOG_POST_TEMPLATE.tsx`
+2. **For Templates**: Copy from `BLOG_POST_TEMPLATE.tsx.example`
 3. **For Quick Reference**: Use `BLOG_QUICK_REF.md`
 4. **For Examples**: Check `app/blog/profile-summary-guide/page.tsx`
 

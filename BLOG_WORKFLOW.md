@@ -126,7 +126,7 @@ graph TD
     Root --> Docs[Documentation/]
     Docs --> Guide[BLOG_POST_GUIDE.md]
     Docs --> Quick[BLOG_QUICK_REF.md]
-    Docs --> Template[BLOG_POST_TEMPLATE.tsx]
+    Docs --> Template[BLOG_POST_TEMPLATE.tsx.example]
     Docs --> Workflow[BLOG_WORKFLOW.md]
     
     Root --> Zed[.zed/]
@@ -156,8 +156,8 @@ flowchart TD
     Q1 -->|Yes| AI1[Read:<br/>.zed/blog-post-rules.md]
     Q1 -->|No| Human1[Read:<br/>BLOG_QUICK_REF.md]
     
-    AI1 --> AI2[Use:<br/>BLOG_POST_TEMPLATE.tsx]
-    Human1 --> Human2[Copy:<br/>BLOG_POST_TEMPLATE.tsx]
+    AI1 --> AI2[Use:<br/>BLOG_POST_TEMPLATE.tsx.example]
+    Human1 --> Human2[Copy:<br/>BLOG_POST_TEMPLATE.tsx.example]
     
     AI2 --> Q2{Need detailed<br/>information?}
     Human2 --> Q2
@@ -203,14 +203,14 @@ flowchart TD
 flowchart LR
     subgraph "For AI Assistants"
         AI1[blog-post-rules.md<br/>START HERE]
-        AI2[BLOG_POST_TEMPLATE.tsx<br/>Structure Reference]
+        AI2[BLOG_POST_TEMPLATE.tsx.example<br/>Structure Reference]
         AI3[BLOG_QUICK_REF.md<br/>Code Snippets]
         AI4[BLOG_POST_GUIDE.md<br/>Deep Dive]
     end
     
     subgraph "For Human Developers"
         H1[BLOG_QUICK_REF.md<br/>START HERE]
-        H2[BLOG_POST_TEMPLATE.tsx<br/>Copy & Customize]
+        H2[BLOG_POST_TEMPLATE.tsx.example<br/>Copy & Customize]
         H3[BLOG_POST_GUIDE.md<br/>Reference Manual]
         H4[BLOG_WORKFLOW.md<br/>Visual Guide]
     end
@@ -433,7 +433,7 @@ cp app/blog/resume-writing-tips/page.module.css \
    app/blog/your-article-slug/page.module.css
 
 # 3. Copy and customize template
-cp BLOG_POST_TEMPLATE.tsx \
+cp BLOG_POST_TEMPLATE.tsx.example \
    app/blog/your-article-slug/page.tsx
 
 # 4. Edit the three main files
