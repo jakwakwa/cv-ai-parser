@@ -14,7 +14,7 @@ export const metadata = buildPageMetadata({
 export default function Page() {
     const breadcrumbs = [
         { name: "Home", item: SITE.baseUrl },
-        { name: "Tools", item: `${SITE.baseUrl}/tools` },
+        { name: "Tools", item: `${SITE.baseUrl}/free-ai-tools"` },
         { name: "Instant Ai Resume Builder", item: `${SITE.baseUrl}/free-ai-tools/ai-resume-builder` },
     ]
 

@@ -11,10 +11,10 @@
     --font-family-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 
     /* Font Sizes */
-    --font-size-xxs: 0.8rem;
-    --font-size-xs: 0.9rem;
+    --font-size-xxs: 0.6rem;
+    --font-size-xs: 0.7rem;
     /* 12px */
-    --font-size-sm: 0.95rem;
+    --font-size-sm: 0.85rem;
     /* 14px */
     --font-size-base: 1rem;
     /* 14.4px */

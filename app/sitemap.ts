@@ -15,7 +15,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		"/blog/profile-summary-guide",
 		"/free-ai-tools/ai-resume-builder",
 		"/free-ai-tools/resume-tailor",
-		"/library",
 		"/resources",
 		"/resources/posts",
 		"/resources/guides/jobfit-tailor-instructions",
@@ -28,20 +27,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		{
 			url: SITE.baseUrl,
 			lastModified,
-			changeFrequency: "weekly",
+			changeFrequency: "monthly",
 			priority: 1.0,
 		},
-		{
-			url: `${SITE.baseUrl}/library`,
-			lastModified,
-			changeFrequency: "weekly",
-			priority: 0.9,
-		},
+
 		...staticPages.slice(1).map(path => ({
 			url: `${SITE.baseUrl}${path}`,
 			lastModified,
 			changeFrequency: "weekly" as const,
-			priority: path.includes("privacy") || path.includes("terms") ? 0.3 : 0.8,
+			priority: path.includes("privacy") || path.includes("terms") ? 0.3 : 0.3,
 		})),
 	]
 
@@ -49,7 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		url: `${SITE.baseUrl}/resume/${slug}`,
 		lastModified: new Date(updatedAt),
 		changeFrequency: "weekly",
-		priority: 0.6,
+		priority: 0.5,
 	}))
 
 	return [...staticEntries, ...resumeEntries]
