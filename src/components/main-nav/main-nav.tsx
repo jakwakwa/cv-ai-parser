@@ -34,11 +34,11 @@ export function MainNav({ onLogoClick, isAuthenticated = false }: MainNavProps) 
                         My Resumes
                     </Link>
                 )}
-                <Link href="/blog" className={styles.navLink}>
+                <Link href="/blog" prefetch={false} className={styles.navLink}>
                     Blog
                 </Link>
 
-                <Link href="/resources" className={styles.navLink}>
+                <Link href="/resources" prefetch={false} className={styles.navLink}>
                     Resources
                 </Link>
             </nav>

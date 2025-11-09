@@ -68,7 +68,7 @@ export function MobileDrawer({ isOpen, onClose, isAuthenticated = false }: Mobil
                                         My Resumes
                                     </Link>
                                 )}
-                                <Link href="/resources" className={styles.navLink} onClick={handleLinkClick}>
+                                <Link href="/resources" prefetch={false} className={styles.navLink} onClick={handleLinkClick}>
                                     Docs
                                 </Link>
                             </nav>
