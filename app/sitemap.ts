@@ -1,10 +1,8 @@
 import type { MetadataRoute } from "next"
-import { ResumeDatabase } from "@/lib/db"
 import { SITE } from "@/src/lib/seo/config"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const lastModified = new Date()
-	const resumes = await ResumeDatabase.getAllPublicResumes()
 
 	const staticPages = [
 		"/",
@@ -39,12 +37,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		})),
 	]
 
-	const resumeEntries: MetadataRoute.Sitemap = resumes.map(({ slug, updatedAt }) => ({
-		url: `${SITE.baseUrl}/resume/${slug}`,
-		lastModified: new Date(updatedAt),
-		changeFrequency: "weekly",
-		priority: 0.5,
-	}))
-
-	return [...staticEntries, ...resumeEntries]
+	return [...staticEntries]
 }
