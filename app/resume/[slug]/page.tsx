@@ -250,7 +250,7 @@ export default function ViewResumePage() {
                 onDownloadPdf={handleDownloadPdf}
                 onEditResume={handleEdit}
                 onMyLibrary={() => router.push("/library")}
-                onUploadNew={() => router.push("/tools/ai-resume-tailor")}
+                onUploadNew={() => router.push("/free-ai-tools/resume-tailor")}
                 showDownload={true}
                 showEdit={true}
                 showLibrary={true}

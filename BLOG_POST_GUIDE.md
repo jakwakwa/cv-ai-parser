@@ -113,7 +113,7 @@ const article = {
     title: "Your Article Title: Comprehensive Guide",
     description: "Same as metadata description",
     path: "/blog/your-post-slug",
-    authorName: "AI Resume Generator Team",
+    authorName: "Instant Ai Resume Generator Team",
     datePublished: "2025-01-15", // Use YYYY-MM-DD format
     tags: ["resume", "career", "keyword"],
 }
@@ -252,7 +252,7 @@ const staticPages = [
   "/blog/career-advice",
   "/blog/resume-writing-tips",
   "/blog/your-post-slug",  // Add here
-  "/tools/ai-resume-generator",
+  "/free-ai-tools/ai-resume-builder",
   // ... rest of pages
 ]
 ```
@@ -540,5 +540,5 @@ If you encounter issues not covered in this guide:
 ---
 
 **Last Updated**: January 2025
-**Maintainer**: AI Resume Generator Team
+**Maintainer**: Instant Ai Resume Generator Team
 **Version**: 1.0

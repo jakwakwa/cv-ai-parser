@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client"
 import { withAccelerate } from "@prisma/extension-accelerate"
 
-// Learn more about instantiating PrismaClient in Next.js here: https://www.prisma.io/docs/data-platform/accelerate/getting-started
+// Learn more about instantiating PrismaClient in Next.js here: https://www.prisma.io/resources/data-platform/accelerate/getting-started
 
 const prismaClientSingleton = () => {
 	return new PrismaClient().$extends(withAccelerate())

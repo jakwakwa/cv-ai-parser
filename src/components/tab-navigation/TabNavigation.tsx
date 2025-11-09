@@ -16,7 +16,7 @@ export default function TabNavigation({ initialView, adSpace }: TabNavigationPro
 
     const handleTabClick = (view: "upload" | "library") => {
         setCurrentView(view)
-        router.push(view === "upload" ? "/tools/ai-resume-tailor/" : "/library")
+        router.push(view === "upload" ? "/free-ai-tools/resume-tailor/" : "/library")
     }
 
     return (

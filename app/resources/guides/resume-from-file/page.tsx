@@ -23,5 +23,5 @@ This guide walks you through turning a plain text or PDF resume into an online d
 `
 
 export default function Guide() {
-	return <Markdown>{md}</Markdown>
+    return <Markdown>{md}</Markdown>
 }

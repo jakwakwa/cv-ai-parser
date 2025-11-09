@@ -1,22 +1,17 @@
-import { SiteHeader } from "@/src/components/site-header/site-header"
-import { HeaderAd, FooterAd, ContentAd } from "@/src/components/adsense/AdBanner"
 import Link from "next/link"
+import { ContentAd, FooterAd, HeaderAd } from "@/src/components/adsense/AdBanner"
 import { JsonLd } from "@/src/components/seo/JsonLd"
-import { buildBreadcrumbSchema, buildArticleSchema } from "@/src/lib/seo/schemas"
-import { buildPageMetadata } from "@/src/lib/seo/metadata"
+import { SiteHeader } from "@/src/components/site-header/site-header"
 import { SITE } from "@/src/lib/seo/config"
+import { buildPageMetadata } from "@/src/lib/seo/metadata"
+import { buildArticleSchema, buildBreadcrumbSchema } from "@/src/lib/seo/schemas"
 import styles from "./page.module.css"
 
 export const metadata = buildPageMetadata({
     title: "Complete Guide to ATS Optimization: Beat the Bots and Reach Human Reviewers",
-    description:
-        "Optimize your resume for Applicant Tracking Systems with formatting, keyword, and testing strategies that improve screening success.",
+    description: "Optimize your resume for Applicant Tracking Systems with formatting, keyword, and testing strategies that improve screening success.",
     path: "/blog/ats-optimization",
-    keywords: [
-        "ATS optimization",
-        "ATS resume formatting",
-        "resume keywords",
-    ],
+    keywords: ["ATS optimization", "ATS resume formatting", "resume keywords"],
 })
 
 const breadcrumbs = [
@@ -27,10 +22,9 @@ const breadcrumbs = [
 
 const article = {
     title: "Complete Guide to ATS Optimization: Beat the Bots and Reach Human Reviewers",
-    description:
-        "Optimize your resume for Applicant Tracking Systems with formatting, keyword, and testing strategies that improve screening success.",
+    description: "Optimize your resume for Applicant Tracking Systems with formatting, keyword, and testing strategies that improve screening success.",
     path: "/blog/ats-optimization",
-    authorName: "AI Resume Generator Team",
+    authorName: "Instant Ai Resume Builder Team",
     datePublished: "2024-12-01",
     tags: ["ATS", "resume", "keywords"],
 }
@@ -168,7 +162,7 @@ export default function ATSOptimizationPage() {
                         </p>
 
                         <p>
-                            When using PDF format, ensure text is selectable rather than image-based. Test this by trying to copy and paste text from your PDF - if you can't select text, the ATS likely can't parse
+                            When using PDF format, ensure text is selectable rather than image-based. Test this by trying to copy and paste text from your current  - if you can't select text, the ATS likely can't parse
                             it either. Avoid creating PDFs from design software or saving documents as images, as these create non-searchable files that ATS systems cannot process.
                         </p>
 
@@ -323,6 +317,6 @@ export default function ATSOptimizationPage() {
             </main>
 
             <FooterAd />
-        </div >
+        </div>
     )
 }

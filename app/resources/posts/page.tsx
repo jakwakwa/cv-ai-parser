@@ -7,5 +7,5 @@ Coming soon...
 `;
 
 export default function Guide() {
-  return <Markdown>{md}</Markdown>;
+    return <Markdown>{md}</Markdown>;
 }

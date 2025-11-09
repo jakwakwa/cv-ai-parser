@@ -41,7 +41,7 @@ const article = {
     description:
         "[Same description as metadata]",
     path: "/blog/[your-url-slug]",
-    authorName: "AI Resume Generator Team",
+    authorName: "Instant Ai Resume Generator Team",
     datePublished: "[YYYY-MM-DD]", // Example: "2025-01-15"
     tags: ["[tag1]", "[tag2]", "[tag3]"],
 }
@@ -234,7 +234,7 @@ export default function [YourArticleTitle]Page() {
                         <h2 className={styles.sectionTitle}>Ready to Create Your Perfect Resume?</h2>
                         <p className={styles.paragraph}>
                             [Engaging call-to-action text that connects the article content to your service.
-                            Encourage readers to take action and use your AI resume generator.]
+                            Encourage readers to take action and use your Instant Ai Resume Generator.]
                         </p>
                         <div style={{ textAlign: "center", marginTop: "2rem" }}>
                             <Link

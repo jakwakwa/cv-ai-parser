@@ -1,22 +1,17 @@
-import { SiteHeader } from "@/src/components/site-header/site-header"
-import { HeaderAd, FooterAd, ContentAd } from "@/src/components/adsense/AdBanner"
 import Link from "next/link"
+import { ContentAd, FooterAd, HeaderAd } from "@/src/components/adsense/AdBanner"
 import { JsonLd } from "@/src/components/seo/JsonLd"
-import { buildBreadcrumbSchema, buildArticleSchema } from "@/src/lib/seo/schemas"
-import { buildPageMetadata } from "@/src/lib/seo/metadata"
+import { SiteHeader } from "@/src/components/site-header/site-header"
 import { SITE } from "@/src/lib/seo/config"
+import { buildPageMetadata } from "@/src/lib/seo/metadata"
+import { buildArticleSchema, buildBreadcrumbSchema } from "@/src/lib/seo/schemas"
 import styles from "./page.module.css"
 
 export const metadata = buildPageMetadata({
     title: "Career Development Strategies for Modern Professionals: Building Lasting Success",
-    description:
-        "Effective strategies for goal-setting, skill development, networking, and resilience to accelerate your career growth.",
+    description: "Effective strategies for goal-setting, skill development, networking, and resilience to accelerate your career growth.",
     path: "/blog/career-advice",
-    keywords: [
-        "career development",
-        "networking strategies",
-        "professional growth",
-    ],
+    keywords: ["career development", "networking strategies", "professional growth"],
 })
 
 const breadcrumbs = [
@@ -27,10 +22,9 @@ const breadcrumbs = [
 
 const article = {
     title: "Career Development Strategies for Modern Professionals: Building Lasting Success",
-    description:
-        "Effective strategies for goal-setting, skill development, networking, and resilience to accelerate your career growth.",
+    description: "Effective strategies for goal-setting, skill development, networking, and resilience to accelerate your career growth.",
     path: "/blog/career-advice",
-    authorName: "AI Resume Generator Team",
+    authorName: "Instant Ai Resume Builder Team",
     datePublished: "2024-12-01",
     tags: ["career", "strategy", "networking"],
 }
@@ -333,12 +327,15 @@ export default function CareerAdvicePage() {
                         padding: "2rem 0",
                         borderTop: "1px solid #e0e0e0",
                     }}>
-                    <Link className="text-amber-400" href="/blog" style={{
-                        marginTop: "3rem",
+                    <Link
+                        className="text-amber-400"
+                        href="/blog"
+                        style={{
+                            marginTop: "3rem",
 
-                        padding: "2rem 0",
-                        borderTop: "1px solid #e0e0e0",
-                    }}>
+                            padding: "2rem 0",
+                            borderTop: "1px solid #e0e0e0",
+                        }}>
                         ← Back to Blog
                     </Link>
                 </nav>

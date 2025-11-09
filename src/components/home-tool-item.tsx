@@ -1,4 +1,4 @@
-import { ArrowRight, Bot, FileText as BriefcaseIcon, Palette, Upload } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/src/components/ui/ui-button/button"
 import styles from "./home-tool-item.module.css"
@@ -23,31 +23,11 @@ function HomeToolItem({ content, link }: HomeToolItemProps) {
                     <h3 className={styles.featureTitle}>{content.title}</h3>
                     <p className={styles.featureDescription}>{content.description}</p>
 
-                    <div className={styles.featureHighlights}>
-                        <div className={styles.highlight}>
-                            <Upload size={16} />
-                            <span>Upload PDF or TXT</span>
-                        </div>
-                        <div className={styles.highlight}>
-                            <BriefcaseIcon size={16} />
-                            <span>Paste job description</span>
-                        </div>
-                        <div className={styles.highlight}>
-                            <Bot size={16} />
-                            <span>AI optimization</span>
-                        </div>
-                        <div className={styles.highlight}>
-                            <Palette size={16} />
-                            <span>Custom styling</span>
-                        </div>
-                    </div>
-
                     <Button variant="primary" className={styles.featureButton} onClick={() => router.push(`${link}`)}>
-                        Start Tailoring
+                        Start Building For Free
                         <ArrowRight size={16} />
                     </Button>
                 </div>
-
             </div>
         </section>
     )

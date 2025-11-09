@@ -213,7 +213,7 @@ const staticPages = [
   "/blog/career-advice",
   "/blog/resume-writing-tips",
   "/blog/your-article-slug",  // <-- ADD YOUR LINE HERE
-  "/tools/ai-resume-generator",
+  "/free-ai-tools/ai-resume-builder",
   // ...
 ]
 ```
@@ -386,6 +386,6 @@ _______________________________________________________________________
 
 **Created**: January 2025  
 **For**: New blog post contributors  
-**Maintainer**: AI Resume Generator Team
+**Maintainer**: Instant Ai Resume Generator Team
 
 **Ready for your next post?** You got this! 🚀

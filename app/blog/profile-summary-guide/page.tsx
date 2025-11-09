@@ -1,25 +1,17 @@
-import { SiteHeader } from "@/src/components/site-header/site-header"
-import { HeaderAd, FooterAd, ContentAd } from "@/src/components/adsense/AdBanner"
 import Link from "next/link"
+import { ContentAd, FooterAd, HeaderAd } from "@/src/components/adsense/AdBanner"
 import { JsonLd } from "@/src/components/seo/JsonLd"
-import { buildBreadcrumbSchema, buildArticleSchema } from "@/src/lib/seo/schemas"
-import { buildPageMetadata } from "@/src/lib/seo/metadata"
+import { SiteHeader } from "@/src/components/site-header/site-header"
 import { SITE } from "@/src/lib/seo/config"
+import { buildPageMetadata } from "@/src/lib/seo/metadata"
+import { buildArticleSchema, buildBreadcrumbSchema } from "@/src/lib/seo/schemas"
 import styles from "./page.module.css"
 
 export const metadata = buildPageMetadata({
     title: "How to Write an Effective Profile Summary: Examples & Guide",
-    description:
-        "Learn how to write a compelling profile summary for your resume and LinkedIn with proven examples, templates, and a step-by-step guide that gets results.",
+    description: "Learn how to write a compelling profile summary for your resume and LinkedIn with proven examples, templates, and a step-by-step guide that gets results.",
     path: "/blog/profile-summary-guide",
-    keywords: [
-        "profile summary",
-        "resume summary",
-        "professional summary",
-        "LinkedIn summary",
-        "how to write profile summary",
-        "profile summary examples",
-    ],
+    keywords: ["profile summary", "resume summary", "professional summary", "LinkedIn summary", "how to write profile summary", "profile summary examples"],
 })
 
 const breadcrumbs = [
@@ -30,10 +22,9 @@ const breadcrumbs = [
 
 const article = {
     title: "How to Write an Effective Profile Summary: Examples & Guide",
-    description:
-        "Learn how to write a compelling profile summary for your resume and LinkedIn with proven examples, templates, and a step-by-step guide that gets results.",
+    description: "Learn how to write a compelling profile summary for your resume and LinkedIn with proven examples, templates, and a step-by-step guide that gets results.",
     path: "/blog/profile-summary-guide",
-    authorName: "AI Resume Generator Team",
+    authorName: "Instant Ai Resume Builder Team",
     datePublished: "2025-01-15",
     tags: ["resume", "profile summary", "career", "LinkedIn"],
 }
@@ -59,9 +50,7 @@ export default function ProfileSummaryGuidePage() {
                     <div className={styles.meta}>
                         <span>15 January 2025</span> • <span>10 min read</span> • <span>Career Advice</span>
                     </div>
-                    <p className={styles.subtitle}>
-                        Master the art of writing a compelling profile summary that captures attention and communicates your professional value in just a few lines.
-                    </p>
+                    <p className={styles.subtitle}>Master the art of writing a compelling profile summary that captures attention and communicates your professional value in just a few lines.</p>
                 </header>
 
                 <article className={styles.article}>
@@ -75,7 +64,8 @@ export default function ProfileSummaryGuidePage() {
                         </p>
 
                         <p className={styles.paragraph}>
-                            This short, 3-5 line paragraph at the top of your <strong>resume or LinkedIn profile</strong> is your single most important piece of professional "real estate." It's your elevator pitch, your first impression, and your best chance to make a recruiter stop scrolling and say, "This is the person I need to talk to."
+                            This short, 3-5 line paragraph at the top of your <strong>resume or LinkedIn profile</strong> is your single most important piece of professional "real estate." It's your elevator pitch,
+                            your first impression, and your best chance to make a recruiter stop scrolling and say, "This is the person I need to talk to."
                         </p>
 
                         <p className={styles.paragraph}>
@@ -83,7 +73,8 @@ export default function ProfileSummaryGuidePage() {
                         </p>
 
                         <p className={styles.paragraph}>
-                            A great <strong>professional summary</strong> (or <strong>resume summary</strong>) doesn't just list your skills; it <em>contextualizes</em> your value. It answers the reader's most important question: "Why should I hire you?"
+                            A great <strong>professional summary</strong> (or <strong>resume summary</strong>) doesn't just list your skills; it <em>contextualizes</em> your value. It answers the reader's most
+                            important question: "Why should I hire you?"
                         </p>
 
                         <p className={styles.paragraph}>
@@ -95,40 +86,38 @@ export default function ProfileSummaryGuidePage() {
 
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>What to Include in a Good Profile Summary: 4 Key Ingredients</h2>
-                        <p className={styles.paragraph}>
-                            Your summary should be a concentrated version of your entire resume. To make it compelling, it needs to include four key ingredients.
-                        </p>
+                        <p className={styles.paragraph}>Your summary should be a concentrated version of your entire resume. To make it compelling, it needs to include four key ingredients.</p>
 
                         <h3 style={{ fontSize: "1.4rem", marginBottom: "1rem", marginTop: "1.5rem" }}>1. Your Professional Identity (Who You Are)</h3>
-                        <p className={styles.paragraph}>
-                            Start with your professional title and years of experience.
-                        </p>
+                        <p className={styles.paragraph}>Start with your professional title and years of experience.</p>
                         <ul className={styles.list}>
-                            <li><em>Example:</em> "Data-driven Marketing Manager with 8+ years of experience..."</li>
+                            <li>
+                                <em>Example:</em> "Data-driven Marketing Manager with 8+ years of experience..."
+                            </li>
                         </ul>
 
                         <h3 style={{ fontSize: "1.4rem", marginBottom: "1rem", marginTop: "1.5rem" }}>2. Your Key Skills & Specialities (What You Do)</h3>
-                        <p className={styles.paragraph}>
-                            What are you an expert in? Mention 2-3 of your most relevant hard or soft skills.
-                        </p>
+                        <p className={styles.paragraph}>What are you an expert in? Mention 2-3 of your most relevant hard or soft skills.</p>
                         <ul className={styles.list}>
-                            <li><em>Example:</em> "...specializing in B2B SaaS campaigns, SEO/SEM, and team leadership."</li>
+                            <li>
+                                <em>Example:</em> "...specializing in B2B SaaS campaigns, SEO/SEM, and team leadership."
+                            </li>
                         </ul>
 
                         <h3 style={{ fontSize: "1.4rem", marginBottom: "1rem", marginTop: "1.5rem" }}>3. A Quantifiable Achievement (Your Proven Value)</h3>
-                        <p className={styles.paragraph}>
-                            This is what separates you from the pack. Use a number to prove your impact.
-                        </p>
+                        <p className={styles.paragraph}>This is what separates you from the pack. Use a number to prove your impact.</p>
                         <ul className={styles.list}>
-                            <li><em>Example:</em> "Proven track record of increasing marketing-qualified leads by 45% in 12 months."</li>
+                            <li>
+                                <em>Example:</em> "Proven track record of increasing marketing-qualified leads by 45% in 12 months."
+                            </li>
                         </ul>
 
                         <h3 style={{ fontSize: "1.4rem", marginBottom: "1rem", marginTop: "1.5rem" }}>4. Your Career Goal or Value Proposition (What You'll Do for Them)</h3>
-                        <p className={styles.paragraph}>
-                            Wrap up by stating what you're looking to do next, framed in a way that benefits the employer.
-                        </p>
+                        <p className={styles.paragraph}>Wrap up by stating what you're looking to do next, framed in a way that benefits the employer.</p>
                         <ul className={styles.list}>
-                            <li><em>Example:</em> "Seeking to leverage data-driven strategies to drive growth for a mission-focused tech company."</li>
+                            <li>
+                                <em>Example:</em> "Seeking to leverage data-driven strategies to drive growth for a mission-focused tech company."
+                            </li>
                         </ul>
                     </section>
 
@@ -151,7 +140,8 @@ export default function ProfileSummaryGuidePage() {
                         <div style={{ backgroundColor: "#f0fdf4", padding: "1.5rem", borderRadius: "8px", marginBottom: "1.5rem", border: "1px solid #86efac" }}>
                             <h3 style={{ fontSize: "1.2rem", marginBottom: "1rem", color: "#15803d" }}>GOOD Resume Summary Example (Experienced Professional):</h3>
                             <p style={{ marginBottom: "1rem", fontStyle: "italic" }}>
-                                "Senior Project Manager (PMP) with a decade of experience leading complex, $5M+ SaaS implementations. Expert in Agile/Scrum methodologies and cross-functional team leadership, with a history of delivering projects 15% under budget. Eager to drive large-scale digital transformation in the fintech sector."
+                                "Senior Project Manager (PMP) with a decade of experience leading complex, $5M+ SaaS implementations. Expert in Agile/Scrum methodologies and cross-functional team leadership, with a
+                                history of delivering projects 15% under budget. Eager to drive large-scale digital transformation in the fintech sector."
                             </p>
                             <p style={{ marginBottom: "0" }}>
                                 <strong>Why it's good:</strong> It's specific (PMP, $5M+, 15% under budget), packed with keywords (Agile/Scrum, SaaS), and has a clear, confident goal.
@@ -161,10 +151,12 @@ export default function ProfileSummaryGuidePage() {
                         <div style={{ backgroundColor: "#f0fdf4", padding: "1.5rem", borderRadius: "8px", marginBottom: "1.5rem", border: "1px solid #86efac" }}>
                             <h3 style={{ fontSize: "1.2rem", marginBottom: "1rem", color: "#15803d" }}>GOOD LinkedIn Summary Example (Career Changer):</h3>
                             <p style={{ marginBottom: "1rem", fontStyle: "italic" }}>
-                                "Detail-oriented Administrative Assistant with 5 years of experience in fast-paced legal environments. Now a certified Front-End Developer (HTML, CSS, React) and eager to apply exceptional organizational and problem-solving skills to build intuitive and accessible user interfaces."
+                                "Detail-oriented Administrative Assistant with 5 years of experience in fast-paced legal environments. Now a certified Front-End Developer (HTML, CSS, React) and eager to apply
+                                exceptional organizational and problem-solving skills to build intuitive and accessible user interfaces."
                             </p>
                             <p style={{ marginBottom: "0" }}>
-                                <strong>Why it's good:</strong> It bridges the gap. It uses the strengths from the <em>previous</em> career (detail-oriented, organizational skills) and connects them directly to the <em>new</em> career (junior developer).
+                                <strong>Why it's good:</strong> It bridges the gap. It uses the strengths from the <em>previous</em> career (detail-oriented, organizational skills) and connects them directly to the{" "}
+                                <em>new</em> career (junior developer).
                             </p>
                         </div>
                     </section>
@@ -180,9 +172,7 @@ export default function ProfileSummaryGuidePage() {
                         </p>
 
                         <h3 style={{ fontSize: "1.4rem", marginBottom: "1rem", marginTop: "1.5rem" }}>Step 2: Write the "Messy" Draft</h3>
-                        <p className={styles.paragraph}>
-                            Don't try to be perfect. Just write. Combine your 4 ingredients and your keywords into a paragraph. It might be long and awkward, but that's okay.
-                        </p>
+                        <p className={styles.paragraph}>Don't try to be perfect. Just write. Combine your 4 ingredients and your keywords into a paragraph. It might be long and awkward, but that's okay.</p>
 
                         <h3 style={{ fontSize: "1.4rem", marginBottom: "1rem", marginTop: "1.5rem" }}>Step 3: Edit for Conciseness</h3>
                         <p className={styles.paragraph}>
@@ -190,25 +180,39 @@ export default function ProfileSummaryGuidePage() {
                         </p>
 
                         <ul className={styles.list}>
-                            <li><em>Instead of:</em> "I have a proven track record of..."</li>
-                            <li><em>Write:</em> "Proven track record of..."</li>
-                            <li style={{ marginTop: "0.5rem" }}><em>Instead of:</em> "I am skilled in..."</li>
-                            <li><em>Write:</em> "Skilled in..."</li>
+                            <li>
+                                <em>Instead of:</em> "I have a proven track record of..."
+                            </li>
+                            <li>
+                                <em>Write:</em> "Proven track record of..."
+                            </li>
+                            <li style={{ marginTop: "0.5rem" }}>
+                                <em>Instead of:</em> "I am skilled in..."
+                            </li>
+                            <li>
+                                <em>Write:</em> "Skilled in..."
+                            </li>
                         </ul>
                     </section>
 
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>Feeling Stuck? How an AI Resume Summary Generator Can Help</h2>
                         <p className={styles.paragraph}>
-                            Writing about yourself is hard. Sometimes, the most difficult part is just starting. This is where a tool like <Link href="/" style={{ color: "#2563eb", textDecoration: "underline" }}>AIResumeGen.com</Link> can be a game-changer.
+                            Writing about yourself is hard. Sometimes, the most difficult part is just starting. This is where a tool like{" "}
+                            <Link href="/" style={{ color: "#2563eb", textDecoration: "underline" }}>
+                                AIResumeGen.com
+                            </Link>{" "}
+                            can be a game-changer.
                         </p>
 
                         <p className={styles.paragraph}>
-                            You can use our AI generator to analyze your experience and skills, providing you with several strong, data-driven profile summaries to choose from. Think of it as your co-writer. The AI can build the powerful foundation, and you can use the tips in this guide to add that final, human touch that makes it uniquely yours.
+                            You can use our AI generator to analyze your experience and skills, providing you with several strong, data-driven profile summaries to choose from. Think of it as your co-writer. The AI
+                            can build the powerful foundation, and you can use the tips in this guide to add that final, human touch that makes it uniquely yours.
                         </p>
 
                         <p className={styles.paragraph}>
-                            Your <strong>profile summary</strong> is your first handshake. Don't make it a weak one. Invest 20 minutes to craft a <strong>summary for your resume</strong> that is specific, confident, and value-driven, and you'll open more doors than you ever thought possible.
+                            Your <strong>profile summary</strong> is your first handshake. Don't make it a weak one. Invest 20 minutes to craft a <strong>summary for your resume</strong> that is specific,
+                            confident, and value-driven, and you'll open more doors than you ever thought possible.
                         </p>
                     </section>
 
@@ -227,7 +231,8 @@ export default function ProfileSummaryGuidePage() {
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>Ready to Create Your Perfect Resume?</h2>
                         <p className={styles.paragraph}>
-                            Now that you understand how to write an effective profile summary, it's time to put it into practice. Our AI-powered resume builder can help you create a professional resume with a compelling summary in minutes.
+                            Now that you understand how to write an effective profile summary, it's time to put it into practice. Our AI-powered resume builder can help you create a professional resume with a
+                            compelling summary in minutes.
                         </p>
                         <div style={{ textAlign: "center", marginTop: "2rem" }}>
                             <Link
@@ -240,9 +245,8 @@ export default function ProfileSummaryGuidePage() {
                                     borderRadius: "8px",
                                     textDecoration: "none",
                                     fontWeight: "600",
-                                    fontSize: "1.1rem"
-                                }}
-                            >
+                                    fontSize: "1.1rem",
+                                }}>
                                 Generate Your Resume Now
                             </Link>
                         </div>

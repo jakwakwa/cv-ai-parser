@@ -36,7 +36,7 @@ const article = {
     title: "Your Title",
     description: "Same as metadata description",
     path: "/blog/your-slug",
-    authorName: "AI Resume Generator Team",
+    authorName: "Instant Ai Resume Generator Team",
     datePublished: "2025-01-15",
     tags: ["tag1", "tag2", "tag3"],
 }

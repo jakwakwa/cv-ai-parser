@@ -105,7 +105,7 @@ const ResumeWithTemplateSelector: React.FC<ResumeWithTemplateSelectorProps> = ({
     <div className="resume-container">
       {/* Template Selector */}
       <div className="template-selector-wrapper">
-        <h3>Choose Template</h3>
+        <h3>Choose From Multiple Resume Templates</h3>
         <div className="template-grid">
           {templates.map((template) => (
             <button

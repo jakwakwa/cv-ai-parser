@@ -75,7 +75,7 @@ export default function TempResumePage() {
                 description: "This temporary resume may have expired or been removed.",
                 variant: "destructive",
             });
-            router.push("/tools/ai-resume-generator"); // Default fallback if no source tool info
+            router.push("/free-ai-tools/ai-resume-builder"); // Default fallback if no source tool info
         }
     }, [slug, getTempResume, router, toast]);
 
@@ -144,7 +144,7 @@ export default function TempResumePage() {
                         if (!KEEP_TEMP_RESUMES_FOR_TESTING && typeof slug === "string") {
                             removeTempResume(slug);
                         }
-                        router.push("/tools/ai-resume-tailor");
+                        router.push("/free-ai-tools/resume-tailor");
                     }}
                 >
                     <ArrowLeft className="mr-2 h-4 w-4" /> Back to Tailor Tool
@@ -183,8 +183,8 @@ export default function TempResumePage() {
                                     removeTempResume(slug);
                                     const toolPath =
                                         sourceTool === "ai-resume-generator"
-                                            ? "/tools/ai-resume-generator"
-                                            : "/tools/ai-resume-tailor";
+                                            ? "/free-ai-tools/ai-resume-builder"
+                                            : "/free-ai-tools/resume-tailor";
                                     router.push(toolPath);
                                 }
                             }}
@@ -205,8 +205,8 @@ export default function TempResumePage() {
                         // Redirect back to the tool that was originally used
                         const toolPath =
                             sourceTool === "ai-resume-generator"
-                                ? "/tools/ai-resume-generator"
-                                : "/tools/ai-resume-tailor";
+                                ? "/free-ai-tools/ai-resume-builder"
+                                : "/free-ai-tools/resume-tailor";
                         router.push(toolPath);
                     }}
                     showDownload={true}

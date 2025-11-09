@@ -158,7 +158,7 @@ Every new blog post requires:
 
 - **Created**: January 2025
 - **Last Updated**: January 2025
-- **Maintainer**: AI Resume Generator Team
+- **Maintainer**: Instant Ai Resume Generator Team
 - **System Version**: 1.0
 
 ---

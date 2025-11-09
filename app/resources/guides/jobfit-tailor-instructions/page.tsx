@@ -21,9 +21,9 @@ This guide walks you through using our AI-powered JobFit Tailor to create a perf
 
 Once the tailoring inputs are enabled, you'll see options to refine your resume:
 
-1.  **Provide a Job Description (Required for Tailoring):**
+1.  **Provide a Add a Job Description (Required for Tailoring):**
     *   **Paste Text:** Copy and paste the job description directly into the large text area.
-    *   **Upload File:** Click the "Upload Job Description" button to select a job description file (PDF or text).
+    *   **Upload File:** Click the "Upload Add a Job Description" button to select a job description file (PDF or text).
     *   *Tip:* The more detailed the job description, the better our AI can tailor your resume!
 
 2.  **Select Your Resume Tone:**
@@ -51,5 +51,5 @@ After providing all the necessary information, click the "Generate Tailored Resu
 `
 
 export default function Guide() {
-	return <Markdown>{md}</Markdown>
+    return <Markdown>{md}</Markdown>
 }
