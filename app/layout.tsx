@@ -127,10 +127,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <head>
                 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" />
-                {/* Google AdSense */}
-                <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7169177467099391" crossOrigin="anonymous" strategy="lazyOnload" />
             </head>
             <body>
+                {/* Google AdSense: move to body to avoid head attribute warnings */}
+                <Script
+                    async
+                    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7169177467099391"
+                    crossOrigin="anonymous"
+                    strategy="afterInteractive"
+                />
                 <JsonLd data={buildOrganizationSchema()} />
                 <JsonLd data={buildWebSiteSchema()} />
                 <ThemeProvider>
