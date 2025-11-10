@@ -11,6 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		"/blog/career-advice",
 		"/blog/resume-writing-tips",
 		"/blog/profile-summary-guide",
+		"/blog/beyond-react-how-ai-is-redefining-the-senior-frontend-interview",
 		"/free-ai-tools/ai-resume-builder",
 		"/free-ai-tools/resume-tailor",
 		"/resources",

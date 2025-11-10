@@ -80,6 +80,31 @@ export default function BlogPage() {
                       <span className={styles.readTime}>10 min read</span>
                     </div>
                     <h3>
+                      <Link href="/blog/beyond-react-how-ai-is-redefining-the-senior-frontend-interview" className={styles.articleTitle}>
+                        Beyond React: How AI Is Redefining the Senior Frontend Interview
+                      </Link>
+                    </h3>
+                  </CardHeader>
+                  <CardContent>
+                    <p className={styles.articleDescription}>
+                      Discover how AI is transforming senior frontend interviews, from designing for AI failure to building trust in intelligent systems.
+                    </p>
+                    <div className={styles.articleFooter}>
+                      <span className={styles.publishDate}>10 November 2025</span>
+                      <Link href="/blog/beyond-react-how-ai-is-redefining-the-senior-frontend-interview" className={styles.readMore}>
+                        Read More →
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className={styles.articleCard}>
+                  <CardHeader>
+                    <div className={styles.articleMeta}>
+                      <span className={styles.category}>Career Advice</span>
+                      <span className={styles.readTime}>10 min read</span>
+                    </div>
+                    <h3>
                       <Link href="/blog/profile-summary-guide" className={styles.articleTitle}>
                         How to Write an Effective Profile Summary (Examples & Guide)
                       </Link>
