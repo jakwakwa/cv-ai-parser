@@ -70,12 +70,12 @@
 
 /* Keep individual bullet points together (atomic element) */
 .detailItem {
-    font-size: 0.75rem;
+    font-size: 0.70rem;
     opacity: 0.8;
     line-height: 1.3;
     padding-left: 1rem;
     position: relative;
-    padding-bottom: 0.31rem;
+    padding-bottom: 0.3rem;
     margin-right: 1.2rem !important;
     page-break-inside: avoid;
     break-inside: avoid;
@@ -83,7 +83,7 @@
 
 /* Converted from Tailwind classes */
 .experienceItem {
-    margin-bottom: 1.25rem;
+    margin-bottom: 3.7rem;
     /* mb-5 */
 }
 

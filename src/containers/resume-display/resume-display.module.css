@@ -52,7 +52,7 @@
 @media (min-width: 768px) {
     .resumeSidebar {
         grid-column: span 1;
-        padding: 2rem;
+        padding: 1rem 2rem;
     }
 }
 
@@ -64,7 +64,7 @@
 @media (min-width: 768px) {
     .resumeMainContent {
         grid-column: span 1;
-        padding: 2rem;
+        padding: 1rem 2rem;
     }
 }
 
