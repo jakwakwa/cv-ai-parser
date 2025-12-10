@@ -192,7 +192,7 @@
   }
 
   .mainContent {
-    padding: 1.5rem !important;
+    padding: 1.5rem 1rem !important;
   }
 
   .profileImageWrapper {
@@ -204,9 +204,23 @@
     grid-template-columns: 1fr 1fr !important;
   }
 
-  .summarySection,
+  .summarySection {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    page-break-inside: avoid;
+  }
+
   .educationWrapper,
   .certificationsWrapper {
     page-break-inside: avoid;
+  }
+
+  .timelineSection {
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+  }
+
+  .skillsWrapper {
+    margin-bottom: 1.5rem;
   }
 }

@@ -195,7 +195,7 @@
 
 @media print {
     .centeredHeader {
-        padding: 2rem 1.5rem !important;
+        padding: 1.5rem 1rem !important;
         background: var(--resume-profile-header-background) !important;
     }
 
@@ -213,15 +213,28 @@
     }
 
     .mainContent {
-        padding: 1.5rem !important;
+        padding: 1.5rem 1rem !important;
     }
 
     .bottomSections {
         grid-template-columns: 1fr 1fr !important;
     }
 
-    .summarySection,
-    .experienceSection,
+    .summarySection {
+        margin-bottom: 1.5rem;
+        page-break-inside: avoid;
+    }
+
+    .experienceSection {
+        margin-bottom: 1.5rem;
+        padding: 1rem 0;
+    }
+
+    .skillsSection {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+    }
+
     .sectionWrapper {
         page-break-inside: avoid;
     }
