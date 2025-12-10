@@ -109,6 +109,7 @@
 
 /* Print-specific optimizations for PDF generation */
 @media print {
+
     /* CRITICAL: Override .avoidBreak to allow experience items to split across pages */
     .avoidBreak {
         break-inside: auto !important;
@@ -124,7 +125,8 @@
         margin-bottom: 0.75rem;
         page-break-inside: auto;
         break-inside: auto;
-        border-bottom: none; /* Remove border that can cause layout issues */
+        border-bottom: none;
+        /* Remove border that can cause layout issues */
     }
 
     .jobHeader {
