@@ -22,7 +22,7 @@ const ExperienceSection = ({ experience, customColors }: ExperienceSectionProps)
 			</h2>
 			{experience && experience.length > 0 ? (
 				experience.map((job, index) => (
-					<div key={`${job.company}-${job.title}-${index}`} className={`${styles.experienceItem} ${styles.avoidBreak}`}>
+					<div key={`${job.company}-${job.title}-${index}`} className={styles.experienceItem}>
 						<div className={styles.jobHeader}>
 							<div>
 								<h3 className={styles.jobTitle} style={{ color: customColors["--resume-job-title"] }}>

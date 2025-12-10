@@ -1,13 +1,8 @@
 /* ExperienceSection styles migrated from old location */
 .experienceSection {
     color: var(--resume-body-text);
-}
-
-@media print {
-    .experienceSection {
-        orphans: 2;
-        widows: 2;
-    }
+    orphans: 2;
+    widows: 2;
 }
 
 .sectionTitle {
@@ -30,8 +25,10 @@
     letter-spacing: 0.03rem;
     margin-top: 1.5rem;
     color: var(--resume-job-title);
+    /* Keep job title with following content */
+    page-break-after: avoid;
+    break-after: avoid;
 }
-
 
 .company {
     text-transform: uppercase;
@@ -42,6 +39,9 @@
     margin-top: 0rem;
     margin-left: 0.05rem;
     color: var(--resume-main-icons);
+    /* Keep company with following content */
+    page-break-after: avoid;
+    break-after: avoid;
 }
 
 .duration {
@@ -52,6 +52,9 @@
     margin-bottom: 0.55rem;
     font-family: 'DM Mono', Menlo, monospace;
     color: var(--resume-dates);
+    /* Keep duration with following content */
+    page-break-after: avoid;
+    break-after: avoid;
 }
 
 .details {
@@ -60,8 +63,12 @@
     padding-left: 0;
     padding-bottom: 1rem;
     border-bottom: 1px dashed #bcc3dd;
+    /* Allow details list to break across pages */
+    page-break-inside: auto;
+    break-inside: auto;
 }
 
+/* Keep individual bullet points together (atomic element) */
 .detailItem {
     font-size: 0.75rem;
     opacity: 0.8;
@@ -70,6 +77,8 @@
     position: relative;
     padding-bottom: 0.31rem;
     margin-right: 1.2rem !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
 }
 
 /* Converted from Tailwind classes */
@@ -83,7 +92,7 @@
     /* last:mb-0 */
 }
 
-
+/* Keep job header with first content */
 .jobHeader {
     display: flex;
     /* flex */
@@ -93,6 +102,14 @@
     /* items-start */
     margin-bottom: 0.5rem;
     /* mb-2 */
+    page-break-after: avoid;
+    break-after: avoid;
+}
+
+/* Prevent orphaned job headers at bottom of page */
+.jobHeader + .details {
+    page-break-before: avoid;
+    break-before: avoid;
 }
 
 .noExperienceMessage {
@@ -102,20 +119,8 @@
     /* text-sm */
 }
 
-.avoidBreak {
-    break-inside: avoid;
-    page-break-inside: avoid;
-}
-
-/* Print-specific optimizations for PDF generation */
+/* Print-specific optimizations */
 @media print {
-
-    /* CRITICAL: Override .avoidBreak to allow experience items to split across pages */
-    .avoidBreak {
-        break-inside: auto !important;
-        page-break-inside: auto !important;
-    }
-
     .experienceItem {
         margin-bottom: 1rem;
     }
@@ -123,40 +128,14 @@
     .details {
         padding-bottom: 0.5rem;
         margin-bottom: 0.75rem;
-        page-break-inside: auto;
-        break-inside: auto;
         border-bottom: none;
-        /* Remove border that can cause layout issues */
-    }
-
-    .jobHeader {
-        page-break-after: avoid;
-        break-after: avoid;
-        margin-bottom: 0.5rem;
     }
 
     .jobTitle {
-        page-break-after: avoid;
-        break-after: avoid;
         margin-top: 0.75rem;
     }
 
-    .company,
-    .duration {
-        page-break-after: avoid;
-        break-after: avoid;
-    }
-
-    /* Keep individual bullet points together */
     .detailItem {
-        page-break-inside: avoid;
-        break-inside: avoid;
         padding-bottom: 0.25rem;
-    }
-
-    /* Prevent orphaned job headers at bottom of page */
-    .jobHeader + .details {
-        page-break-before: avoid;
-        break-before: avoid;
     }
 }
