@@ -1,226 +1,226 @@
 .resumeContent {
-  background: #fff;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  border-radius: 0.75rem;
-  overflow: hidden;
-  width: 100%;
-  max-width: 48rem;
-  margin: 0 auto;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    width: 100%;
+    max-width: 48rem;
+    margin: 0 auto;
 }
 
 @media print {
-  .resumeContent {
-    padding: 0 !important;
-    margin: 0 !important;
-    box-shadow: none;
-  }
+    .resumeContent {
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none;
+    }
 }
 
 /* Header Section */
 .headerSection {
-  background: var(--resume-profile-header-background);
-  border-bottom: 4px solid var(--resume-job-title);
+    background: var(--resume-profile-header-background);
+    border-bottom: 4px solid var(--resume-job-title);
 }
 
 .headerContent {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rem 2rem 1rem;
-  gap: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 2rem 1rem;
+    gap: 2rem;
 }
 
 .headerLeft {
-  flex: 1;
+    flex: 1;
 }
 
 .name {
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.1;
-  letter-spacing: -0.5px;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
 }
 
 .title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .headerRight {
-  flex-shrink: 0;
+    flex-shrink: 0;
 }
 
 .profileImageWrapper {
-  width: 100px;
-  height: 100px;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 3px solid var(--resume-main-icons);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 3px solid var(--resume-main-icons);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .profileImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .contactBar {
-  padding: 0 2rem 1.5rem;
-  background: var(--resume-profile-header-background);
+    padding: 0 2rem 1.5rem;
+    background: var(--resume-profile-header-background);
 }
 
 /* Main Content */
 .mainContent {
-  padding: 2rem;
+    padding: 2rem;
 }
 
 .summarySection {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: var(--resume-sidebar-background);
-  border-radius: 8px;
-  border-left: 4px solid var(--resume-job-title);
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--resume-sidebar-background);
+    border-radius: 8px;
+    border-left: 4px solid var(--resume-job-title);
 }
 
 .sectionTitle {
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin: 0 0 1rem 0;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .summaryText {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0;
 }
 
 /* Skills Wrapper */
 .skillsWrapper {
-  margin-bottom: 2rem;
+    margin-bottom: 2rem;
 }
 
 /* Timeline Section for Experience */
 .timelineSection {
-  position: relative;
-  margin-bottom: 2rem;
-  padding-left: 1.5rem;
-  border-left: 3px solid var(--resume-main-icons);
+    position: relative;
+    margin-bottom: 2rem;
+    padding-left: 1.5rem;
+    border-left: 3px solid var(--resume-main-icons);
 }
 
 .timelineSection::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -7px;
-  width: 11px;
-  height: 11px;
-  background: var(--resume-job-title);
-  border-radius: 50%;
-  border: 3px solid #fff;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -7px;
+    width: 11px;
+    height: 11px;
+    background: var(--resume-job-title);
+    border-radius: 50%;
+    border: 3px solid #fff;
 }
 
 /* Bottom Grid for Education and Certifications */
 .bottomGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
 }
 
 @media (min-width: 768px) {
-  .bottomGrid {
-    grid-template-columns: 1fr 1fr;
-  }
+    .bottomGrid {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
 .educationWrapper,
 .certificationsWrapper {
-  padding: 1.5rem;
-  background: var(--resume-sidebar-background);
-  border-radius: 8px;
-  border-top: 3px solid var(--resume-main-icons);
+    padding: 1.5rem;
+    background: var(--resume-sidebar-background);
+    border-radius: 8px;
+    border-top: 3px solid var(--resume-main-icons);
 }
 
 /* Responsive Adjustments */
 @media (max-width: 767px) {
-  .headerContent {
-    flex-direction: column;
-    text-align: center;
-    padding: 1.5rem;
-  }
+    .headerContent {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+    }
 
-  .name {
-    font-size: 2rem;
-  }
+    .name {
+        font-size: 2rem;
+    }
 
-  .title {
-    font-size: 1rem;
-  }
+    .title {
+        font-size: 1rem;
+    }
 
-  .profileImageWrapper {
-    width: 80px;
-    height: 80px;
-  }
+    .profileImageWrapper {
+        width: 80px;
+        height: 80px;
+    }
 
-  .mainContent {
-    padding: 1.5rem;
-  }
+    .mainContent {
+        padding: 1.5rem;
+    }
 
-  .timelineSection {
-    padding-left: 1rem;
-  }
+    .timelineSection {
+        padding-left: 1rem;
+    }
 }
 
 @media print {
-  .headerContent {
-    padding: 1.5rem !important;
-  }
+    .headerContent {
+        padding: 1.5rem !important;
+    }
 
-  .name {
-    font-size: 2rem;
-  }
+    .name {
+        font-size: 2rem;
+    }
 
-  .title {
-    font-size: 1rem;
-  }
+    .title {
+        font-size: 1rem;
+    }
 
-  .mainContent {
-    padding: 1.5rem 1rem !important;
-  }
+    .mainContent {
+        padding: 1.5rem 1rem !important;
+    }
 
-  .profileImageWrapper {
-    width: 80px;
-    height: 80px;
-  }
+    .profileImageWrapper {
+        width: 80px;
+        height: 80px;
+    }
 
-  .bottomGrid {
-    grid-template-columns: 1fr 1fr !important;
-  }
+    .bottomGrid {
+        grid-template-columns: 1fr 1fr !important;
+    }
 
-  .summarySection {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    page-break-inside: avoid;
-  }
+    .summarySection {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        page-break-inside: avoid;
+    }
 
-  .educationWrapper,
-  .certificationsWrapper {
-    page-break-inside: avoid;
-  }
+    .educationWrapper,
+    .certificationsWrapper {
+        page-break-inside: avoid;
+    }
 
-  .timelineSection {
-    margin-bottom: 1.5rem;
-    padding-left: 1rem;
-  }
+    .timelineSection {
+        margin-bottom: 1.5rem;
+        padding-left: 1rem;
+    }
 
-  .skillsWrapper {
-    margin-bottom: 1.5rem;
-  }
+    .skillsWrapper {
+        margin-bottom: 1.5rem;
+    }
 }
