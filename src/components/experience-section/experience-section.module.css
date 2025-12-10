@@ -1,7 +1,13 @@
 /* ExperienceSection styles migrated from old location */
 .experienceSection {
     color: var(--resume-body-text);
+}
 
+@media print {
+    .experienceSection {
+        orphans: 2;
+        widows: 2;
+    }
 }
 
 .sectionTitle {
@@ -103,24 +109,52 @@
 
 /* Print-specific optimizations for PDF generation */
 @media print {
+    /* CRITICAL: Override .avoidBreak to allow experience items to split across pages */
+    .avoidBreak {
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+    }
+
+    .experienceItem {
+        margin-bottom: 1rem;
+    }
+
     .details {
-        padding-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
         page-break-inside: auto;
         break-inside: auto;
+        border-bottom: none; /* Remove border that can cause layout issues */
     }
 
     .jobHeader {
         page-break-after: avoid;
         break-after: avoid;
+        margin-bottom: 0.5rem;
     }
 
     .jobTitle {
         page-break-after: avoid;
         break-after: avoid;
+        margin-top: 0.75rem;
     }
 
+    .company,
+    .duration {
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+
+    /* Keep individual bullet points together */
     .detailItem {
         page-break-inside: avoid;
         break-inside: avoid;
+        padding-bottom: 0.25rem;
+    }
+
+    /* Prevent orphaned job headers at bottom of page */
+    .jobHeader + .details {
+        page-break-before: avoid;
+        break-before: avoid;
     }
 }

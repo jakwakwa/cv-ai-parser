@@ -180,19 +180,19 @@
 
 @media print {
     .headerContent {
-        padding: 1.5rem !important;
+        padding: 1.25rem 1rem !important;
     }
 
     .name {
-        font-size: 2rem;
+        font-size: 1.75rem;
     }
 
     .title {
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
 
     .mainContent {
-        padding: 1.5rem 1rem !important;
+        padding: 1.25rem 1rem !important;
     }
 
     .profileImageWrapper {
@@ -202,25 +202,37 @@
 
     .bottomGrid {
         grid-template-columns: 1fr 1fr !important;
+        gap: 1.5rem;
     }
 
     .summarySection {
-        margin-bottom: 1.5rem;
-        padding: 1rem;
+        margin-bottom: 1.25rem;
+        padding: 0.75rem;
         page-break-inside: avoid;
     }
 
     .educationWrapper,
     .certificationsWrapper {
+        padding: 1rem;
         page-break-inside: avoid;
     }
 
     .timelineSection {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
         padding-left: 1rem;
     }
 
     .skillsWrapper {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+
+    /* Optimize overall print layout */
+    .resumeContent {
+        orphans: 2;
+        widows: 2;
+    }
+
+    .contactBar {
+        padding: 0 1rem 1rem;
     }
 }
