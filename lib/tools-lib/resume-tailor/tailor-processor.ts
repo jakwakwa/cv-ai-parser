@@ -1,5 +1,6 @@
 import { google } from "@ai-sdk/google"
 import { generateText } from "ai"
+import type { TextPart, FilePart } from "ai"
 import { AI_MODEL_FLASH } from "@/lib/config"
 import type { FileParseResult } from "../shared/file-parsers/base-parser"
 import { enforceSummaryLimit } from "../shared/summary-limiter"
@@ -29,14 +30,6 @@ interface CustomizationOptions {
 
 // Placeholder for the full context needed for tailoring
 type TailorContext = UserAdditionalContext
-
-// Local helper types
-type ModelMessage = {
-	type: "file" | "text"
-	data?: Uint8Array
-	mimeType?: string
-	text?: string
-}
 
 type JobAnalysis = {
 	keywords: string[]
@@ -227,13 +220,13 @@ class TailorProcessor {
 
 	private async parseOriginal(fileResult: FileParseResult): Promise<ParsedResumeSchema> {
 		const model = google(AI_MODEL_FLASH)
-		const messagesContent: ModelMessage[] = []
+		const messagesContent: (TextPart | FilePart)[] = []
 
 		if (fileResult.fileType === "pdf" && fileResult.fileData) {
 			messagesContent.push({
 				type: "file",
 				data: new Uint8Array(fileResult.fileData),
-				mimeType: "application/pdf",
+				mediaType: "application/pdf",
 			})
 			messagesContent.push({
 				type: "text",
@@ -255,7 +248,7 @@ class TailorProcessor {
 			messages: [
 				{
 					role: "user",
-					content: messagesContent as unknown as string,
+					content: messagesContent,
 				},
 			],
 			temperature: 0.2,

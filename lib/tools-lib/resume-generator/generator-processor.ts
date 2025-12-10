@@ -1,5 +1,6 @@
 import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
+import type { TextPart, FilePart } from "ai";
 import { AI_MODEL_FLASH, AI_MODEL_PRO } from "@/lib/config";
 import type { FileParseResult } from "../shared/file-parsers/base-parser";
 import { enforceSummaryLimit } from "../shared/summary-limiter";
@@ -29,14 +30,14 @@ class GeneratorProcessor {
 
     const model = google(AI_MODEL_FLASH); // Use AI_MODEL_FLASH for resume parsing, it supports PDF processing
     console.warn("GEMINI FLASH is parsing... replace with", AI_MODEL_PRO);
-    const messagesContent: unknown[] = [];
+    const messagesContent: (TextPart | FilePart)[] = [];
 
     if (fileResult.fileType === "pdf" && fileResult.fileData) {
       // For PDF files, send the ArrayBuffer directly as a file input
       messagesContent.push({
         type: "file",
         data: new Uint8Array(fileResult.fileData),
-        mimeType: "application/pdf",
+        mediaType: "application/pdf",
       });
       // Add a text part for instructions
       messagesContent.push({
@@ -58,7 +59,7 @@ class GeneratorProcessor {
       messages: [
         {
           role: "user",
-          content: messagesContent as unknown as string,
+          content: messagesContent,
         },
       ],
       temperature: 0.2,
