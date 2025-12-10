@@ -143,7 +143,7 @@
     }
 
     .mainContent {
-        padding: 2rem !important;
+        padding: 1.5rem 1rem !important;
     }
 
     .profileImageWrapper {
@@ -157,5 +157,10 @@
 
     .sectionTitle {
         font-size: 1.2rem;
+    }
+
+    .summarySection {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
     }
 }

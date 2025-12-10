@@ -52,7 +52,7 @@
     list-style: none;
     margin-bottom: 0rem;
     padding-left: 0;
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
     border-bottom: 1px dashed #bcc3dd;
 }
 
@@ -99,4 +99,28 @@
 .avoidBreak {
     break-inside: avoid;
     page-break-inside: avoid;
+}
+
+/* Print-specific optimizations for PDF generation */
+@media print {
+    .details {
+        padding-bottom: 0.75rem;
+        page-break-inside: auto;
+        break-inside: auto;
+    }
+
+    .jobHeader {
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+
+    .jobTitle {
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+
+    .detailItem {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
 }
